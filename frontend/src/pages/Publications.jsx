@@ -475,8 +475,8 @@ Best regards,`;
               {pagination.total_items} publications
             </div>
             
-            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-2">
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between space-y-4 md:space-y-0">
+              <div className="flex items-center space-x-2 order-2 md:order-1">
                 <Button
                   variant="outline"
                   size="sm"
