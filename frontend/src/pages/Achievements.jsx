@@ -265,59 +265,124 @@ const Achievements = () => {
 
         {/* Achievements Grid */}
         {!loading && achievements.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {achievements.map((achievement) => (
-              <Card key={achievement.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                {/* Achievement Image */}
-                {achievement.image && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={achievement.image}
-                      alt={achievement.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                    <div className="absolute top-4 right-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                        <Trophy className="h-4 w-4 text-emerald-600" />
+          <div className="space-y-8">
+            {/* First Achievement - Featured/Large Card */}
+            {achievements[0] && (
+              <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-emerald-50 border-2 border-emerald-200">
+                <div className="md:flex">
+                  {/* Featured Image */}
+                  {achievements[0].image && (
+                    <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+                      <img 
+                        src={achievements[0].image}
+                        alt={achievements[0].title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                      <div className="absolute top-6 left-6">
+                        <div className="bg-emerald-600/90 backdrop-blur-sm rounded-full p-3">
+                          <Trophy className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute top-6 right-6">
+                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-emerald-700">
+                          Featured Achievement
+                        </span>
                       </div>
                     </div>
-                  </div>
-                )}
-                
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {/* Date */}
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      <span>{formatDate(achievement.date)}</span>
+                  )}
+                  
+                  <CardContent className="md:w-1/2 p-8 md:p-12">
+                    <div className="space-y-6">
+                      {/* Date */}
+                      <div className="flex items-center text-emerald-600">
+                        <Calendar className="h-5 w-5 mr-3" />
+                        <span className="text-lg font-medium">{formatDate(achievements[0].date)}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
+                        {achievements[0].title}
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-gray-700 text-lg leading-relaxed">
+                        {achievements[0].short_description}
+                      </p>
+
+                      {/* Read More Button */}
+                      <div className="pt-6">
+                        <Button 
+                          size="lg"
+                          className="group-hover:bg-emerald-700 bg-emerald-600 text-white px-8 py-3"
+                          onClick={() => generateBlogContent(achievements[0])}
+                        >
+                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
+                        </Button>
+                      </div>
                     </div>
-
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
-                      {achievement.title}
-                    </h3>
-
-                    {/* Short Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                      {achievement.short_description}
-                    </p>
-
-                    {/* Read More Button */}
-                    <div className="pt-4 border-t border-gray-200">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
-                        onClick={() => generateBlogContent(achievement)}
-                      >
-                        Read More <ArrowRight className="h-4 w-4 ml-2" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </div>
               </Card>
-            ))}
+            )}
+
+            {/* Rest of Achievements - Regular Grid */}
+            {achievements.length > 1 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {achievements.slice(1).map((achievement) => (
+                  <Card key={achievement.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    {/* Achievement Image */}
+                    {achievement.image && (
+                      <div className="relative h-48 overflow-hidden">
+                        <img 
+                          src={achievement.image}
+                          alt={achievement.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        <div className="absolute top-4 right-4">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                            <Trophy className="h-4 w-4 text-emerald-600" />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {/* Date */}
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          <span>{formatDate(achievement.date)}</span>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
+                          {achievement.title}
+                        </h3>
+
+                        {/* Short Description */}
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                          {achievement.short_description}
+                        </p>
+
+                        {/* Read More Button */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
+                            onClick={() => generateBlogContent(achievement)}
+                          >
+                            Read More <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
