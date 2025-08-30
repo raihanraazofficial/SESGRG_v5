@@ -346,15 +346,31 @@ Best regards,`;
                       <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight">
                         {publication.title}
                       </h3>
-                      <p className="text-gray-700 mb-2 text-sm md:text-base">
-                        <strong>Authors:</strong> {publication.authors.join(', ')}
-                      </p>
-                      <p className="text-gray-600 mb-3 text-sm md:text-base">
-                        {publication.publication_info}
-                      </p>
-                      {publication.abstract && (
-                        <p className="text-gray-600 text-sm mb-3 leading-relaxed">
-                          {publication.abstract}
+                      
+                      {/* IEEE Formatted Citation */}
+                      <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                        <p className="text-gray-800 text-sm md:text-base leading-relaxed">
+                          <span 
+                            className="ieee-citation"
+                            dangerouslySetInnerHTML={{
+                              __html: this.renderIEEEFormat(publication)
+                            }}
+                          />
+                        </p>
+                      </div>
+                      
+                      {/* DOI/Link */}
+                      {publication.doi_link && (
+                        <p className="text-sm text-blue-600 mb-2">
+                          <strong>DOI/Link:</strong>{' '}
+                          <a 
+                            href={publication.doi_link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                          >
+                            {publication.doi_link}
+                          </a>
                         </p>
                       )}
                     </div>
