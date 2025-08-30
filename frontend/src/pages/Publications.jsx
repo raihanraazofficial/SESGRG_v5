@@ -202,24 +202,20 @@ Best regards,`;
               </Button>
             </div>
 
-            {/* Search */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            {/* Single Search Bar */}
+            <div className="mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search by title..."
-                  value={filters.title_filter}
-                  onChange={(e) => handleFilterChange('title_filter', e.target.value)}
-                  className="pl-10"
+                  placeholder="Search by title, author, or year..."
+                  value={filters.search_filter}
+                  onChange={(e) => handleFilterChange('search_filter', e.target.value)}
+                  className="pl-10 text-lg py-3"
                 />
               </div>
-              <div className="relative">
-                <Input
-                  placeholder="Search by author..."
-                  value={filters.author_filter}
-                  onChange={(e) => handleFilterChange('author_filter', e.target.value)}
-                />
-              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                You can search by publication title, author name, or publication year
+              </p>
             </div>
 
             {/* Advanced Filters */}
