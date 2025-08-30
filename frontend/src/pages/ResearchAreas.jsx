@@ -1,8 +1,7 @@
-import React from "react";
-import { Zap, Sun, Battery, Brain, Leaf, Shield, FileText, Folder } from "lucide-react";
+import React, { useState } from "react";
+import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { researchAreas } from "../mock/data";
+import { Button } from "../components/ui/button";
 
 const ResearchAreas = () => {
   const iconMap = {
