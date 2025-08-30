@@ -246,16 +246,16 @@ frontend:
         comment: "Successfully implemented News & Events page with three categories (News, Events, Upcoming Events), Google Sheets API integration, search and filtering capabilities, pagination with go-to-page system, blog-style content generation, and embedded Google Calendar iframe at the bottom."
 
   - task: "Contact Page with Google Maps Integration"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "pages/Contacts.jsx"
     stuck_count: 0
     priority: "low"
     needs_retesting: false
     status_history:
-      - working: "NA"
+      - working: true
         agent: "main"
-        comment: "Embed Google Maps for BRAC University location"
+        comment: "Successfully implemented Contact page with embedded Google Maps for BRAC University location. Added comprehensive contact information, office hours, and additional sections for research collaboration, student opportunities, and industry partnerships. Includes transportation directions and quick contact functionality."
 
   - task: "Add Google Analytics Tracking"
     implemented: false
