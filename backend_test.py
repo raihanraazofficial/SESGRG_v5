@@ -758,6 +758,9 @@ def run_all_tests():
     results['research_stats'] = test_research_stats_endpoint()
     results['error_handling'] = test_error_handling()
     
+    # Comprehensive News & Events API testing (as requested)
+    results['news_events_comprehensive'] = test_news_events_comprehensive()
+    
     print("\n" + "=" * 60)
     print("TEST SUMMARY")
     print("=" * 60)
@@ -766,6 +769,7 @@ def run_all_tests():
     basic_tests = ['server_accessible', 'root_endpoint', 'post_status', 'get_status', 'mongodb_connection', 'cors_config']
     sheets_tests = ['publications_endpoint', 'projects_endpoint', 'achievements_endpoint', 'news_events_endpoint', 
                    'achievement_details', 'news_event_details', 'research_stats', 'error_handling']
+    comprehensive_tests = ['news_events_comprehensive']
     
     print("BASIC FUNCTIONALITY:")
     for test_name in basic_tests:
@@ -785,13 +789,21 @@ def run_all_tests():
             all_passed = False
             sheets_passed = False
     
+    print("\nCOMPREHENSIVE FILTERING TESTS:")
+    for test_name in comprehensive_tests:
+        passed = results.get(test_name, False)
+        status = "✅ PASS" if passed else "❌ FAIL"
+        print(f"  {test_name.replace('_', ' ').title()}: {status}")
+        if not passed:
+            all_passed = False
+    
     print("=" * 60)
     if all_passed:
-        print("🎉 ALL TESTS PASSED - Google Sheets Integration APIs are ready for frontend!")
-    elif sheets_passed and any(results[test] for test in basic_tests):
-        print("✅ GOOGLE SHEETS INTEGRATION WORKING - Some basic functionality issues")
+        print("🎉 ALL TESTS PASSED - News & Events API filtering functionality working perfectly!")
+    elif results.get('news_events_comprehensive', False):
+        print("✅ NEWS & EVENTS FILTERING WORKING - Some other functionality issues")
     else:
-        print("⚠️  CRITICAL ISSUES FOUND - Backend needs attention")
+        print("⚠️  NEWS & EVENTS FILTERING ISSUES FOUND - Needs attention")
     
     return results, all_passed
 
