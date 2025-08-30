@@ -1088,7 +1088,7 @@ class SESGSheetsService:
                         
                         publication = {
                             "id": f"pub_{i:03d}",
-                            "category": str(row[0]) if len(row) > 0 else "Journal Articles",
+                            "category": self._normalize_category(str(row[0])) if len(row) > 0 else "Journal Articles",
                             "authors": self._parse_authors(str(row[1])) if len(row) > 1 else [],
                             "title": str(row[2]) if len(row) > 2 else "",
                             "journal_book_conference_name": str(row[3]) if len(row) > 3 else "",
