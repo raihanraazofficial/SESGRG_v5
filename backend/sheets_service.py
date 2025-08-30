@@ -101,8 +101,7 @@ class SESGSheetsService:
         if self.use_mock_data:
             return self._get_mock_achievement_details(achievement_id)
         else:
-            # TODO: Implement real Google Sheets integration
-            pass
+            return self._get_google_sheets_achievement_details(achievement_id)
     
     def get_news_event_details(self, news_id: str) -> Optional[Dict[str, Any]]:
         """Get detailed news/event for blog-style page"""
