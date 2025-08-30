@@ -478,7 +478,6 @@ Best regards,`;
             <div className="flex flex-col items-center justify-center space-y-4">
               {/* Main Pagination Controls - Centered */}
               <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-2 order-2 md:order-1">
                 <Button
                   variant="outline"
                   size="sm"
@@ -530,8 +529,8 @@ Best regards,`;
                 </Button>
               </div>
               
-              {/* Go to Page */}
-              <div className="flex items-center space-x-2 order-1 md:order-2">
+              {/* Go to Page - Below main pagination */}
+              <div className="flex items-center space-x-2">
                 <span className="text-xs md:text-sm text-gray-600">Go to page:</span>
                 <Input
                   type="number"
