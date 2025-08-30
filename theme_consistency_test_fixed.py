@@ -160,7 +160,7 @@ def test_achievements_comprehensive():
         
         # Check first item structure for Read More requirements
         first_item = achievements[0]
-        required_fields = ["id", "title", "description", "date", "category", "image"]
+        required_fields = ["id", "title", "short_description", "date", "category", "image"]
         
         missing_required = [field for field in required_fields if field not in first_item]
         if missing_required:
