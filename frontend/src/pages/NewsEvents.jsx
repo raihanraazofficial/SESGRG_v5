@@ -586,10 +586,22 @@ const NewsEvents = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">News & Events</h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            Stay updated with the latest news, events, and achievements from our research lab. 
-            Discover our recent breakthroughs and upcoming activities in sustainable energy and smart grid research.
-          </p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <p className="text-xl text-gray-600 max-w-4xl text-center">
+              Stay updated with the latest news, events, and achievements from our research lab. 
+              Discover our recent breakthroughs and upcoming activities in sustainable energy and smart grid research.
+            </p>
+            <Button
+              onClick={() => fetchNewsEvents(true)}
+              disabled={refreshing}
+              variant="outline"
+              size="sm"
+              className="ml-4 flex-shrink-0"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing...' : 'Refresh'}
+            </Button>
+          </div>
 
           {/* Category Filter Buttons */}
           <div className="flex justify-center flex-wrap gap-4 mb-8">
