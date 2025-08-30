@@ -297,39 +297,45 @@ const NewsEvents = () => {
             {/* Advanced Filters */}
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
-                <Select
-                  value={filters.category_filter || "all"}
-                  onValueChange={(value) => handleFilterChange('category_filter', value === "all" ? "" : value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Category</label>
+                  <Select
+                    value={filters.category_filter || "all"}
+                    onValueChange={(value) => handleFilterChange('category_filter', value === "all" ? "" : value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {categories.map(category => (
+                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <Select
-                  value={`${filters.sort_by}-${filters.sort_order}`}
-                  onValueChange={(value) => {
-                    const [sort_by, sort_order] = value.split('-');
-                    handleFilterChange('sort_by', sort_by);
-                    handleFilterChange('sort_order', sort_order);
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date-desc">Date (Newest)</SelectItem>
-                    <SelectItem value="date-asc">Date (Oldest)</SelectItem>
-                    <SelectItem value="title-asc">Title (A-Z)</SelectItem>
-                    <SelectItem value="title-desc">Title (Z-A)</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
+                  <Select
+                    value={`${filters.sort_by}-${filters.sort_order}`}
+                    onValueChange={(value) => {
+                      const [sort_by, sort_order] = value.split('-');
+                      handleFilterChange('sort_by', sort_by);
+                      handleFilterChange('sort_order', sort_order);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Sort Option" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="date-desc">Date (Newest First)</SelectItem>
+                      <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
+                      <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                      <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             )}
 
