@@ -53,28 +53,48 @@ function doGet(e) {
     const data = rows.map(row => {
       const obj = {};
       headers.forEach((header, index) => {
-        obj[header.toLowerCase().trim()] = row[index] || '';
+        const headerKey = header.toLowerCase().trim();
+        let value = row[index] || '';
+        
+        // Handle boolean fields
+        if (headerKey === 'featured') {
+          value = (value.toString().toLowerCase() === 'true');
+        }
+        
+        obj[headerKey] = value;
       });
       return obj;
+    });
+    
+    // Sort data: Featured items first, then by date (newest first)
+    const sortedData = data.sort((a, b) => {
+      // Featured items first
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      
+      // Then sort by date (newest first)
+      const dateA = new Date(a.date || '1900-01-01');
+      const dateB = new Date(b.date || '1900-01-01');
+      return dateB - dateA;
     });
     
     // News & Events এর জন্য
     if (sheetName === 'sheet9') {
       return ContentService
-        .createTextOutput(JSON.stringify({news_events: data}))
+        .createTextOutput(JSON.stringify({news_events: sortedData}))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
     // Achievements এর জন্য
     if (sheetName === 'sheet8') {
       return ContentService
-        .createTextOutput(JSON.stringify({achievements: data}))
+        .createTextOutput(JSON.stringify({achievements: sortedData}))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
     // Default response
     return ContentService
-      .createTextOutput(JSON.stringify({data: data}))
+      .createTextOutput(JSON.stringify({data: sortedData}))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
