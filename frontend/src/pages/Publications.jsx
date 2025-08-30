@@ -126,7 +126,7 @@ Best regards,`;
           </p>
           
           {/* Statistics */}
-          <div className="flex justify-center space-x-8 mb-8">
+          <div className="flex justify-center flex-wrap gap-6 mb-8">
             <div className="text-center">
               <p className="text-3xl font-bold text-emerald-600">{statistics.total_publications || 0}</p>
               <p className="text-gray-600">Total Publications</p>
@@ -135,6 +135,46 @@ Best regards,`;
               <p className="text-3xl font-bold text-blue-600">{statistics.total_citations || 0}</p>
               <p className="text-gray-600">Total Citations</p>
             </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-purple-600">{statistics.latest_year || new Date().getFullYear()}</p>
+              <p className="text-gray-600">Latest Year</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-orange-600">{statistics.total_areas || 7}</p>
+              <p className="text-gray-600">Research Areas</p>
+            </div>
+          </div>
+
+          {/* Category Filter Buttons */}
+          <div className="flex justify-center space-x-4 mb-8">
+            <Button
+              variant={filters.category_filter === '' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', '')}
+              className="px-6 py-2"
+            >
+              All Publications
+            </Button>
+            <Button
+              variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
+              className="px-6 py-2"
+            >
+              Journal Articles
+            </Button>
+            <Button
+              variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
+              className="px-6 py-2"
+            >
+              Conference Proceedings
+            </Button>
+            <Button
+              variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
+              className="px-6 py-2"
+            >
+              Book Chapters
+            </Button>
           </div>
         </div>
 
