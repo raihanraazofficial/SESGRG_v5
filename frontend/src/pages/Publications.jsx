@@ -324,15 +324,15 @@ Best regards,`;
             {publications.map((publication) => (
               <Card key={publication.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-8">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
+                    <div className="flex-1 lg:mr-6">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight">
                         {publication.title}
                       </h3>
-                      <p className="text-gray-700 mb-2">
+                      <p className="text-gray-700 mb-2 text-sm md:text-base">
                         <strong>Authors:</strong> {publication.authors.join(', ')}
                       </p>
-                      <p className="text-gray-600 mb-3">
+                      <p className="text-gray-600 mb-3 text-sm md:text-base">
                         {publication.publication_info}
                       </p>
                       {publication.abstract && (
@@ -341,18 +341,25 @@ Best regards,`;
                         </p>
                       )}
                     </div>
-                    <div className="ml-6 text-right">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    <div className="flex lg:flex-col justify-between lg:justify-start items-center lg:items-end lg:text-right space-x-4 lg:space-x-0 lg:space-y-2">
+                      <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
                         publication.category === 'Journal Articles' ? 'bg-blue-100 text-blue-700' :
                         publication.category === 'Conference Proceedings' ? 'bg-green-100 text-green-700' :
-                        'bg-purple-100 text-purple-700'
+                        publication.category === 'Book Chapters' ? 'bg-purple-100 text-purple-700' :
+                        'bg-orange-100 text-orange-700'
                       }`}>
                         {publication.category}
                       </span>
-                      <p className="text-2xl font-bold text-emerald-600 mt-2">
-                        {publication.citations}
-                      </p>
-                      <p className="text-sm text-gray-500">Citations</p>
+                      <div className="text-center lg:text-right">
+                        <p className="text-xl md:text-2xl font-bold text-emerald-600">
+                          {publication.citations}
+                        </p>
+                        <p className="text-xs md:text-sm text-gray-500">Citations</p>
+                      </div>
+                      <div className="text-center lg:text-right">
+                        <p className="text-lg font-semibold text-gray-900">{publication.year}</p>
+                        <p className="text-xs md:text-sm text-gray-500">Published</p>
+                      </div>
                     </div>
                   </div>
 
