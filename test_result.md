@@ -242,11 +242,14 @@ frontend:
     file: "pages/NewsEvents.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Enhanced News & Events page with improved layout where the first news item is displayed as a large featured card and remaining items in 2-3 card grid layout. Maintained all existing functionality including three categories (News, Events, Upcoming Events), search and filtering, pagination with go-to-page system, and Google Calendar iframe at the bottom."
+      - working: true
+        agent: "testing"
+        comment: "Backend API testing completed successfully. GET /api/news-events endpoint working perfectly with category filtering (Upcoming Event: 10 items, News: 10 items, Achievement: 10 items, Event: 10 items), sorting by date/title, pagination, and combined filtering. News-events details endpoint (/api/news-events/{id}) working correctly with full content retrieval. All functionality ready for frontend integration."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
