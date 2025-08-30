@@ -2919,6 +2919,7 @@ if __name__ == "__main__":
         test_projects_endpoint,
         test_achievements_endpoint,
         test_news_events_endpoint,
+        test_featured_items_and_short_description,
         test_latex_rendering_support,
         test_achievement_details_endpoint,
         test_news_event_details_endpoint,
