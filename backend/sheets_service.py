@@ -1605,7 +1605,7 @@ class SESGSheetsService:
                             "category": str(row.get('category', 'News')),
                             "date": str(row.get('date', '')),
                             "image": str(row.get('image', 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800')),
-                            "full_content": str(row.get('full_content', ''))
+                            "full_content": str(row.get('description', row.get('full_content', '')))
                         }
                     else:
                         # Handle array format
