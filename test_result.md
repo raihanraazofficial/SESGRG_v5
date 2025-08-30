@@ -230,7 +230,7 @@ frontend:
     file: "pages/Achievements.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
@@ -241,6 +241,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Re-tested Achievements API as specifically requested in review. CONFIRMED: All backend functionality working perfectly. Available categories: Award (7 items), Partnership (7 items), Publication (5 items), Grant (6 items). Note: Requested categories 'Awards', 'Recognition', 'Milestones' not available in current mock data - available categories are Award, Partnership, Publication, Grant. Search functionality working correctly. Sorting by date/title in both directions working. Pagination with multiple page sizes working properly. Detailed view endpoint working with rich blog-style content including headers, formatting, and comprehensive achievement descriptions. All backend APIs fully functional and production-ready."
+      - working: true
+        agent: "main"
+        comment: "FIXED category filter button issues in Achievements page: 1) Updated category filter buttons to use correct backend category names: 'Award' (displayed as 'Awards'), 'Partnership' (displayed as 'Partnerships'), 'Publication' (displayed as 'Publications'), 'Grant' (displayed as 'Grants'). 2) Fixed both top category filter buttons and dropdown select options to match backend API exactly. 3) The frontend now correctly corresponds to available backend categories instead of non-existent categories. Ready for frontend testing to verify all category filters work correctly with the backend API."
 
   - task: "News & Events Page with Categories"
     implemented: true
