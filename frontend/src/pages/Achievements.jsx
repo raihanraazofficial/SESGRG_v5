@@ -163,14 +163,46 @@ const Achievements = () => {
           </p>
         </div>
 
+        {/* Category Filter Buttons */}
+        <div className="flex justify-center flex-wrap gap-4 mb-8">
+          <Button
+            variant={filters.category_filter === '' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', '')}
+            className="px-6 py-2"
+          >
+            All Categories
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Awards' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Awards')}
+            className="px-6 py-2"
+          >
+            Awards
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Recognition' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Recognition')}
+            className="px-6 py-2"
+          >
+            Recognition
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Milestones' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Milestones')}
+            className="px-6 py-2"
+          >
+            Milestones
+          </Button>
+        </div>
+
         {/* Search and Filters */}
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Search Achievements</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Search & Filter</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -181,11 +213,44 @@ const Achievements = () => {
                 />
               </div>
               
-              <div className="flex justify-end">
-                <Button variant="outline" onClick={clearFilters}>
-                  Clear Search
-                </Button>
-              </div>
+              <Select
+                value={filters.category_filter}
+                onValueChange={(value) => handleFilterChange('category_filter', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="Awards">Awards</SelectItem>
+                  <SelectItem value="Recognition">Recognition</SelectItem>
+                  <SelectItem value="Milestones">Milestones</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={`${filters.sort_by}-${filters.sort_order}`}
+                onValueChange={(value) => {
+                  const [sort_by, sort_order] = value.split('-');
+                  setFilters(prev => ({ ...prev, sort_by, sort_order, page: 1 }));
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date-desc">Date (Newest First)</SelectItem>
+                  <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
+                  <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                  <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear All Filters
+              </Button>
             </div>
           </CardContent>
         </Card>
