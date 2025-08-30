@@ -280,6 +280,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "COMPREHENSIVE FRONTEND TESTING COMPLETED: ✅ All category filters working perfectly - News (11 items), Events (10 items), Upcoming Events (10 items), All Categories (15 items). ✅ Advanced blogging features fully functional - 'Read More' buttons open new windows with rich blog content, emerald/blue theme styling consistent, mathematical content keywords detected. ✅ Homepage auto-update verified - Latest News & Events section displays 4 current items from API. ✅ Blog generation tested across multiple articles with proper theme styling (emerald for achievements, blue for news). ✅ All requested functionality working without errors. Category filter fixes successful and production-ready."
+      - working: true
+        agent: "main"
+        comment: "FIXED 'Read More' theme consistency: Modified News & Events page to use exactly the same generateBlogContent function as Achievements page. Removed dependency on complex blogGenerator utility and implemented the same simple emerald theme styling. Both pages now create identical themed blog pages when 'Read More' is clicked, with consistent emerald colors (emerald-600, emerald-100, emerald-50), same layout structure, and matching styling throughout. Ready for testing to verify theme consistency."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
