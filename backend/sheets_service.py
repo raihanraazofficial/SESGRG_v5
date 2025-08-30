@@ -1123,17 +1123,37 @@ class SESGSheetsService:
             
         return publications
 
-    def _parse_authors(self, authors_str: str) -> List[str]:
-        """Parse authors string into list"""
-        if not authors_str or authors_str.strip() == '':
+    def _parse_authors(self, authors_input) -> List[str]:
+        """Parse authors string or list into list"""
+        if not authors_input:
             return []
-        return [author.strip() for author in str(authors_str).split(',') if author.strip()]
+        
+        # If it's already a list, return it
+        if isinstance(authors_input, list):
+            return [str(author).strip() for author in authors_input if str(author).strip()]
+        
+        # If it's a string, split by comma
+        if isinstance(authors_input, str):
+            return [author.strip() for author in authors_input.split(',') if author.strip()]
+        
+        # Fallback
+        return [str(authors_input).strip()] if str(authors_input).strip() else []
 
-    def _parse_research_areas(self, areas_str: str) -> List[str]:
-        """Parse research areas string into list"""
-        if not areas_str or areas_str.strip() == '':
+    def _parse_research_areas(self, areas_input) -> List[str]:
+        """Parse research areas string or list into list"""
+        if not areas_input:
             return []
-        return [area.strip() for area in str(areas_str).split(',') if area.strip()]
+        
+        # If it's already a list, return it
+        if isinstance(areas_input, list):
+            return [str(area).strip() for area in areas_input if str(area).strip()]
+        
+        # If it's a string, split by comma
+        if isinstance(areas_input, str):
+            return [area.strip() for area in areas_input.split(',') if area.strip()]
+        
+        # Fallback
+        return [str(areas_input).strip()] if str(areas_input).strip() else []
 
     def _generate_ieee_format(self, publication: Dict[str, Any]) -> str:
         """Generate IEEE formatted citation based on publication type"""
