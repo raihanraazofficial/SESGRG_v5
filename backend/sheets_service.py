@@ -1558,15 +1558,18 @@ class SESGSheetsService:
                         achievement = {
                             "id": f"ach_{row.get('id', i):03d}",
                             "title": str(row.get('title', '')),
-                            "short_description": str(row.get('short_description', '')),
+                            # Fix: Map 'description' to 'short_description' for display
+                            "short_description": str(row.get('description', row.get('short_description', ''))),
                             "category": str(row.get('category', 'Award')),
                             "date": str(row.get('date', '')),
                             "image": str(row.get('image', 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800')),
-                            "full_content": str(row.get('description', row.get('full_content', '')))
+                            "full_content": str(row.get('full_content', row.get('description', ''))),
+                            # Add featured field support
+                            "featured": int(row.get('featured', 0)) if str(row.get('featured', 0)).isdigit() else 0
                         }
                     else:
                         # Handle array format
-                        # Expected order: Title, Short Description, Category, Date, Image, Full Content
+                        # Expected order: Title, Description, Category, Date, Image, Full Content, Featured
                         
                         # Skip header row if exists
                         if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'achievement title']:
@@ -1579,7 +1582,8 @@ class SESGSheetsService:
                             "category": str(row[2]) if len(row) > 2 else "Award",
                             "date": str(row[3]) if len(row) > 3 else "",
                             "image": str(row[4]) if len(row) > 4 and str(row[4]).startswith('http') else "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800",
-                            "full_content": str(row[5]) if len(row) > 5 else ""
+                            "full_content": str(row[5]) if len(row) > 5 else "",
+                            "featured": int(row[6]) if len(row) > 6 and str(row[6]).isdigit() else 0
                         }
                     
                     # Only add if title is not empty
