@@ -24,9 +24,23 @@ const Achievements = () => {
     fetchAchievements();
   }, [filters]);
 
-  const fetchAchievements = async () => {
+  const fetchAchievements = async (forceRefresh = false) => {
     try {
-      setLoading(true);
+      if (forceRefresh) {
+        setRefreshing(true);
+        // Clear cache first
+        try {
+          await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/clear-cache`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+        } catch (cacheError) {
+          console.warn('Cache clear failed:', cacheError);
+        }
+      } else {
+        setLoading(true);
+      }
+      
       // Convert 'all' to empty string for API
       const apiFilters = {
         ...filters,
@@ -42,6 +56,7 @@ const Achievements = () => {
       setPagination({});
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
