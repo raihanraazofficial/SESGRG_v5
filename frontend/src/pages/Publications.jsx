@@ -529,7 +529,7 @@ Best regards,`;
               </div>
               
               {/* Go to Page */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 order-1 md:order-2">
                 <span className="text-xs md:text-sm text-gray-600">Go to page:</span>
                 <Input
                   type="number"
