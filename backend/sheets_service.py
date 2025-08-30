@@ -954,12 +954,19 @@ class SESGSheetsService:
     def _sort_news_events(self, news_events, sort_by, sort_order):
         reverse = sort_order == "desc"
         
-        if sort_by == "date":
-            return sorted(news_events, key=lambda x: x["date"], reverse=reverse)
-        elif sort_by == "title":
-            return sorted(news_events, key=lambda x: x["title"], reverse=reverse)
-        else:
-            return news_events
+        # Always prioritize featured items first, then apply the requested sort
+        def sort_key(x):
+            featured_priority = -x.get("featured", 0)  # Featured items (1) get negative value for priority
+            
+            if sort_by == "date":
+                return (featured_priority, x["date"])
+            elif sort_by == "title":
+                return (featured_priority, x["title"].lower())
+            else:
+                return (featured_priority, x["date"])
+        
+        # Sort with featured items always first
+        return sorted(news_events, key=sort_key, reverse=reverse)
 
     def _get_mock_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
         """Get detailed achievement for blog-style page"""
