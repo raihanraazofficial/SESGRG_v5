@@ -1,203 +1,433 @@
-import React, { useState, useMemo } from "react";
-import { Calendar, Clock, Tag, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, Filter, Calendar, Clock, ChevronLeft, ChevronRight, Loader2, ArrowRight, MapPin } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { newsEvents } from "../mock/data";
+import apiService from "../services/api";
 
 const NewsEvents = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState("all");
-  const [sortBy, setSortBy] = useState("date");
+  const [newsEvents, setNewsEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({});
+  const [filters, setFilters] = useState({
+    category_filter: '',
+    title_filter: '',
+    sort_by: 'date',
+    sort_order: 'desc',
+    page: 1,
+    per_page: 15
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
-  const types = ["all", "News", "Event", "Achievement"];
+  const categories = ["News", "Events", "Upcoming Events"];
 
-  const filteredNews = useMemo(() => {
-    let filtered = newsEvents.filter((item) => {
-      const matchesSearch = 
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesType = selectedType === "all" || item.type === selectedType;
-      
-      return matchesSearch && matchesType;
-    });
+  useEffect(() => {
+    fetchNewsEvents();
+  }, [filters]);
 
-    // Sort news items
-    filtered.sort((a, b) => {
-      if (sortBy === "date") return new Date(b.date) - new Date(a.date);
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      return 0;
-    });
-
-    return filtered;
-  }, [searchTerm, selectedType, sortBy]);
-
-  const getTypeColor = (type) => {
-    switch (type) {
-      case "News":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "Event":
-        return "bg-emerald-100 text-emerald-700 border-emerald-200";
-      case "Achievement":
-        return "bg-amber-100 text-amber-700 border-amber-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+  const fetchNewsEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getNewsEvents(filters);
+      setNewsEvents(response.news_events || []);
+      setPagination(response.pagination || {});
+    } catch (error) {
+      console.error('Error fetching news and events:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const NewsCard = ({ item, featured = false }) => (
-    <Card className={`hover:shadow-lg transition-all duration-300 border-0 shadow-md ${featured ? 'md:col-span-2' : ''}`}>
-      <CardContent className="p-0">
-        {item.image && (
-          <div className="aspect-video overflow-hidden rounded-t-lg">
-            <img 
-              src={item.image} 
-              alt={item.title}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-        )}
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-3">
-            <Badge className={`${getTypeColor(item.type)} border flex items-center gap-1`}>
-              <Tag className="h-3 w-3" />
-              {item.type}
-            </Badge>
-            <div className="flex items-center text-sm text-gray-500">
-              <Calendar className="h-4 w-4 mr-1" />
-              {new Date(item.date).toLocaleDateString()}
-            </div>
-          </div>
-          
-          <h3 className={`font-semibold text-gray-900 mb-3 hover:text-emerald-600 transition-colors ${featured ? 'text-2xl' : 'text-lg'} leading-tight`}>
-            {item.title}
-          </h3>
-          
-          <p className="text-gray-600 leading-relaxed">
-            {item.description}
-          </p>
-          
-          <div className="mt-4 flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-500">
-              <Clock className="h-4 w-4 mr-1" />
-              {Math.ceil(item.description.length / 100)} min read
-            </div>
-            <button className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
-              Read More →
-            </button>
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+      page: 1
+    }));
+  };
+
+  const handlePageChange = (newPage) => {
+    setFilters(prev => ({ ...prev, page: newPage }));
+  };
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= pagination.total_pages) {
+      handlePageChange(page);
+    }
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category_filter: '',
+      title_filter: '',
+      sort_by: 'date',
+      sort_order: 'desc',
+      page: 1,
+      per_page: 15
+    });
+  };
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'News':
+        return 'bg-emerald-100 text-emerald-700';
+      case 'Events':
+        return 'bg-blue-100 text-blue-700';
+      case 'Upcoming Events':
+        return 'bg-purple-100 text-purple-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const generateBlogContent = (item) => {
+    // This function would generate a blog-style page from the item description
+    // For now, we'll navigate to a simple detail page
+    const blogHtml = `
+      <div class="max-w-4xl mx-auto px-4 py-12">
+        <div class="mb-8">
+          <span class="px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(item.category).replace('text-', 'text-').replace('bg-', 'bg-')}">${item.category}</span>
+          <h1 class="text-4xl font-bold text-gray-900 mt-4 mb-4">${item.title}</h1>
+          <div class="flex items-center text-gray-600 mb-6">
+            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            ${formatDate(item.date)}
           </div>
         </div>
-      </CardContent>
-    </Card>
-  );
+        ${item.image ? `<img src="${item.image}" alt="${item.title}" class="w-full h-64 object-cover rounded-lg mb-8">` : ''}
+        <div class="prose max-w-none">
+          ${item.description.split('\n').map(p => `<p class="mb-4 leading-relaxed">${p}</p>`).join('')}
+        </div>
+      </div>
+    `;
+    
+    const newWindow = window.open('', '_blank');
+    newWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${item.title} - SESG Research</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-gray-50">
+        ${blogHtml}
+      </body>
+      </html>
+    `);
+    newWindow.document.close();
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">News & Events</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Stay updated with the latest developments, research breakthroughs, and upcoming events from our lab.
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">News & Events</h1>
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+            Stay updated with the latest news, events, and achievements from our research lab. 
+            Discover our recent breakthroughs and upcoming activities in sustainable energy and smart grid research.
           </p>
-        </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {types.slice(1).map((type) => {
-            const count = newsEvents.filter(item => item.type === type).length;
-            return (
-              <div key={type} className="bg-white rounded-lg p-6 text-center shadow-sm">
-                <div className={`inline-flex p-3 rounded-full ${getTypeColor(type).replace('text-', 'bg-').replace('border-', '').split(' ')[0]} mb-3`}>
-                  <Tag className="h-6 w-6" />
-                </div>
-                <p className="text-2xl font-bold text-gray-900">{count}</p>
-                <p className="text-sm text-gray-600">{type}s</p>
-              </div>
-            );
-          })}
+          {/* Category Filter Buttons */}
+          <div className="flex justify-center flex-wrap gap-4 mb-8">
+            <Button
+              variant={filters.category_filter === '' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', '')}
+              className="px-6 py-2"
+            >
+              All Categories
+            </Button>
+            <Button
+              variant={filters.category_filter === 'News' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'News')}
+              className="px-6 py-2"
+            >
+              News
+            </Button>
+            <Button
+              variant={filters.category_filter === 'Events' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Events')}
+              className="px-6 py-2"
+            >
+              Events
+            </Button>
+            <Button
+              variant={filters.category_filter === 'Upcoming Events' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Upcoming Events')}
+              className="px-6 py-2"
+            >
+              Upcoming Events
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Search & Filter</h3>
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2"
+              >
+                <Filter className="h-4 w-4" />
+                <span>{showFilters ? 'Hide' : 'Show'} Filters</span>
+              </Button>
+            </div>
+
+            {/* Search */}
+            <div className="mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search news and events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search by title..."
+                  value={filters.title_filter}
+                  onChange={(e) => handleFilterChange('title_filter', e.target.value)}
                   className="pl-10"
                 />
               </div>
             </div>
-            
-            <div className="flex gap-4">
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {types.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type === "all" ? "All Types" : type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="date">Date</SelectItem>
-                  <SelectItem value="title">Title</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <div className="mt-4">
-            <p className="text-sm text-gray-600">
-              Showing {filteredNews.length} of {newsEvents.length} items
-            </p>
-          </div>
-        </div>
 
-        {/* News Grid */}
-        {filteredNews.length > 0 && (
-          <div className="space-y-8">
-            {/* Featured News Item */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">Featured</h2>
-              <NewsCard item={filteredNews[0]} featured={true} />
-            </div>
+            {/* Advanced Filters */}
+            {showFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                <Select
+                  value={filters.category_filter}
+                  onValueChange={(value) => handleFilterChange('category_filter', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Categories</SelectItem>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-            {/* Recent News Grid */}
-            {filteredNews.length > 1 && (
-              <>
-                <h2 className="text-2xl font-semibold text-gray-900">Recent Updates</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredNews.slice(1).map((item) => (
-                    <NewsCard key={item.id} item={item} />
-                  ))}
-                </div>
-              </>
+                <Select
+                  value={`${filters.sort_by}-${filters.sort_order}`}
+                  onValueChange={(value) => {
+                    const [sort_by, sort_order] = value.split('-');
+                    handleFilterChange('sort_by', sort_by);
+                    handleFilterChange('sort_order', sort_order);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="date-desc">Date (Newest)</SelectItem>
+                    <SelectItem value="date-asc">Date (Oldest)</SelectItem>
+                    <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                    <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             )}
+
+            {/* Clear Filters */}
+            <div className="flex justify-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear All Filters
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+            <span className="ml-3 text-lg text-gray-600">Loading News & Events...</span>
           </div>
         )}
 
-        {filteredNews.length === 0 && (
-          <div className="text-center py-12">
-            <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No news or events found</h3>
-            <p className="text-gray-600">Try adjusting your search criteria or filters.</p>
+        {/* News & Events Grid */}
+        {!loading && newsEvents.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {newsEvents.map((item) => (
+              <Card key={item.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                {/* Image */}
+                {item.image && (
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(item.category)}`}>
+                        {item.category}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
+                      {item.title}
+                    </h3>
+
+                    {/* Date and Location */}
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        <span>{formatDate(item.date)}</span>
+                      </div>
+                      {item.location && (
+                        <div className="flex items-center text-sm text-gray-600">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span>{item.location}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                      {item.description}
+                    </p>
+
+                    {/* Read More Button */}
+                    <div className="pt-4 border-t border-gray-200">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
+                        onClick={() => generateBlogContent(item)}
+                      >
+                        Read More <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
+
+        {/* No Results */}
+        {!loading && newsEvents.length === 0 && (
+          <div className="text-center py-20">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">No news or events found</h3>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
+            <Button onClick={clearFilters}>Clear All Filters</Button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!loading && pagination.total_pages > 1 && (
+          <div className="flex items-center justify-between mt-12 p-6 bg-white rounded-lg shadow">
+            <div className="text-sm text-gray-600">
+              Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
+              {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)} of{' '}
+              {pagination.total_items} items
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                onClick={() => goToPage(pagination.current_page - 1)}
+                disabled={!pagination.has_prev}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Previous
+              </Button>
+              
+              {/* Page Numbers */}
+              <div className="flex space-x-1">
+                {Array.from({ length: Math.min(5, pagination.total_pages) }, (_, i) => {
+                  let pageNum;
+                  if (pagination.total_pages <= 5) {
+                    pageNum = i + 1;
+                  } else if (pagination.current_page <= 3) {
+                    pageNum = i + 1;
+                  } else if (pagination.current_page >= pagination.total_pages - 2) {
+                    pageNum = pagination.total_pages - 4 + i;
+                  } else {
+                    pageNum = pagination.current_page - 2 + i;
+                  }
+                  
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={pageNum === pagination.current_page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => goToPage(pageNum)}
+                      className="w-10"
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => goToPage(pagination.current_page + 1)}
+                disabled={!pagination.has_next}
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+            
+            {/* Go to Page */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Go to page:</span>
+              <Input
+                type="number"
+                min="1"
+                max={pagination.total_pages}
+                className="w-20"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    const page = parseInt(e.target.value);
+                    if (page && page >= 1 && page <= pagination.total_pages) {
+                      goToPage(page);
+                      e.target.value = '';
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Google Calendar Iframe */}
+        <div className="mt-16">
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Upcoming Events Calendar</h3>
+              <div className="w-full h-96 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://calendar.google.com/calendar/embed?src=en.bd%23holiday%40group.v.calendar.google.com&ctz=Asia%2FDhaka"
+                  style={{ border: 0 }}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  scrolling="no"
+                  className="rounded-lg"
+                  title="SESG Research Events Calendar"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
