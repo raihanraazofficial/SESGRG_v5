@@ -48,9 +48,21 @@ const Publications = () => {
     try {
       setLoading(true);
       const response = await apiService.getPublications(filters);
-      setPublications(response.publications || []);
+      const pubs = response.publications || [];
+      
+      setPublications(pubs);
       setPagination(response.pagination || {});
       setStatistics(response.statistics || {});
+      
+      // Extract unique years and research areas from all publications
+      if (pubs.length > 0) {
+        const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
+        const allAreas = pubs.flatMap(pub => pub.research_areas || []);
+        const uniqueAreas = [...new Set(allAreas)].sort();
+        
+        setAvailableYears(uniqueYears);
+        setAvailableAreas(uniqueAreas);
+      }
     } catch (error) {
       console.error('Error fetching publications:', error);
     } finally {
