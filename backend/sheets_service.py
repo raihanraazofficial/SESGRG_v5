@@ -1612,7 +1612,7 @@ class SESGSheetsService:
                     # Handle object format (direct from Google Sheets API)
                     if isinstance(row, dict):
                         news_event = {
-                            "id": f"news_{row.get('id', i):03d}",
+                            "id": f"news_{str(row.get('id', i)).zfill(3) if str(row.get('id', i)).isdigit() else str(row.get('id', f'{i:03d}'))}",
                             "title": str(row.get('title', '')),
                             "short_description": str(row.get('short_description', '')),
                             "category": str(row.get('category', 'News')),
