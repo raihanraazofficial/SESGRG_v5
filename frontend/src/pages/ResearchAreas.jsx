@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { researchAreas } from "../mock/data";
 
 const ResearchAreas = () => {
   const iconMap = {
