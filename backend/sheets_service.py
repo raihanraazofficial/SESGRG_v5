@@ -1129,6 +1129,19 @@ class SESGSheetsService:
             
         return publications
 
+    def _normalize_category(self, category: str) -> str:
+        """Normalize category names to standard format"""
+        category_lower = category.lower().strip()
+        
+        if 'journal' in category_lower:
+            return "Journal Articles"
+        elif 'conference' in category_lower or 'proceeding' in category_lower:
+            return "Conference Proceedings"
+        elif 'book' in category_lower or 'chapter' in category_lower:
+            return "Book Chapters"
+        else:
+            return category.strip() or "Journal Articles"
+
     def _parse_authors(self, authors_input) -> List[str]:
         """Parse authors string or list into list"""
         if not authors_input:
