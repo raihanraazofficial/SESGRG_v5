@@ -11,6 +11,7 @@ const Achievements = () => {
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({
     title_filter: '',
+    category_filter: '',
     sort_by: 'date',
     sort_order: 'desc',
     page: 1,
