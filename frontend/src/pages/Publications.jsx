@@ -280,12 +280,14 @@ Best regards,`;
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="year-desc">Year (Newest)</SelectItem>
-                      <SelectItem value="year-asc">Year (Oldest)</SelectItem>
-                      <SelectItem value="citations-desc">Citations (High)</SelectItem>
-                      <SelectItem value="citations-asc">Citations (Low)</SelectItem>
+                      <SelectItem value="year-desc">Year (Newest First)</SelectItem>
+                      <SelectItem value="year-asc">Year (Oldest First)</SelectItem>
+                      <SelectItem value="citations-desc">Citations (High to Low)</SelectItem>
+                      <SelectItem value="citations-asc">Citations (Low to High)</SelectItem>
                       <SelectItem value="title-asc">Title (A-Z)</SelectItem>
                       <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                      <SelectItem value="area-asc">Research Area (A-Z)</SelectItem>
+                      <SelectItem value="area-desc">Research Area (Z-A)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
