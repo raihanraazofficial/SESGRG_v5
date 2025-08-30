@@ -938,50 +938,24 @@ class SESGSheetsService:
         reverse = sort_order == "desc"
         
         # Always prioritize featured items first, then apply the requested sort
-        def sort_key(x):
-            featured_priority = -x.get("featured", 0)  # Featured items (1) get negative value for priority
-            
-            if sort_by == "date":
-                # For date sorting, reverse the secondary sort but keep featured priority intact
-                secondary_sort = x["date"]
-                if reverse:
-                    # For descending date, we want newer dates first, so negate the date for proper sorting
-                    return (featured_priority, secondary_sort)
-                else:
-                    return (featured_priority, secondary_sort)
-            elif sort_by == "title":
-                secondary_sort = x["title"].lower()
-                if reverse:
-                    # For descending title (Z-A), we need to handle this in the secondary sort
-                    return (featured_priority, secondary_sort)
-                else:
-                    return (featured_priority, secondary_sort)
-            else:
-                # Default to date sorting
-                secondary_sort = x["date"]
-                return (featured_priority, secondary_sort)
+        # Split into featured and non-featured groups to maintain featured priority
+        featured_items = [item for item in achievements if item.get("featured", 0) == 1]
+        non_featured_items = [item for item in achievements if item.get("featured", 0) == 0]
         
-        # Sort with featured items always first, but handle reverse for secondary sort only
-        if sort_by == "title":
-            # For title sorting, we can use reverse directly since string comparison works correctly
-            return sorted(achievements, key=sort_key, reverse=reverse)
+        # Sort each group separately
+        if sort_by == "date":
+            featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+        elif sort_by == "title":
+            featured_items.sort(key=lambda x: x["title"].lower(), reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["title"].lower(), reverse=reverse)
         else:
-            # For date sorting, we need to handle the reverse logic more carefully
-            # First sort by featured priority (always ascending to keep featured first)
-            # Then sort by date within each group
-            featured_items = [item for item in achievements if item.get("featured", 0) == 1]
-            non_featured_items = [item for item in achievements if item.get("featured", 0) == 0]
-            
-            # Sort each group separately
-            if sort_by == "date":
-                featured_items.sort(key=lambda x: x["date"], reverse=reverse)
-                non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
-            else:
-                featured_items.sort(key=lambda x: x["date"], reverse=reverse)
-                non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
-            
-            # Combine with featured items first
-            return featured_items + non_featured_items
+            # Default to date sorting
+            featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+        
+        # Combine with featured items first
+        return featured_items + non_featured_items
     
     def _apply_news_filters(self, news_events, category_filter, title_filter):
         filtered = news_events
