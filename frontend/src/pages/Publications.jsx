@@ -403,7 +403,7 @@ Best regards,`;
                   </div>
 
                   {/* Research Areas */}
-                  <div className="flex flex-wrap gap-1.5 mb-3">
+                  <div className="flex flex-wrap gap-1.5 mb-2">
                     {publication.research_areas.map((area, index) => (
                       <span
                         key={index}
