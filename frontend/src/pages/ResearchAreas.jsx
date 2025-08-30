@@ -4,12 +4,6 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
 
-import React, { useState } from "react";
-import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight, Folder, FileText, Sun, Brain, ExternalLink } from "lucide-react";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { researchAreas } from "../mock/data";
-
 const ResearchAreas = () => {
   const [selectedArea, setSelectedArea] = useState(null);
 
@@ -277,7 +271,5 @@ const ResearchAreas = () => {
     </div>
   );
 };
-
-export default ResearchAreas;
 
 export default ResearchAreas;
