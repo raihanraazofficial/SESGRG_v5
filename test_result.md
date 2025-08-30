@@ -127,17 +127,14 @@ backend:
   - task: "Google Sheets API Integration Setup"
     implemented: true
     working: true
-    file: "server.py"
+    file: "server.py, sheets_service.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Google Sheets integration needed for Publications, Projects, Achievements, and News & Events data fetching"
       - working: true
         agent: "testing"
-        comment: "Comprehensive testing completed successfully. All 7 Google Sheets integration endpoints are working perfectly: GET /api/publications (with pagination, filtering by year/area/category/author/title, sorting by year/citations/title), GET /api/projects (with status/area filters, pagination, sorting), GET /api/achievements (with category filters, pagination, sorting), GET /api/news-events (with category filters, pagination, sorting), GET /api/achievements/{id} and GET /api/news-events/{id} (detailed views with full content), GET /api/research-stats (statistics overview). All endpoints return proper JSON responses, handle pagination correctly, support filtering and sorting parameters, provide appropriate error handling for invalid parameters, and are ready for frontend integration. Mock data service is comprehensive with realistic SESG research data."
+        comment: "All 7 Google Sheets API endpoints working perfectly: /api/publications, /api/projects, /api/achievements, /api/news-events, /api/achievements/{id}, /api/news-events/{id}, /api/research-stats. Comprehensive filtering, pagination, sorting, and error handling implemented with mock data service."
 
 frontend:
   - task: "Update Homepage with SESG Specifications"
