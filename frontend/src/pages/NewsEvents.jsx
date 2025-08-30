@@ -514,8 +514,9 @@ const NewsEvents = () => {
       <head>
         <title>${item.title} - SESG Research News & Events</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           .prose ul { list-style-type: disc; margin-left: 1.5rem; }
@@ -545,24 +546,76 @@ const NewsEvents = () => {
             border-radius: 12px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           }
+          /* LaTeX Inline Styling */
+          .math-inline-content {
+            background: #ecfdf5;
+            color: #047857;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #a7f3d0;
+            font-family: 'Computer Modern', serif;
+          }
+          /* LaTeX Display Styling */
+          .math-display-content {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+            overflow-x: auto;
+          }
         </style>
       </head>
       <body class="bg-gray-50">
         ${blogHtml}
         
         <script>
-          // MathJax Configuration
-          window.MathJax = {
-            tex: {
-              inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
-              displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
-              processEscapes: true,
-              processEnvironments: true
-            },
-            options: {
-              skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          // KaTeX Configuration and Rendering
+          document.addEventListener('DOMContentLoaded', function() {
+            // Render inline math
+            const inlineMathElements = document.querySelectorAll('.math-inline-content');
+            inlineMathElements.forEach(function(element) {
+              const mathContent = element.getAttribute('data-math');
+              try {
+                katex.render(mathContent, element, {
+                  throwOnError: false,
+                  displayMode: false
+                });
+              } catch (e) {
+                element.innerHTML = 'LaTeX Error: ' + mathContent;
+                element.style.color = '#dc2626';
+              }
+            });
+            
+            // Render display math
+            const displayMathElements = document.querySelectorAll('.math-display-content, .math-content');
+            displayMathElements.forEach(function(element) {
+              const mathContent = element.getAttribute('data-math');
+              try {
+                katex.render(mathContent, element, {
+                  throwOnError: false,
+                  displayMode: true
+                });
+              } catch (e) {
+                element.innerHTML = 'LaTeX Error: ' + mathContent;
+                element.style.color = '#dc2626';
+              }
+            });
+            
+            // Auto-render any remaining LaTeX expressions
+            if (typeof renderMathInElement !== 'undefined') {
+              renderMathInElement(document.body, {
+                delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\\\[', right: '\\\\]', display: true},
+                  {left: '\\\\(', right: '\\\\)', display: false}
+                ],
+                throwOnError: false
+              });
             }
-          };
+          });
         </script>
       </body>
       </html>
