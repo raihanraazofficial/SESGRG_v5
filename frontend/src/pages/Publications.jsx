@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Copy, ExternalLink, Mail, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import {
+  Search, Filter, Copy, ExternalLink, Mail,
+  ChevronLeft, ChevronRight, Loader2
+} from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import apiService from "../services/api";
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue
+} from "../components/ui/select";
 
 const Publications = () => {
   const [publications, setPublications] = useState([]);
@@ -12,13 +17,13 @@ const Publications = () => {
   const [pagination, setPagination] = useState({});
   const [statistics, setStatistics] = useState({});
   const [filters, setFilters] = useState({
-    year_filter: '',
-    area_filter: '',
-    category_filter: '',
-    author_filter: '',
-    title_filter: '',
-    sort_by: 'year',
-    sort_order: 'desc',
+    year_filter: "",
+    area_filter: "",
+    category_filter: "",
+    author_filter: "",
+    title_filter: "",
+    sort_by: "year",
+    sort_order: "desc",
     page: 1,
     per_page: 20
   });
@@ -26,7 +31,7 @@ const Publications = () => {
 
   const researchAreas = [
     "Smart Grid Technologies",
-    "Microgrids & Distributed Energy Systems", 
+    "Microgrids & Distributed Energy Systems",
     "Renewable Energy Integration",
     "Grid Optimization & Stability",
     "Energy Storage Systems",
@@ -35,80 +40,109 @@ const Publications = () => {
   ];
 
   const categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"];
-  const years = Array.from({length: 10}, (_, i) => (new Date().getFullYear() - i).toString());
+  const years = Array.from({ length: 10 }, (_, i) =>
+    (new Date().getFullYear() - i).toString()
+  );
 
   useEffect(() => {
     fetchPublications();
   }, [filters]);
 
+  const buildQuery = () => {
+    const params = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== "") {
+        params.append(key, filters[key]);
+      }
+    });
+    return params.toString();
+  };
+
   const fetchPublications = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getPublications(filters);
-      setPublications(response.publications || []);
-      setPagination(response.pagination || {});
-      setStatistics(response.statistics || {});
+      const query = buildQuery();
+      const url = `${process.env.REACT_APP_PUBLICATIONS_API}${
+        query ? `&${query}` : ""
+      }`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      setPublications(data.publications || data || []);
+      setPagination(data.pagination || {
+        current_page: 1,
+        per_page: filters.per_page,
+        total_items: data.length || 0,
+        total_pages: Math.ceil((data.length || 0) / filters.per_page),
+        has_prev: false,
+        has_next: false
+      });
+      setStatistics(data.statistics || {
+        total_publications: data.length || 0,
+        total_citations: 0,
+        latest_year: new Date().getFullYear(),
+        total_areas: researchAreas.length
+      });
     } catch (error) {
-      console.error('Error fetching publications:', error);
+      console.error("Error fetching publications:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value,
-      page: 1 // Reset to first page when filtering
-    }));
+    setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = newPage => {
     setFilters(prev => ({ ...prev, page: newPage }));
   };
 
-  const goToPage = (page) => {
+  const goToPage = page => {
     if (page >= 1 && page <= pagination.total_pages) {
       handlePageChange(page);
     }
   };
 
-  const copyPaperCitation = async (publication) => {
-    const citation = apiService.generateIEEECitation(publication);
-    const success = await apiService.copyToClipboard(citation);
-    if (success) {
-      alert('Citation copied to clipboard!');
-    } else {
-      alert('Failed to copy citation. Please try again.');
+  const copyPaperCitation = async publication => {
+    const citation = `${publication.authors?.join(", ")}. "${publication.title}," ${publication.publication_info}, ${publication.year}.`;
+    try {
+      await navigator.clipboard.writeText(citation);
+      alert("Citation copied to clipboard!");
+    } catch {
+      alert("Failed to copy citation. Please try again.");
     }
   };
 
-  const requestPaper = (publication) => {
+  const requestPaper = publication => {
     const subject = `Request for Paper: ${publication.title}`;
     const body = `Dear SESG Research Team,
 
 I would like to request access to the following paper:
 
 Title: ${publication.title}
-Authors: ${publication.authors.join(', ')}
+Authors: ${publication.authors?.join(", ")}
 Publication: ${publication.publication_info}
 
 Thank you for your time.
 
 Best regards,`;
-    
-    window.location.href = `mailto:sesg@bracu.ac.bd?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = `mailto:sesg@bracu.ac.bd?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
   };
 
   const clearFilters = () => {
     setFilters({
-      year_filter: '',
-      area_filter: '',
-      category_filter: '',
-      author_filter: '',
-      title_filter: '',
-      sort_by: 'year',
-      sort_order: 'desc',
+      year_filter: "",
+      area_filter: "",
+      category_filter: "",
+      author_filter: "",
+      title_filter: "",
+      sort_by: "year",
+      sort_order: "desc",
       page: 1,
       per_page: 20
     });
@@ -119,62 +153,53 @@ Best regards,`;
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Publications</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Publications
+          </h1>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            Explore our research publications in sustainable energy and smart grid technologies. 
-            Discover cutting-edge research that's shaping the future of energy systems.
+            Explore our research publications in sustainable energy and smart grid technologies.
           </p>
-          
+
           {/* Statistics */}
           <div className="flex justify-center flex-wrap gap-6 mb-8">
             <div className="text-center">
-              <p className="text-3xl font-bold text-emerald-600">{statistics.total_publications || 0}</p>
+              <p className="text-3xl font-bold text-emerald-600">
+                {statistics.total_publications || 0}
+              </p>
               <p className="text-gray-600">Total Publications</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-blue-600">{statistics.total_citations || 0}</p>
+              <p className="text-3xl font-bold text-blue-600">
+                {statistics.total_citations || 0}
+              </p>
               <p className="text-gray-600">Total Citations</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-purple-600">{statistics.latest_year || new Date().getFullYear()}</p>
+              <p className="text-3xl font-bold text-purple-600">
+                {statistics.latest_year || new Date().getFullYear()}
+              </p>
               <p className="text-gray-600">Latest Year</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-orange-600">{statistics.total_areas || 7}</p>
+              <p className="text-3xl font-bold text-orange-600">
+                {statistics.total_areas || researchAreas.length}
+              </p>
               <p className="text-gray-600">Research Areas</p>
             </div>
           </div>
 
-          {/* Category Filter Buttons */}
+          {/* Category Buttons */}
           <div className="flex justify-center space-x-4 mb-8">
-            <Button
-              variant={filters.category_filter === '' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', '')}
-              className="px-6 py-2"
-            >
-              All Publications
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
-              className="px-6 py-2"
-            >
-              Journal Articles
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
-              className="px-6 py-2"
-            >
-              Conference Proceedings
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
-              className="px-6 py-2"
-            >
-              Book Chapters
-            </Button>
+            {["", "Journal Articles", "Conference Proceedings", "Book Chapters"].map(cat => (
+              <Button
+                key={cat || "all"}
+                variant={filters.category_filter === cat ? "default" : "outline"}
+                onClick={() => handleFilterChange("category_filter", cat)}
+                className="px-6 py-2"
+              >
+                {cat || "All Publications"}
+              </Button>
+            ))}
           </div>
         </div>
 
@@ -182,43 +207,44 @@ Best regards,`;
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Search & Filter</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Search & Filter
+              </h3>
               <Button
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center space-x-2"
               >
                 <Filter className="h-4 w-4" />
-                <span>{showFilters ? 'Hide' : 'Show'} Filters</span>
+                <span>{showFilters ? "Hide" : "Show"} Filters</span>
               </Button>
             </div>
 
-            {/* Search */}
+            {/* Search Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   placeholder="Search by title..."
                   value={filters.title_filter}
-                  onChange={(e) => handleFilterChange('title_filter', e.target.value)}
+                  onChange={e => handleFilterChange("title_filter", e.target.value)}
                   className="pl-10"
                 />
               </div>
-              <div className="relative">
-                <Input
-                  placeholder="Search by author..."
-                  value={filters.author_filter}
-                  onChange={(e) => handleFilterChange('author_filter', e.target.value)}
-                />
-              </div>
+              <Input
+                placeholder="Search by author..."
+                value={filters.author_filter}
+                onChange={e => handleFilterChange("author_filter", e.target.value)}
+              />
             </div>
 
             {/* Advanced Filters */}
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                {/* Year */}
                 <Select
                   value={filters.year_filter}
-                  onValueChange={(value) => handleFilterChange('year_filter', value)}
+                  onValueChange={value => handleFilterChange("year_filter", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Year" />
@@ -226,29 +252,35 @@ Best regards,`;
                   <SelectContent>
                     <SelectItem value="">All Years</SelectItem>
                     {years.map(year => (
-                      <SelectItem key={year} value={year}>{year}</SelectItem>
+                      <SelectItem key={year} value={year}>
+                        {year}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
+                {/* Category */}
                 <Select
                   value={filters.category_filter}
-                  onValueChange={(value) => handleFilterChange('category_filter', value)}
+                  onValueChange={value => handleFilterChange("category_filter", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All Categories</SelectItem>
-                    {categories.map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    {categories.map(cat => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
+                {/* Research Area */}
                 <Select
                   value={filters.area_filter}
-                  onValueChange={(value) => handleFilterChange('area_filter', value)}
+                  onValueChange={value => handleFilterChange("area_filter", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Research Area" />
@@ -256,37 +288,36 @@ Best regards,`;
                   <SelectContent>
                     <SelectItem value="">All Areas</SelectItem>
                     {researchAreas.map(area => (
-                      <SelectItem key={area} value={area}>{area}</SelectItem>
+                      <SelectItem key={area} value={area}>
+                        {area}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <div className="flex space-x-2">
-                  <Select
-                    value={`${filters.sort_by}-${filters.sort_order}`}
-                    onValueChange={(value) => {
-                      const [sort_by, sort_order] = value.split('-');
-                      handleFilterChange('sort_by', sort_by);
-                      handleFilterChange('sort_order', sort_order);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="year-desc">Year (Newest)</SelectItem>
-                      <SelectItem value="year-asc">Year (Oldest)</SelectItem>
-                      <SelectItem value="citations-desc">Citations (High)</SelectItem>
-                      <SelectItem value="citations-asc">Citations (Low)</SelectItem>
-                      <SelectItem value="title-asc">Title (A-Z)</SelectItem>
-                      <SelectItem value="title-desc">Title (Z-A)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {/* Sort */}
+                <Select
+                  value={`${filters.sort_by}-${filters.sort_order}`}
+                  onValueChange={value => {
+                    const [sort_by, sort_order] = value.split("-");
+                    handleFilterChange("sort_by", sort_by);
+                    handleFilterChange("sort_order", sort_order);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="year-desc">Year (Newest)</SelectItem>
+                    <SelectItem value="year-asc">Year (Oldest)</SelectItem>
+                    <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                    <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
 
-            {/* Clear Filters */}
+            {/* Clear */}
             <div className="flex justify-end">
               <Button variant="outline" onClick={clearFilters}>
                 Clear All Filters
@@ -295,47 +326,51 @@ Best regards,`;
           </CardContent>
         </Card>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">Loading Publications...</span>
+            <span className="ml-3 text-lg text-gray-600">
+              Loading Publications...
+            </span>
           </div>
         )}
 
-        {/* Publications List */}
+        {/* List */}
         {!loading && publications.length > 0 && (
           <div className="space-y-6">
-            {publications.map((publication) => (
-              <Card key={publication.id} className="hover:shadow-lg transition-shadow">
+            {publications.map((pub, i) => (
+              <Card key={i} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-8">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                        {publication.title}
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        {pub.title}
                       </h3>
                       <p className="text-gray-700 mb-2">
-                        <strong>Authors:</strong> {publication.authors.join(', ')}
+                        <strong>Authors:</strong> {pub.authors?.join(", ")}
                       </p>
-                      <p className="text-gray-600 mb-3">
-                        {publication.publication_info}
-                      </p>
-                      {publication.abstract && (
-                        <p className="text-gray-600 text-sm mb-3 leading-relaxed">
-                          {publication.abstract}
+                      <p className="text-gray-600 mb-3">{pub.publication_info}</p>
+                      {pub.abstract && (
+                        <p className="text-gray-600 text-sm mb-3">
+                          {pub.abstract}
                         </p>
                       )}
                     </div>
                     <div className="ml-6 text-right">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        publication.category === 'Journal Articles' ? 'bg-blue-100 text-blue-700' :
-                        publication.category === 'Conference Proceedings' ? 'bg-green-100 text-green-700' :
-                        'bg-purple-100 text-purple-700'
-                      }`}>
-                        {publication.category}
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          pub.category === "Journal Articles"
+                            ? "bg-blue-100 text-blue-700"
+                            : pub.category === "Conference Proceedings"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-purple-100 text-purple-700"
+                        }`}
+                      >
+                        {pub.category}
                       </span>
                       <p className="text-2xl font-bold text-emerald-600 mt-2">
-                        {publication.citations}
+                        {pub.citations || 0}
                       </p>
                       <p className="text-sm text-gray-500">Citations</p>
                     </div>
@@ -343,9 +378,9 @@ Best regards,`;
 
                   {/* Research Areas */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {publication.research_areas.map((area, index) => (
+                    {pub.research_areas?.map((area, j) => (
                       <span
-                        key={index}
+                        key={j}
                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
                       >
                         {area}
@@ -356,36 +391,30 @@ Best regards,`;
                   {/* Actions */}
                   <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                     <div className="flex space-x-4">
-                      {publication.open_access && publication.full_paper_link ? (
+                      {pub.open_access && pub.full_paper_link ? (
                         <Button
                           variant="default"
                           className="bg-emerald-600 hover:bg-emerald-700"
-                          onClick={() => window.open(publication.full_paper_link, '_blank')}
+                          onClick={() => window.open(pub.full_paper_link, "_blank")}
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           Read Full Paper
                         </Button>
                       ) : (
-                        <Button
-                          variant="outline"
-                          onClick={() => requestPaper(publication)}
-                        >
+                        <Button variant="outline" onClick={() => requestPaper(pub)}>
                           <Mail className="h-4 w-4 mr-2" />
                           Request Full Paper
                         </Button>
                       )}
-                      
-                      <Button
-                        variant="outline"
-                        onClick={() => copyPaperCitation(publication)}
-                      >
+                      <Button variant="outline" onClick={() => copyPaperCitation(pub)}>
                         <Copy className="h-4 w-4 mr-2" />
                         Copy Citation
                       </Button>
                     </div>
-                    
                     <div className="text-right">
-                      <p className="text-lg font-semibold text-gray-900">{publication.year}</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {pub.year}
+                      </p>
                       <p className="text-sm text-gray-500">Published</p>
                     </div>
                   </div>
@@ -395,11 +424,15 @@ Best regards,`;
           </div>
         )}
 
-        {/* No Results */}
+        {/* No results */}
         {!loading && publications.length === 0 && (
           <div className="text-center py-20">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">No publications found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+              No publications found
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Try adjusting your search criteria or filters.
+            </p>
             <Button onClick={clearFilters}>Clear All Filters</Button>
           </div>
         )}
@@ -408,11 +441,11 @@ Best regards,`;
         {!loading && pagination.total_pages > 1 && (
           <div className="flex items-center justify-between mt-12 p-6 bg-white rounded-lg shadow">
             <div className="text-sm text-gray-600">
-              Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
-              {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)} of{' '}
-              {pagination.total_items} publications
+              Showing{" "}
+              {((pagination.current_page - 1) * pagination.per_page) + 1} to{" "}
+              {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)}{" "}
+              of {pagination.total_items} publications
             </div>
-            
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -422,8 +455,6 @@ Best regards,`;
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
               </Button>
-              
-              {/* Page Numbers */}
               <div className="flex space-x-1">
                 {Array.from({ length: Math.min(5, pagination.total_pages) }, (_, i) => {
                   let pageNum;
@@ -436,7 +467,6 @@ Best regards,`;
                   } else {
                     pageNum = pagination.current_page - 2 + i;
                   }
-                  
                   return (
                     <Button
                       key={pageNum}
@@ -450,7 +480,6 @@ Best regards,`;
                   );
                 })}
               </div>
-              
               <Button
                 variant="outline"
                 onClick={() => goToPage(pagination.current_page + 1)}
@@ -460,8 +489,6 @@ Best regards,`;
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
-            
-            {/* Go to Page */}
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600">Go to page:</span>
               <Input
@@ -469,12 +496,12 @@ Best regards,`;
                 min="1"
                 max={pagination.total_pages}
                 className="w-20"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
+                onKeyPress={e => {
+                  if (e.key === "Enter") {
                     const page = parseInt(e.target.value);
                     if (page && page >= 1 && page <= pagination.total_pages) {
                       goToPage(page);
-                      e.target.value = '';
+                      e.target.value = "";
                     }
                   }
                 }}
