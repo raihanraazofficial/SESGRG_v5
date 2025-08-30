@@ -5,6 +5,7 @@ Handles data fetching from Google Sheets or mock data for development
 
 import os
 import json
+import requests
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 import logging
@@ -13,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 class SESGSheetsService:
     def __init__(self):
-        self.use_mock_data = True  # Set to False when real Google Sheets are available
+        self.use_mock_data = False  # Set to False to use real Google Sheets
+        self.publications_api_url = "https://script.google.com/macros/s/AKfycbzQ6XwRBYMc5PaDDns3XlgpRGYQFZtC45RtVRUhyvVlt869zH9mL0IlGlnvBV2-e_s/exec?sheet=sheet6"
         
     def get_publications(self, 
                         page: int = 1, 
