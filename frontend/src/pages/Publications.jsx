@@ -37,7 +37,7 @@ const Publications = () => {
     "Cybersecurity and AI for Power Infrastructure"
   ];
 
-  const categories = ["Journal Articles", "Conference Proceedings", "Book Chapters", "Books"];
+  const categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"];
   const years = Array.from({length: 10}, (_, i) => (new Date().getFullYear() - i).toString());
 
   useEffect(() => {
