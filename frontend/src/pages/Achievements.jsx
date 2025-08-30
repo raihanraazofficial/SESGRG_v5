@@ -286,9 +286,10 @@ const Achievements = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Awards">Awards</SelectItem>
-                  <SelectItem value="Recognition">Recognition</SelectItem>
-                  <SelectItem value="Milestones">Milestones</SelectItem>
+                  <SelectItem value="Award">Awards</SelectItem>
+                  <SelectItem value="Partnership">Partnerships</SelectItem>
+                  <SelectItem value="Publication">Publications</SelectItem>
+                  <SelectItem value="Grant">Grants</SelectItem>
                 </SelectContent>
               </Select>
 
