@@ -925,6 +925,116 @@ class SESGSheetsService:
         news_events = self._get_mock_news_events(1, 100, None, None, "date", "desc")["news_events"]
         return next((n for n in news_events if n["id"] == news_id), None)
 
+    def _get_google_sheets_publications(self, page, per_page, year_filter, area_filter, 
+                                      category_filter, author_filter, title_filter, 
+                                      sort_by, sort_order) -> Dict[str, Any]:
+        """Get publications from Google Sheets API"""
+        try:
+            # Fetch data from Google Sheets
+            response = requests.get(self.publications_api_url, timeout=10)
+            response.raise_for_status()
+            
+            # Parse the response
+            sheets_data = response.json()
+            
+            # Convert sheets data to our publication format
+            publications = self._convert_sheets_to_publications(sheets_data)
+            
+            # Apply filters
+            filtered_pubs = self._apply_publication_filters(
+                publications, year_filter, area_filter, category_filter, 
+                author_filter, title_filter
+            )
+            
+            # Apply sorting
+            filtered_pubs = self._sort_publications(filtered_pubs, sort_by, sort_order)
+            
+            # Calculate statistics
+            total_publications = len(filtered_pubs)
+            total_citations = sum(pub.get("citations", 0) for pub in filtered_pubs)
+            latest_year = max((int(pub.get("year", 0)) for pub in filtered_pubs), default=datetime.now().year)
+            
+            # Get unique research areas
+            all_areas = set()
+            for pub in filtered_pubs:
+                if pub.get("research_areas"):
+                    all_areas.update(pub["research_areas"])
+            total_areas = len(all_areas)
+            
+            # Apply pagination
+            total = len(filtered_pubs)
+            start_idx = (page - 1) * per_page
+            end_idx = start_idx + per_page
+            paginated_pubs = filtered_pubs[start_idx:end_idx]
+            
+            return {
+                "publications": paginated_pubs,
+                "pagination": {
+                    "current_page": page,
+                    "per_page": per_page,
+                    "total_items": total,
+                    "total_pages": (total + per_page - 1) // per_page,
+                    "has_next": end_idx < total,
+                    "has_prev": page > 1
+                },
+                "statistics": {
+                    "total_publications": total_publications,
+                    "total_citations": total_citations,
+                    "latest_year": latest_year,
+                    "total_areas": total_areas
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching Google Sheets data: {e}")
+            # Fallback to mock data on error
+            return self._get_mock_publications(page, per_page, year_filter, area_filter, 
+                                            category_filter, author_filter, title_filter, 
+                                            sort_by, sort_order)
+
+    def _convert_sheets_to_publications(self, sheets_data) -> List[Dict[str, Any]]:
+        """Convert Google Sheets data to publication format"""
+        publications = []
+        
+        try:
+            # Assuming the Google Sheets returns data in a specific format
+            # You may need to adjust this based on your actual Google Sheets structure
+            data_rows = sheets_data.get('data', [])
+            
+            for i, row in enumerate(data_rows):
+                # Skip header row if exists
+                if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'paper title', 'publication title']:
+                    continue
+                
+                try:
+                    # Adjust these indices based on your Google Sheets column structure
+                    publication = {
+                        "id": f"pub_{i:03d}",
+                        "title": str(row[0]) if len(row) > 0 else "",
+                        "authors": [author.strip() for author in str(row[1]).split(',') if author.strip()] if len(row) > 1 else [],
+                        "publication_info": str(row[2]) if len(row) > 2 else "",
+                        "year": str(row[3]) if len(row) > 3 else str(datetime.now().year),
+                        "category": str(row[4]) if len(row) > 4 else "Journal Articles",
+                        "research_areas": [area.strip() for area in str(row[5]).split(',') if area.strip()] if len(row) > 5 else [],
+                        "citations": int(row[6]) if len(row) > 6 and str(row[6]).isdigit() else 0,
+                        "open_access": str(row[7]).lower() in ['true', 'yes', '1'] if len(row) > 7 else False,
+                        "full_paper_link": str(row[8]) if len(row) > 8 and str(row[8]).startswith('http') else None,
+                        "abstract": str(row[9]) if len(row) > 9 else ""
+                    }
+                    
+                    # Only add if title is not empty
+                    if publication["title"].strip():
+                        publications.append(publication)
+                        
+                except (ValueError, IndexError) as e:
+                    logger.warning(f"Error processing row {i}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error converting sheets data: {e}")
+            
+        return publications
+
 
 # Global instance
 sheets_service = SESGSheetsService()
