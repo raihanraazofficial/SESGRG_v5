@@ -240,15 +240,17 @@ Best regards,`;
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                 <Select
-                  value={filters.year_filter}
+                  value={filters.year_filter || "all"}
                   onValueChange={(value) => handleFilterChange('year_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Year" />
+                    <SelectValue placeholder="Filter by Year" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Years</SelectItem>
-                    {years.map(year => (
+                    {availableYears.length > 0 ? availableYears.map(year => (
+                      <SelectItem key={year} value={year}>{year}</SelectItem>
+                    )) : years.map(year => (
                       <SelectItem key={year} value={year}>{year}</SelectItem>
                     ))}
                   </SelectContent>
