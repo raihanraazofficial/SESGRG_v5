@@ -116,11 +116,74 @@ class ApiService {
   // Utility method to generate IEEE citation
   generateIEEECitation(publication) {
     try {
-      const authors = publication.authors.join(', ');
+      // If IEEE formatted version is available from backend, use it
+      if (publication.ieee_formatted) {
+        return publication.ieee_formatted;
+      }
+
+      // Fallback: Generate IEEE citation based on category
+      const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : publication.authors;
       const title = `"${publication.title}"`;
-      const publicationInfo = publication.publication_info;
+      const category = publication.category || 'Journal Articles';
       
-      return `${authors}, ${title}, ${publicationInfo}.`;
+      if (category === "Journal Articles") {
+        // Authors, "Title," Journal Name, vol. X, no. Y, pp. Z-W, Year.
+        let citation = `${authors}, ${title}`;
+        if (publication.journal_book_conference_name) {
+          citation += `, ${publication.journal_book_conference_name}`;
+        }
+        if (publication.volume) {
+          citation += `, vol. ${publication.volume}`;
+        }
+        if (publication.issue) {
+          citation += `, no. ${publication.issue}`;
+        }
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        citation += `, ${publication.year}.`;
+        return citation;
+        
+      } else if (category === "Conference Proceedings") {
+        // Authors, "Title," Conference Name, Location, pp. X-Y, Year.
+        let citation = `${authors}, ${title}`;
+        if (publication.journal_book_conference_name) {
+          citation += `, ${publication.journal_book_conference_name}`;
+        }
+        if (publication.location) {
+          citation += `, ${publication.location}`;
+        }
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        citation += `, ${publication.year}.`;
+        return citation;
+        
+      } else if (category === "Book Chapters") {
+        // Authors, "Chapter Title," in Book Title, Editors, Ed(s). Publisher, Location, pp. X-Y, Year.
+        let citation = `${authors}, ${title}`;
+        if (publication.journal_book_conference_name) {
+          citation += `, in ${publication.journal_book_conference_name}`;
+        }
+        if (publication.editors) {
+          citation += `, ${publication.editors}, Ed(s).`;
+        }
+        if (publication.publisher) {
+          citation += ` ${publication.publisher}`;
+        }
+        if (publication.location) {
+          citation += `, ${publication.location}`;
+        }
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        citation += `, ${publication.year}.`;
+        return citation;
+      }
+      
+      // Generic fallback
+      return `${authors}, ${title}, ${publication.year}.`;
+      
     } catch (error) {
       console.error('Error generating citation:', error);
       return 'Citation format error';
