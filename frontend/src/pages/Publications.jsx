@@ -415,7 +415,7 @@ Best regards,`;
                   </div>
 
                   {/* Actions */}
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-4 border-t border-gray-200 space-y-3 md:space-y-0">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-3 border-t border-gray-200 space-y-2 md:space-y-0">
                     <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
                       {publication.open_access && publication.full_paper_link ? (
                         <Button
