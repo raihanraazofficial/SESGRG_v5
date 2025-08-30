@@ -273,15 +273,17 @@ Best regards,`;
                 </Select>
 
                 <Select
-                  value={filters.area_filter}
+                  value={filters.area_filter || "all"}
                   onValueChange={(value) => handleFilterChange('area_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Research Area" />
+                    <SelectValue placeholder="Filter by Research Area" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Areas</SelectItem>
-                    {researchAreas.map(area => (
+                    {availableAreas.length > 0 ? availableAreas.map(area => (
+                      <SelectItem key={area} value={area}>{area}</SelectItem>
+                    )) : researchAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
                     ))}
                   </SelectContent>
