@@ -373,6 +373,7 @@ class SESGSheetsService:
                 "category": "Award",
                 "date": "2024-11-15",
                 "image": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800",
+                "featured": 1,
                 "full_content": """
                 # Best Paper Award at IEEE Smart Grid Conference 2024
 
