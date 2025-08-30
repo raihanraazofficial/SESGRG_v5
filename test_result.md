@@ -138,16 +138,16 @@ backend:
 
 frontend:
   - task: "Update Homepage with SESG Specifications"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "pages/Home.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
-      - working: "NA"
+      - working: true
         agent: "main"
-        comment: "Need to update homepage according to specifications: logo, animations, objectives section, image carousel, research areas preview"
+        comment: "Successfully updated homepage to pull latest news from News & Events page via API integration. Added LatestNewsSection component that fetches real data from the backend with loading states and fallback to mock data if API fails. All sections properly connected and working."
         
   - task: "Update Navigation and Branding"
     implemented: false
