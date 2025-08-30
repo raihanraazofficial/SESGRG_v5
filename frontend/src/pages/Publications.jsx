@@ -17,6 +17,7 @@ const Publications = () => {
     category_filter: '',
     author_filter: '',
     title_filter: '',
+    search_filter: '',
     sort_by: 'year',
     sort_order: 'desc',
     page: 1,
