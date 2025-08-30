@@ -453,6 +453,7 @@ class SESGSheetsService:
                 "category": ["Award", "Partnership", "Publication", "Grant"][i % 4],
                 "date": f"2024-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}",
                 "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+                "featured": 1 if i == 5 else 0,  # Make one of them featured for testing
                 "full_content": f"""
                 # Research Milestone {i}: Innovation in Sustainable Energy
 
