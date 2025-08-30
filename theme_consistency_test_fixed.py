@@ -255,7 +255,7 @@ def test_theme_consistency():
         achievement_item = achievements_data["achievements"][0] if achievements_data["achievements"] else {}
         
         # Common fields that should exist in both for Read More functionality
-        common_fields = ["id", "title", "description", "date", "category", "image"]
+        common_fields = ["id", "title", "short_description", "date", "category", "image"]
         
         news_fields = set(news_item.keys())
         achievement_fields = set(achievement_item.keys())
