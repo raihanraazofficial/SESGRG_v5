@@ -230,25 +230,32 @@ const Achievements = () => {
             All Categories
           </Button>
           <Button
-            variant={filters.category_filter === 'Awards' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Awards')}
+            variant={filters.category_filter === 'Award' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Award')}
             className="px-6 py-2"
           >
             Awards
           </Button>
           <Button
-            variant={filters.category_filter === 'Recognition' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Recognition')}
+            variant={filters.category_filter === 'Partnership' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Partnership')}
             className="px-6 py-2"
           >
-            Recognition
+            Partnerships
           </Button>
           <Button
-            variant={filters.category_filter === 'Milestones' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Milestones')}
+            variant={filters.category_filter === 'Publication' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Publication')}
             className="px-6 py-2"
           >
-            Milestones
+            Publications
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Grant' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Grant')}
+            className="px-6 py-2"
+          >
+            Grants
           </Button>
         </div>
 
