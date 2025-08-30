@@ -74,7 +74,7 @@ async def get_publications(
             page=page, per_page=per_page, year_filter=year_filter,
             area_filter=area_filter, category_filter=category_filter,
             author_filter=author_filter, title_filter=title_filter,
-            sort_by=sort_by, sort_order=sort_order
+            search_filter=search_filter, sort_by=sort_by, sort_order=sort_order
         )
         return result
     except Exception as e:
