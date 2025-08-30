@@ -106,7 +106,7 @@ class SESGSheetsService:
 
     def _get_mock_publications(self, page, per_page, year_filter, area_filter, 
                               category_filter, author_filter, title_filter, 
-                              sort_by, sort_order) -> Dict[str, Any]:
+                              search_filter, sort_by, sort_order) -> Dict[str, Any]:
         """Generate comprehensive mock publications data"""
         
         # Mock publications data
