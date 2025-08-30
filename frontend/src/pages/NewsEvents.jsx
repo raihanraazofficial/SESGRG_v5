@@ -9,6 +9,7 @@ import apiService from "../services/api";
 const NewsEvents = () => {
   const [newsEvents, setNewsEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({
     category_filter: '',
