@@ -407,6 +407,7 @@ class SESGSheetsService:
                 "category": "Partnership",
                 "date": "2024-10-28",
                 "image": "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=800",
+                "featured": 0,
                 "full_content": """
                 # Strategic Partnership with Tesla Energy
 
