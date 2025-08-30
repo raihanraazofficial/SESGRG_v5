@@ -1014,36 +1014,55 @@ class SESGSheetsService:
         publications = []
         
         try:
-            # Assuming the Google Sheets returns data in a specific format
-            # You may need to adjust this based on your actual Google Sheets structure
-            data_rows = sheets_data.get('data', [])
+            # Handle direct array response from Google Sheets API
+            if isinstance(sheets_data, list):
+                data_rows = sheets_data
+            else:
+                # Fallback to nested data structure
+                data_rows = sheets_data.get('data', [])
             
             for i, row in enumerate(data_rows):
-                # Skip header row if exists
-                if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'paper title', 'publication title']:
-                    continue
-                
                 try:
-                    # Adjust these indices based on your Google Sheets column structure
-                    publication = {
-                        "id": f"pub_{i:03d}",
-                        "title": str(row[0]) if len(row) > 0 else "",
-                        "authors": [author.strip() for author in str(row[1]).split(',') if author.strip()] if len(row) > 1 else [],
-                        "publication_info": str(row[2]) if len(row) > 2 else "",
-                        "year": str(row[3]) if len(row) > 3 else str(datetime.now().year),
-                        "category": str(row[4]) if len(row) > 4 else "Journal Articles",
-                        "research_areas": [area.strip() for area in str(row[5]).split(',') if area.strip()] if len(row) > 5 else [],
-                        "citations": int(row[6]) if len(row) > 6 and str(row[6]).isdigit() else 0,
-                        "open_access": str(row[7]).lower() in ['true', 'yes', '1'] if len(row) > 7 else False,
-                        "full_paper_link": str(row[8]) if len(row) > 8 and str(row[8]).startswith('http') else None,
-                        "abstract": str(row[9]) if len(row) > 9 else ""
-                    }
+                    # Handle object format (direct from Google Sheets API)
+                    if isinstance(row, dict):
+                        publication = {
+                            "id": f"pub_{row.get('id', i):03d}",
+                            "title": str(row.get('title', '')),
+                            "authors": row.get('authors', []) if isinstance(row.get('authors'), list) else [str(row.get('authors', ''))],
+                            "publication_info": str(row.get('publication_info', '')),
+                            "year": str(row.get('year', datetime.now().year)),
+                            "category": str(row.get('category', 'Journal Articles')),
+                            "research_areas": row.get('research_areas', []) if isinstance(row.get('research_areas'), list) else [str(row.get('research_areas', ''))],
+                            "citations": int(row.get('citations', 0)) if str(row.get('citations', 0)).isdigit() else 0,
+                            "open_access": bool(row.get('open_access', False)),
+                            "full_paper_link": str(row.get('full_paper_link', '')) if row.get('full_paper_link') else None,
+                            "abstract": str(row.get('abstract', ''))
+                        }
+                    else:
+                        # Handle array format (legacy support)
+                        # Skip header row if exists
+                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'paper title', 'publication title']:
+                            continue
+                        
+                        publication = {
+                            "id": f"pub_{i:03d}",
+                            "title": str(row[0]) if len(row) > 0 else "",
+                            "authors": [author.strip() for author in str(row[1]).split(',') if author.strip()] if len(row) > 1 else [],
+                            "publication_info": str(row[2]) if len(row) > 2 else "",
+                            "year": str(row[3]) if len(row) > 3 else str(datetime.now().year),
+                            "category": str(row[4]) if len(row) > 4 else "Journal Articles",
+                            "research_areas": [area.strip() for area in str(row[5]).split(',') if area.strip()] if len(row) > 5 else [],
+                            "citations": int(row[6]) if len(row) > 6 and str(row[6]).isdigit() else 0,
+                            "open_access": str(row[7]).lower() in ['true', 'yes', '1'] if len(row) > 7 else False,
+                            "full_paper_link": str(row[8]) if len(row) > 8 and str(row[8]).startswith('http') else None,
+                            "abstract": str(row[9]) if len(row) > 9 else ""
+                        }
                     
                     # Only add if title is not empty
                     if publication["title"].strip():
                         publications.append(publication)
                         
-                except (ValueError, IndexError) as e:
+                except (ValueError, IndexError, TypeError) as e:
                     logger.warning(f"Error processing row {i}: {e}")
                     continue
                     
