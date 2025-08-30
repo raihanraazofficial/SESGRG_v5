@@ -721,9 +721,16 @@ const NewsEvents = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">Loading News & Events...</span>
+          <div className="space-y-8">
+            {/* Featured Skeleton */}
+            <SkeletonCard variant="featured" />
+            
+            {/* Regular Skeletons */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }, (_, i) => (
+                <SkeletonCard key={i} variant="regular" />
+              ))}
+            </div>
           </div>
         )}
 
