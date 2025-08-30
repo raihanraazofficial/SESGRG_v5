@@ -257,66 +257,139 @@ const NewsEvents = () => {
 
         {/* News & Events Grid */}
         {!loading && newsEvents.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsEvents.map((item) => (
-              <Card key={item.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                {/* Image */}
-                {item.image && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(item.category)}`}>
-                        {item.category}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
-                      {item.title}
-                    </h3>
-
-                    {/* Date and Location */}
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span>{formatDate(item.date)}</span>
+          <div className="space-y-8">
+            {/* First News/Event - Featured/Large Card */}
+            {newsEvents[0] && (
+              <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-blue-50 border-2 border-blue-200">
+                <div className="md:flex">
+                  {/* Featured Image */}
+                  {newsEvents[0].image && (
+                    <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+                      <img 
+                        src={newsEvents[0].image}
+                        alt={newsEvents[0].title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                      <div className="absolute top-6 left-6">
+                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${getCategoryColor(newsEvents[0].category)}`}>
+                          {newsEvents[0].category}
+                        </span>
                       </div>
-                      {item.location && (
-                        <div className="flex items-center text-sm text-gray-600">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          <span>{item.location}</span>
+                      <div className="absolute top-6 right-6">
+                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-blue-700">
+                          Featured Story
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <CardContent className="md:w-1/2 p-8 md:p-12">
+                    <div className="space-y-6">
+                      {/* Date and Location */}
+                      <div className="space-y-2">
+                        <div className="flex items-center text-blue-600">
+                          <Calendar className="h-5 w-5 mr-3" />
+                          <span className="text-lg font-medium">{formatDate(newsEvents[0].date)}</span>
                         </div>
-                      )}
-                    </div>
+                        {newsEvents[0].location && (
+                          <div className="flex items-center text-gray-600">
+                            <MapPin className="h-5 w-5 mr-3" />
+                            <span className="text-lg">{newsEvents[0].location}</span>
+                          </div>
+                        )}
+                      </div>
 
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                      {item.description}
-                    </p>
+                      {/* Title */}
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
+                        {newsEvents[0].title}
+                      </h2>
 
-                    {/* Read More Button */}
-                    <div className="pt-4 border-t border-gray-200">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
-                        onClick={() => generateBlogContent(item)}
-                      >
-                        Read More <ArrowRight className="h-4 w-4 ml-2" />
-                      </Button>
+                      {/* Description */}
+                      <p className="text-gray-700 text-lg leading-relaxed line-clamp-4">
+                        {newsEvents[0].description}
+                      </p>
+
+                      {/* Read More Button */}
+                      <div className="pt-6">
+                        <Button 
+                          size="lg"
+                          className="group-hover:bg-blue-700 bg-blue-600 text-white px-8 py-3"
+                          onClick={() => generateBlogContent(newsEvents[0])}
+                        >
+                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </div>
               </Card>
-            ))}
+            )}
+
+            {/* Rest of News & Events - Regular Grid */}
+            {newsEvents.length > 1 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {newsEvents.slice(1).map((item) => (
+                  <Card key={item.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                    {/* Image */}
+                    {item.image && (
+                      <div className="relative h-48 overflow-hidden">
+                        <img 
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(item.category)}`}>
+                            {item.category}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {/* Title */}
+                        <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
+                          {item.title}
+                        </h3>
+
+                        {/* Date and Location */}
+                        <div className="space-y-2">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            <span>{formatDate(item.date)}</span>
+                          </div>
+                          {item.location && (
+                            <div className="flex items-center text-sm text-gray-600">
+                              <MapPin className="h-4 w-4 mr-2" />
+                              <span>{item.location}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                          {item.description}
+                        </p>
+
+                        {/* Read More Button */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
+                            onClick={() => generateBlogContent(item)}
+                          >
+                            Read More <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
