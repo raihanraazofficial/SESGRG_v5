@@ -1697,6 +1697,9 @@ def run_all_tests():
     # Comprehensive News & Events API testing (as requested)
     results['news_events_comprehensive'] = test_news_events_comprehensive()
     
+    # Updated News & Events API testing with new Google Sheets URL
+    results['updated_news_events_api'] = test_updated_news_events_api()
+    
     print("\n" + "=" * 60)
     print("TEST SUMMARY")
     print("=" * 60)
