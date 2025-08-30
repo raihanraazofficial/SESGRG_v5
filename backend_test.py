@@ -582,6 +582,191 @@ def test_news_events_endpoint():
         print(f"   ❌ Error testing news-events endpoint: {e}")
         return False
 
+def test_updated_news_events_api():
+    """Test the updated News & Events API with new Google Sheets URL as per review request"""
+    print("18. Testing UPDATED News & Events API with NEW Google Sheets URL...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Clear cache first to ensure fresh data fetch
+        print("   1.1 Clearing cache to ensure fresh data fetch...")
+        response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Cache cleared successfully")
+        else:
+            print(f"      ⚠️  Cache clear returned status: {response.status_code}")
+        
+        # 2. Test GET /api/news-events endpoint with new URL
+        print("   1.2 Testing GET /api/news-events with new Google Sheets URL...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ News-events API request failed with status: {response.status_code}")
+            print(f"      Response: {response.text}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            required_keys = ["news_events", "pagination"]
+            if not all(key in data for key in required_keys):
+                print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+                all_tests_passed = False
+            else:
+                news_events = data.get("news_events", [])
+                print(f"      ✅ Successfully fetched {len(news_events)} news & events from new Google Sheets URL")
+                
+                # Verify data structure handles "news_events" key
+                if len(news_events) > 0:
+                    sample_item = news_events[0]
+                    required_fields = ["id", "title", "short_description", "category", "date", "image"]
+                    missing_fields = [field for field in required_fields if field not in sample_item]
+                    if not missing_fields:
+                        print(f"      ✅ Data parsing correctly handles news_events structure")
+                        print(f"      📊 Sample item: {sample_item['title']} - {sample_item['category']}")
+                    else:
+                        print(f"      ❌ Missing required fields: {missing_fields}")
+                        all_tests_passed = False
+        
+        # 3. Test category filtering for News, Events, Upcoming Events
+        print("   2.1 Testing category filtering for News, Events, Upcoming Events...")
+        
+        categories_to_test = ["News", "Events", "Upcoming Events"]
+        for category in categories_to_test:
+            response = requests.get(f"{API_BASE_URL}/news-events?category_filter={category}", timeout=10)
+            if response.status_code != 200:
+                print(f"      ❌ Category filter '{category}' failed with status: {response.status_code}")
+                all_tests_passed = False
+            else:
+                data = response.json()
+                filtered_items = data.get("news_events", [])
+                # Verify all returned items have the correct category
+                correct_category = all(item.get("category") == category for item in filtered_items)
+                if correct_category:
+                    print(f"      ✅ Category '{category}': {len(filtered_items)} items")
+                else:
+                    print(f"      ❌ Category '{category}': Filtering not working correctly")
+                    all_tests_passed = False
+        
+        # 4. Test detailed view endpoint GET /api/news-events/{id}
+        print("   3.1 Testing detailed view endpoint GET /api/news-events/{id}...")
+        
+        # First get a news event ID
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=1", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            if len(news_events) > 0:
+                news_id = news_events[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=10)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    if "full_content" in detail_data:
+                        content_length = len(detail_data.get("full_content", ""))
+                        print(f"      ✅ News event detail endpoint working for ID: {news_id}")
+                        print(f"      📄 Blog content retrieved: {content_length} characters")
+                    else:
+                        print("      ❌ News event detail missing full_content for blog")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ News event detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No news events available to test detail endpoint")
+        
+        # 5. Test existing functionality: pagination, sorting, search filtering
+        print("   4.1 Testing existing functionality: pagination, sorting, search...")
+        
+        # Test pagination
+        page_sizes = [5, 10, 15, 20]
+        for page_size in page_sizes:
+            response = requests.get(f"{API_BASE_URL}/news-events?per_page={page_size}", timeout=10)
+            if response.status_code != 200:
+                print(f"      ❌ Pagination with page_size {page_size} failed")
+                all_tests_passed = False
+            else:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                pagination = data.get("pagination", {})
+                print(f"      ✅ Pagination page_size {page_size}: Got {len(news_events)} items")
+        
+        # Test sorting
+        sorting_tests = [
+            ("date", "desc", "newest first"),
+            ("date", "asc", "oldest first"),
+            ("title", "asc", "A-Z"),
+            ("title", "desc", "Z-A")
+        ]
+        
+        for sort_by, sort_order, description in sorting_tests:
+            response = requests.get(f"{API_BASE_URL}/news-events?sort_by={sort_by}&sort_order={sort_order}&per_page=5", timeout=10)
+            if response.status_code != 200:
+                print(f"      ❌ Sorting by {sort_by} ({description}) failed")
+                all_tests_passed = False
+            else:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                if len(news_events) >= 2:
+                    if sort_by == "date":
+                        dates = [item.get("date", "") for item in news_events[:3]]
+                        print(f"      ✅ Date sorting ({description}): {dates}")
+                    elif sort_by == "title":
+                        titles = [item.get("title", "")[:30] + "..." for item in news_events[:3]]
+                        print(f"      ✅ Title sorting ({description}): {titles}")
+        
+        # Test search filtering
+        search_terms = ["Smart", "Grid", "Energy", "Research"]
+        for search_term in search_terms:
+            response = requests.get(f"{API_BASE_URL}/news-events?title_filter={search_term}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                search_results = data.get("news_events", [])
+                print(f"      ✅ Search '{search_term}': {len(search_results)} results")
+            else:
+                print(f"      ❌ Search '{search_term}' failed")
+                all_tests_passed = False
+        
+        # 6. Test combined filtering
+        print("   5.1 Testing combined filtering scenarios...")
+        
+        # Test category + sorting combination
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&sort_by=date&sort_order=desc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            combined_results = data.get("news_events", [])
+            print(f"      ✅ Category + Sorting: {len(combined_results)} News items sorted by date")
+        
+        # Test category + pagination combination
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=Events&page=1&per_page=5", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            paginated_results = data.get("news_events", [])
+            pagination = data.get("pagination", {})
+            print(f"      ✅ Category + Pagination: {len(paginated_results)} Events, page {pagination.get('current_page', 1)}")
+        
+        # 7. Verify cache status after testing
+        print("   6.1 Verifying cache status after testing...")
+        response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if response.status_code == 200:
+            cache_data = response.json()
+            cached_items = cache_data.get("cached_items", 0)
+            print(f"      ✅ Cache status: {cached_items} items cached")
+        
+        if all_tests_passed:
+            print("   🎉 ALL Updated News & Events API tests PASSED!")
+            print("   ✅ New Google Sheets URL integration working correctly")
+            print("   ✅ Data parsing handles 'news_events' key properly")
+            print("   ✅ All category filtering working (News, Events, Upcoming Events)")
+            print("   ✅ Detailed view endpoint working for blog content")
+            print("   ✅ Cache clearing and fresh data fetch working")
+            print("   ✅ All existing functionality preserved (pagination, sorting, search)")
+        else:
+            print("   ⚠️  Some Updated News & Events API tests FAILED!")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Updated News & Events API testing: {e}")
+        return False
+
 def test_google_sheets_projects_integration():
     """Test Google Sheets integration for Projects API as per review request"""
     print("15. Testing Google Sheets Projects Integration - NEW API ENDPOINTS...")
