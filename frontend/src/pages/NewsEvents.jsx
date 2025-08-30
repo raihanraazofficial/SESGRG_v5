@@ -176,14 +176,13 @@ const NewsEvents = () => {
         }
         
         // Handle inline math expressions with $ $ or LaTeX patterns
+        let processedLine = line;
         if (!inCodeBlock && !inMathBlock) {
           // Process inline math $...$
-          let processedLine = line.replace(/\$([^$]+)\$/g, '<span class="math-inline">$$$1$$</span>');
+          processedLine = processedLine.replace(/\$([^$]+)\$/g, '<span class="math-inline">$$$1$$</span>');
           
           // Process display math $$...$$ (single line)
           processedLine = processedLine.replace(/\$\$([^$]+)\$\$/g, '<div class="math-display bg-emerald-50 p-4 my-4 rounded border text-center">$$$$1$$$$</div>');
-          
-          line = processedLine;
         }
         
         // Inside code block
