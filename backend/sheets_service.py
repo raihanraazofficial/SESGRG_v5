@@ -927,12 +927,19 @@ class SESGSheetsService:
     def _sort_achievements(self, achievements, sort_by, sort_order):
         reverse = sort_order == "desc"
         
-        if sort_by == "date":
-            return sorted(achievements, key=lambda x: x["date"], reverse=reverse)
-        elif sort_by == "title":
-            return sorted(achievements, key=lambda x: x["title"], reverse=reverse)
-        else:
-            return achievements
+        # Always prioritize featured items first, then apply the requested sort
+        def sort_key(x):
+            featured_priority = -x.get("featured", 0)  # Featured items (1) get negative value for priority
+            
+            if sort_by == "date":
+                return (featured_priority, x["date"])
+            elif sort_by == "title":
+                return (featured_priority, x["title"].lower())
+            else:
+                return (featured_priority, x["date"])
+        
+        # Sort with featured items always first
+        return sorted(achievements, key=sort_key, reverse=reverse)
     
     def _apply_news_filters(self, news_events, category_filter, title_filter):
         filtered = news_events
