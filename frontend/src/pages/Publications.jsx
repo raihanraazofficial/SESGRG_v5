@@ -425,79 +425,85 @@ Best regards,`;
 
         {/* Pagination */}
         {!loading && pagination.total_pages > 1 && (
-          <div className="flex items-center justify-between mt-12 p-6 bg-white rounded-lg shadow">
-            <div className="text-sm text-gray-600">
+          <div className="mt-12 p-4 md:p-6 bg-white rounded-lg shadow space-y-4 md:space-y-0">
+            <div className="text-sm text-gray-600 text-center md:text-left">
               Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
               {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)} of{' '}
               {pagination.total_items} publications
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => goToPage(pagination.current_page - 1)}
-                disabled={!pagination.has_prev}
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Previous
-              </Button>
-              
-              {/* Page Numbers */}
-              <div className="flex space-x-1">
-                {Array.from({ length: Math.min(5, pagination.total_pages) }, (_, i) => {
-                  let pageNum;
-                  if (pagination.total_pages <= 5) {
-                    pageNum = i + 1;
-                  } else if (pagination.current_page <= 3) {
-                    pageNum = i + 1;
-                  } else if (pagination.current_page >= pagination.total_pages - 2) {
-                    pageNum = pagination.total_pages - 4 + i;
-                  } else {
-                    pageNum = pagination.current_page - 2 + i;
-                  }
-                  
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={pageNum === pagination.current_page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => goToPage(pageNum)}
-                      className="w-10"
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
+            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(pagination.current_page - 1)}
+                  disabled={!pagination.has_prev}
+                  className="text-xs md:text-sm"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </Button>
+                
+                {/* Page Numbers */}
+                <div className="flex space-x-1">
+                  {Array.from({ length: Math.min(3, pagination.total_pages) }, (_, i) => {
+                    let pageNum;
+                    if (pagination.total_pages <= 3) {
+                      pageNum = i + 1;
+                    } else if (pagination.current_page <= 2) {
+                      pageNum = i + 1;
+                    } else if (pagination.current_page >= pagination.total_pages - 1) {
+                      pageNum = pagination.total_pages - 2 + i;
+                    } else {
+                      pageNum = pagination.current_page - 1 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={pageNum === pagination.current_page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => goToPage(pageNum)}
+                        className="w-8 md:w-10 text-xs md:text-sm"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(pagination.current_page + 1)}
+                  disabled={!pagination.has_next}
+                  className="text-xs md:text-sm"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
               </div>
               
-              <Button
-                variant="outline"
-                onClick={() => goToPage(pagination.current_page + 1)}
-                disabled={!pagination.has_next}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            {/* Go to Page */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Go to page:</span>
-              <Input
-                type="number"
-                min="1"
-                max={pagination.total_pages}
-                className="w-20"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    const page = parseInt(e.target.value);
-                    if (page && page >= 1 && page <= pagination.total_pages) {
-                      goToPage(page);
-                      e.target.value = '';
+              {/* Go to Page */}
+              <div className="flex items-center space-x-2">
+                <span className="text-xs md:text-sm text-gray-600">Go to page:</span>
+                <Input
+                  type="number"
+                  min="1"
+                  max={pagination.total_pages}
+                  className="w-16 md:w-20 text-xs md:text-sm"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      const page = parseInt(e.target.value);
+                      if (page && page >= 1 && page <= pagination.total_pages) {
+                        goToPage(page);
+                        e.target.value = '';
+                      }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}
