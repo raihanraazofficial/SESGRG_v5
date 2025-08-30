@@ -5,30 +5,117 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
 const Home = () => {
-  const stats = [
-    { icon: Users, label: "Research Team", value: "15+", color: "text-blue-600" },
-    { icon: BookOpen, label: "Publications", value: "80+", color: "text-emerald-600" },
-    { icon: Lightbulb, label: "Active Projects", value: "12", color: "text-amber-600" },
-    { icon: Award, label: "Awards", value: "25+", color: "text-purple-600" }
-  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [animatedObjectives, setAnimatedObjectives] = useState(new Set());
 
-  const highlights = [
+  // Carousel images
+  const carouselImages = [
     {
-      title: "Smart Grid Innovation",
-      description: "Developing next-generation intelligent grid systems for improved reliability and efficiency.",
-      link: "/research"
+      url: "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
+      alt: "Wind turbine in desert landscape"
     },
     {
-      title: "Renewable Integration",
-      description: "Seamless integration of renewable energy sources into existing infrastructure.",
-      link: "/projects"
+      url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
+      alt: "Wind farm at golden hour"
     },
     {
-      title: "AI-Powered Solutions",
-      description: "Machine learning applications for energy forecasting and optimization.",
-      link: "/publications"
+      url: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
+      alt: "Solar panel farm aerial view"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1467533003447-e295ff1b0435?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
+      alt: "Modern wind turbines"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGdyaWR8ZW58MHx8fHwxNzU2NTM1MTU3fDA&ixlib=rb-4.1.0&q=85",
+      alt: "Power transmission infrastructure"
     }
   ];
+
+  // 7 Objectives as per specifications
+  const objectives = [
+    "Advance smart grid technologies for enhanced energy distribution efficiency",
+    "Integrate renewable energy sources into existing power infrastructure",
+    "Develop AI-powered solutions for energy forecasting and optimization",
+    "Enhance cybersecurity measures for power grid protection",
+    "Create sustainable microgrids for distributed energy systems",
+    "Research energy storage systems for improved grid stability",
+    "Foster interdisciplinary collaboration in sustainable energy research"
+  ];
+
+  // Research Areas
+  const researchAreas = [
+    {
+      title: "Smart Grid Technologies",
+      description: "Next-generation intelligent grid systems for improved reliability and efficiency.",
+      image: carouselImages[0].url
+    },
+    {
+      title: "Microgrids & Distributed Energy Systems", 
+      description: "Localized energy grids that can operate independently or with traditional grids.",
+      image: carouselImages[1].url
+    },
+    {
+      title: "Renewable Energy Integration",
+      description: "Seamless integration of solar, wind, and other renewable sources.",
+      image: carouselImages[2].url
+    },
+    {
+      title: "Grid Optimization & Stability",
+      description: "Advanced algorithms for power system optimization and stability analysis.",
+      image: carouselImages[3].url
+    },
+    {
+      title: "Energy Storage Systems",
+      description: "Battery management and energy storage solutions for grid applications.",
+      image: carouselImages[4].url
+    },
+    {
+      title: "Power System Automation",
+      description: "Automated control systems for modern power grid operations.",
+      image: carouselImages[0].url
+    }
+  ];
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
+
+  // Animation on scroll
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const observerOptions = {
+      threshold: 0.6,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const objectiveIndex = parseInt(entry.target.dataset.objectiveIndex);
+          if (objectiveIndex !== undefined) {
+            setTimeout(() => {
+              setAnimatedObjectives(prev => new Set([...prev, objectiveIndex]));
+            }, objectiveIndex * 200);
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe objective elements
+    setTimeout(() => {
+      const objectiveElements = document.querySelectorAll('[data-objective-index]');
+      objectiveElements.forEach(el => observer.observe(el));
+    }, 100);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen">
