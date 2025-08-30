@@ -282,7 +282,6 @@ test_plan:
   current_focus:
     - "Update Homepage with SESG Specifications"
     - "Update Navigation and Branding"
-    - "Google Sheets API Integration Setup"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
