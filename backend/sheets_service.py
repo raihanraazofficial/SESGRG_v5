@@ -1591,6 +1591,14 @@ class SESGSheetsService:
                 try:
                     # Handle object format (direct from Google Sheets API)
                     if isinstance(row, dict):
+                        # Handle featured field with potential trailing spaces or variations
+                        featured_value = 0
+                        for key in row.keys():
+                            if key.strip().lower() == 'featured':
+                                featured_raw = str(row[key]).strip()
+                                featured_value = int(featured_raw) if featured_raw.isdigit() else 0
+                                break
+                        
                         achievement = {
                             "id": f"ach_{row.get('id', i):03d}",
                             "title": str(row.get('title', '')),
@@ -1600,8 +1608,8 @@ class SESGSheetsService:
                             "date": str(row.get('date', '')),
                             "image": str(row.get('image', 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800')),
                             "full_content": str(row.get('full_content', row.get('description', ''))),
-                            # Add featured field support
-                            "featured": int(row.get('featured', 0)) if str(row.get('featured', 0)).isdigit() else 0
+                            # Add featured field support with flexible key matching
+                            "featured": featured_value
                         }
                     else:
                         # Handle array format
