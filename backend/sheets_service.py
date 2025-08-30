@@ -857,11 +857,13 @@ class SESGSheetsService:
         reverse = sort_order == "desc"
         
         if sort_by == "year":
-            return sorted(publications, key=lambda x: x["year"], reverse=reverse)
+            return sorted(publications, key=lambda x: int(x["year"]) if x["year"].isdigit() else 0, reverse=reverse)
         elif sort_by == "citations":
             return sorted(publications, key=lambda x: x["citations"], reverse=reverse)
         elif sort_by == "title":
-            return sorted(publications, key=lambda x: x["title"], reverse=reverse)
+            return sorted(publications, key=lambda x: x["title"].lower(), reverse=reverse)
+        elif sort_by == "area":
+            return sorted(publications, key=lambda x: x["research_areas"][0].lower() if x["research_areas"] else "", reverse=reverse)
         else:
             return publications
     
