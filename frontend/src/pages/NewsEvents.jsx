@@ -792,6 +792,13 @@ const NewsEvents = () => {
             >
               Upcoming Events
             </Button>
+            <Button
+              variant={filters.category_filter === 'Achievement' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Achievement')}
+              className="px-6 py-2"
+            >
+              Achievements
+            </Button>
           </div>
         </div>
 
