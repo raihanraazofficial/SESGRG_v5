@@ -24,6 +24,8 @@ const Publications = () => {
     per_page: 20
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [availableAreas, setAvailableAreas] = useState([]);
 
   const researchAreas = [
     "Smart Grid Technologies",
