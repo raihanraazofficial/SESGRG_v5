@@ -160,35 +160,35 @@ Best regards,`;
             <Button
               variant={filters.category_filter === '' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', '')}
-              className="px-6 py-2"
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
             >
               All Publications
             </Button>
             <Button
               variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
-              className="px-6 py-2"
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
             >
-              Journal Articles
+              Journals
             </Button>
             <Button
               variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
-              className="px-6 py-2"
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
             >
-              Conference Proceedings
+              Conferences
             </Button>
             <Button
               variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
-              className="px-6 py-2"
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
             >
               Book Chapters
             </Button>
             <Button
               variant={filters.category_filter === 'Books' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Books')}
-              className="px-6 py-2"
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
             >
               Books
             </Button>
