@@ -1640,6 +1640,15 @@ class SESGSheetsService:
         news_events = []
         
         try:
+            # Debug logging to understand data structure
+            logger.info(f"DEBUG: sheets_data type: {type(sheets_data)}")
+            if isinstance(sheets_data, dict):
+                logger.info(f"DEBUG: sheets_data keys: {list(sheets_data.keys())}")
+                if 'news_events' in sheets_data and sheets_data['news_events']:
+                    logger.info(f"DEBUG: First news_events item keys: {list(sheets_data['news_events'][0].keys()) if sheets_data['news_events'] else 'No items'}")
+                    if sheets_data['news_events']:
+                        logger.info(f"DEBUG: First news_events item sample: {sheets_data['news_events'][0]}")
+            
             # Handle direct array response from Google Sheets API
             if isinstance(sheets_data, list):
                 data_rows = sheets_data
