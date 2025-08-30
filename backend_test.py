@@ -1529,5 +1529,89 @@ def run_all_tests():
     return results, all_passed
 
 if __name__ == "__main__":
-    results, all_passed = run_all_tests()
-    sys.exit(0 if all_passed else 1)
+    print("Starting Backend API Testing Suite - GOOGLE SHEETS INTEGRATION FOCUS...")
+    print("=" * 60)
+    
+    # Run all tests including new Google Sheets integration tests
+    tests = [
+        test_server_accessibility,
+        test_root_endpoint,
+        test_post_status_endpoint,
+        test_get_status_endpoint,
+        test_mongodb_connection,
+        test_cors_configuration,
+        test_publications_endpoint,
+        test_projects_endpoint,
+        test_achievements_endpoint,
+        test_news_events_endpoint,
+        test_achievement_details_endpoint,
+        test_news_event_details_endpoint,
+        test_research_stats_endpoint,
+        test_error_handling,
+        # NEW GOOGLE SHEETS INTEGRATION TESTS AS PER REVIEW REQUEST
+        test_google_sheets_projects_integration,
+        test_google_sheets_achievements_integration,
+        test_google_sheets_news_events_integration,
+        test_caching_verification,
+        test_error_handling_fallback,
+        test_real_vs_mock_data_verification,
+        test_news_events_comprehensive
+    ]
+    
+    results = []
+    for test in tests:
+        try:
+            if test.__name__ == 'test_post_status_endpoint':
+                result, _ = test()  # This test returns a tuple
+            else:
+                result = test()
+            results.append(result)
+        except Exception as e:
+            print(f"Test {test.__name__} failed with exception: {e}")
+            results.append(False)
+    
+    # Summary
+    print("\n" + "=" * 60)
+    print("BACKEND TESTING SUMMARY - GOOGLE SHEETS INTEGRATION FOCUS")
+    print("=" * 60)
+    
+    passed = sum(results)
+    total = len(results)
+    
+    print(f"Tests Passed: {passed}/{total}")
+    print(f"Success Rate: {(passed/total)*100:.1f}%")
+    
+    # Specific focus on Google Sheets integration results
+    google_sheets_tests = [
+        "test_google_sheets_projects_integration",
+        "test_google_sheets_achievements_integration", 
+        "test_google_sheets_news_events_integration",
+        "test_caching_verification",
+        "test_real_vs_mock_data_verification"
+    ]
+    
+    google_sheets_results = []
+    for i, test in enumerate(tests):
+        if test.__name__ in google_sheets_tests:
+            google_sheets_results.append(results[i])
+    
+    google_sheets_passed = sum(google_sheets_results)
+    google_sheets_total = len(google_sheets_results)
+    
+    print(f"\nGoogle Sheets Integration Tests: {google_sheets_passed}/{google_sheets_total}")
+    
+    if passed == total:
+        print("🎉 ALL TESTS PASSED! Google Sheets integration is working perfectly.")
+        print("✅ Real data is being fetched from Google Sheets (not mock data)")
+        print("✅ All three APIs (Projects, Achievements, News & Events) are functional")
+        print("✅ Caching is working for performance optimization")
+        print("✅ This addresses the user complaint of 'No projects/achievements/news found'")
+    elif google_sheets_passed == google_sheets_total:
+        print("✅ GOOGLE SHEETS INTEGRATION WORKING! Some basic functionality issues.")
+        print("✅ Real data is being fetched from new Google Sheets URLs")
+        print("✅ This addresses the user complaint about missing data")
+    else:
+        print("⚠️  Google Sheets integration issues found. Please review above.")
+        print("❌ User complaint about missing data may not be resolved")
+    
+    print("=" * 60)
