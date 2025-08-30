@@ -801,13 +801,16 @@ class SESGSheetsService:
         
         # Add more news/events for testing
         for i in range(5, 41):
+            description = f"Update {i} provides the latest information about our ongoing research and activities."
             news_events.append({
                 "id": f"news_{i:03d}",
                 "title": f"News/Event {i}: Latest Update from SESG Lab",
-                "short_description": f"Update {i} provides the latest information about our ongoing research and activities.",
+                "short_description": description,
+                "description": description,
                 "category": ["News", "Event", "Achievement", "Upcoming Event"][i % 4],
                 "date": f"2024-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}",
                 "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+                "featured": 1 if i == 7 else 0,  # Make one of them featured for testing
                 "full_content": f"""
                 # News/Event {i}: Latest Update from SESG Lab
 
