@@ -16,6 +16,9 @@ class SESGSheetsService:
     def __init__(self):
         self.use_mock_data = False  # Set to False to use real Google Sheets
         self.publications_api_url = "https://script.google.com/macros/s/AKfycbzQ6XwRBYMc5PaDDns3XlgpRGYQFZtC45RtVRUhyvVlt869zH9mL0IlGlnvBV2-e_s/exec?sheet=sheet6"
+        self.projects_api_url = "https://script.google.com/macros/s/AKfycbz5-vZBCz8DZQhLDmLjJNA70HQ3OazQ2uTAUuK7UQaTVip7pG8ulVPLuzA8VN8rqTGH/exec?sheet=sheet7"
+        self.achievements_api_url = "https://script.google.com/macros/s/AKfycbxScZMmNtYyVJ5Je8iRpAFTGVpCCuA-5tnS3jGVGk6aYbRjbiL7NAAquXsxcQU2T_I/exec?sheet=sheet8"
+        self.news_events_api_url = "https://script.google.com/macros/s/AKfycbykWJ0VZWqL22CmmhG7qeSrkLxczJB2gid4HiH6ixZZJrvM7Ha-ZuDS8ygbHz205aN7/exec?sheet=sheet9"
         
         # Cache configuration for performance optimization
         self.cache = {}
