@@ -245,7 +245,7 @@ frontend:
     file: "pages/NewsEvents.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
@@ -262,6 +262,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Comprehensive News & Events API filtering functionality testing completed with 100% success rate. All requested test scenarios passed: 1) Basic API with default parameters working (15 items per page, proper pagination), 2) Category filtering working perfectly (News: 11 items, Events: 10 items, Upcoming Events: 10 items, Achievement: 10 items), 3) Search/title filtering working correctly ('Smart Grid': 2 matches, 'Mathematical': 1 match with math-heavy content, case-insensitive search working), 4) Sorting by date (newest/oldest) and title (A-Z/Z-A) working correctly, 5) Combined filtering (category + search + sorting) working perfectly, 6) Pagination with different page sizes (5, 10, 20) and navigation working correctly with proper metadata (total_pages, has_next, has_prev), 7) Edge cases handled gracefully (invalid page numbers, large page sizes, empty search results). The filtering functionality mentioned as 'not working properly' in the user request is actually working perfectly. All backend APIs are production-ready."
+      - working: true
+        agent: "testing"
+        comment: "Re-tested News & Events API as specifically requested in review. CONFIRMED: All category filtering working perfectly - 'Events' category (10 items), 'Upcoming Events' category (10 items), 'News' category (11 items), 'Achievement' category (10 items). Search functionality working ('Smart Grid': 2 results, 'Mathematical': 1 result). Sorting by date/title in both directions working correctly. Pagination with multiple page sizes (5,10,15,20) working properly. Detailed view endpoint working with rich content. Mathematical content verified with Greek letters (α,β,γ,Σ), equations, and formulas in 'Advanced Mathematical Modeling' article (4630 characters). All backend APIs fully functional and ready for production."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
