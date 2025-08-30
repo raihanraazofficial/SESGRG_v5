@@ -950,19 +950,36 @@ class SESGSheetsService:
     def _get_google_sheets_publications(self, page, per_page, year_filter, area_filter, 
                                       category_filter, author_filter, title_filter, 
                                       search_filter, sort_by, sort_order) -> Dict[str, Any]:
-        """Get publications from Google Sheets API"""
+        """Get publications from Google Sheets API with caching for performance"""
+        cache_key = "publications_raw_data"
+        
         try:
-            # Fetch data from Google Sheets
-            response = requests.get(self.publications_api_url, timeout=10)
-            response.raise_for_status()
+            # Check if we have cached data that's still valid
+            current_time = datetime.now()
+            if (cache_key in self.cache and 
+                cache_key in self.last_fetch_time and
+                current_time - self.last_fetch_time[cache_key] < self.cache_duration):
+                
+                logger.info("Using cached publications data for performance")
+                publications = self.cache[cache_key]
+            else:
+                # Fetch fresh data from Google Sheets
+                logger.info("Fetching fresh publications data from Google Sheets")
+                response = requests.get(self.publications_api_url, timeout=30)  # Increased timeout
+                response.raise_for_status()
+                
+                # Parse the response
+                sheets_data = response.json()
+                
+                # Convert sheets data to our publication format
+                publications = self._convert_sheets_to_publications(sheets_data)
+                
+                # Cache the raw publications data
+                self.cache[cache_key] = publications
+                self.last_fetch_time[cache_key] = current_time
+                logger.info(f"Cached {len(publications)} publications for performance")
             
-            # Parse the response
-            sheets_data = response.json()
-            
-            # Convert sheets data to our publication format
-            publications = self._convert_sheets_to_publications(sheets_data)
-            
-            # Apply filters
+            # Apply filters on cached data
             filtered_pubs = self._apply_publication_filters(
                 publications, year_filter, area_filter, category_filter, 
                 author_filter, title_filter, search_filter
