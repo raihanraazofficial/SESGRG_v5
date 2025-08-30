@@ -116,7 +116,7 @@ const NewsEvents = () => {
   };
 
   const generateBlogContent = (item) => {
-    // Enhanced function to parse and format description content with all advanced features
+    // Enhanced function to parse and format description content with all advanced features including LaTeX
     const parseDescription = (description) => {
       if (!description) return '';
       
@@ -129,6 +129,7 @@ const NewsEvents = () => {
       let inTable = false;
       let tableRows = [];
       let codeLanguage = '';
+      let mathContent = '';
       
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
@@ -161,39 +162,43 @@ const NewsEvents = () => {
         if (trimmed === '$$') {
           if (!inMathBlock) {
             inMathBlock = true;
-            result += `<div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 my-6 rounded-r-lg">
-              <div class="flex items-center mb-3">
-                <svg class="w-5 h-5 text-emerald-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="text-sm font-medium text-emerald-800">Mathematical Formula</span>
-              </div>
-              <div class="math-display bg-white p-4 rounded border text-center overflow-x-auto">$$`;
+            mathContent = '';
+            result += '<div class="latex-block-math">';
           } else {
             inMathBlock = false;
-            result += `$$</div></div>`;
+            // Use KaTeX for rendering the math content
+            result += `<div class="my-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg overflow-x-auto">
+              <div class="flex items-center mb-2">
+                <svg class="w-4 h-4 text-emerald-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-xs font-medium text-emerald-800 uppercase tracking-wide">Mathematical Formula</span>
+              </div>
+              <div class="text-center math-content" data-math="${mathContent.replace(/"/g, '&quot;')}"></div>
+            </div>`;
+            result += '</div>';
           }
           continue;
         }
         
-        // Handle inline math expressions with $ $ or LaTeX patterns
+        // Inside math block - collect LaTeX content
+        if (inMathBlock) {
+          mathContent += line + '\n';
+          continue;
+        }
+        
+        // Handle inline math expressions
         let processedLine = line;
-        if (!inCodeBlock && !inMathBlock) {
+        if (!inCodeBlock) {
           // Process inline math $...$
-          processedLine = processedLine.replace(/\$([^$]+)\$/g, '<span class="math-inline">$$$1$$</span>');
+          processedLine = processedLine.replace(/\$([^$\n]+)\$/g, '<span class="math-inline-content" data-math="$1"></span>');
           
           // Process display math $$...$$ (single line)
-          processedLine = processedLine.replace(/\$\$([^$]+)\$\$/g, '<div class="math-display bg-emerald-50 p-4 my-4 rounded border text-center">$$$$1$$$$</div>');
+          processedLine = processedLine.replace(/\$\$([^$\n]+)\$\$/g, '<div class="math-display-content my-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-center" data-math="$1"></div>');
         }
         
         // Inside code block
         if (inCodeBlock) {
-          result += line + '\n';
-          continue;
-        }
-        
-        // Inside math block - keep LaTeX syntax intact for MathJax
-        if (inMathBlock) {
           result += line + '\n';
           continue;
         }
