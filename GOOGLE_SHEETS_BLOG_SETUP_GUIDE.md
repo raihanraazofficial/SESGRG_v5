@@ -11,6 +11,53 @@
 5. [Sample Data Examples](#sample-data-examples)
 6. [Troubleshooting](#troubleshooting)
 
+## 🚀 Quick Setup Checklist
+
+### ✅ Step-by-Step Setup:
+
+#### 1. **Google Sheets তৈরি করুন:**
+- [ ] নতুন Google Sheets file তৈরি করুন
+- [ ] Sheet rename করুন `sheet9` (News & Events) বা `sheet8` (Achievements)
+- [ ] Headers add করুন: `id | title | short_description | category | date | image | featured | full_content`
+
+#### 2. **Apps Script Setup:**
+- [ ] Extensions > Apps Script open করুন
+- [ ] উপরের JavaScript code copy-paste করুন
+- [ ] Script save করুন
+- [ ] Deploy as Web App করুন
+- [ ] Access permission: "Anyone" set করুন
+- [ ] Deployment URL copy করুন
+
+#### 3. **Sample Data Entry:**
+- [ ] প্রথম row এ একটি featured item add করুন (`featured = TRUE`)
+- [ ] High-quality image URL add করুন (1200px+ width)
+- [ ] Full content এ LaTeX/Markdown formatting ব্যবহার করুন
+- [ ] Date format: YYYY-MM-DD ব্যবহার করুন
+
+#### 4. **Testing:**
+- [ ] Browser এ API URL test করুন
+- [ ] JSON response চেক করুন
+- [ ] Website এ content load হচ্ছে কিনা verify করুন
+
+### 🎯 Featured Content Best Practices:
+
+#### Content Selection:
+- **High Impact News**: Major awards, partnerships, breakthroughs
+- **Time-Sensitive**: Recent achievements, upcoming events
+- **Visual Appeal**: Strong, relevant images
+- **Complete Story**: Rich full_content with proper formatting
+
+#### Technical Requirements:
+- **Image Size**: Minimum 1200px width for featured items
+- **Content Length**: 500+ words for featured articles
+- **LaTeX Support**: Use proper math notation
+- **Mobile Friendly**: Test on different screen sizes
+
+#### Maintenance Schedule:
+- **Weekly**: Update featured content
+- **Monthly**: Review and archive old content  
+- **Quarterly**: Optimize images and content structure
+
 ---
 
 ## 🚀 Google Apps Script Setup
