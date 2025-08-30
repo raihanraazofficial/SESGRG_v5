@@ -221,7 +221,7 @@ const Achievements = () => {
                   <SelectValue placeholder="Filter by Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="Awards">Awards</SelectItem>
                   <SelectItem value="Recognition">Recognition</SelectItem>
                   <SelectItem value="Milestones">Milestones</SelectItem>
