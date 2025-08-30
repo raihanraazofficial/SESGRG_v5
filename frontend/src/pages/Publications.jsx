@@ -366,7 +366,7 @@ Best regards,`;
                           <span 
                             className="ieee-citation"
                             dangerouslySetInnerHTML={{
-                              __html: this.renderIEEEFormat(publication)
+                              __html: renderIEEEFormat(publication)
                             }}
                           />
                         </p>
