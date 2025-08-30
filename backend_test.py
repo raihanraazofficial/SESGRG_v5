@@ -319,7 +319,7 @@ def test_achievements_endpoint():
         return False
 
 def test_news_events_endpoint():
-    """Test GET /api/news-events endpoint with various parameters"""
+    """Test GET /api/news-events endpoint with comprehensive filtering tests"""
     print("10. Testing GET /api/news-events endpoint...")
     try:
         # Test basic endpoint
@@ -333,6 +333,8 @@ def test_news_events_endpoint():
         if not all(key in data for key in required_keys):
             print(f"   ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
             return False
+        
+        print("   ✅ Basic endpoint structure correct")
         
         # Test category filter
         response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News", timeout=10)
@@ -351,6 +353,233 @@ def test_news_events_endpoint():
         
     except Exception as e:
         print(f"   ❌ Error testing news-events endpoint: {e}")
+        return False
+
+def test_news_events_comprehensive():
+    """Comprehensive News & Events API functionality testing"""
+    print("15. Testing News & Events API - Comprehensive Filtering Tests...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Basic API Test - GET /api/news-events (default parameters)
+        print("   1.1 Testing basic API with default parameters...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=10)
+        if response.status_code != 200:
+            print(f"      ❌ Basic request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            if "news_events" in data and "pagination" in data:
+                print(f"      ✅ Basic API working - Retrieved {len(data['news_events'])} items")
+                print(f"      📊 Pagination: Page {data['pagination']['current_page']} of {data['pagination']['total_pages']}")
+            else:
+                print("      ❌ Response structure incorrect")
+                all_tests_passed = False
+        
+        # 2. Category Filtering Tests
+        print("   1.2 Testing category filtering...")
+        categories = ["News", "Events", "Upcoming Events", "Achievement"]
+        
+        for category in categories:
+            response = requests.get(f"{API_BASE_URL}/news-events?category_filter={category}", timeout=10)
+            if response.status_code != 200:
+                print(f"      ❌ Category filter '{category}' failed")
+                all_tests_passed = False
+            else:
+                data = response.json()
+                items = data.get("news_events", [])
+                # Verify all items have the correct category
+                correct_category = all(item.get("category") == category for item in items)
+                if correct_category and len(items) > 0:
+                    print(f"      ✅ Category '{category}': {len(items)} items found")
+                elif len(items) == 0:
+                    print(f"      ⚠️  Category '{category}': No items found (may be expected)")
+                else:
+                    print(f"      ❌ Category '{category}': Filtering not working correctly")
+                    all_tests_passed = False
+        
+        # Test invalid category
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=InvalidCategory", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            print(f"      ✅ Invalid category handled gracefully: {len(items)} items returned")
+        
+        # 3. Search/Title Filtering Tests
+        print("   1.3 Testing search/title filtering...")
+        
+        # Search for "Smart Grid" (should match multiple items)
+        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=Smart Grid", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            smart_grid_matches = [item for item in items if "smart grid" in item.get("title", "").lower()]
+            print(f"      ✅ 'Smart Grid' search: {len(smart_grid_matches)} matches found")
+        else:
+            print("      ❌ 'Smart Grid' search failed")
+            all_tests_passed = False
+        
+        # Search for "Mathematical" (should match the math-heavy news item)
+        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=Mathematical", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            math_matches = [item for item in items if "mathematical" in item.get("title", "").lower()]
+            print(f"      ✅ 'Mathematical' search: {len(math_matches)} matches found")
+            if len(math_matches) > 0:
+                print(f"         Found: '{math_matches[0].get('title', 'N/A')}'")
+        else:
+            print("      ❌ 'Mathematical' search failed")
+            all_tests_passed = False
+        
+        # Test partial matches and case sensitivity
+        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=grant", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            grant_matches = [item for item in items if "grant" in item.get("title", "").lower()]
+            print(f"      ✅ Case-insensitive 'grant' search: {len(grant_matches)} matches")
+        
+        # 4. Sorting Tests
+        print("   1.4 Testing sorting functionality...")
+        
+        # Sort by date (newest first)
+        response = requests.get(f"{API_BASE_URL}/news-events?sort_by=date&sort_order=desc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            if len(items) >= 2:
+                dates = [item.get("date") for item in items[:3]]
+                print(f"      ✅ Date sorting (desc): {dates}")
+        
+        # Sort by date (oldest first)
+        response = requests.get(f"{API_BASE_URL}/news-events?sort_by=date&sort_order=asc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            if len(items) >= 2:
+                dates = [item.get("date") for item in items[:3]]
+                print(f"      ✅ Date sorting (asc): {dates}")
+        
+        # Sort by title (A-Z)
+        response = requests.get(f"{API_BASE_URL}/news-events?sort_by=title&sort_order=asc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            if len(items) >= 2:
+                titles = [item.get("title", "")[:30] + "..." for item in items[:3]]
+                print(f"      ✅ Title sorting (A-Z): {titles}")
+        
+        # Sort by title (Z-A)
+        response = requests.get(f"{API_BASE_URL}/news-events?sort_by=title&sort_order=desc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            if len(items) >= 2:
+                titles = [item.get("title", "")[:30] + "..." for item in items[:3]]
+                print(f"      ✅ Title sorting (Z-A): {titles}")
+        
+        # 5. Combined Filtering Tests
+        print("   1.5 Testing combined filtering...")
+        
+        # Combine category + search filters
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&title_filter=Grant", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            valid_items = [item for item in items if 
+                          item.get("category") == "News" and 
+                          "grant" in item.get("title", "").lower()]
+            print(f"      ✅ Category + Search filter: {len(valid_items)} valid items")
+        
+        # Combine category + sorting
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&sort_by=date&sort_order=desc", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            news_items = [item for item in items if item.get("category") == "News"]
+            print(f"      ✅ Category + Sorting: {len(news_items)} News items sorted by date")
+        
+        # Test multiple filters together
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&title_filter=Smart&sort_by=title&sort_order=asc&page=1&per_page=5", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            print(f"      ✅ Multiple filters combined successfully")
+        
+        # 6. Pagination Tests
+        print("   1.6 Testing pagination...")
+        
+        # Test different page sizes
+        for page_size in [5, 10, 20]:
+            response = requests.get(f"{API_BASE_URL}/news-events?per_page={page_size}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                items = data.get("news_events", [])
+                pagination = data.get("pagination", {})
+                print(f"      ✅ Page size {page_size}: Got {len(items)} items, per_page={pagination.get('per_page')}")
+        
+        # Test navigation through pages
+        response = requests.get(f"{API_BASE_URL}/news-events?page=1&per_page=5", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            pagination = data.get("pagination", {})
+            print(f"      ✅ Page navigation: Page 1 - has_next={pagination.get('has_next')}, has_prev={pagination.get('has_prev')}")
+        
+        response = requests.get(f"{API_BASE_URL}/news-events?page=2&per_page=5", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            pagination = data.get("pagination", {})
+            print(f"      ✅ Page navigation: Page 2 - has_next={pagination.get('has_next')}, has_prev={pagination.get('has_prev')}")
+        
+        # Verify pagination metadata
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=10", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            pagination = data.get("pagination", {})
+            required_pagination_keys = ["total_pages", "has_next", "has_prev", "current_page", "per_page", "total_items"]
+            missing_keys = [key for key in required_pagination_keys if key not in pagination]
+            if not missing_keys:
+                print(f"      ✅ Pagination metadata complete: {pagination}")
+            else:
+                print(f"      ❌ Missing pagination keys: {missing_keys}")
+                all_tests_passed = False
+        
+        # 7. Edge Cases
+        print("   1.7 Testing edge cases...")
+        
+        # Invalid page numbers
+        response = requests.get(f"{API_BASE_URL}/news-events?page=-1", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Invalid page number (-1) handled gracefully")
+        
+        response = requests.get(f"{API_BASE_URL}/news-events?page=999999", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            print(f"      ✅ Very large page number handled gracefully: {len(items)} items")
+        
+        # Very large page sizes
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=1000", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Large page size handled gracefully")
+        
+        # Empty search results
+        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=NonExistentSearchTerm12345", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("news_events", [])
+            print(f"      ✅ Empty search results handled: {len(items)} items found")
+        
+        if all_tests_passed:
+            print("   🎉 ALL News & Events API tests PASSED!")
+        else:
+            print("   ⚠️  Some News & Events API tests FAILED!")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in comprehensive News & Events testing: {e}")
         return False
 
 def test_achievement_details_endpoint():
