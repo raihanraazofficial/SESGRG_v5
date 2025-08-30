@@ -320,7 +320,7 @@ const NewsEvents = () => {
         formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>');
         
         // Inline math $formula$
-        formatted = formatted.replace(/\$([^$]+)\$/g, `<span class="bg-emerald-50 text-emerald-800 px-2 py-1 rounded font-mono">$1</span>`);
+        formatted = formatted.replace(/\$([^$]+)\$/g, '<span class="math-inline-content" data-math="$1"></span>');
         
         // Colored text [color:text]
         formatted = formatted.replace(/\[([a-z]+):(.*?)\]/g, '<span class="text-$1-600 font-medium">$2</span>');
