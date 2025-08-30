@@ -82,7 +82,54 @@ const Achievements = () => {
   };
 
   const generateBlogContent = (achievement) => {
-    // Generate blog-style content from the achievement description
+    // Function to parse and format description content from Google Sheets
+    const parseDescription = (description) => {
+      if (!description) return '';
+      
+      return description.split('\n').map(paragraph => {
+        const trimmed = paragraph.trim();
+        if (!trimmed) return '';
+        
+        // Headers (lines starting with ##)
+        if (trimmed.startsWith('## ')) {
+          return `<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">${trimmed.substring(3)}</h2>`;
+        }
+        
+        // Subheaders (lines starting with ###)
+        if (trimmed.startsWith('### ')) {
+          return `<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">${trimmed.substring(4)}</h3>`;
+        }
+        
+        // Bold text (**text**)
+        let formatted = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic text (*text*)
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Bullet points (lines starting with -)
+        if (trimmed.startsWith('- ')) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.substring(2)}</li>`;
+        }
+        
+        // Numbered lists (lines starting with number.)
+        if (/^\d+\.\s/.test(trimmed)) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.replace(/^\d+\.\s/, '')}</li>`;
+        }
+        
+        // Quotes (lines starting with >)
+        if (trimmed.startsWith('> ')) {
+          return `<blockquote class="border-l-4 border-emerald-300 pl-6 my-6 italic text-lg text-gray-600 bg-emerald-50 py-4 rounded-r-lg">${formatted.substring(2)}</blockquote>`;
+        }
+        
+        // Links [text](url)
+        formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 hover:text-emerald-800 underline">$1</a>');
+        
+        // Regular paragraphs
+        return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${formatted}</p>`;
+      }).join('');
+    };
+
+    // Generate blog-style content from the achievement
     const blogHtml = `
       <div class="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
         <div class="mb-8">
@@ -99,6 +146,13 @@ const Achievements = () => {
             </svg>
             <span class="text-lg">${formatDate(achievement.date)}</span>
           </div>
+          ${achievement.category ? `
+          <div class="mb-6">
+            <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
+              ${achievement.category}
+            </span>
+          </div>
+          ` : ''}
         </div>
         
         ${achievement.image ? `<div class="mb-12">
@@ -110,18 +164,9 @@ const Achievements = () => {
             <p class="text-emerald-800 font-medium text-lg leading-relaxed">${achievement.short_description}</p>
           </div>
           
-          ${achievement.description.split('\n\n').map(paragraph => {
-            if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
-              return `<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">${paragraph.replace(/\*\*/g, '')}</h2>`;
-            } else if (paragraph.trim().startsWith('*')) {
-              const items = paragraph.split('*').filter(item => item.trim());
-              return `<ul class="list-disc pl-6 mb-6 space-y-2">${items.map(item => `<li class="text-gray-700 leading-relaxed">${item.trim()}</li>`).join('')}</ul>`;
-            } else if (paragraph.trim().startsWith('"') && paragraph.trim().endsWith('"')) {
-              return `<blockquote class="border-l-4 border-gray-300 pl-6 my-8 italic text-lg text-gray-600">${paragraph}</blockquote>`;
-            } else {
-              return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${paragraph}</p>`;
-            }
-          }).join('')}
+          <div class="mt-8">
+            ${parseDescription(achievement.description || achievement.full_content || '')}
+          </div>
           
           <div class="mt-12 p-8 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl">
             <h3 class="text-xl font-bold text-gray-900 mb-4">About This Achievement</h3>
@@ -145,6 +190,10 @@ const Achievements = () => {
         <title>${achievement.title} - SESG Research Achievement</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          .prose ul { list-style-type: disc; margin-left: 1.5rem; }
+          .prose ol { list-style-type: decimal; margin-left: 1.5rem; }
+        </style>
       </head>
       <body class="bg-gray-50">
         ${blogHtml}
