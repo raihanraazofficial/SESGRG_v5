@@ -53,6 +53,142 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
+# SESG Research Data API Endpoints
+
+@api_router.get("/publications")
+async def get_publications(
+    page: int = 1,
+    per_page: int = 20,
+    year_filter: Optional[str] = None,
+    area_filter: Optional[str] = None,
+    category_filter: Optional[str] = None,
+    author_filter: Optional[str] = None,
+    title_filter: Optional[str] = None,
+    sort_by: str = "year",
+    sort_order: str = "desc"
+):
+    """Get publications with filtering, pagination, and sorting"""
+    try:
+        result = sheets_service.get_publications(
+            page=page, per_page=per_page, year_filter=year_filter,
+            area_filter=area_filter, category_filter=category_filter,
+            author_filter=author_filter, title_filter=title_filter,
+            sort_by=sort_by, sort_order=sort_order
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching publications: {e}")
+        return {"error": "Failed to fetch publications", "publications": [], "pagination": {}}
+
+@api_router.get("/projects")
+async def get_projects(
+    page: int = 1,
+    per_page: int = 20,
+    status_filter: Optional[str] = None,
+    area_filter: Optional[str] = None,
+    title_filter: Optional[str] = None,
+    sort_by: str = "start_date",
+    sort_order: str = "desc"
+):
+    """Get projects with filtering and pagination"""
+    try:
+        result = sheets_service.get_projects(
+            page=page, per_page=per_page, status_filter=status_filter,
+            area_filter=area_filter, title_filter=title_filter,
+            sort_by=sort_by, sort_order=sort_order
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching projects: {e}")
+        return {"error": "Failed to fetch projects", "projects": [], "pagination": {}}
+
+@api_router.get("/achievements")
+async def get_achievements(
+    page: int = 1,
+    per_page: int = 12,
+    category_filter: Optional[str] = None,
+    title_filter: Optional[str] = None,
+    sort_by: str = "date",
+    sort_order: str = "desc"
+):
+    """Get achievements with filtering and pagination"""
+    try:
+        result = sheets_service.get_achievements(
+            page=page, per_page=per_page, category_filter=category_filter,
+            title_filter=title_filter, sort_by=sort_by, sort_order=sort_order
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching achievements: {e}")
+        return {"error": "Failed to fetch achievements", "achievements": [], "pagination": {}}
+
+@api_router.get("/news-events")
+async def get_news_events(
+    page: int = 1,
+    per_page: int = 15,
+    category_filter: Optional[str] = None,
+    title_filter: Optional[str] = None,
+    sort_by: str = "date",
+    sort_order: str = "desc"
+):
+    """Get news and events with filtering and pagination"""
+    try:
+        result = sheets_service.get_news_events(
+            page=page, per_page=per_page, category_filter=category_filter,
+            title_filter=title_filter, sort_by=sort_by, sort_order=sort_order
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching news and events: {e}")
+        return {"error": "Failed to fetch news and events", "news_events": [], "pagination": {}}
+
+@api_router.get("/achievements/{achievement_id}")
+async def get_achievement_details(achievement_id: str):
+    """Get detailed achievement for blog-style page"""
+    try:
+        result = sheets_service.get_achievement_details(achievement_id)
+        if result:
+            return result
+        else:
+            return {"error": "Achievement not found"}
+    except Exception as e:
+        logger.error(f"Error fetching achievement details: {e}")
+        return {"error": "Failed to fetch achievement details"}
+
+@api_router.get("/news-events/{news_id}")
+async def get_news_event_details(news_id: str):
+    """Get detailed news/event for blog-style page"""
+    try:
+        result = sheets_service.get_news_event_details(news_id)
+        if result:
+            return result
+        else:
+            return {"error": "News/Event not found"}
+    except Exception as e:
+        logger.error(f"Error fetching news/event details: {e}")
+        return {"error": "Failed to fetch news/event details"}
+
+@api_router.get("/research-stats")
+async def get_research_statistics():
+    """Get overall research statistics"""
+    try:
+        # Get total counts from each category
+        publications = sheets_service.get_publications(page=1, per_page=1)
+        projects = sheets_service.get_projects(page=1, per_page=1) 
+        achievements = sheets_service.get_achievements(page=1, per_page=1)
+        news_events = sheets_service.get_news_events(page=1, per_page=1)
+        
+        return {
+            "total_publications": publications.get("pagination", {}).get("total_items", 0),
+            "total_citations": publications.get("statistics", {}).get("total_citations", 0),
+            "active_projects": len([p for p in sheets_service.get_projects(page=1, per_page=100)["projects"] if p["status"] == "Active"]),
+            "total_achievements": achievements.get("pagination", {}).get("total_items", 0),
+            "recent_news": news_events.get("pagination", {}).get("total_items", 0)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching research statistics: {e}")
+        return {"error": "Failed to fetch research statistics"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
