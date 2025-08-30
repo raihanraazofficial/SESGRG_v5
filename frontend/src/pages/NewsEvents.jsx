@@ -21,7 +21,7 @@ const NewsEvents = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ["News", "Events", "Upcoming Events", "Achievement"];
+  const categories = ["News", "Event", "Upcoming Event"];
 
   useEffect(() => {
     fetchNewsEvents();
