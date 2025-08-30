@@ -509,14 +509,56 @@ const Achievements = () => {
       <head>
         <title>${achievement.title} - SESG Research Achievement</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           .prose ul { list-style-type: disc; margin-left: 1.5rem; }
           .prose ol { list-style-type: decimal; margin-left: 1.5rem; }
+          /* Math Formula Styling */
+          .math-formula { 
+            font-family: 'Courier New', monospace; 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+          }
+          /* Code Block Styling */
+          .prose pre {
+            background: #1a202c !important;
+            border-radius: 12px;
+            border: 1px solid #2d3748;
+          }
+          .prose code {
+            color: #48bb78 !important;
+            font-family: 'Fira Code', 'Consolas', monospace;
+          }
+          /* Table Styling */
+          .prose table {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          }
+          /* Video Container */
+          .video-container iframe {
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          }
         </style>
       </head>
       <body class="bg-gray-50">
         ${blogHtml}
+        
+        <script>
+          // MathJax Configuration
+          window.MathJax = {
+            tex: {
+              inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+              displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+              processEscapes: true,
+              processEnvironments: true
+            },
+            options: {
+              skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+          };
+        </script>
       </body>
       </html>
     `);
