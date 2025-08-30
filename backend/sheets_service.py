@@ -1252,6 +1252,392 @@ class SESGSheetsService:
             logger.error(f"Error generating IEEE format: {e}")
             return f"{', '.join(publication.get('authors', []))}, \"{publication.get('title', '')}\", {publication.get('year', '')}."
 
+    def _get_google_sheets_projects(self, page, per_page, status_filter, area_filter, 
+                                   title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Get projects from Google Sheets API with caching for performance"""
+        cache_key = "projects_raw_data"
+        
+        try:
+            # Check if we have cached data that's still valid
+            current_time = datetime.now()
+            if (cache_key in self.cache and 
+                cache_key in self.last_fetch_time and
+                current_time - self.last_fetch_time[cache_key] < self.cache_duration):
+                
+                logger.info("Using cached projects data for performance")
+                projects = self.cache[cache_key]
+            else:
+                # Fetch fresh data from Google Sheets
+                logger.info("Fetching fresh projects data from Google Sheets")
+                response = requests.get(self.projects_api_url, timeout=30)
+                response.raise_for_status()
+                
+                # Parse the response
+                sheets_data = response.json()
+                
+                # Convert sheets data to our projects format
+                projects = self._convert_sheets_to_projects(sheets_data)
+                
+                # Cache the raw projects data
+                self.cache[cache_key] = projects
+                self.last_fetch_time[cache_key] = current_time
+                logger.info(f"Cached {len(projects)} projects for performance")
+            
+            # Apply filters on cached data
+            filtered_projects = self._apply_project_filters(projects, status_filter, area_filter, title_filter)
+            
+            # Apply sorting
+            filtered_projects = self._sort_projects(filtered_projects, sort_by, sort_order)
+            
+            # Apply pagination
+            total = len(filtered_projects)
+            start_idx = (page - 1) * per_page
+            end_idx = start_idx + per_page
+            paginated_projects = filtered_projects[start_idx:end_idx]
+            
+            return {
+                "projects": paginated_projects,
+                "pagination": {
+                    "current_page": page,
+                    "per_page": per_page,
+                    "total_items": total,
+                    "total_pages": (total + per_page - 1) // per_page,
+                    "has_next": end_idx < total,
+                    "has_prev": page > 1
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching Google Sheets projects data: {e}")
+            # Fallback to mock data on error
+            return self._get_mock_projects(page, per_page, status_filter, area_filter, 
+                                         title_filter, sort_by, sort_order)
+
+    def _get_google_sheets_achievements(self, page, per_page, category_filter, 
+                                       title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Get achievements from Google Sheets API with caching for performance"""
+        cache_key = "achievements_raw_data"
+        
+        try:
+            # Check if we have cached data that's still valid
+            current_time = datetime.now()
+            if (cache_key in self.cache and 
+                cache_key in self.last_fetch_time and
+                current_time - self.last_fetch_time[cache_key] < self.cache_duration):
+                
+                logger.info("Using cached achievements data for performance")
+                achievements = self.cache[cache_key]
+            else:
+                # Fetch fresh data from Google Sheets
+                logger.info("Fetching fresh achievements data from Google Sheets")
+                response = requests.get(self.achievements_api_url, timeout=30)
+                response.raise_for_status()
+                
+                # Parse the response
+                sheets_data = response.json()
+                
+                # Convert sheets data to our achievements format
+                achievements = self._convert_sheets_to_achievements(sheets_data)
+                
+                # Cache the raw achievements data
+                self.cache[cache_key] = achievements
+                self.last_fetch_time[cache_key] = current_time
+                logger.info(f"Cached {len(achievements)} achievements for performance")
+            
+            # Apply filters on cached data
+            filtered_achievements = self._apply_achievement_filters(achievements, category_filter, title_filter)
+            
+            # Apply sorting
+            filtered_achievements = self._sort_achievements(filtered_achievements, sort_by, sort_order)
+            
+            # Apply pagination
+            total = len(filtered_achievements)
+            start_idx = (page - 1) * per_page
+            end_idx = start_idx + per_page
+            paginated_achievements = filtered_achievements[start_idx:end_idx]
+            
+            return {
+                "achievements": paginated_achievements,
+                "pagination": {
+                    "current_page": page,
+                    "per_page": per_page,
+                    "total_items": total,
+                    "total_pages": (total + per_page - 1) // per_page,
+                    "has_next": end_idx < total,
+                    "has_prev": page > 1
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching Google Sheets achievements data: {e}")
+            # Fallback to mock data on error
+            return self._get_mock_achievements(page, per_page, category_filter, 
+                                            title_filter, sort_by, sort_order)
+
+    def _get_google_sheets_news_events(self, page, per_page, category_filter, 
+                                      title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Get news and events from Google Sheets API with caching for performance"""
+        cache_key = "news_events_raw_data"
+        
+        try:
+            # Check if we have cached data that's still valid
+            current_time = datetime.now()
+            if (cache_key in self.cache and 
+                cache_key in self.last_fetch_time and
+                current_time - self.last_fetch_time[cache_key] < self.cache_duration):
+                
+                logger.info("Using cached news events data for performance")
+                news_events = self.cache[cache_key]
+            else:
+                # Fetch fresh data from Google Sheets
+                logger.info("Fetching fresh news events data from Google Sheets")
+                response = requests.get(self.news_events_api_url, timeout=30)
+                response.raise_for_status()
+                
+                # Parse the response
+                sheets_data = response.json()
+                
+                # Convert sheets data to our news events format
+                news_events = self._convert_sheets_to_news_events(sheets_data)
+                
+                # Cache the raw news events data
+                self.cache[cache_key] = news_events
+                self.last_fetch_time[cache_key] = current_time
+                logger.info(f"Cached {len(news_events)} news events for performance")
+            
+            # Apply filters on cached data
+            filtered_news = self._apply_news_filters(news_events, category_filter, title_filter)
+            
+            # Apply sorting
+            filtered_news = self._sort_news_events(filtered_news, sort_by, sort_order)
+            
+            # Apply pagination
+            total = len(filtered_news)
+            start_idx = (page - 1) * per_page
+            end_idx = start_idx + per_page
+            paginated_news = filtered_news[start_idx:end_idx]
+            
+            return {
+                "news_events": paginated_news,
+                "pagination": {
+                    "current_page": page,
+                    "per_page": per_page,
+                    "total_items": total,
+                    "total_pages": (total + per_page - 1) // per_page,
+                    "has_next": end_idx < total,
+                    "has_prev": page > 1
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching Google Sheets news events data: {e}")
+            # Fallback to mock data on error
+            return self._get_mock_news_events(page, per_page, category_filter, 
+                                            title_filter, sort_by, sort_order)
+
+    def _get_google_sheets_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed achievement for blog-style page from Google Sheets"""
+        try:
+            # Get all achievements and find the specific one
+            achievements_data = self._get_google_sheets_achievements(1, 1000, None, None, "date", "desc")
+            achievements = achievements_data.get("achievements", [])
+            return next((a for a in achievements if a["id"] == achievement_id), None)
+        except Exception as e:
+            logger.error(f"Error fetching achievement details from Google Sheets: {e}")
+            # Fallback to mock data
+            return self._get_mock_achievement_details(achievement_id)
+
+    def _get_google_sheets_news_event_details(self, news_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed news/event for blog-style page from Google Sheets"""
+        try:
+            # Get all news events and find the specific one
+            news_data = self._get_google_sheets_news_events(1, 1000, None, None, "date", "desc")
+            news_events = news_data.get("news_events", [])
+            return next((n for n in news_events if n["id"] == news_id), None)
+        except Exception as e:
+            logger.error(f"Error fetching news event details from Google Sheets: {e}")
+            # Fallback to mock data
+            return self._get_mock_news_event_details(news_id)
+
+    def _convert_sheets_to_projects(self, sheets_data) -> List[Dict[str, Any]]:
+        """Convert Google Sheets data to projects format"""
+        projects = []
+        
+        try:
+            # Handle direct array response from Google Sheets API
+            if isinstance(sheets_data, list):
+                data_rows = sheets_data
+            else:
+                # Fallback to nested data structure
+                data_rows = sheets_data.get('data', [])
+            
+            for i, row in enumerate(data_rows):
+                try:
+                    # Handle object format (direct from Google Sheets API)
+                    if isinstance(row, dict):
+                        project = {
+                            "id": f"proj_{row.get('id', i):03d}",
+                            "title": str(row.get('title', '')),
+                            "description": str(row.get('description', '')),
+                            "status": str(row.get('status', 'Active')),
+                            "start_date": str(row.get('start_date', '')),
+                            "end_date": str(row.get('end_date', '')),
+                            "research_areas": self._parse_research_areas(row.get('research_areas', [])),
+                            "principal_investigator": str(row.get('principal_investigator', '')),
+                            "team_members": self._parse_authors(row.get('team_members', [])),
+                            "funding_agency": str(row.get('funding_agency', '')),
+                            "budget": str(row.get('budget', '')),
+                            "image": str(row.get('image', 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e'))
+                        }
+                    else:
+                        # Handle array format
+                        # Expected order: Title, Description, Status, Start Date, End Date, Research Areas, 
+                        # Principal Investigator, Team Members, Funding Agency, Budget, Image
+                        
+                        # Skip header row if exists
+                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'project title']:
+                            continue
+                        
+                        project = {
+                            "id": f"proj_{i:03d}",
+                            "title": str(row[0]) if len(row) > 0 else "",
+                            "description": str(row[1]) if len(row) > 1 else "",
+                            "status": str(row[2]) if len(row) > 2 else "Active",
+                            "start_date": str(row[3]) if len(row) > 3 else "",
+                            "end_date": str(row[4]) if len(row) > 4 else "",
+                            "research_areas": self._parse_research_areas(str(row[5])) if len(row) > 5 else [],
+                            "principal_investigator": str(row[6]) if len(row) > 6 else "",
+                            "team_members": self._parse_authors(str(row[7])) if len(row) > 7 else [],
+                            "funding_agency": str(row[8]) if len(row) > 8 else "",
+                            "budget": str(row[9]) if len(row) > 9 else "",
+                            "image": str(row[10]) if len(row) > 10 and str(row[10]).startswith('http') else "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e"
+                        }
+                    
+                    # Only add if title is not empty
+                    if project["title"].strip():
+                        projects.append(project)
+                        
+                except (ValueError, IndexError, TypeError) as e:
+                    logger.warning(f"Error processing project row {i}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error converting sheets data to projects: {e}")
+            
+        return projects
+
+    def _convert_sheets_to_achievements(self, sheets_data) -> List[Dict[str, Any]]:
+        """Convert Google Sheets data to achievements format"""
+        achievements = []
+        
+        try:
+            # Handle direct array response from Google Sheets API
+            if isinstance(sheets_data, list):
+                data_rows = sheets_data
+            else:
+                # Fallback to nested data structure
+                data_rows = sheets_data.get('data', [])
+            
+            for i, row in enumerate(data_rows):
+                try:
+                    # Handle object format (direct from Google Sheets API)
+                    if isinstance(row, dict):
+                        achievement = {
+                            "id": f"ach_{row.get('id', i):03d}",
+                            "title": str(row.get('title', '')),
+                            "short_description": str(row.get('short_description', '')),
+                            "category": str(row.get('category', 'Award')),
+                            "date": str(row.get('date', '')),
+                            "image": str(row.get('image', 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800')),
+                            "full_content": str(row.get('full_content', ''))
+                        }
+                    else:
+                        # Handle array format
+                        # Expected order: Title, Short Description, Category, Date, Image, Full Content
+                        
+                        # Skip header row if exists
+                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'achievement title']:
+                            continue
+                        
+                        achievement = {
+                            "id": f"ach_{i:03d}",
+                            "title": str(row[0]) if len(row) > 0 else "",
+                            "short_description": str(row[1]) if len(row) > 1 else "",
+                            "category": str(row[2]) if len(row) > 2 else "Award",
+                            "date": str(row[3]) if len(row) > 3 else "",
+                            "image": str(row[4]) if len(row) > 4 and str(row[4]).startswith('http') else "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800",
+                            "full_content": str(row[5]) if len(row) > 5 else ""
+                        }
+                    
+                    # Only add if title is not empty
+                    if achievement["title"].strip():
+                        achievements.append(achievement)
+                        
+                except (ValueError, IndexError, TypeError) as e:
+                    logger.warning(f"Error processing achievement row {i}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error converting sheets data to achievements: {e}")
+            
+        return achievements
+
+    def _convert_sheets_to_news_events(self, sheets_data) -> List[Dict[str, Any]]:
+        """Convert Google Sheets data to news events format"""
+        news_events = []
+        
+        try:
+            # Handle direct array response from Google Sheets API
+            if isinstance(sheets_data, list):
+                data_rows = sheets_data
+            else:
+                # Fallback to nested data structure
+                data_rows = sheets_data.get('data', [])
+            
+            for i, row in enumerate(data_rows):
+                try:
+                    # Handle object format (direct from Google Sheets API)
+                    if isinstance(row, dict):
+                        news_event = {
+                            "id": f"news_{row.get('id', i):03d}",
+                            "title": str(row.get('title', '')),
+                            "short_description": str(row.get('short_description', '')),
+                            "category": str(row.get('category', 'News')),
+                            "date": str(row.get('date', '')),
+                            "image": str(row.get('image', 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800')),
+                            "full_content": str(row.get('full_content', ''))
+                        }
+                    else:
+                        # Handle array format
+                        # Expected order: Title, Short Description, Category, Date, Image, Full Content
+                        
+                        # Skip header row if exists
+                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'news title']:
+                            continue
+                        
+                        news_event = {
+                            "id": f"news_{i:03d}",
+                            "title": str(row[0]) if len(row) > 0 else "",
+                            "short_description": str(row[1]) if len(row) > 1 else "",
+                            "category": str(row[2]) if len(row) > 2 else "News",
+                            "date": str(row[3]) if len(row) > 3 else "",
+                            "image": str(row[4]) if len(row) > 4 and str(row[4]).startswith('http') else "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+                            "full_content": str(row[5]) if len(row) > 5 else ""
+                        }
+                    
+                    # Only add if title is not empty
+                    if news_event["title"].strip():
+                        news_events.append(news_event)
+                        
+                except (ValueError, IndexError, TypeError) as e:
+                    logger.warning(f"Error processing news event row {i}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error converting sheets data to news events: {e}")
+            
+        return news_events
+
 
 # Global instance
 sheets_service = SESGSheetsService()
