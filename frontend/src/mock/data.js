@@ -156,47 +156,146 @@ export const researchAreas = [
     description: "Advanced grid monitoring, control systems, and intelligent distribution networks for enhanced reliability and efficiency.",
     icon: "Zap",
     projects: 12,
-    publications: 28
+    publications: 28,
+    overview: "Our smart grid research focuses on developing next-generation electrical grids that can efficiently integrate renewable energy sources, provide real-time monitoring, and enable two-way communication between utilities and consumers.",
+    objectives: [
+      "Develop advanced metering infrastructure (AMI)",
+      "Create intelligent load management systems",
+      "Implement real-time grid monitoring and control",
+      "Design self-healing grid capabilities"
+    ],
+    applications: [
+      "Smart cities infrastructure",
+      "Industrial energy management",
+      "Residential energy optimization",
+      "Utility grid modernization"
+    ]
   },
   {
     id: 2,
+    title: "Microgrids & Distributed Energy Systems",
+    description: "Localized energy networks that can operate independently or in conjunction with the main power grid.",
+    icon: "Network",
+    projects: 9,
+    publications: 24,
+    overview: "Research on autonomous energy systems that enhance grid resilience through distributed generation and storage, enabling communities to maintain power during outages and optimize local energy resources.",
+    objectives: [
+      "Design autonomous microgrid controllers",
+      "Develop peer-to-peer energy trading systems",
+      "Create grid synchronization protocols",
+      "Implement distributed energy resource management"
+    ],
+    applications: [
+      "Campus energy systems",
+      "Remote community power",
+      "Industrial microgrids",
+      "Emergency backup systems"
+    ]
+  },
+  {
+    id: 3,
     title: "Renewable Energy Integration",
     description: "Seamless integration of solar, wind, and other renewable sources into existing grid infrastructure.",
     icon: "Sun",
     projects: 8,
-    publications: 22
+    publications: 22,
+    overview: "Focus on overcoming technical challenges in renewable energy integration, including intermittency issues, grid stability, and optimal placement of renewable energy sources for maximum efficiency.",
+    objectives: [
+      "Develop renewable energy forecasting models",
+      "Create grid stability solutions for variable sources",
+      "Design optimal renewable energy placement algorithms",
+      "Implement power quality management systems"
+    ],
+    applications: [
+      "Utility-scale solar integration",
+      "Wind farm grid connection",
+      "Distributed rooftop solar",
+      "Hybrid renewable systems"
+    ]
   },
   {
-    id: 3,
+    id: 4,
+    title: "Grid Optimization & Stability",
+    description: "Advanced algorithms and control systems to maintain grid stability and optimize power flow.",
+    icon: "Cpu",
+    projects: 11,
+    publications: 26,
+    overview: "Research on maintaining power system stability and optimizing grid operations through advanced control algorithms, real-time optimization, and predictive analytics.",
+    objectives: [
+      "Develop real-time optimization algorithms",
+      "Create predictive stability analysis tools",
+      "Design adaptive control systems",
+      "Implement machine learning for grid optimization"
+    ],
+    applications: [
+      "Power system stability control",
+      "Economic dispatch optimization",
+      "Voltage regulation systems",
+      "Frequency control mechanisms"
+    ]
+  },
+  {
+    id: 5,
     title: "Energy Storage Systems",
     description: "Battery technologies, grid-scale storage solutions, and energy management systems for optimal utilization.",
     icon: "Battery",
     projects: 6,
-    publications: 15
-  },
-  {
-    id: 4,
-    title: "Machine Learning for Energy",
-    description: "AI-driven forecasting, optimization algorithms, and predictive maintenance for energy systems.",
-    icon: "Brain",
-    projects: 10,
-    publications: 20
-  },
-  {
-    id: 5,
-    title: "Sustainability Assessment",
-    description: "Life cycle analysis, carbon footprint studies, and environmental impact evaluation of energy technologies.",
-    icon: "Leaf",
-    projects: 7,
-    publications: 18
+    publications: 15,
+    overview: "Advanced research on energy storage technologies including battery management systems, grid-scale storage integration, and novel storage materials for improved performance and longevity.",
+    objectives: [
+      "Develop advanced battery management systems",
+      "Create grid-scale storage integration protocols",
+      "Research novel storage materials",
+      "Design optimal storage placement strategies"
+    ],
+    applications: [
+      "Grid-scale energy storage",
+      "Electric vehicle integration",
+      "Residential energy storage",
+      "Industrial backup power"
+    ]
   },
   {
     id: 6,
-    title: "Grid Cybersecurity",
-    description: "Security protocols, threat detection, and resilience strategies for critical energy infrastructure.",
+    title: "Power System Automation",
+    description: "Intelligent automation systems for power generation, transmission, and distribution networks.",
+    icon: "Lightbulb",
+    projects: 7,
+    publications: 19,
+    overview: "Development of automated systems for power system operations, including intelligent protection systems, automated fault detection and recovery, and smart switching technologies.",
+    objectives: [
+      "Design intelligent protection systems",
+      "Create automated fault detection algorithms",
+      "Develop smart switching technologies",
+      "Implement predictive maintenance systems"
+    ],
+    applications: [
+      "Substation automation",
+      "Distribution automation",
+      "Protection system coordination",
+      "Maintenance scheduling optimization"
+    ]
+  },
+  {
+    id: 7,
+    title: "Cybersecurity and AI for Power Infrastructure",
+    description: "Security protocols, threat detection, and AI-driven solutions for critical energy infrastructure protection.",
     icon: "Shield",
     projects: 5,
-    publications: 12
+    publications: 12,
+    overview: "Comprehensive research on protecting power infrastructure from cyber threats using AI-driven security solutions, anomaly detection, and resilient system design for critical energy systems.",
+    objectives: [
+      "Develop AI-powered threat detection systems",
+      "Create resilient infrastructure designs",
+      "Implement blockchain for energy transactions",
+      "Design intrusion detection systems"
+    ],
+    applications: [
+      "Critical infrastructure protection",
+      "Smart meter security",
+      "SCADA system protection",
+      "Secure energy trading platforms"
+    ]
   }
 ];
 
