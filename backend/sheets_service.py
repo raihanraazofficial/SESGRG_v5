@@ -545,9 +545,11 @@ class SESGSheetsService:
                 "id": "news_002",
                 "title": "SESG Lab Receives $1.2M Grant from National Science Foundation",
                 "short_description": "Major funding awarded for groundbreaking research in AI-powered smart grid optimization and renewable energy integration.",
+                "description": "Major funding awarded for groundbreaking research in AI-powered smart grid optimization and renewable energy integration.",
                 "category": "News",
                 "date": "2024-11-20",
                 "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800",
+                "featured": 0,
                 "full_content": """
                 # Major NSF Grant Awarded to SESG Research Lab
 
