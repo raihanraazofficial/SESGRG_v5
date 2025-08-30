@@ -167,12 +167,21 @@ const NewsEvents = () => {
                 </svg>
                 <span class="text-sm font-medium text-emerald-800">Mathematical Formula</span>
               </div>
-              <div class="math-formula bg-white p-4 rounded border font-mono text-lg leading-relaxed overflow-x-auto">`;
+              <div class="math-display bg-white p-4 rounded border text-center overflow-x-auto">$$`;
           } else {
             inMathBlock = false;
-            result += `</div></div>`;
+            result += `$$</div></div>`;
           }
           continue;
+        }
+        
+        // Handle inline math expressions with $ $ or LaTeX patterns
+        if (!inCodeBlock && !inMathBlock) {
+          // Process inline math $...$
+          line = line.replace(/\$([^$]+)\$/g, '<span class="math-inline">$$$1$$</span>');
+          
+          // Process display math $$...$$ (single line)
+          line = line.replace(/\$\$([^$]+)\$\$/g, '<div class="math-display bg-emerald-50 p-4 my-4 rounded border text-center">$$$$1$$$$</div>');
         }
         
         // Inside code block
