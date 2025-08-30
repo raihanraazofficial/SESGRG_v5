@@ -125,24 +125,32 @@ Best regards,`;
             Discover cutting-edge research that's shaping the future of energy systems.
           </p>
           
-          {/* Statistics */}
-          <div className="flex justify-center flex-wrap gap-6 mb-8">
-            <div className="text-center">
-              <p className="text-3xl font-bold text-emerald-600">{statistics.total_publications || 0}</p>
-              <p className="text-gray-600">Total Publications</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-blue-600">{statistics.total_citations || 0}</p>
-              <p className="text-gray-600">Total Citations</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-purple-600">{statistics.latest_year || new Date().getFullYear()}</p>
-              <p className="text-gray-600">Latest Year</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-orange-600">{statistics.total_areas || 7}</p>
-              <p className="text-gray-600">Research Areas</p>
-            </div>
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_publications || 0}</p>
+                <p className="text-gray-600 font-medium">Total Publications</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.total_citations || 0}</p>
+                <p className="text-gray-600 font-medium">Total Citations</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.latest_year || new Date().getFullYear()}</p>
+                <p className="text-gray-600 font-medium">Latest Year</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-6 border-l-4 border-l-orange-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-orange-600 mb-2">{statistics.total_areas || 7}</p>
+                <p className="text-gray-600 font-medium">Total Research Areas</p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Category Filter Buttons */}
