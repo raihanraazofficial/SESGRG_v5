@@ -202,15 +202,18 @@ frontend:
 
   - task: "Publications Page with Google Sheets Integration"
     implemented: true
-    working: true
+    working: false
     file: "pages/Publications.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
         comment: "Successfully implemented Publications page with Google Sheets API integration, comprehensive filtering (year, area, category, author, title), pagination with go-to-page system, citation copying functionality, and enhanced statistics display. Category filter buttons added at top for easy navigation."
+      - working: false
+        agent: "main"
+        comment: "Major improvements implemented: 1) Backend Google Sheets integration updated to fetch directly from provided API URL, 2) Statistics converted to separate responsive cards with colored borders, 3) Single unified search bar for titles/authors/year, 4) Added Books category filter, 5) Enhanced mobile responsiveness throughout, 6) Fixed sorting with research area options, 7) Improved pagination for mobile devices. Ready for backend testing."
 
   - task: "Projects Page with Google Sheets Integration"
     implemented: true
