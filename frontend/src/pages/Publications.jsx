@@ -151,6 +151,15 @@ Best regards,`;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <style>{`
+        .ieee-citation em {
+          font-style: italic;
+          font-weight: normal;
+        }
+        .ieee-citation {
+          line-height: 1.6;
+        }
+      `}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
