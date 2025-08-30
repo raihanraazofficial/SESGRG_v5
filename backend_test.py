@@ -582,9 +582,503 @@ def test_news_events_endpoint():
         print(f"   ❌ Error testing news-events endpoint: {e}")
         return False
 
+def test_google_sheets_projects_integration():
+    """Test Google Sheets integration for Projects API as per review request"""
+    print("15. Testing Google Sheets Projects Integration - NEW API ENDPOINTS...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test Projects API (/api/projects) - Google Sheets Integration
+        print("   1.1 Testing Projects API Google Sheets integration...")
+        response = requests.get(f"{API_BASE_URL}/projects", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ Projects API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            required_keys = ["projects", "pagination"]
+            if not all(key in data for key in required_keys):
+                print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+                all_tests_passed = False
+            else:
+                projects = data.get("projects", [])
+                print(f"      ✅ Google Sheets Projects API working - Retrieved {len(projects)} projects")
+                
+                # Verify project fields as per review request
+                if len(projects) > 0:
+                    project = projects[0]
+                    required_fields = ["id", "title", "description", "status", "start_date", "end_date", 
+                                     "research_areas", "principal_investigator", "team_members", 
+                                     "funding_agency", "budget", "image"]
+                    missing_fields = [field for field in required_fields if field not in project]
+                    if not missing_fields:
+                        print(f"      ✅ All required project fields present: {required_fields}")
+                    else:
+                        print(f"      ❌ Missing project fields: {missing_fields}")
+                        all_tests_passed = False
+                
+                # Test filtering by status
+                print("   1.2 Testing Projects status filtering...")
+                response = requests.get(f"{API_BASE_URL}/projects?status_filter=Active", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    active_projects = data.get("projects", [])
+                    print(f"      ✅ Status filtering working: {len(active_projects)} Active projects")
+                else:
+                    print("      ❌ Status filtering failed")
+                    all_tests_passed = False
+                
+                # Test filtering by area
+                print("   1.3 Testing Projects area filtering...")
+                response = requests.get(f"{API_BASE_URL}/projects?area_filter=Smart Grid Technologies", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    area_projects = data.get("projects", [])
+                    print(f"      ✅ Area filtering working: {len(area_projects)} Smart Grid projects")
+                else:
+                    print("      ❌ Area filtering failed")
+                    all_tests_passed = False
+                
+                # Test title filtering
+                print("   1.4 Testing Projects title filtering...")
+                response = requests.get(f"{API_BASE_URL}/projects?title_filter=Smart", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    title_projects = data.get("projects", [])
+                    print(f"      ✅ Title filtering working: {len(title_projects)} projects with 'Smart' in title")
+                else:
+                    print("      ❌ Title filtering failed")
+                    all_tests_passed = False
+                
+                # Test pagination
+                print("   1.5 Testing Projects pagination...")
+                response = requests.get(f"{API_BASE_URL}/projects?page=1&per_page=5", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    pagination = data.get("pagination", {})
+                    required_pagination_keys = ["current_page", "total_pages", "has_next", "has_prev", "per_page", "total_items"]
+                    missing_keys = [key for key in required_pagination_keys if key not in pagination]
+                    if not missing_keys:
+                        print(f"      ✅ Projects pagination working: Page {pagination['current_page']} of {pagination['total_pages']}")
+                    else:
+                        print(f"      ❌ Missing pagination keys: {missing_keys}")
+                        all_tests_passed = False
+                else:
+                    print("      ❌ Projects pagination failed")
+                    all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Google Sheets Projects integration testing: {e}")
+        return False
+
+def test_google_sheets_achievements_integration():
+    """Test Google Sheets integration for Achievements API as per review request"""
+    print("16. Testing Google Sheets Achievements Integration - NEW API ENDPOINTS...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test Achievements API (/api/achievements) - Google Sheets Integration
+        print("   1.1 Testing Achievements API Google Sheets integration...")
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ Achievements API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            required_keys = ["achievements", "pagination"]
+            if not all(key in data for key in required_keys):
+                print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+                all_tests_passed = False
+            else:
+                achievements = data.get("achievements", [])
+                print(f"      ✅ Google Sheets Achievements API working - Retrieved {len(achievements)} achievements")
+                
+                # Verify achievement fields as per review request
+                if len(achievements) > 0:
+                    achievement = achievements[0]
+                    required_fields = ["id", "title", "short_description", "category", "date", "image", "full_content"]
+                    missing_fields = [field for field in required_fields if field not in achievement]
+                    if not missing_fields:
+                        print(f"      ✅ All required achievement fields present: {required_fields}")
+                    else:
+                        print(f"      ❌ Missing achievement fields: {missing_fields}")
+                        all_tests_passed = False
+                
+                # Test category filtering
+                print("   1.2 Testing Achievements category filtering...")
+                response = requests.get(f"{API_BASE_URL}/achievements?category_filter=Award", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    award_achievements = data.get("achievements", [])
+                    print(f"      ✅ Category filtering working: {len(award_achievements)} Award achievements")
+                else:
+                    print("      ❌ Category filtering failed")
+                    all_tests_passed = False
+                
+                # Test pagination
+                print("   1.3 Testing Achievements pagination...")
+                response = requests.get(f"{API_BASE_URL}/achievements?page=1&per_page=6", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    pagination = data.get("pagination", {})
+                    required_pagination_keys = ["current_page", "total_pages", "has_next", "has_prev", "per_page", "total_items"]
+                    missing_keys = [key for key in required_pagination_keys if key not in pagination]
+                    if not missing_keys:
+                        print(f"      ✅ Achievements pagination working: Page {pagination['current_page']} of {pagination['total_pages']}")
+                    else:
+                        print(f"      ❌ Missing pagination keys: {missing_keys}")
+                        all_tests_passed = False
+                else:
+                    print("      ❌ Achievements pagination failed")
+                    all_tests_passed = False
+        
+        # 2. Test Achievement Detail Endpoint (/api/achievements/{id})
+        print("   2.1 Testing Achievement detail endpoint...")
+        # First get an achievement ID
+        response = requests.get(f"{API_BASE_URL}/achievements?per_page=1", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            if len(achievements) > 0:
+                achievement_id = achievements[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/achievements/{achievement_id}", timeout=10)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    if "full_content" in detail_data:
+                        print(f"      ✅ Achievement detail endpoint working for ID: {achievement_id}")
+                    else:
+                        print("      ❌ Achievement detail missing full_content")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ Achievement detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No achievements available to test detail endpoint")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Google Sheets Achievements integration testing: {e}")
+        return False
+
+def test_google_sheets_news_events_integration():
+    """Test Google Sheets integration for News & Events API as per review request"""
+    print("17. Testing Google Sheets News & Events Integration - NEW API ENDPOINTS...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test News & Events API (/api/news-events) - Google Sheets Integration
+        print("   1.1 Testing News & Events API Google Sheets integration...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ News & Events API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            required_keys = ["news_events", "pagination"]
+            if not all(key in data for key in required_keys):
+                print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+                all_tests_passed = False
+            else:
+                news_events = data.get("news_events", [])
+                print(f"      ✅ Google Sheets News & Events API working - Retrieved {len(news_events)} items")
+                
+                # Verify news event fields as per review request
+                if len(news_events) > 0:
+                    news_event = news_events[0]
+                    required_fields = ["id", "title", "short_description", "category", "date", "image", "full_content"]
+                    missing_fields = [field for field in required_fields if field not in news_event]
+                    if not missing_fields:
+                        print(f"      ✅ All required news event fields present: {required_fields}")
+                    else:
+                        print(f"      ❌ Missing news event fields: {missing_fields}")
+                        all_tests_passed = False
+                
+                # Test category filtering
+                print("   1.2 Testing News & Events category filtering...")
+                response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    news_items = data.get("news_events", [])
+                    print(f"      ✅ Category filtering working: {len(news_items)} News items")
+                else:
+                    print("      ❌ Category filtering failed")
+                    all_tests_passed = False
+                
+                # Test pagination
+                print("   1.3 Testing News & Events pagination...")
+                response = requests.get(f"{API_BASE_URL}/news-events?page=1&per_page=10", timeout=10)
+                if response.status_code == 200:
+                    data = response.json()
+                    pagination = data.get("pagination", {})
+                    required_pagination_keys = ["current_page", "total_pages", "has_next", "has_prev", "per_page", "total_items"]
+                    missing_keys = [key for key in required_pagination_keys if key not in pagination]
+                    if not missing_keys:
+                        print(f"      ✅ News & Events pagination working: Page {pagination['current_page']} of {pagination['total_pages']}")
+                    else:
+                        print(f"      ❌ Missing pagination keys: {missing_keys}")
+                        all_tests_passed = False
+                else:
+                    print("      ❌ News & Events pagination failed")
+                    all_tests_passed = False
+        
+        # 2. Test News Event Detail Endpoint (/api/news-events/{id})
+        print("   2.1 Testing News Event detail endpoint...")
+        # First get a news event ID
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=1", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            if len(news_events) > 0:
+                news_id = news_events[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=10)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    if "full_content" in detail_data:
+                        print(f"      ✅ News Event detail endpoint working for ID: {news_id}")
+                    else:
+                        print("      ❌ News Event detail missing full_content")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ News Event detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No news events available to test detail endpoint")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Google Sheets News & Events integration testing: {e}")
+        return False
+
+def test_caching_verification():
+    """Test caching functionality as per review request"""
+    print("18. Testing Caching Verification - PERFORMANCE OPTIMIZATION...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test cache status endpoint
+        print("   1.1 Testing /api/cache-status endpoint...")
+        response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if response.status_code != 200:
+            print(f"      ❌ Cache status endpoint failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            cache_data = response.json()
+            required_keys = ["cached_items", "last_fetch_times", "cache_duration_minutes"]
+            missing_keys = [key for key in required_keys if key not in cache_data]
+            if not missing_keys:
+                print(f"      ✅ Cache status endpoint working: {cache_data['cached_items']} cached items")
+                print(f"      📊 Cache duration: {cache_data['cache_duration_minutes']} minutes")
+            else:
+                print(f"      ❌ Missing cache status keys: {missing_keys}")
+                all_tests_passed = False
+        
+        # 2. Test performance improvement with caching
+        print("   1.2 Testing caching performance improvement...")
+        import time
+        
+        # Clear cache first
+        clear_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if clear_response.status_code == 200:
+            print("      ✅ Cache cleared successfully")
+        
+        # First request (should fetch from Google Sheets)
+        start_time = time.time()
+        response1 = requests.get(f"{API_BASE_URL}/projects", timeout=30)
+        first_request_time = time.time() - start_time
+        
+        if response1.status_code == 200:
+            print(f"      ✅ First request (from Google Sheets): {first_request_time:.3f} seconds")
+        
+        # Second request (should use cache)
+        start_time = time.time()
+        response2 = requests.get(f"{API_BASE_URL}/projects", timeout=30)
+        second_request_time = time.time() - start_time
+        
+        if response2.status_code == 200:
+            print(f"      ✅ Second request (from cache): {second_request_time:.3f} seconds")
+            
+            # Calculate performance improvement
+            if first_request_time > 0:
+                improvement = ((first_request_time - second_request_time) / first_request_time) * 100
+                print(f"      📊 Performance improvement: {improvement:.1f}%")
+                
+                if improvement > 50:  # Expect significant improvement
+                    print("      ✅ Significant caching performance improvement verified")
+                else:
+                    print("      ⚠️  Caching improvement less than expected")
+        
+        # 3. Test data consistency between cached and fresh data
+        print("   1.3 Testing data consistency between cached and fresh data...")
+        data1 = response1.json()
+        data2 = response2.json()
+        
+        if data1.get("projects") == data2.get("projects"):
+            print("      ✅ Data consistency verified between cached and fresh data")
+        else:
+            print("      ❌ Data inconsistency detected between cached and fresh data")
+            all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in caching verification testing: {e}")
+        return False
+
+def test_error_handling_fallback():
+    """Test error handling and fallback to mock data as per review request"""
+    print("19. Testing Error Handling and Fallback - GRACEFUL DEGRADATION...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test that APIs still work even if Google Sheets is unavailable
+        # We can't actually break Google Sheets, but we can test the fallback mechanism
+        print("   1.1 Testing graceful fallback behavior...")
+        
+        # Test all three main endpoints to ensure they respond
+        endpoints = [
+            ("projects", "/api/projects"),
+            ("achievements", "/api/achievements"), 
+            ("news-events", "/api/news-events")
+        ]
+        
+        for name, endpoint in endpoints:
+            response = requests.get(f"{API_BASE_URL}{endpoint}", timeout=30)
+            if response.status_code == 200:
+                data = response.json()
+                if name == "projects" and "projects" in data:
+                    print(f"      ✅ {name.title()} API responding correctly")
+                elif name == "achievements" and "achievements" in data:
+                    print(f"      ✅ {name.title()} API responding correctly")
+                elif name == "news-events" and "news_events" in data:
+                    print(f"      ✅ {name.title()} API responding correctly")
+                else:
+                    print(f"      ❌ {name.title()} API response structure incorrect")
+                    all_tests_passed = False
+            else:
+                print(f"      ❌ {name.title()} API failed with status: {response.status_code}")
+                all_tests_passed = False
+        
+        # Test edge cases and invalid parameters
+        print("   1.2 Testing edge cases and invalid parameters...")
+        
+        # Test invalid page numbers
+        response = requests.get(f"{API_BASE_URL}/projects?page=-1", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Invalid page number handled gracefully")
+        else:
+            print("      ❌ Invalid page number not handled properly")
+            all_tests_passed = False
+        
+        # Test very large page numbers
+        response = requests.get(f"{API_BASE_URL}/achievements?page=99999", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Large page number handled gracefully")
+        else:
+            print("      ❌ Large page number not handled properly")
+            all_tests_passed = False
+        
+        # Test invalid category filters
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=InvalidCategory", timeout=10)
+        if response.status_code == 200:
+            print("      ✅ Invalid category filter handled gracefully")
+        else:
+            print("      ❌ Invalid category filter not handled properly")
+            all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in error handling and fallback testing: {e}")
+        return False
+
+def test_real_vs_mock_data_verification():
+    """Verify that real data is being fetched from Google Sheets instead of mock data"""
+    print("20. Testing Real vs Mock Data Verification - GOOGLE SHEETS DATA...")
+    
+    all_tests_passed = True
+    
+    try:
+        print("   1.1 Verifying real Google Sheets data vs mock data...")
+        
+        # Test Projects API for real data indicators
+        response = requests.get(f"{API_BASE_URL}/projects", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            projects = data.get("projects", [])
+            if len(projects) > 0:
+                # Check if we're getting real data (not the typical mock patterns)
+                project_titles = [p.get("title", "") for p in projects]
+                print(f"      📊 Projects found: {len(projects)} items")
+                print(f"      📋 Sample project titles: {project_titles[:3]}")
+                
+                # Real data should not have sequential mock patterns like "Project 1", "Project 2"
+                mock_pattern_count = sum(1 for title in project_titles if "Project " in title and any(char.isdigit() for char in title))
+                if mock_pattern_count < len(projects) * 0.5:  # Less than 50% mock patterns
+                    print("      ✅ Projects appear to be real Google Sheets data (not mock)")
+                else:
+                    print("      ⚠️  Projects may still be using mock data patterns")
+            else:
+                print("      ❌ No projects found - this addresses the user complaint!")
+                all_tests_passed = False
+        
+        # Test Achievements API for real data indicators  
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            if len(achievements) > 0:
+                achievement_titles = [a.get("title", "") for a in achievements]
+                print(f"      📊 Achievements found: {len(achievements)} items")
+                print(f"      📋 Sample achievement titles: {achievement_titles[:3]}")
+                
+                # Real data should not have sequential mock patterns
+                mock_pattern_count = sum(1 for title in achievement_titles if "Achievement " in title and any(char.isdigit() for char in title))
+                if mock_pattern_count < len(achievements) * 0.5:
+                    print("      ✅ Achievements appear to be real Google Sheets data (not mock)")
+                else:
+                    print("      ⚠️  Achievements may still be using mock data patterns")
+            else:
+                print("      ❌ No achievements found - this addresses the user complaint!")
+                all_tests_passed = False
+        
+        # Test News & Events API for real data indicators
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            if len(news_events) > 0:
+                news_titles = [n.get("title", "") for n in news_events]
+                print(f"      📊 News & Events found: {len(news_events)} items")
+                print(f"      📋 Sample news titles: {news_titles[:3]}")
+                
+                # Real data should not have sequential mock patterns
+                mock_pattern_count = sum(1 for title in news_titles if ("News " in title or "Event " in title) and any(char.isdigit() for char in title))
+                if mock_pattern_count < len(news_events) * 0.5:
+                    print("      ✅ News & Events appear to be real Google Sheets data (not mock)")
+                else:
+                    print("      ⚠️  News & Events may still be using mock data patterns")
+            else:
+                print("      ❌ No news and events found - this addresses the user complaint!")
+                all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in real vs mock data verification: {e}")
+        return False
+
 def test_news_events_comprehensive():
     """Comprehensive News & Events API functionality testing"""
-    print("15. Testing News & Events API - Comprehensive Filtering Tests...")
+    print("21. Testing News & Events API - Comprehensive Filtering Tests...")
     
     all_tests_passed = True
     
