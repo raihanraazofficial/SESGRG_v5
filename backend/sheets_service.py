@@ -502,9 +502,11 @@ class SESGSheetsService:
                 "id": "news_001",
                 "title": "International Smart Grid Symposium 2024 - Call for Papers",
                 "short_description": "Submit your research papers for the upcoming International Smart Grid Symposium to be held at BRAC University in December 2024.",
+                "description": "Submit your research papers for the upcoming International Smart Grid Symposium to be held at BRAC University in December 2024.",
                 "category": "Upcoming Event",
                 "date": "2024-12-15",
                 "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+                "featured": 1,
                 "full_content": """
                 # International Smart Grid Symposium 2024
 
