@@ -22,7 +22,7 @@ class SESGSheetsService:
         
         # Cache configuration for performance optimization
         self.cache = {}
-        self.cache_duration = timedelta(minutes=5)  # Reduced to 5 minutes for faster updates
+        self.cache_duration = timedelta(seconds=30)  # Reduced to 30 seconds for faster updates
         self.last_fetch_time = {}
         
     def get_publications(self, 
