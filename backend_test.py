@@ -1959,7 +1959,7 @@ if __name__ == "__main__":
     
     # Summary
     print("\n" + "=" * 60)
-    print("BACKEND TESTING SUMMARY - GOOGLE SHEETS INTEGRATION FOCUS")
+    print("BACKEND TESTING SUMMARY - UPDATED SESG RESEARCH WEBSITE")
     print("=" * 60)
     
     passed = sum(results)
@@ -1968,7 +1968,25 @@ if __name__ == "__main__":
     print(f"Tests Passed: {passed}/{total}")
     print(f"Success Rate: {(passed/total)*100:.1f}%")
     
-    # Specific focus on Google Sheets integration results
+    # Specific focus on review request tests
+    review_request_tests = [
+        "test_cache_duration_verification",
+        "test_environment_variables_configuration", 
+        "test_force_refresh_functionality",
+        "test_all_data_endpoints_comprehensive"
+    ]
+    
+    review_results = []
+    for i, test in enumerate(tests):
+        if test.__name__ in review_request_tests:
+            review_results.append(results[i])
+    
+    review_passed = sum(review_results)
+    review_total = len(review_results)
+    
+    print(f"\nReview Request Tests (New Features): {review_passed}/{review_total}")
+    
+    # Google Sheets integration results
     google_sheets_tests = [
         "test_google_sheets_projects_integration",
         "test_google_sheets_achievements_integration", 
@@ -1985,20 +2003,21 @@ if __name__ == "__main__":
     google_sheets_passed = sum(google_sheets_results)
     google_sheets_total = len(google_sheets_results)
     
-    print(f"\nGoogle Sheets Integration Tests: {google_sheets_passed}/{google_sheets_total}")
+    print(f"Google Sheets Integration Tests: {google_sheets_passed}/{google_sheets_total}")
     
     if passed == total:
-        print("🎉 ALL TESTS PASSED! Google Sheets integration is working perfectly.")
-        print("✅ Real data is being fetched from Google Sheets (not mock data)")
-        print("✅ All three APIs (Projects, Achievements, News & Events) are functional")
-        print("✅ Caching is working for performance optimization")
-        print("✅ This addresses the user complaint of 'No projects/achievements/news found'")
-    elif google_sheets_passed == google_sheets_total:
-        print("✅ GOOGLE SHEETS INTEGRATION WORKING! Some basic functionality issues.")
-        print("✅ Real data is being fetched from new Google Sheets URLs")
-        print("✅ This addresses the user complaint about missing data")
+        print("🎉 ALL TESTS PASSED! Updated SESG Research Website backend working perfectly.")
+        print("✅ Cache duration reduced to 30 seconds for real-time updates")
+        print("✅ Environment variables configured for Google Sheets API URLs")
+        print("✅ Force refresh functionality working via POST /api/clear-cache")
+        print("✅ All 4 main data endpoints responding successfully")
+        print("✅ Cache status endpoint providing monitoring information")
+    elif review_passed == review_total:
+        print("✅ REVIEW REQUEST FEATURES WORKING! All new changes implemented successfully.")
+        print("✅ Cache duration: 30 seconds ✅ Environment variables ✅ Force refresh ✅ All endpoints")
     else:
-        print("⚠️  Google Sheets integration issues found. Please review above.")
-        print("❌ User complaint about missing data may not be resolved")
+        print("⚠️  Some review request features need attention. Please review above.")
+        if review_passed > 0:
+            print(f"✅ {review_passed}/{review_total} new features working correctly")
     
     print("=" * 60)
