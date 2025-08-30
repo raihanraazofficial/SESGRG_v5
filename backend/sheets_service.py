@@ -17,6 +17,11 @@ class SESGSheetsService:
         self.use_mock_data = False  # Set to False to use real Google Sheets
         self.publications_api_url = "https://script.google.com/macros/s/AKfycbzQ6XwRBYMc5PaDDns3XlgpRGYQFZtC45RtVRUhyvVlt869zH9mL0IlGlnvBV2-e_s/exec?sheet=sheet6"
         
+        # Cache configuration for performance optimization
+        self.cache = {}
+        self.cache_duration = timedelta(minutes=15)  # Cache for 15 minutes
+        self.last_fetch_time = {}
+        
     def get_publications(self, 
                         page: int = 1, 
                         per_page: int = 20,
