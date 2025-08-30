@@ -56,6 +56,7 @@ const Achievements = () => {
   const clearFilters = () => {
     setFilters({
       title_filter: '',
+      category_filter: '',
       sort_by: 'date',
       sort_order: 'desc',
       page: 1,
