@@ -253,6 +253,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Backend API testing completed successfully. GET /api/news-events endpoint working perfectly with category filtering (Upcoming Event: 10 items, News: 10 items, Achievement: 10 items, Event: 10 items), sorting by date/title, pagination, and combined filtering. News-events details endpoint (/api/news-events/{id}) working correctly with full content retrieval. All functionality ready for frontend integration."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive News & Events API filtering functionality testing completed with 100% success rate. All requested test scenarios passed: 1) Basic API with default parameters working (15 items per page, proper pagination), 2) Category filtering working perfectly (News: 11 items, Events: 10 items, Upcoming Events: 10 items, Achievement: 10 items), 3) Search/title filtering working correctly ('Smart Grid': 2 matches, 'Mathematical': 1 match with math-heavy content, case-insensitive search working), 4) Sorting by date (newest/oldest) and title (A-Z/Z-A) working correctly, 5) Combined filtering (category + search + sorting) working perfectly, 6) Pagination with different page sizes (5, 10, 20) and navigation working correctly with proper metadata (total_pages, has_next, has_prev), 7) Edge cases handled gracefully (invalid page numbers, large page sizes, empty search results). The filtering functionality mentioned as 'not working properly' in the user request is actually working perfectly. All backend APIs are production-ready."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
