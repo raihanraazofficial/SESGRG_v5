@@ -227,11 +227,11 @@ frontend:
     file: "pages/Achievements.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "Successfully implemented Achievements page with Google Sheets API integration, search functionality, pagination with go-to-page system, and blog-style content generation. Read More buttons open detailed blog-style content in new windows with rich formatting support."
+        comment: "Enhanced Achievements page with category filtering (Awards, Recognition, Milestones), improved sorting options (Date newest/oldest, Title A-Z), and updated layout with first achievement displayed as a large featured card and remaining achievements in 2-3 card grid layout. Maintained pagination and go-to-page functionality."
 
   - task: "News & Events Page with Categories"
     implemented: true
