@@ -239,11 +239,11 @@ frontend:
     file: "pages/NewsEvents.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "Successfully implemented News & Events page with three categories (News, Events, Upcoming Events), Google Sheets API integration, search and filtering capabilities, pagination with go-to-page system, blog-style content generation, and embedded Google Calendar iframe at the bottom."
+        comment: "Enhanced News & Events page with improved layout where the first news item is displayed as a large featured card and remaining items in 2-3 card grid layout. Maintained all existing functionality including three categories (News, Events, Upcoming Events), search and filtering, pagination with go-to-page system, and Google Calendar iframe at the bottom."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
