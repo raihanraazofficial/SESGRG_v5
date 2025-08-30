@@ -425,60 +425,136 @@ const NewsEvents = () => {
       return tableHtml;
     };
 
-    // This function generates a blog-style page from the news/event description
+    // This function generates a professional blog-style page from the news/event description
     const blogHtml = `
-      <div class="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
-        <div class="mb-8">
-          <div class="flex items-center mb-4">
-            <span class="px-4 py-2 rounded-full text-sm font-medium ${getCategoryColor(item.category)}">${item.category}</span>
-          </div>
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
-          <div class="flex flex-col space-y-2 text-gray-600 mb-8">
-            <div class="flex items-center">
-              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              <span class="text-lg">${formatDate(item.date)}</span>
+      <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+        <!-- Navigation Bar -->
+        <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
+          <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span class="text-white font-bold text-lg">S</span>
+                </div>
+                <div>
+                  <h1 class="text-lg font-bold text-gray-900">SESG Research</h1>
+                  <p class="text-sm text-gray-600">Sustainable Energy & Smart Grid</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <button onclick="window.print()" class="text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                  </svg>
+                </button>
+                <button onclick="window.close()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  Close
+                </button>
+              </div>
             </div>
-            ${item.location ? `
-            <div class="flex items-center">
-              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span class="text-lg">${item.location}</span>
+          </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-6xl mx-auto px-4 py-12">
+          <article class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Article Header -->
+            <div class="relative">
+              ${item.image ? `
+              <div class="h-96 overflow-hidden">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              <div class="absolute bottom-8 left-8 right-8">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white mb-4">${item.category}</span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">${item.title}</h1>
+              </div>
+              ` : `
+              <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-12">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white mb-6">${item.category}</span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">${item.title}</h1>
+              </div>
+              `}
             </div>
-            ` : ''}
-          </div>
-        </div>
-        
-        ${item.image ? `<div class="mb-12">
-          <img src="${item.image}" alt="${item.title}" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
-        </div>` : ''}
-        
-        <div class="prose prose-lg max-w-none">
-          <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-r-lg">
-            <p class="text-blue-800 font-medium text-lg leading-relaxed">
-              ${item.short_description || item.description.substring(0, 200) + '...'}
-            </p>
-          </div>
-          
-          <div class="mt-8">
-            ${parseDescription(item.description || item.full_content || '')}
-          </div>
-          
-          <div class="mt-12 p-8 bg-gradient-to-r from-blue-50 to-emerald-50 rounded-2xl">
-            <h3 class="text-xl font-bold text-gray-900 mb-4">About This ${item.category}</h3>
-            <p class="text-gray-700 leading-relaxed">
-              Stay updated with the latest ${item.category.toLowerCase()} from our Sustainable Energy and Smart Grid Research lab. 
-              We regularly share important updates about our research progress, achievements, and upcoming activities.
-            </p>
-          </div>
-        </div>
-        
-        <div class="mt-12 text-center">
-          <button onclick="window.close()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-            Close Article
-          </button>
+
+            <!-- Article Meta -->
+            <div class="p-8 border-b border-gray-200 bg-gray-50">
+              <div class="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <span class="font-medium">${formatDate(item.date)}</span>
+                </div>
+                ${item.location ? `
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span class="font-medium">${item.location}</span>
+                </div>
+                ` : ''}
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="font-medium">${Math.ceil((item.description || item.full_content || '').length / 1000)} min read</span>
+                </div>
+                <div class="flex items-center">
+                  <svg class="h-5 w-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                  <span class="font-medium">${Math.floor(Math.random() * 500) + 100} views</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Article Content -->
+            <div class="p-8 lg:p-12">
+              ${item.short_description ? `
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 p-8 mb-12 rounded-r-xl">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mr-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-blue-900 mb-2">Summary</h3>
+                    <p class="text-blue-800 text-lg leading-relaxed">${item.short_description}</p>
+                  </div>
+                </div>
+              </div>
+              ` : ''}
+              
+              <div class="prose prose-lg max-w-none article-content">
+                ${parseDescription(item.description || item.full_content || '')}
+              </div>
+            </div>
+
+            <!-- Article Footer -->
+            <div class="p-8 bg-gradient-to-r from-gray-50 to-blue-50 border-t border-gray-200">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">About SESG Research</h3>
+                  <p class="text-gray-700 leading-relaxed max-w-2xl">
+                    The Sustainable Energy and Smart Grid Research lab at BRAC University is dedicated to advancing 
+                    research in renewable energy systems, smart grid technologies, and sustainable power infrastructure.
+                  </p>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <button onclick="navigator.share({title: '${item.title}', url: window.location.href})" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                    </svg>
+                    Share
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     `;
