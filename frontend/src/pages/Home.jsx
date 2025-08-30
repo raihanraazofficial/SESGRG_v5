@@ -117,11 +117,16 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
+  const scrollToResearch = () => {
+    const researchSection = document.getElementById('research-areas');
+    researchSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+      {/* Header Section */}
+      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
           <div className="w-full h-full" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }}>
@@ -130,23 +135,36 @@ const Home = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Lab Sustainable Energy &<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-                Smart Grid Research
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Pioneering the future of energy through innovative research in smart grids, 
-              renewable integration, and AI-powered energy systems.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3">
-                <Link to="/research" className="flex items-center">
-                  Explore Research <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            <div className={`transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
+                <span className="inline-block animate-pulse">Sustainable Energy</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 animate-bounce">
+                  Smart Grid Research
+                </span>
+              </h1>
+            </div>
+            
+            <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in">
+                Pioneering the future of energy through innovative research in smart grids, 
+                renewable integration, and AI-powered energy systems at BRAC University
+              </p>
+            </div>
+            
+            <div className={`flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <Button 
+                size="lg" 
+                onClick={scrollToResearch}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 text-lg hover:scale-105 transition-all duration-300"
+              >
+                Explore Research <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg hover:scale-105 transition-all duration-300"
+              >
                 <Link to="/people" className="flex items-center">
                   Meet Our Team <Users className="ml-2 h-5 w-5" />
                 </Link>
@@ -156,120 +174,224 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
+      {/* About Us Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div key={index} className="text-center space-y-3">
-                  <div className={`inline-flex p-4 rounded-full bg-gray-50 ${stat.color}`}>
-                    <IconComponent className="h-8 w-8" />
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">About Us</h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              The Sustainable Energy and Smart Grid Research lab at BRAC University is dedicated to advancing 
+              cutting-edge research in renewable energy systems, smart grid technologies, and sustainable power 
+              infrastructure. Our interdisciplinary team works to address the global energy challenges through 
+              innovative solutions and collaborative research.
+            </p>
+          </div>
+
+          {/* Objectives */}
+          <div className="mb-20">
+            <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Objectives</h3>
+            <div className="space-y-8">
+              {objectives.map((objective, index) => (
+                <div 
+                  key={index}
+                  data-objective-index={index}
+                  className="flex items-center space-x-6 group"
+                >
+                  <div className={`relative flex-shrink-0 w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center transition-all duration-500 ${
+                    animatedObjectives.has(index) 
+                      ? 'bg-emerald-500 scale-110' 
+                      : 'bg-white'
+                  }`}>
+                    <span className={`text-2xl font-bold transition-colors duration-500 ${
+                      animatedObjectives.has(index) ? 'text-white' : 'text-emerald-500'
+                    }`}>
+                      {index + 1}
+                    </span>
+                    {animatedObjectives.has(index) && (
+                      <CheckCircle className="absolute -top-2 -right-2 h-6 w-6 text-emerald-600 animate-ping" />
+                    )}
                   </div>
-                  <div>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-gray-600 font-medium">{stat.label}</p>
+                  <div className="flex-1 h-px bg-gray-200"></div>
+                  <div className="flex-1">
+                    <p className="text-lg text-gray-700 group-hover:text-emerald-600 transition-colors duration-300">
+                      {objective}
+                    </p>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+
+          {/* Image Carousel */}
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-gray-900 mb-8">Our Research in Action</h3>
+            <div className="relative max-w-4xl mx-auto">
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                {carouselImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${
+                      index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <img 
+                      src={image.url}
+                      alt={image.alt}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 text-white">
+                      <p className="text-lg font-semibold">{image.alt}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Carousel Navigation */}
+              <button
+                onClick={() => setCurrentImageIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
+              >
+                <ChevronLeft className="h-6 w-6 text-white" />
+              </button>
+              <button
+                onClick={() => setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
+              >
+                <ChevronRight className="h-6 w-6 text-white" />
+              </button>
+
+              {/* Carousel Indicators */}
+              <div className="flex justify-center mt-6 space-x-2">
+                {carouselImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === currentImageIndex 
+                        ? 'bg-emerald-600 scale-125' 
+                        : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Research Highlights */}
-      <section className="py-20 bg-gray-50">
+      {/* Research Areas Section */}
+      <section id="research-areas" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Research Highlights
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Research Areas
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover our cutting-edge research areas that are shaping the future of sustainable energy systems.
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              Explore our comprehensive research domains that are driving innovation in sustainable energy and smart grid technologies.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {highlights.map((highlight, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors">
-                    {highlight.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {highlight.description}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {researchAreas.map((area, index) => (
+              <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={area.image}
+                    alt={area.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">{area.title}</h3>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    {area.description}
                   </p>
-                  <Link 
-                    to={highlight.link}
-                    className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium group-hover:translate-x-1 transition-all"
-                  >
-                    Learn More <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg" 
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3"
+            >
+              <Link to="/research" className="flex items-center">
+                Know More <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Latest News Section */}
+      {/* Latest News & Events Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 Latest News & Events
               </h2>
               <p className="text-xl text-gray-600">
-                Stay updated with our recent achievements and upcoming events.
+                Stay updated with our recent achievements, news, events, and upcoming activities.
               </p>
             </div>
             <Link 
               to="/news"
-              className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center"
+              className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center text-lg"
             >
-              View All <ArrowRight className="ml-1 h-4 w-4" />
+              View All <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                title: "International Smart Grid Symposium 2024",
-                date: "Nov 15, 2024",
-                type: "Event",
-                excerpt: "Successfully hosted symposium with 200+ participants from 25 countries."
+                title: "International Smart Grid Conference 2024",
+                date: "Dec 15, 2024",
+                type: "Upcoming Event",
+                excerpt: "Join us for the annual international conference on smart grid innovations."
               },
               {
-                title: "New Tesla Energy Partnership",
-                date: "Oct 28, 2024", 
+                title: "Research Partnership with Tesla Energy",
+                date: "Nov 28, 2024", 
                 type: "News",
-                excerpt: "Strategic collaboration for next-generation battery management systems."
+                excerpt: "Strategic collaboration announced for next-generation energy storage research."
               },
               {
-                title: "PhD Defense Success",
-                date: "Oct 10, 2024",
+                title: "Best Paper Award at IEEE Conference",
+                date: "Nov 10, 2024",
                 type: "Achievement", 
-                excerpt: "Alex Thompson defended thesis on ML approaches for energy forecasting."
+                excerpt: "Our research on AI-powered grid optimization wins prestigious award."
+              },
+              {
+                title: "Smart Microgrid Installation Completed",
+                date: "Oct 25, 2024",
+                type: "Event",
+                excerpt: "Successfully installed demonstration microgrid system on campus."
               }
             ].map((news, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow border-0 shadow-sm">
+              <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${
                       news.type === 'Event' ? 'bg-blue-100 text-blue-700' :
                       news.type === 'News' ? 'bg-emerald-100 text-emerald-700' :
-                      'bg-amber-100 text-amber-700'
+                      news.type === 'Achievement' ? 'bg-amber-100 text-amber-700' :
+                      'bg-purple-100 text-purple-700'
                     }`}>
                       {news.type}
                     </span>
-                    <span className="text-sm text-gray-500">{news.date}</span>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
                     {news.title}
                   </h3>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-sm text-gray-500 mb-3">{news.date}</p>
+                  <p className="text-gray-600 text-sm line-clamp-3">
                     {news.excerpt}
                   </p>
                 </CardContent>
