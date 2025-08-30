@@ -5,12 +5,13 @@ import { Button } from "../components/ui/button";
 
 const ResearchAreas = () => {
   const iconMap = {
+    Lightbulb: Lightbulb,
     Zap: Zap,
-    Sun: Sun,
     Battery: Battery,
-    Brain: Brain,
-    Leaf: Leaf,
-    Shield: Shield
+    Shield: Shield,
+    Cpu: Cpu,
+    Network: Network,
+    Leaf: Leaf
   };
 
   return (
