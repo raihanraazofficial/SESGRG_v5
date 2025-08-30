@@ -2341,6 +2341,8 @@ if __name__ == "__main__":
         test_error_handling_fallback,
         test_real_vs_mock_data_verification,
         test_news_events_comprehensive,
+        # NEW TESTS FOR REVIEW REQUEST - UPDATED NEWS & EVENTS API
+        test_updated_news_events_api,
         # NEW TESTS FOR REVIEW REQUEST - UPDATED SESG RESEARCH WEBSITE
         test_cache_duration_verification,
         test_environment_variables_configuration,
