@@ -27,16 +27,39 @@ const NewsEvents = () => {
     fetchNewsEvents();
   }, [filters]);
 
-  const fetchNewsEvents = async () => {
+  const fetchNewsEvents = async (forceRefresh = false) => {
     try {
-      setLoading(true);
-      const response = await apiService.getNewsEvents(filters);
+      if (forceRefresh) {
+        setRefreshing(true);
+        // Clear cache first
+        try {
+          await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/clear-cache`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+        } catch (cacheError) {
+          console.warn('Cache clear failed:', cacheError);
+        }
+      } else {
+        setLoading(true);
+      }
+      
+      // Convert 'all' to empty string for API
+      const apiFilters = {
+        ...filters,
+        category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
+      };
+      const response = await apiService.getNewsEvents(apiFilters);
       setNewsEvents(response.news_events || []);
       setPagination(response.pagination || {});
     } catch (error) {
-      console.error('Error fetching news and events:', error);
+      console.error('Error fetching news events:', error);
+      // Fallback to empty state on error
+      setNewsEvents([]);
+      setPagination({});
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
