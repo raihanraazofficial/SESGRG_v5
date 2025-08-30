@@ -174,16 +174,16 @@ frontend:
         comment: "Update footer with Quick Links, Reach Out to Us, Find Us sections as per specs"
 
   - task: "Update People Page Structure"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "pages/People.jsx"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
     status_history:
-      - working: "NA"
+      - working: true
         agent: "main"
-        comment: "Structure page with Advisors, Research Assistants, Collaborators sections"
+        comment: "Successfully restructured People page with three sections: Advisors, Research Assistants, and Collaborators. Enhanced person cards with large photos, detailed descriptions, multiple social/academic profile links (Google Scholar, ORCID, ResearchGate, IEEE, LinkedIn, GitHub), contact buttons, and Know More buttons linking to personal websites. Modern tabbed navigation and call-to-action section added."
 
   - task: "Update Research Areas Page with 7 Core Areas"
     implemented: false
