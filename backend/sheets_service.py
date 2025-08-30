@@ -1053,13 +1053,14 @@ class SESGSheetsService:
                 try:
                     # Handle object format (direct from Google Sheets API)
                     if isinstance(row, dict):
-                        # IEEE format structure
+                        # IEEE format structure - handle both new IEEE format and existing Google Sheets format
                         publication = {
                             "id": f"pub_{row.get('id', i):03d}",
                             "category": str(row.get('category', 'Journal Articles')),
-                            "authors": self._parse_authors(row.get('authors', '')),
+                            "authors": self._parse_authors(row.get('authors', [])),
                             "title": str(row.get('title', '')),
-                            "journal_book_conference_name": str(row.get('journal_book_conference_name', '')),
+                            # Handle both IEEE format field and Google Sheets format field
+                            "journal_book_conference_name": str(row.get('journal_book_conference_name', '') or row.get('publication_info', '')),
                             "volume": str(row.get('volume', '')),
                             "issue": str(row.get('issue', '')),
                             "editors": str(row.get('editors', '')),
@@ -1068,11 +1069,13 @@ class SESGSheetsService:
                             "pages": str(row.get('pages', '')),
                             "year": str(row.get('year', datetime.now().year)),
                             "citations": int(row.get('citations', 0)) if str(row.get('citations', 0)).isdigit() else 0,
-                            "doi_link": str(row.get('doi_link', '')) if row.get('doi_link') else None,
-                            "research_areas": self._parse_research_areas(row.get('research_areas', '')),
+                            "doi_link": str(row.get('doi_link', '') or row.get('full_paper_link', '')) if (row.get('doi_link') or row.get('full_paper_link')) else None,
+                            "research_areas": self._parse_research_areas(row.get('research_areas', [])),
                             # Additional fields for functionality
-                            "open_access": bool(row.get('open_access', False)) or bool(row.get('doi_link', '')),
-                            "full_paper_link": str(row.get('doi_link', '')) if row.get('doi_link') else None,
+                            "open_access": bool(row.get('open_access', False)),
+                            "full_paper_link": str(row.get('full_paper_link', '') or row.get('doi_link', '')) if (row.get('full_paper_link') or row.get('doi_link')) else None,
+                            # Keep original abstract for search functionality
+                            "abstract": str(row.get('abstract', ''))
                         }
                     else:
                         # Handle array format for IEEE columns
