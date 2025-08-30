@@ -156,7 +156,7 @@ Best regards,`;
           </div>
 
           {/* Category Filter Buttons */}
-          <div className="flex justify-center space-x-4 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
             <Button
               variant={filters.category_filter === '' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', '')}
