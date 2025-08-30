@@ -381,16 +381,19 @@ Best regards,`;
                         </p>
                       </div>
 
-                      {/* Research Areas - Same style as category pills */}
+                      {/* Research Areas - 7 colors for 7 research areas */}
                       <div className="flex flex-wrap gap-2">
                         {publication.research_areas.map((area, index) => (
                           <span
                             key={index}
                             className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                              index % 4 === 0 ? 'bg-emerald-100 text-emerald-700' :
-                              index % 4 === 1 ? 'bg-blue-100 text-blue-700' :
-                              index % 4 === 2 ? 'bg-purple-100 text-purple-700' :
-                              'bg-orange-100 text-orange-700'
+                              index % 7 === 0 ? 'bg-emerald-100 text-emerald-700' :
+                              index % 7 === 1 ? 'bg-blue-100 text-blue-700' :
+                              index % 7 === 2 ? 'bg-purple-100 text-purple-700' :
+                              index % 7 === 3 ? 'bg-orange-100 text-orange-700' :
+                              index % 7 === 4 ? 'bg-red-100 text-red-700' :
+                              index % 7 === 5 ? 'bg-indigo-100 text-indigo-700' :
+                              'bg-pink-100 text-pink-700'
                             }`}
                           >
                             {area}
