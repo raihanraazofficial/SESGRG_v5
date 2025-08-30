@@ -26,11 +26,19 @@ const Achievements = () => {
   const fetchAchievements = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getAchievements(filters);
+      // Convert 'all' to empty string for API
+      const apiFilters = {
+        ...filters,
+        category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
+      };
+      const response = await apiService.getAchievements(apiFilters);
       setAchievements(response.achievements || []);
       setPagination(response.pagination || {});
     } catch (error) {
       console.error('Error fetching achievements:', error);
+      // Fallback to empty state on error
+      setAchievements([]);
+      setPagination({});
     } finally {
       setLoading(false);
     }
