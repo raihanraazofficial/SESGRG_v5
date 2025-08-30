@@ -22,7 +22,7 @@ const NewsEvents = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ["News", "Event", "Upcoming Event"];
+  const categories = ["News", "Events", "Upcoming Events"];
 
   useEffect(() => {
     fetchNewsEvents();
@@ -621,15 +621,15 @@ const NewsEvents = () => {
               News
             </Button>
             <Button
-              variant={filters.category_filter === 'Event' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Event')}
+              variant={filters.category_filter === 'Events' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Events')}
               className="px-6 py-2"
             >
               Events
             </Button>
             <Button
-              variant={filters.category_filter === 'Upcoming Event' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Upcoming Event')}
+              variant={filters.category_filter === 'Upcoming Events' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', 'Upcoming Events')}
               className="px-6 py-2"
             >
               Upcoming Events
