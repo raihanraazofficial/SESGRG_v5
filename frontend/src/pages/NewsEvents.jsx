@@ -562,24 +562,188 @@ const NewsEvents = () => {
     const newWindow = window.open('', '_blank');
     newWindow.document.write(`
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
         <title>${item.title} - SESG Research</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="${item.short_description || item.description?.substring(0, 160) || ''}">
+        <meta property="og:title" content="${item.title}">
+        <meta property="og:description" content="${item.short_description || item.description?.substring(0, 160) || ''}">
+        <meta property="og:image" content="${item.image || ''}">
+        <meta property="og:type" content="article">
+        
         <style>
-          .prose ul { list-style-type: disc; margin-left: 1.5rem; }
-          .prose ol { list-style-type: decimal; margin-left: 1.5rem; }
-          .bg-emerald-100 { background-color: #dcfce7; }
-          .text-emerald-700 { color: #047857; }
-          .bg-blue-100 { background-color: #dbeafe; }
-          .text-blue-700 { color: #1d4ed8; }
-          .bg-purple-100 { background-color: #e9d5ff; }
-          .text-purple-700 { color: #7c2d12; }
+          /* Enhanced Typography */
+          .article-content { 
+            font-family: 'Inter', 'system-ui', sans-serif; 
+            line-height: 1.75;
+          }
+          
+          /* Math Formula Styling */
+          .math-formula { 
+            font-family: 'Courier New', monospace; 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+          }
+          
+          /* Code Block Styling */
+          .article-content pre {
+            background: #1a202c !important;
+            border-radius: 12px;
+            border: 1px solid #2d3748;
+          }
+          
+          .article-content code {
+            color: #48bb78 !important;
+            font-family: 'Fira Code', 'Consolas', monospace;
+          }
+          
+          /* Table Styling */
+          .article-content table {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          }
+          
+          /* Video Container */
+          .video-container iframe {
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          }
+          
+          /* Animations */
+          .fade-in { animation: fadeIn 0.6s ease-in-out; }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          /* Print Styles */
+          @media print {
+            .no-print { display: none !important; }
+            nav { display: none !important; }
+            body { background: white !important; }
+            .bg-gradient-to-br { background: white !important; }
+          }
+          
+          /* Dark Mode Support */
+          @media (prefers-color-scheme: dark) {
+            body { background: #1a202c; color: #e2e8f0; }
+            .bg-white { background: #2d3748 !important; }
+            .text-gray-900 { color: #e2e8f0 !important; }
+            .text-gray-700 { color: #cbd5e1 !important; }
+            .text-gray-600 { color: #a0aec0 !important; }
+          }
+          
+          /* Custom Scrollbar */
+          ::-webkit-scrollbar { width: 8px; }
+          ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+          ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+          ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         </style>
       </head>
       <body class="bg-gray-50">
-        ${blogHtml}
+        <div class="fade-in">
+          ${blogHtml}
+        </div>
+        
+        <script>
+          // MathJax Configuration
+          window.MathJax = {
+            tex: {
+              inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+              displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+              processEscapes: true,
+              processEnvironments: true
+            },
+            options: {
+              skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+          };
+
+          // Enhanced Copy Code Functionality
+          document.addEventListener('DOMContentLoaded', function() {
+            const copyButtons = document.querySelectorAll('button[onclick*="clipboard"]');
+            copyButtons.forEach(btn => {
+              btn.addEventListener('click', function() {
+                const code = this.parentElement.nextElementSibling.textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                  const originalText = this.textContent;
+                  this.textContent = 'Copied!';
+                  this.classList.add('bg-green-600');
+                  setTimeout(() => {
+                    this.textContent = originalText;
+                    this.classList.remove('bg-green-600');
+                  }, 2000);
+                });
+              });
+            });
+            
+            // Smooth scroll for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+              anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              });
+            });
+            
+            // Reading Progress Bar
+            const progressBar = document.createElement('div');
+            progressBar.style.cssText = 'position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); z-index: 9999; transition: width 0.25s ease-out;';
+            document.body.appendChild(progressBar);
+            
+            window.addEventListener('scroll', function() {
+              const scrollTop = window.pageYOffset;
+              const docHeight = document.body.offsetHeight - window.innerHeight;
+              const scrollPercent = scrollTop / docHeight * 100;
+              progressBar.style.width = scrollPercent + '%';
+            });
+            
+            // Share functionality fallback
+            if (!navigator.share) {
+              const shareBtn = document.querySelector('button[onclick*="navigator.share"]');
+              if (shareBtn) {
+                shareBtn.onclick = function() {
+                  const url = window.location.href;
+                  navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                  });
+                };
+              }
+            }
+          });
+
+          // Table of Contents Generator (for long articles)
+          function generateTableOfContents() {
+            const headers = document.querySelectorAll('h2, h3, h4');
+            if (headers.length > 3) {
+              const toc = document.createElement('div');
+              toc.className = 'bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8';
+              toc.innerHTML = '<h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Table of Contents</h3><ul class="space-y-2">';
+              
+              headers.forEach((header, index) => {
+                const id = 'heading-' + index;
+                header.id = id;
+                const level = parseInt(header.tagName[1]);
+                const indent = level === 2 ? '' : level === 3 ? 'ml-4' : 'ml-8';
+                toc.innerHTML += '<li class="' + indent + '"><a href="#' + id + '" class="text-blue-600 hover:text-blue-800 text-sm hover:underline">' + header.textContent + '</a></li>';
+              });
+              
+              toc.innerHTML += '</ul>';
+              const articleContent = document.querySelector('.article-content');
+              if (articleContent) {
+                articleContent.insertBefore(toc, articleContent.firstChild);
+              }
+            }
+          }
+          
+          // Generate TOC after page load
+          window.addEventListener('load', generateTableOfContents);
+        </script>
       </body>
       </html>
     `);
