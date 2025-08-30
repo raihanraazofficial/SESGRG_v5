@@ -1,0 +1,806 @@
+"""
+Google Sheets Service for SESG Research Website
+Handles data fetching from Google Sheets or mock data for development
+"""
+
+import os
+import json
+from typing import List, Dict, Any, Optional
+from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
+
+class SESGSheetsService:
+    def __init__(self):
+        self.use_mock_data = True  # Set to False when real Google Sheets are available
+        
+    def get_publications(self, 
+                        page: int = 1, 
+                        per_page: int = 20,
+                        year_filter: Optional[str] = None,
+                        area_filter: Optional[str] = None,
+                        category_filter: Optional[str] = None,
+                        author_filter: Optional[str] = None,
+                        title_filter: Optional[str] = None,
+                        sort_by: str = "year",
+                        sort_order: str = "desc") -> Dict[str, Any]:
+        """Get publications with filtering, pagination, and sorting"""
+        
+        if self.use_mock_data:
+            return self._get_mock_publications(page, per_page, year_filter, area_filter, 
+                                            category_filter, author_filter, title_filter, 
+                                            sort_by, sort_order)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+    
+    def get_projects(self,
+                    page: int = 1,
+                    per_page: int = 20,
+                    status_filter: Optional[str] = None,
+                    area_filter: Optional[str] = None,
+                    title_filter: Optional[str] = None,
+                    sort_by: str = "start_date",
+                    sort_order: str = "desc") -> Dict[str, Any]:
+        """Get projects with filtering and pagination"""
+        
+        if self.use_mock_data:
+            return self._get_mock_projects(page, per_page, status_filter, area_filter, 
+                                         title_filter, sort_by, sort_order)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+    
+    def get_achievements(self,
+                        page: int = 1,
+                        per_page: int = 12,
+                        category_filter: Optional[str] = None,
+                        title_filter: Optional[str] = None,
+                        sort_by: str = "date",
+                        sort_order: str = "desc") -> Dict[str, Any]:
+        """Get achievements with filtering and pagination"""
+        
+        if self.use_mock_data:
+            return self._get_mock_achievements(page, per_page, category_filter, 
+                                            title_filter, sort_by, sort_order)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+    
+    def get_news_events(self,
+                       page: int = 1,
+                       per_page: int = 15,
+                       category_filter: Optional[str] = None,
+                       title_filter: Optional[str] = None,
+                       sort_by: str = "date",
+                       sort_order: str = "desc") -> Dict[str, Any]:
+        """Get news and events with filtering and pagination"""
+        
+        if self.use_mock_data:
+            return self._get_mock_news_events(page, per_page, category_filter, 
+                                            title_filter, sort_by, sort_order)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+    
+    def get_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed achievement for blog-style page"""
+        if self.use_mock_data:
+            return self._get_mock_achievement_details(achievement_id)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+    
+    def get_news_event_details(self, news_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed news/event for blog-style page"""
+        if self.use_mock_data:
+            return self._get_mock_news_event_details(news_id)
+        else:
+            # TODO: Implement real Google Sheets integration
+            pass
+
+    def _get_mock_publications(self, page, per_page, year_filter, area_filter, 
+                              category_filter, author_filter, title_filter, 
+                              sort_by, sort_order) -> Dict[str, Any]:
+        """Generate comprehensive mock publications data"""
+        
+        # Mock publications data
+        publications = [
+            {
+                "id": "pub_001",
+                "title": "Machine Learning Approaches for Smart Grid Optimization: A Comprehensive Review",
+                "authors": ["Dr. Ahmed Rahman", "Prof. Sarah Mitchell", "Dr. James Chen", "Ms. Fatima Al-Zahra"],
+                "publication_info": "IEEE Transactions on Smart Grid, vol. 15, no. 3, pp. 2145-2158, 2024",
+                "year": "2024",
+                "category": "Journal Articles",
+                "research_areas": ["Smart Grid Technologies", "Grid Optimization & Stability"],
+                "citations": 45,
+                "open_access": True,
+                "full_paper_link": "https://example.com/paper1.pdf",
+                "abstract": "This paper presents a comprehensive review of machine learning approaches for smart grid optimization, covering deep learning, reinforcement learning, and ensemble methods."
+            },
+            {
+                "id": "pub_002", 
+                "title": "Renewable Energy Integration Strategies for Microgrids: Performance Analysis and Optimization",
+                "authors": ["Prof. Maria Rodriguez", "Dr. Ahmed Rahman", "Eng. Michael Johnson"],
+                "publication_info": "Renewable Energy, vol. 198, pp. 1156-1169, 2024",
+                "year": "2024",
+                "category": "Journal Articles",
+                "research_areas": ["Microgrids & Distributed Energy Systems", "Renewable Energy Integration"],
+                "citations": 32,
+                "open_access": False,
+                "full_paper_link": None,
+                "abstract": "An analysis of various renewable energy integration strategies for microgrids with focus on optimization algorithms and performance metrics."
+            },
+            {
+                "id": "pub_003",
+                "title": "Cybersecurity Framework for Smart Power Grids: Threat Analysis and Defense Mechanisms",
+                "authors": ["Dr. Elena Petrov", "Prof. John Williams", "Dr. Ahmed Rahman"],
+                "publication_info": "IEEE Conference on Smart Grid Communications, pp. 234-239, 2024",
+                "year": "2024", 
+                "category": "Conference Proceedings",
+                "research_areas": ["Cybersecurity and AI for Power Infrastructure"],
+                "citations": 18,
+                "open_access": True,
+                "full_paper_link": "https://example.com/paper3.pdf",
+                "abstract": "This work proposes a comprehensive cybersecurity framework for smart power grids addressing emerging threats and defense strategies."
+            },
+            {
+                "id": "pub_004",
+                "title": "Advanced Energy Storage Systems for Grid Stability: A Technical Review",
+                "authors": ["Dr. Lisa Chang", "Prof. David Kumar", "Dr. Ahmed Rahman", "Eng. Robert Smith"],
+                "publication_info": "Journal of Energy Storage, vol. 67, article 107543, 2023",
+                "year": "2023",
+                "category": "Journal Articles", 
+                "research_areas": ["Energy Storage Systems", "Grid Optimization & Stability"],
+                "citations": 67,
+                "open_access": True,
+                "full_paper_link": "https://example.com/paper4.pdf",
+                "abstract": "Comprehensive review of advanced energy storage technologies and their impact on grid stability and performance."
+            },
+            {
+                "id": "pub_005",
+                "title": "IoT-Based Monitoring Systems for Smart Grid Infrastructure",
+                "authors": ["Eng. Alex Thompson", "Dr. Ahmed Rahman", "Prof. Sarah Mitchell"],
+                "publication_info": "International Conference on Internet of Things, pp. 145-152, 2023",
+                "year": "2023",
+                "category": "Conference Proceedings",
+                "research_areas": ["Smart Grid Technologies", "Power System Automation"],
+                "citations": 29,
+                "open_access": False,
+                "full_paper_link": None,
+                "abstract": "Development of IoT-based monitoring systems for real-time smart grid infrastructure management and optimization."
+            },
+            {
+                "id": "pub_006",
+                "title": "Distributed Energy Resources Management in Smart Grids",
+                "authors": ["Prof. Maria Rodriguez", "Dr. Elena Petrov", "Eng. Michael Johnson"],
+                "publication_info": "Smart Grid Technologies Handbook, Chapter 12, pp. 245-278, Springer, 2023",
+                "year": "2023",
+                "category": "Book Chapters",
+                "research_areas": ["Microgrids & Distributed Energy Systems", "Smart Grid Technologies"],
+                "citations": 41,
+                "open_access": False,
+                "full_paper_link": None,
+                "abstract": "Comprehensive guide to managing distributed energy resources in modern smart grid systems."
+            }
+        ]
+        
+        # Add more publications for pagination testing
+        for i in range(7, 51):
+            publications.append({
+                "id": f"pub_{i:03d}",
+                "title": f"Research Paper {i}: Advanced Topics in Sustainable Energy Systems",
+                "authors": ["Dr. Researcher A", "Prof. Researcher B"],
+                "publication_info": f"Conference on Energy Systems, vol. {i}, pp. 100-110, {2022 + (i % 3)}",
+                "year": str(2022 + (i % 3)),
+                "category": ["Journal Articles", "Conference Proceedings", "Book Chapters"][i % 3],
+                "research_areas": [["Smart Grid Technologies"], ["Renewable Energy Integration"], 
+                                 ["Energy Storage Systems"], ["Grid Optimization & Stability"]][i % 4],
+                "citations": max(1, 50 - i),
+                "open_access": i % 2 == 0,
+                "full_paper_link": f"https://example.com/paper{i}.pdf" if i % 2 == 0 else None,
+                "abstract": f"Abstract for research paper {i} covering advanced topics in sustainable energy systems."
+            })
+        
+        # Apply filters
+        filtered_pubs = self._apply_publication_filters(
+            publications, year_filter, area_filter, category_filter, 
+            author_filter, title_filter
+        )
+        
+        # Apply sorting
+        filtered_pubs = self._sort_publications(filtered_pubs, sort_by, sort_order)
+        
+        # Apply pagination
+        total = len(filtered_pubs)
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        paginated_pubs = filtered_pubs[start_idx:end_idx]
+        
+        return {
+            "publications": paginated_pubs,
+            "pagination": {
+                "current_page": page,
+                "per_page": per_page,
+                "total_items": total,
+                "total_pages": (total + per_page - 1) // per_page,
+                "has_next": end_idx < total,
+                "has_prev": page > 1
+            },
+            "statistics": {
+                "total_publications": total,
+                "total_citations": sum(pub["citations"] for pub in filtered_pubs)
+            }
+        }
+    
+    def _get_mock_projects(self, page, per_page, status_filter, area_filter, 
+                          title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Generate mock projects data"""
+        
+        projects = [
+            {
+                "id": "proj_001",
+                "title": "AI-Powered Smart Grid Optimization Platform",
+                "description": "Development of an intelligent platform for real-time smart grid optimization using machine learning algorithms and predictive analytics.",
+                "status": "Active",
+                "start_date": "2024-01-15",
+                "end_date": "2025-12-31",
+                "research_areas": ["Smart Grid Technologies", "Grid Optimization & Stability"],
+                "principal_investigator": "Dr. Ahmed Rahman",
+                "team_members": ["Prof. Sarah Mitchell", "Dr. James Chen", "Ms. Fatima Al-Zahra"],
+                "funding_agency": "National Science Foundation",
+                "budget": "$450,000",
+                "image": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e"
+            },
+            {
+                "id": "proj_002",
+                "title": "Microgrid Integration for Rural Communities",
+                "description": "Implementation of sustainable microgrid solutions for rural communities with focus on renewable energy integration and energy storage systems.",
+                "status": "Active",
+                "start_date": "2023-06-01",
+                "end_date": "2025-05-31",
+                "research_areas": ["Microgrids & Distributed Energy Systems", "Renewable Energy Integration"],
+                "principal_investigator": "Prof. Maria Rodriguez",
+                "team_members": ["Dr. Elena Petrov", "Eng. Michael Johnson", "Dr. Lisa Chang"],
+                "funding_agency": "Department of Energy",
+                "budget": "$650,000",
+                "image": "https://images.unsplash.com/photo-1466611653911-95081537e5b7"
+            },
+            {
+                "id": "proj_003",
+                "title": "Cybersecurity Enhancement for Smart Power Infrastructure",
+                "description": "Research and development of advanced cybersecurity measures to protect smart grid infrastructure from emerging cyber threats.",
+                "status": "Completed",
+                "start_date": "2022-09-01", 
+                "end_date": "2024-08-31",
+                "research_areas": ["Cybersecurity and AI for Power Infrastructure"],
+                "principal_investigator": "Dr. Elena Petrov",
+                "team_members": ["Prof. John Williams", "Dr. Ahmed Rahman", "Eng. Alex Thompson"],
+                "funding_agency": "Defense Advanced Research Projects Agency",
+                "budget": "$750,000",
+                "image": "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e"
+            },
+            {
+                "id": "proj_004",
+                "title": "Next-Generation Battery Management Systems",
+                "description": "Development of intelligent battery management systems for large-scale energy storage applications in smart grids.",
+                "status": "Active",
+                "start_date": "2024-03-01",
+                "end_date": "2026-02-28",
+                "research_areas": ["Energy Storage Systems", "Power System Automation"],
+                "principal_investigator": "Dr. Lisa Chang",
+                "team_members": ["Prof. David Kumar", "Eng. Robert Smith", "Dr. Ahmed Rahman"],
+                "funding_agency": "Tesla Energy Research Fund",
+                "budget": "$850,000",
+                "image": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9"
+            }
+        ]
+        
+        # Add more projects for pagination testing
+        for i in range(5, 21):
+            projects.append({
+                "id": f"proj_{i:03d}",
+                "title": f"Research Project {i}: Sustainable Energy Innovation",
+                "description": f"Project {i} focuses on innovative approaches to sustainable energy systems and smart grid technologies.",
+                "status": ["Active", "Completed", "Planning"][i % 3],
+                "start_date": f"2024-{(i % 12) + 1:02d}-01",
+                "end_date": f"2025-{(i % 12) + 1:02d}-31",
+                "research_areas": [["Smart Grid Technologies"], ["Renewable Energy Integration"], 
+                                 ["Energy Storage Systems"]][i % 3],
+                "principal_investigator": f"Dr. Researcher {chr(65 + (i % 5))}",
+                "team_members": [f"Prof. Member {i}", f"Eng. Assistant {i}"],
+                "funding_agency": ["NSF", "DOE", "Private Industry"][i % 3],
+                "budget": f"${(i * 50000):,}",
+                "image": "https://images.unsplash.com/photo-1467533003447-e295ff1b0435"
+            })
+        
+        # Apply filters and sorting
+        filtered_projects = self._apply_project_filters(projects, status_filter, area_filter, title_filter)
+        filtered_projects = self._sort_projects(filtered_projects, sort_by, sort_order)
+        
+        # Apply pagination
+        total = len(filtered_projects)
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        paginated_projects = filtered_projects[start_idx:end_idx]
+        
+        return {
+            "projects": paginated_projects,
+            "pagination": {
+                "current_page": page,
+                "per_page": per_page,
+                "total_items": total,
+                "total_pages": (total + per_page - 1) // per_page,
+                "has_next": end_idx < total,
+                "has_prev": page > 1
+            }
+        }
+    
+    def _get_mock_achievements(self, page, per_page, category_filter, 
+                              title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Generate mock achievements data"""
+        
+        achievements = [
+            {
+                "id": "ach_001",
+                "title": "Best Paper Award at IEEE Smart Grid Conference 2024",
+                "short_description": "Our research on AI-powered grid optimization received the prestigious Best Paper Award at the IEEE International Conference on Smart Grid Technologies.",
+                "category": "Award",
+                "date": "2024-11-15",
+                "image": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800",
+                "full_content": """
+                # Best Paper Award at IEEE Smart Grid Conference 2024
+
+                We are thrilled to announce that our research paper titled "Machine Learning Approaches for Smart Grid Optimization: A Comprehensive Review" has been awarded the **Best Paper Award** at the IEEE International Conference on Smart Grid Technologies 2024.
+
+                ## About the Research
+
+                The award-winning paper, authored by Dr. Ahmed Rahman, Prof. Sarah Mitchell, Dr. James Chen, and Ms. Fatima Al-Zahra, presents a comprehensive analysis of machine learning applications in smart grid optimization.
+
+                ### Key Contributions:
+                - Novel deep learning architectures for grid optimization
+                - Comparative analysis of reinforcement learning algorithms
+                - Real-world case studies and performance benchmarks
+                - Future research directions and challenges
+
+                ## Conference Highlights
+
+                The IEEE International Conference on Smart Grid Technologies brought together over 500 researchers from around the world. Our presentation highlighted the potential of AI in revolutionizing power grid management.
+
+                ### Impact and Recognition
+
+                This recognition validates our lab's commitment to cutting-edge research in sustainable energy systems. The paper has already received significant attention from the research community and industry partners.
+
+                **Citation:** Rahman, A., Mitchell, S., Chen, J., & Al-Zahra, F. (2024). Machine Learning Approaches for Smart Grid Optimization: A Comprehensive Review. *IEEE Transactions on Smart Grid*, 15(3), 2145-2158.
+                """
+            },
+            {
+                "id": "ach_002",
+                "title": "Strategic Partnership with Tesla Energy Announced",
+                "short_description": "SESG Research Lab partners with Tesla Energy to develop next-generation battery management systems for smart grid applications.",
+                "category": "Partnership",
+                "date": "2024-10-28",
+                "image": "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=800",
+                "full_content": """
+                # Strategic Partnership with Tesla Energy
+
+                The Sustainable Energy and Smart Grid Research Lab is proud to announce a groundbreaking partnership with **Tesla Energy** to advance research in battery management systems and energy storage technologies.
+
+                ## Partnership Overview
+
+                This collaboration brings together our lab's academic research expertise with Tesla's industry-leading energy storage solutions to develop innovative technologies for smart grid applications.
+
+                ### Research Focus Areas:
+                1. **Advanced Battery Management Systems**
+                2. **Grid-Scale Energy Storage Solutions**
+                3. **AI-Powered Energy Optimization**
+                4. **Sustainable Energy Integration**
+
+                ## Expected Outcomes
+
+                The partnership is expected to yield significant advances in:
+                - Battery performance optimization algorithms
+                - Smart grid integration protocols
+                - Real-time energy management systems
+                - Sustainable energy storage solutions
+
+                ### Funding and Duration
+
+                Tesla Energy will provide $850,000 in funding over two years, along with access to cutting-edge battery technology and testing facilities.
+
+                ## Team Leadership
+
+                The project will be led by **Dr. Lisa Chang** as Principal Investigator, with support from Prof. David Kumar and the entire SESG research team.
+
+                This partnership represents a significant milestone in our mission to advance sustainable energy technologies and smart grid solutions.
+                """
+            }
+        ]
+        
+        # Add more achievements for testing
+        for i in range(3, 26):
+            achievements.append({
+                "id": f"ach_{i:03d}",
+                "title": f"Research Milestone {i}: Innovation in Sustainable Energy",
+                "short_description": f"Achievement {i} represents a significant breakthrough in our ongoing research efforts.",
+                "category": ["Award", "Partnership", "Publication", "Grant"][i % 4],
+                "date": f"2024-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}",
+                "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+                "full_content": f"""
+                # Research Milestone {i}: Innovation in Sustainable Energy
+
+                This achievement represents our continued commitment to advancing sustainable energy research.
+
+                ## Overview
+                Achievement {i} demonstrates our lab's innovative approach to solving complex energy challenges.
+
+                ### Key Points:
+                - Significant research breakthrough
+                - Industry collaboration
+                - Academic recognition
+                - Future impact potential
+
+                This milestone contributes to our broader mission of sustainable energy advancement.
+                """
+            })
+        
+        # Apply filters and sorting
+        filtered_achievements = self._apply_achievement_filters(achievements, category_filter, title_filter)
+        filtered_achievements = self._sort_achievements(filtered_achievements, sort_by, sort_order)
+        
+        # Apply pagination
+        total = len(filtered_achievements)
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        paginated_achievements = filtered_achievements[start_idx:end_idx]
+        
+        return {
+            "achievements": paginated_achievements,
+            "pagination": {
+                "current_page": page,
+                "per_page": per_page,
+                "total_items": total,
+                "total_pages": (total + per_page - 1) // per_page,
+                "has_next": end_idx < total,
+                "has_prev": page > 1
+            }
+        }
+    
+    def _get_mock_news_events(self, page, per_page, category_filter, 
+                             title_filter, sort_by, sort_order) -> Dict[str, Any]:
+        """Generate mock news and events data"""
+        
+        news_events = [
+            {
+                "id": "news_001",
+                "title": "International Smart Grid Symposium 2024 - Call for Papers",
+                "short_description": "Submit your research papers for the upcoming International Smart Grid Symposium to be held at BRAC University in December 2024.",
+                "category": "Upcoming Event",
+                "date": "2024-12-15",
+                "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+                "full_content": """
+                # International Smart Grid Symposium 2024
+
+                ## Call for Papers - Deadline Extended!
+
+                The SESG Research Lab is organizing the **International Smart Grid Symposium 2024** at BRAC University, Dhaka, Bangladesh.
+
+                ### Important Dates:
+                - **Paper Submission Deadline:** November 30, 2024
+                - **Notification of Acceptance:** December 5, 2024  
+                - **Conference Date:** December 15-16, 2024
+
+                ## Conference Themes:
+                1. Smart Grid Technologies and Applications
+                2. Renewable Energy Integration
+                3. Energy Storage Systems
+                4. Grid Cybersecurity
+                5. AI and Machine Learning in Power Systems
+
+                ### Keynote Speakers:
+                - Prof. Elena Rodriguez (MIT)
+                - Dr. James Patterson (Stanford University)
+                - Industry leaders from Tesla, Google, and Siemens
+
+                ## Registration Information:
+                - **Academic:** $150
+                - **Industry:** $300
+                - **Students:** $75
+
+                Join us for two days of cutting-edge research presentations, networking opportunities, and collaborative discussions on the future of smart grid technologies.
+
+                **Contact:** symposium@sesg.bracu.ac.bd
+                """
+            },
+            {
+                "id": "news_002",
+                "title": "SESG Lab Receives $1.2M Grant from National Science Foundation",
+                "short_description": "Major funding awarded for groundbreaking research in AI-powered smart grid optimization and renewable energy integration.",
+                "category": "News",
+                "date": "2024-11-20",
+                "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800",
+                "full_content": """
+                # Major NSF Grant Awarded to SESG Research Lab
+
+                The Sustainable Energy and Smart Grid Research Lab has been awarded a **$1.2 million grant** from the National Science Foundation (NSF) for our proposal titled "AI-Powered Optimization Framework for Next-Generation Smart Grids."
+
+                ## Project Overview
+
+                This three-year project will focus on developing advanced artificial intelligence algorithms for optimizing smart grid operations, with particular emphasis on renewable energy integration and demand response systems.
+
+                ### Research Objectives:
+                - Develop novel deep learning architectures for grid optimization
+                - Create real-time decision-making systems for energy distribution
+                - Integrate renewable energy sources more effectively
+                - Enhance grid resilience and reliability
+
+                ## Team and Collaboration
+
+                The project will be led by **Dr. Ahmed Rahman** as Principal Investigator, with co-investigators Prof. Sarah Mitchell and Dr. James Chen.
+
+                ### Industry Partners:
+                - Tesla Energy
+                - Siemens Smart Infrastructure
+                - Bangladesh Power Development Board
+
+                ## Expected Impact
+
+                This research is expected to significantly advance the field of smart grid technologies and contribute to more sustainable and efficient power systems worldwide.
+
+                The grant will also support graduate student research and state-of-the-art laboratory equipment for advanced energy systems research.
+                """
+            },
+            {
+                "id": "news_003",
+                "title": "Student Team Wins First Place at IEEE Power & Energy Student Competition",
+                "short_description": "Our undergraduate students secured first place in the prestigious IEEE Power & Energy Society Student Competition with their innovative microgrid design.",
+                "category": "Achievement",
+                "date": "2024-11-10",
+                "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800",
+                "full_content": """
+                # IEEE Competition Victory: Students Excel in Microgrid Design
+
+                Congratulations to our outstanding undergraduate student team for winning **First Place** in the IEEE Power & Energy Society Student Competition 2024!
+
+                ## Winning Project: "Smart Microgrid for Rural Electrification"
+
+                The team developed an innovative microgrid solution specifically designed for rural communities in Bangladesh, incorporating:
+
+                ### Key Features:
+                - Solar and wind energy integration
+                - Smart battery management system
+                - IoT-based monitoring and control
+                - Machine learning for demand prediction
+                - Community engagement platform
+
+                ## Team Members:
+                - **Fatima Al-Zahra** (Team Leader, Electrical Engineering)
+                - **Michael Rahman** (Computer Science & Engineering)
+                - **Sarah Ahmed** (Electrical Engineering)  
+                - **David Kumar** (Environmental Science)
+
+                ### Faculty Supervisor:
+                Prof. Maria Rodriguez provided guidance throughout the project development.
+
+                ## Competition Details
+
+                The IEEE Power & Energy Society Student Competition brought together 150 teams from universities across Asia-Pacific. Our team's presentation impressed judges with its practical approach and innovative technology integration.
+
+                ### Prize and Recognition:
+                - $5,000 cash prize
+                - IEEE PES membership for team members
+                - Invitation to present at IEEE PES General Meeting 2025
+                - Industry mentorship opportunities
+
+                This achievement highlights the quality of education and research opportunities available at our lab and BRAC University.
+                """
+            },
+            {
+                "id": "news_004",
+                "title": "Smart Campus Microgrid Installation Completed Successfully",
+                "short_description": "BRAC University's new smart microgrid system is now operational, serving as a living laboratory for sustainable energy research.",
+                "category": "Event",
+                "date": "2024-10-25",
+                "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800",
+                "full_content": """
+                # Smart Campus Microgrid Goes Live
+
+                We are excited to announce the successful completion and activation of the **BRAC University Smart Campus Microgrid**, a state-of-the-art installation that will serve as both a sustainable energy solution and a living laboratory for research.
+
+                ## System Specifications
+
+                The microgrid system includes:
+                - **500 kW Solar PV Array** installed across campus rooftops
+                - **200 kWh Battery Storage System** for energy management
+                - **Smart Inverters and Controllers** for grid integration
+                - **IoT Monitoring Network** for real-time data collection
+
+                ### Performance Highlights:
+                - 30% reduction in grid electricity consumption
+                - Real-time energy optimization
+                - Seamless backup power during outages
+                - Carbon footprint reduction of 150 tons CO2/year
+
+                ## Research Opportunities
+
+                This installation creates unique research opportunities for:
+                - Graduate student thesis projects
+                - Industry collaboration studies
+                - Technology validation and testing
+                - Educational demonstrations
+
+                ### Current Research Projects:
+                1. Machine learning for energy forecasting
+                2. Demand response optimization
+                3. Battery management algorithms
+                4. Grid integration protocols
+
+                ## Community Impact
+
+                The microgrid serves as a demonstration site for sustainable energy technologies, hosting visits from government officials, industry partners, and other universities.
+
+                **Project Partners:** Tesla Energy, Siemens, Solar Power Bangladesh Ltd.
+
+                This achievement represents a significant step toward our vision of a sustainable energy future.
+                """
+            }
+        ]
+        
+        # Add more news/events for testing
+        for i in range(5, 41):
+            news_events.append({
+                "id": f"news_{i:03d}",
+                "title": f"News/Event {i}: Latest Update from SESG Lab",
+                "short_description": f"Update {i} provides the latest information about our ongoing research and activities.",
+                "category": ["News", "Event", "Achievement", "Upcoming Event"][i % 4],
+                "date": f"2024-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}",
+                "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+                "full_content": f"""
+                # News/Event {i}: Latest Update from SESG Lab
+
+                ## Overview
+                This update covers the latest developments in our research activities.
+
+                ### Key Points:
+                - Research progress update
+                - Team accomplishments
+                - Future plans and objectives
+                - Community engagement activities
+
+                Stay tuned for more updates from the SESG Research Lab.
+                """
+            })
+        
+        # Apply filters and sorting
+        filtered_news = self._apply_news_filters(news_events, category_filter, title_filter)
+        filtered_news = self._sort_news_events(filtered_news, sort_by, sort_order)
+        
+        # Apply pagination
+        total = len(filtered_news)
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        paginated_news = filtered_news[start_idx:end_idx]
+        
+        return {
+            "news_events": paginated_news,
+            "pagination": {
+                "current_page": page,
+                "per_page": per_page,
+                "total_items": total,
+                "total_pages": (total + per_page - 1) // per_page,
+                "has_next": end_idx < total,
+                "has_prev": page > 1
+            }
+        }
+
+    # Helper methods for filtering and sorting
+    def _apply_publication_filters(self, publications, year_filter, area_filter, 
+                                  category_filter, author_filter, title_filter):
+        filtered = publications
+        
+        if year_filter:
+            filtered = [p for p in filtered if p["year"] == year_filter]
+        if area_filter:
+            filtered = [p for p in filtered if area_filter in p["research_areas"]]
+        if category_filter:
+            filtered = [p for p in filtered if p["category"] == category_filter]
+        if author_filter:
+            filtered = [p for p in filtered if any(author_filter.lower() in author.lower() 
+                                                  for author in p["authors"])]
+        if title_filter:
+            filtered = [p for p in filtered if title_filter.lower() in p["title"].lower()]
+            
+        return filtered
+    
+    def _sort_publications(self, publications, sort_by, sort_order):
+        reverse = sort_order == "desc"
+        
+        if sort_by == "year":
+            return sorted(publications, key=lambda x: x["year"], reverse=reverse)
+        elif sort_by == "citations":
+            return sorted(publications, key=lambda x: x["citations"], reverse=reverse)
+        elif sort_by == "title":
+            return sorted(publications, key=lambda x: x["title"], reverse=reverse)
+        else:
+            return publications
+    
+    def _apply_project_filters(self, projects, status_filter, area_filter, title_filter):
+        filtered = projects
+        
+        if status_filter:
+            filtered = [p for p in filtered if p["status"] == status_filter]
+        if area_filter:
+            filtered = [p for p in filtered if area_filter in p["research_areas"]]
+        if title_filter:
+            filtered = [p for p in filtered if title_filter.lower() in p["title"].lower()]
+            
+        return filtered
+    
+    def _sort_projects(self, projects, sort_by, sort_order):
+        reverse = sort_order == "desc"
+        
+        if sort_by == "start_date":
+            return sorted(projects, key=lambda x: x["start_date"], reverse=reverse)
+        elif sort_by == "title":
+            return sorted(projects, key=lambda x: x["title"], reverse=reverse)
+        else:
+            return projects
+    
+    def _apply_achievement_filters(self, achievements, category_filter, title_filter):
+        filtered = achievements
+        
+        if category_filter:
+            filtered = [a for a in filtered if a["category"] == category_filter]
+        if title_filter:
+            filtered = [a for a in filtered if title_filter.lower() in a["title"].lower()]
+            
+        return filtered
+    
+    def _sort_achievements(self, achievements, sort_by, sort_order):
+        reverse = sort_order == "desc"
+        
+        if sort_by == "date":
+            return sorted(achievements, key=lambda x: x["date"], reverse=reverse)
+        elif sort_by == "title":
+            return sorted(achievements, key=lambda x: x["title"], reverse=reverse)
+        else:
+            return achievements
+    
+    def _apply_news_filters(self, news_events, category_filter, title_filter):
+        filtered = news_events
+        
+        if category_filter:
+            filtered = [n for n in filtered if n["category"] == category_filter]
+        if title_filter:
+            filtered = [n for n in filtered if title_filter.lower() in n["title"].lower()]
+            
+        return filtered
+    
+    def _sort_news_events(self, news_events, sort_by, sort_order):
+        reverse = sort_order == "desc"
+        
+        if sort_by == "date":
+            return sorted(news_events, key=lambda x: x["date"], reverse=reverse)
+        elif sort_by == "title":
+            return sorted(news_events, key=lambda x: x["title"], reverse=reverse)
+        else:
+            return news_events
+
+    def _get_mock_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed achievement for blog-style page"""
+        # This would normally query the Google Sheets for full content
+        # For now, return mock detailed content
+        achievements = self._get_mock_achievements(1, 100, None, None, "date", "desc")["achievements"]
+        return next((a for a in achievements if a["id"] == achievement_id), None)
+    
+    def _get_mock_news_event_details(self, news_id: str) -> Optional[Dict[str, Any]]:
+        """Get detailed news/event for blog-style page"""
+        # This would normally query the Google Sheets for full content
+        news_events = self._get_mock_news_events(1, 100, None, None, "date", "desc")["news_events"]
+        return next((n for n in news_events if n["id"] == news_id), None)
+
+
+# Global instance
+sheets_service = SESGSheetsService()
