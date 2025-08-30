@@ -9,6 +9,7 @@ import apiService from "../services/api";
 const Achievements = () => {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({
     title_filter: '',
