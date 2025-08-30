@@ -1007,7 +1007,7 @@ class SESGSheetsService:
             # Fallback to mock data on error
             return self._get_mock_publications(page, per_page, year_filter, area_filter, 
                                             category_filter, author_filter, title_filter, 
-                                            sort_by, sort_order)
+                                            search_filter, sort_by, sort_order)
 
     def _convert_sheets_to_publications(self, sheets_data) -> List[Dict[str, Any]]:
         """Convert Google Sheets data to publication format"""
