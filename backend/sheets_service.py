@@ -997,18 +997,24 @@ class SESGSheetsService:
         reverse = sort_order == "desc"
         
         # Always prioritize featured items first, then apply the requested sort
-        def sort_key(x):
-            featured_priority = -x.get("featured", 0)  # Featured items (1) get negative value for priority
-            
-            if sort_by == "date":
-                return (featured_priority, x["date"])
-            elif sort_by == "title":
-                return (featured_priority, x["title"].lower())
-            else:
-                return (featured_priority, x["date"])
+        # Split into featured and non-featured groups to maintain featured priority
+        featured_items = [item for item in news_events if item.get("featured", 0) == 1]
+        non_featured_items = [item for item in news_events if item.get("featured", 0) == 0]
         
-        # Sort with featured items always first
-        return sorted(news_events, key=sort_key, reverse=reverse)
+        # Sort each group separately
+        if sort_by == "date":
+            featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+        elif sort_by == "title":
+            featured_items.sort(key=lambda x: x["title"].lower(), reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["title"].lower(), reverse=reverse)
+        else:
+            # Default to date sorting
+            featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+            non_featured_items.sort(key=lambda x: x["date"], reverse=reverse)
+        
+        # Combine with featured items first
+        return featured_items + non_featured_items
 
     def _get_mock_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
         """Get detailed achievement for blog-style page"""
