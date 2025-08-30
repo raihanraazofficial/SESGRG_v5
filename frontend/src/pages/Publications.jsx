@@ -380,21 +380,6 @@ Best regards,`;
                           />
                         </p>
                       </div>
-                      
-                      {/* DOI/Link */}
-                      {publication.doi_link && (
-                        <p className="text-sm text-blue-600 mb-2">
-                          <strong>DOI/Link:</strong>{' '}
-                          <a 
-                            href={publication.doi_link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="hover:underline"
-                          >
-                            {publication.doi_link}
-                          </a>
-                        </p>
-                      )}
                     </div>
                     <div className="flex lg:flex-col justify-between lg:justify-start items-center lg:items-end lg:text-right space-x-4 lg:space-x-0 lg:space-y-2">
                       <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
