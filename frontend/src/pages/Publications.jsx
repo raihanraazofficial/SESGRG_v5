@@ -362,8 +362,7 @@ Best regards,`;
                       <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
                         publication.category === 'Journal Articles' ? 'bg-blue-100 text-blue-700' :
                         publication.category === 'Conference Proceedings' ? 'bg-green-100 text-green-700' :
-                        publication.category === 'Book Chapters' ? 'bg-purple-100 text-purple-700' :
-                        'bg-orange-100 text-orange-700'
+                        'bg-purple-100 text-purple-700'
                       }`}>
                         {publication.category}
                       </span>
