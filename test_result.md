@@ -366,7 +366,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Featured Items and Short Description Testing - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
