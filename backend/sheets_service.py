@@ -1053,19 +1053,25 @@ class SESGSheetsService:
                 try:
                     # Handle object format (direct from Google Sheets API)
                     if isinstance(row, dict):
-                        # IEEE format structure - handle both new IEEE format and existing Google Sheets format
+                        # Your Google Sheets data structure mapping
                         publication = {
                             "id": f"pub_{row.get('id', i):03d}",
                             "category": self._normalize_category(str(row.get('category', 'Journal Articles'))),
                             "authors": self._parse_authors(row.get('authors', [])),
                             "title": str(row.get('title', '')),
-                            # Handle both IEEE format field and Google Sheets format field
-                            "journal_book_conference_name": str(row.get('journal_book_conference_name', '') or row.get('publication_info', '')),
+                            # Map your Google Sheets fields to IEEE format
+                            "journal_book_conference_name": str(
+                                row.get('journal_name', '') or 
+                                row.get('conference_name', '') or 
+                                row.get('book_title', '') or
+                                row.get('journal_book_conference_name', '') or 
+                                row.get('publication_info', '')
+                            ),
                             "volume": str(row.get('volume', '')),
                             "issue": str(row.get('issue', '')),
-                            "editors": str(row.get('editors', '')),
+                            "editors": str(row.get('editor', '') or row.get('editors', '')),
                             "publisher": str(row.get('publisher', '')),
-                            "location": str(row.get('location', '')),
+                            "location": str(row.get('city', '') + (', ' + str(row.get('country', '')) if row.get('country') else '') if row.get('city') else ''),
                             "pages": str(row.get('pages', '')),
                             "year": str(row.get('year', datetime.now().year)),
                             "citations": int(row.get('citations', 0)) if str(row.get('citations', 0)).isdigit() else 0,
