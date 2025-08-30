@@ -118,6 +118,35 @@ function doGet(e) {
 3. একসাথে সর্বোচ্চ 1-2টি featured item রাখুন
 4. Featured content এর জন্য high-quality image ব্যবহার করুন
 
+## 🎨 Frontend Display Logic
+
+### Featured Content Display:
+1. **Featured items (featured = TRUE)** সবার উপরে বড় card হিসেবে দেখাবে
+2. **Regular items (featured = FALSE)** ছোট grid cards হিসেবে দেখাবে
+3. Website automatically sort করবে: Featured items first, then by date (newest first)
+
+### Page Layout:
+```
+┌─────────────── Featured Story (Large Card) ──────────────┐
+│  🖼️ Large Image                                          │
+│  📰 FEATURED: Breaking News Title                        │
+│  📝 Detailed description with rich formatting            │
+│  🔗 Read More Button                                     │
+└─────────────────────────────────────────────────────────┘
+
+┌──── Regular Card ────┐ ┌──── Regular Card ────┐ ┌──── Regular Card ────┐
+│ 🖼️ Image             │ │ 🖼️ Image             │ │ 🖼️ Image             │
+│ 📰 News Title        │ │ 📰 News Title        │ │ 📰 News Title        │
+│ 📝 Short desc        │ │ 📝 Short desc        │ │ 📝 Short desc        │
+│ 🔗 Read More         │ │ 🔗 Read More         │ │ 🔗 Read More         │
+└─────────────────────┘ └─────────────────────┘ └─────────────────────┘
+```
+
+### ⚠️ Important Notes:
+- **Featured items** এর জন্য high-resolution images (1200px+ width) ব্যবহার করুন
+- একসাথে অনেকগুলো featured item সেট করবেন না (maximum 1-2টি)
+- Featured content regularly আপডেট করুন fresh রাখার জন্য
+
 ---
 
 ## 🏆 Achievements Data Structure
