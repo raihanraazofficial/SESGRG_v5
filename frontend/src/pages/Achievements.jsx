@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter } from "lucide-react";
+import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
