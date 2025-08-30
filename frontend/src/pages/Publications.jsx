@@ -257,11 +257,11 @@ Best regards,`;
                 </Select>
 
                 <Select
-                  value={filters.category_filter}
+                  value={filters.category_filter || "all"}
                   onValueChange={(value) => handleFilterChange('category_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder="Filter by Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
@@ -269,7 +269,7 @@ Best regards,`;
                       <SelectItem key={category} value={category}>{category}</SelectItem>
                     ))}
                   </SelectContent>
-                
+                </Select>
                 </Select>
 
                 <Select
