@@ -131,6 +131,9 @@ Best regards,`;
       page: 1,
       per_page: 20
     });
+    // Reset available options
+    setAvailableYears([]);
+    setAvailableAreas([]);
   };
 
   return (
