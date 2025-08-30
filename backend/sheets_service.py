@@ -30,7 +30,7 @@ class SESGSheetsService:
         )
         self.news_events_api_url = os.environ.get(
             'NEWS_EVENTS_API_URL',
-            "https://script.google.com/macros/s/AKfycbykWJ0VZWqL22CmmhG7qeSrkLxczJB2gid4HiH6ixZZJrvM7Ha-ZuDS8ygbHz205aN7/exec?sheet=sheet9"
+            "https://script.google.com/macros/s/AKfycbwLVCtEI2Mr2J76jf72kfK6OhaMNNdfvLTcJTV8J6mtWcNNGVnHtt0Gxu__lavtnrc8/exec?sheet=sheet9"
         )
         
         # Cache configuration for performance optimization
