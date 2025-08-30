@@ -54,7 +54,17 @@ class ApiService {
       sort_by: 'year',
       sort_order: 'desc'
     };
-    return this.get('/publications', { ...defaultParams, ...params });
+    
+    // Convert single search to individual filters for backend
+    const processedParams = { ...defaultParams, ...params };
+    if (params.search_filter) {
+      processedParams.title_filter = params.search_filter;
+      processedParams.author_filter = params.search_filter;
+      processedParams.year_filter = params.search_filter;
+      delete processedParams.search_filter;
+    }
+    
+    return this.get('/publications', processedParams);
   }
 
   // Projects API
