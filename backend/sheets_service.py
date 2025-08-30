@@ -25,6 +25,7 @@ class SESGSheetsService:
                         category_filter: Optional[str] = None,
                         author_filter: Optional[str] = None,
                         title_filter: Optional[str] = None,
+                        search_filter: Optional[str] = None,
                         sort_by: str = "year",
                         sort_order: str = "desc") -> Dict[str, Any]:
         """Get publications with filtering, pagination, and sorting"""
