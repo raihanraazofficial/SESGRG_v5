@@ -90,23 +90,107 @@ const NewsEvents = () => {
   };
 
   const generateBlogContent = (item) => {
-    // This function would generate a blog-style page from the item description
-    // For now, we'll navigate to a simple detail page
+    // Function to parse and format description content from Google Sheets
+    const parseDescription = (description) => {
+      if (!description) return '';
+      
+      return description.split('\n').map(paragraph => {
+        const trimmed = paragraph.trim();
+        if (!trimmed) return '';
+        
+        // Headers (lines starting with ##)
+        if (trimmed.startsWith('## ')) {
+          return `<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">${trimmed.substring(3)}</h2>`;
+        }
+        
+        // Subheaders (lines starting with ###)
+        if (trimmed.startsWith('### ')) {
+          return `<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">${trimmed.substring(4)}</h3>`;
+        }
+        
+        // Bold text (**text**)
+        let formatted = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic text (*text*)
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Bullet points (lines starting with -)
+        if (trimmed.startsWith('- ')) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.substring(2)}</li>`;
+        }
+        
+        // Numbered lists (lines starting with number.)
+        if (/^\d+\.\s/.test(trimmed)) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.replace(/^\d+\.\s/, '')}</li>`;
+        }
+        
+        // Quotes (lines starting with >)
+        if (trimmed.startsWith('> ')) {
+          return `<blockquote class="border-l-4 border-blue-300 pl-6 my-6 italic text-lg text-gray-600 bg-blue-50 py-4 rounded-r-lg">${formatted.substring(2)}</blockquote>`;
+        }
+        
+        // Links [text](url)
+        formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:text-blue-800 underline">$1</a>');
+        
+        // Regular paragraphs
+        return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${formatted}</p>`;
+      }).join('');
+    };
+
+    // This function generates a blog-style page from the news/event description
     const blogHtml = `
-      <div class="max-w-4xl mx-auto px-4 py-12">
+      <div class="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
         <div class="mb-8">
-          <span class="px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(item.category).replace('text-', 'text-').replace('bg-', 'bg-')}">${item.category}</span>
-          <h1 class="text-4xl font-bold text-gray-900 mt-4 mb-4">${item.title}</h1>
-          <div class="flex items-center text-gray-600 mb-6">
-            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            ${formatDate(item.date)}
+          <div class="flex items-center mb-4">
+            <span class="px-4 py-2 rounded-full text-sm font-medium ${getCategoryColor(item.category)}">${item.category}</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
+          <div class="flex flex-col space-y-2 text-gray-600 mb-8">
+            <div class="flex items-center">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="text-lg">${formatDate(item.date)}</span>
+            </div>
+            ${item.location ? `
+            <div class="flex items-center">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span class="text-lg">${item.location}</span>
+            </div>
+            ` : ''}
           </div>
         </div>
-        ${item.image ? `<img src="${item.image}" alt="${item.title}" class="w-full h-64 object-cover rounded-lg mb-8">` : ''}
-        <div class="prose max-w-none">
-          ${item.description.split('\n').map(p => `<p class="mb-4 leading-relaxed">${p}</p>`).join('')}
+        
+        ${item.image ? `<div class="mb-12">
+          <img src="${item.image}" alt="${item.title}" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+        </div>` : ''}
+        
+        <div class="prose prose-lg max-w-none">
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-r-lg">
+            <p class="text-blue-800 font-medium text-lg leading-relaxed">
+              ${item.short_description || item.description.substring(0, 200) + '...'}
+            </p>
+          </div>
+          
+          <div class="mt-8">
+            ${parseDescription(item.description || item.full_content || '')}
+          </div>
+          
+          <div class="mt-12 p-8 bg-gradient-to-r from-blue-50 to-emerald-50 rounded-2xl">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">About This ${item.category}</h3>
+            <p class="text-gray-700 leading-relaxed">
+              Stay updated with the latest ${item.category.toLowerCase()} from our Sustainable Energy and Smart Grid Research lab. 
+              We regularly share important updates about our research progress, achievements, and upcoming activities.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-12 text-center">
+          <button onclick="window.close()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            Close Article
+          </button>
         </div>
       </div>
     `;
@@ -118,6 +202,17 @@ const NewsEvents = () => {
       <head>
         <title>${item.title} - SESG Research</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          .prose ul { list-style-type: disc; margin-left: 1.5rem; }
+          .prose ol { list-style-type: decimal; margin-left: 1.5rem; }
+          .bg-emerald-100 { background-color: #dcfce7; }
+          .text-emerald-700 { color: #047857; }
+          .bg-blue-100 { background-color: #dbeafe; }
+          .text-blue-700 { color: #1d4ed8; }
+          .bg-purple-100 { background-color: #e9d5ff; }
+          .text-purple-700 { color: #7c2d12; }
+        </style>
       </head>
       <body class="bg-gray-50">
         ${blogHtml}
