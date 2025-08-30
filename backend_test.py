@@ -1914,7 +1914,7 @@ if __name__ == "__main__":
     print("Starting Backend API Testing Suite - UPDATED SESG RESEARCH WEBSITE...")
     print("=" * 60)
     
-    # Run all tests including new Google Sheets integration tests
+    # Run all tests including new Google Sheets integration tests and review request tests
     tests = [
         test_server_accessibility,
         test_root_endpoint,
@@ -1930,14 +1930,19 @@ if __name__ == "__main__":
         test_news_event_details_endpoint,
         test_research_stats_endpoint,
         test_error_handling,
-        # NEW GOOGLE SHEETS INTEGRATION TESTS AS PER REVIEW REQUEST
+        # GOOGLE SHEETS INTEGRATION TESTS
         test_google_sheets_projects_integration,
         test_google_sheets_achievements_integration,
         test_google_sheets_news_events_integration,
         test_caching_verification,
         test_error_handling_fallback,
         test_real_vs_mock_data_verification,
-        test_news_events_comprehensive
+        test_news_events_comprehensive,
+        # NEW TESTS FOR REVIEW REQUEST - UPDATED SESG RESEARCH WEBSITE
+        test_cache_duration_verification,
+        test_environment_variables_configuration,
+        test_force_refresh_functionality,
+        test_all_data_endpoints_comprehensive
     ]
     
     results = []
