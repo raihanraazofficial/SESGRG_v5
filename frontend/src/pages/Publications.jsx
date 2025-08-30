@@ -227,13 +227,6 @@ Best regards,`;
             >
               Book Chapters
             </Button>
-            <Button
-              variant={filters.category_filter === 'Books' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Books')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
-            >
-              Books
-            </Button>
           </div>
         </div>
 
