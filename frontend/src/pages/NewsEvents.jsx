@@ -486,11 +486,11 @@ const NewsEvents = () => {
         
         <div class="prose prose-lg max-w-none">
           <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 mb-8 rounded-r-lg">
-            <p class="text-emerald-800 font-medium text-lg leading-relaxed">${item.description || item.short_description}</p>
+            <p class="text-emerald-800 font-medium text-lg leading-relaxed">${item.short_description || item.description || ''}</p>
           </div>
           
           <div class="mt-8">
-            ${parseDescription(item.description || item.full_content || '')}
+            ${parseDescription(item.full_content || item.description || '')}
           </div>
           
           <div class="mt-12 p-8 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl">
