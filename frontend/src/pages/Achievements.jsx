@@ -166,8 +166,8 @@ const Achievements = () => {
         {/* Category Filter Buttons */}
         <div className="flex justify-center flex-wrap gap-4 mb-8">
           <Button
-            variant={filters.category_filter === '' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', '')}
+            variant={filters.category_filter === 'all' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'all')}
             className="px-6 py-2"
           >
             All Categories
