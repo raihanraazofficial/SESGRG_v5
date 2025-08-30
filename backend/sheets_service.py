@@ -1535,8 +1535,8 @@ class SESGSheetsService:
             if isinstance(sheets_data, list):
                 data_rows = sheets_data
             else:
-                # Fallback to nested data structure
-                data_rows = sheets_data.get('data', [])
+                # Handle nested data structure from Google Sheets API - look for 'achievements' key first
+                data_rows = sheets_data.get('achievements', sheets_data.get('data', []))
             
             for i, row in enumerate(data_rows):
                 try:
