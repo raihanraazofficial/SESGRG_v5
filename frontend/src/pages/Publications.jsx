@@ -118,6 +118,19 @@ Best regards,`;
     window.location.href = `mailto:sesg@bracu.ac.bd?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
+  const renderIEEEFormat = (publication) => {
+    if (publication.ieee_formatted) {
+      // Replace *text* with <em>text</em> for italic formatting
+      return publication.ieee_formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    }
+    
+    // Fallback formatting
+    const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : publication.authors;
+    const title = `"${publication.title}"`;
+    
+    return `${authors}, ${title}, ${publication.year}.`;
+  };
+
   const clearFilters = () => {
     setFilters({
       year_filter: '',
