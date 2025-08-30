@@ -77,8 +77,8 @@ class SESGSheetsService:
             return self._get_mock_achievements(page, per_page, category_filter, 
                                             title_filter, sort_by, sort_order)
         else:
-            # TODO: Implement real Google Sheets integration
-            pass
+            return self._get_google_sheets_achievements(page, per_page, category_filter, 
+                                                      title_filter, sort_by, sort_order)
     
     def get_news_events(self,
                        page: int = 1,
