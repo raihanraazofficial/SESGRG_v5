@@ -269,7 +269,7 @@ Best regards,`;
                       <SelectItem key={category} value={category}>{category}</SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+                </Select></Select>
                 </Select>
 
                 <Select
