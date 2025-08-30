@@ -43,19 +43,19 @@ def test_news_events_api_structure():
         response = requests.get(f"{API_BASE_URL}/news-events", timeout=10)
         if response.status_code != 200:
             print(f"   ❌ Basic request failed with status: {response.status_code}")
-            return False
+            return False, {}
         
         data = response.json()
         
         # Check main structure
         if "news_events" not in data or "pagination" not in data:
             print("   ❌ Missing main structure keys")
-            return False
+            return False, {}
         
         news_events = data["news_events"]
         if not news_events:
             print("   ❌ No news events found")
-            return False
+            return False, {}
         
         # Check first item structure for Read More requirements
         first_item = news_events[0]
