@@ -822,20 +822,34 @@ class SESGSheetsService:
 
     # Helper methods for filtering and sorting
     def _apply_publication_filters(self, publications, year_filter, area_filter, 
-                                  category_filter, author_filter, title_filter):
+                                  category_filter, author_filter, title_filter, search_filter=None):
         filtered = publications
         
-        if year_filter:
-            filtered = [p for p in filtered if p["year"] == year_filter]
-        if area_filter:
-            filtered = [p for p in filtered if area_filter in p["research_areas"]]
+        # Single search filter (searches in title, authors, or year)
+        if search_filter:
+            search_term = search_filter.lower()
+            filtered = [p for p in filtered if (
+                search_term in p["title"].lower() or
+                any(search_term in author.lower() for author in p["authors"]) or
+                search_term in p["year"] or
+                (p.get("abstract") and search_term in p["abstract"].lower())
+            )]
+        
+        # Individual filters (only apply if search_filter is not used)
+        if not search_filter:
+            if year_filter:
+                filtered = [p for p in filtered if p["year"] == year_filter]
+            if area_filter:
+                filtered = [p for p in filtered if area_filter in p["research_areas"]]
+            if author_filter:
+                filtered = [p for p in filtered if any(author_filter.lower() in author.lower() 
+                                                      for author in p["authors"])]
+            if title_filter:
+                filtered = [p for p in filtered if title_filter.lower() in p["title"].lower()]
+        
+        # Category filter always applies
         if category_filter:
             filtered = [p for p in filtered if p["category"] == category_filter]
-        if author_filter:
-            filtered = [p for p in filtered if any(author_filter.lower() in author.lower() 
-                                                  for author in p["authors"])]
-        if title_filter:
-            filtered = [p for p in filtered if title_filter.lower() in p["title"].lower()]
             
         return filtered
     
