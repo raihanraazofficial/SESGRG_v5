@@ -191,36 +191,9 @@ const NewsEvents = () => {
           continue;
         }
         
-        // Inside math block - format mathematical expressions
+        // Inside math block - keep LaTeX syntax intact for MathJax
         if (inMathBlock) {
-          let mathLine = line
-            // Greek letters
-            .replace(/α/g, '<span class="text-emerald-600 font-semibold">α</span>')
-            .replace(/β/g, '<span class="text-emerald-600 font-semibold">β</span>')
-            .replace(/γ/g, '<span class="text-emerald-600 font-semibold">γ</span>')
-            .replace(/δ/g, '<span class="text-emerald-600 font-semibold">δ</span>')
-            .replace(/ε/g, '<span class="text-emerald-600 font-semibold">ε</span>')
-            .replace(/θ/g, '<span class="text-emerald-600 font-semibold">θ</span>')
-            .replace(/λ/g, '<span class="text-emerald-600 font-semibold">λ</span>')
-            .replace(/μ/g, '<span class="text-emerald-600 font-semibold">μ</span>')
-            .replace(/π/g, '<span class="text-emerald-600 font-semibold">π</span>')
-            .replace(/σ/g, '<span class="text-emerald-600 font-semibold">σ</span>')
-            .replace(/τ/g, '<span class="text-emerald-600 font-semibold">τ</span>')
-            .replace(/ω/g, '<span class="text-emerald-600 font-semibold">ω</span>')
-            // Subscripts and superscripts
-            .replace(/(\w+)_\{([^}]+)\}/g, '$1<sub class="text-sm">$2</sub>')
-            .replace(/(\w+)_(\w+)/g, '$1<sub class="text-sm">$2</sub>')
-            .replace(/(\w+)\^\{([^}]+)\}/g, '$1<sup class="text-sm">$2</sup>')
-            .replace(/(\w+)\^(\w+)/g, '$1<sup class="text-sm">$2</sup>')
-            // Mathematical operators
-            .replace(/≤/g, '<span class="text-red-600 font-bold">≤</span>')
-            .replace(/≥/g, '<span class="text-red-600 font-bold">≥</span>')
-            .replace(/∑/g, '<span class="text-purple-600 font-bold text-xl">∑</span>')
-            .replace(/∫/g, '<span class="text-purple-600 font-bold text-xl">∫</span>')
-            .replace(/√/g, '<span class="text-emerald-600 font-bold">√</span>')
-            .replace(/∞/g, '<span class="text-indigo-600 font-bold">∞</span>');
-          
-          result += mathLine + '<br>';
+          result += line + '\n';
           continue;
         }
         
