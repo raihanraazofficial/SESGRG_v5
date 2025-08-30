@@ -373,7 +373,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Featured Items and Short Description Testing - COMPLETED"
+    - "Read Full Story Data Source Fix Testing - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
