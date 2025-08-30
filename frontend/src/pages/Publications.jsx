@@ -363,14 +363,14 @@ Best regards,`;
             {publications.map((publication) => (
               <Card key={publication.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-8">
-                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-2 space-y-4 lg:space-y-0">
                     <div className="flex-1 lg:mr-6">
                       <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight">
                         {publication.title}
                       </h3>
                       
                       {/* IEEE Formatted Citation */}
-                      <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                      <div className="mb-2 p-4 bg-gray-50 rounded-lg">
                         <p className="text-gray-800 text-sm md:text-base leading-relaxed">
                           <span 
                             className="ieee-citation"
