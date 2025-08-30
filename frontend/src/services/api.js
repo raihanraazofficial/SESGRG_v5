@@ -12,29 +12,37 @@ class ApiService {
   }
 
   async get(endpoint, params = {}) {
-    try {
-      const url = new URL(`${this.baseURL}${endpoint}`);
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
-          url.searchParams.append(key, params[key]);
+    // Try primary URL first, then fallback to localhost
+    for (const baseUrl of [API_BASE_URL, FALLBACK_URL]) {
+      try {
+        const url = new URL(`${baseUrl}/api${endpoint}`);
+        Object.keys(params).forEach(key => {
+          if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
+            url.searchParams.append(key, params[key]);
+          }
+        });
+
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
         }
-      });
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        return await response.json();
+      } catch (error) {
+        console.error(`API GET request failed for ${baseUrl}:`, error);
+        
+        // If this is the last URL to try, throw the error
+        if (baseUrl === FALLBACK_URL) {
+          throw error;
+        }
+        // Otherwise, continue to next URL
       }
-
-      return await response.json();
-    } catch (error) {
-      console.error('API GET request failed:', error);
-      throw error;
     }
   }
 
