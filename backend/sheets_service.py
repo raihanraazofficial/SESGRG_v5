@@ -93,8 +93,8 @@ class SESGSheetsService:
             return self._get_mock_news_events(page, per_page, category_filter, 
                                             title_filter, sort_by, sort_order)
         else:
-            # TODO: Implement real Google Sheets integration
-            pass
+            return self._get_google_sheets_news_events(page, per_page, category_filter, 
+                                                     title_filter, sort_by, sort_order)
     
     def get_achievement_details(self, achievement_id: str) -> Optional[Dict[str, Any]]:
         """Get detailed achievement for blog-style page"""
