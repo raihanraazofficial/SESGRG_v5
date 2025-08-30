@@ -363,14 +363,14 @@ Best regards,`;
             {publications.map((publication) => (
               <Card key={publication.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-8">
-                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-2 space-y-4 lg:space-y-0">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 lg:mr-6">
                       <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight">
                         {publication.title}
                       </h3>
                       
                       {/* IEEE Formatted Citation */}
-                      <div className="mb-2 p-4 bg-gray-50 rounded-lg">
+                      <div className="mb-4 p-4 bg-gray-50 rounded-lg">
                         <p className="text-gray-800 text-sm md:text-base leading-relaxed">
                           <span 
                             className="ieee-citation"
@@ -379,6 +379,22 @@ Best regards,`;
                             }}
                           />
                         </p>
+                      </div>
+
+                      {/* Research Areas - Moved here and aligned with right side */}
+                      <div className="flex flex-wrap gap-2">
+                        {publication.research_areas.map((area, index) => (
+                          <span
+                            key={index}
+                            className={`px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap ${
+                              index % 3 === 0 ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
+                              index % 3 === 1 ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                              'bg-purple-100 text-purple-800 border border-purple-200'
+                            }`}
+                          >
+                            {area}
+                          </span>
+                        ))}
                       </div>
                     </div>
                     <div className="flex lg:flex-col justify-between lg:justify-start items-center lg:items-end lg:text-right space-x-4 lg:space-x-0 lg:space-y-2">
@@ -400,18 +416,6 @@ Best regards,`;
                         <p className="text-xs md:text-sm text-gray-500">Published</p>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Research Areas */}
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {publication.research_areas.map((area, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap"
-                      >
-                        {area}
-                      </span>
-                    ))}
                   </div>
 
                   {/* Actions */}
