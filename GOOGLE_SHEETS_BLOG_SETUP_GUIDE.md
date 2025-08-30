@@ -124,14 +124,30 @@ function doGet(e) {
 
 ### Required Columns (sheet8 এ):
 ```
-| id | title | short_description | category | date | image | full_content |
+| id | title | short_description | category | date | image | featured | full_content |
 ```
+
+### Column Details:
+- **id**: Unique identifier (e.g., ach_001, award_001)
+- **title**: Achievement title
+- **short_description**: Brief description (1-2 sentences)
+- **category**: Award, Partnership, Publication, Grant
+- **date**: YYYY-MM-DD format (e.g., 2025-01-15)
+- **image**: Image URL (Unsplash links work well)
+- **featured**: TRUE/FALSE - Featured achievement সবার উপরে বড় card হিসেবে দেখাবে
+- **full_content**: Full blog content with markdown/LaTeX support
 
 ### Category Options:
 - Award
 - Partnership  
 - Publication
 - Grant
+
+### ⭐ Featured Achievement তৈরি করার নিয়ম:
+1. **featured** column এ **TRUE** লিখুন
+2. সবার আগে featured content রাখুন (প্রথম row এ)
+3. একসাথে সর্বোচ্চ 1-2টি featured item রাখুন
+4. Featured content এর জন্য high-quality image ব্যবহার করুন
 
 ---
 
