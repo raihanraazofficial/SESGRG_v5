@@ -190,6 +190,29 @@ async def get_research_statistics():
         logger.error(f"Error fetching research statistics: {e}")
         return {"error": "Failed to fetch research statistics"}
 
+@api_router.get("/cache-status")
+async def get_cache_status():
+    """Get cache status for performance monitoring"""
+    try:
+        return {
+            "cached_items": len(sheets_service.cache),
+            "last_fetch_times": {k: v.isoformat() for k, v in sheets_service.last_fetch_time.items()},
+            "cache_duration_minutes": sheets_service.cache_duration.total_seconds() / 60
+        }
+    except Exception as e:
+        logger.error(f"Error fetching cache status: {e}")
+        return {"error": "Failed to fetch cache status"}
+
+@api_router.post("/clear-cache")
+async def clear_cache():
+    """Clear all cached data"""
+    try:
+        sheets_service.clear_cache()
+        return {"message": "Cache cleared successfully"}
+    except Exception as e:
+        logger.error(f"Error clearing cache: {e}")
+        return {"error": "Failed to clear cache"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
