@@ -101,3 +101,177 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Transform existing website to "Sustainable Energy and Smart Grid Research" website according to detailed specifications including:
+  - Update branding (logo, favicon, page title)
+  - Modify homepage with specific sections (header animation, objectives carousel, research highlights)
+  - Update all pages according to specifications (People, Research Areas, Publications, Projects, Achievements, News & Events, Contact)
+  - Implement Google Sheets integration for dynamic data
+  - Add animations, enhanced UI/UX, proper navigation and footer
+  - Add Google Analytics tracking
+  
+backend:
+  - task: "Google Sheets API Integration Setup"
+    implemented: false
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Google Sheets integration needed for Publications, Projects, Achievements, and News & Events data fetching"
+
+frontend:
+  - task: "Update Homepage with SESG Specifications"
+    implemented: false
+    working: "NA"
+    file: "pages/Home.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Need to update homepage according to specifications: logo, animations, objectives section, image carousel, research areas preview"
+        
+  - task: "Update Navigation and Branding"
+    implemented: false
+    working: "NA"
+    file: "components/Navbar.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Update logo to SESG logo, page title, favicon, navbar styling"
+
+  - task: "Update Footer According to Specifications"
+    implemented: false
+    working: "NA"
+    file: "components/Footer.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Update footer with Quick Links, Reach Out to Us, Find Us sections as per specs"
+
+  - task: "Update People Page Structure"
+    implemented: false
+    working: "NA"
+    file: "pages/People.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Structure page with Advisors, Research Assistants, Collaborators sections"
+
+  - task: "Update Research Areas Page with 7 Core Areas"
+    implemented: false
+    working: "NA"
+    file: "pages/ResearchAreas.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implement 7 research areas with banner images and detailed descriptions"
+
+  - task: "Publications Page with Google Sheets Integration"
+    implemented: false
+    working: "NA"
+    file: "pages/Publications.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Integrate with Google Sheets for dynamic data, add filters, pagination, citation copying"
+
+  - task: "Projects Page with Google Sheets Integration"
+    implemented: false
+    working: "NA"
+    file: "pages/Projects.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Integrate with Google Sheets for dynamic data, add filters and pagination"
+
+  - task: "Achievements Page with Blog-style Content"
+    implemented: false
+    working: "NA"
+    file: "pages/Achievements.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Google Sheets integration with auto-generated blog-style pages for achievements"
+
+  - task: "News & Events Page with Categories"
+    implemented: false
+    working: "NA"
+    file: "pages/NewsEvents.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implement News, Events, Upcoming Events categories with blog-style content generation"
+
+  - task: "Contact Page with Google Maps Integration"
+    implemented: false
+    working: "NA"
+    file: "pages/Contacts.jsx"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Embed Google Maps for BRAC University location"
+
+  - task: "Add Google Analytics Tracking"
+    implemented: false
+    working: "NA"
+    file: "public/index.html"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Add Google Analytics tracking code to head section"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Update Homepage with SESG Specifications"
+    - "Update Navigation and Branding"
+    - "Google Sheets API Integration Setup"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Initial analysis complete. Current app is a functional React/FastAPI/MongoDB template with basic pages. Ready to transform according to SESG specifications starting with homepage, branding, and Google Sheets integration."
