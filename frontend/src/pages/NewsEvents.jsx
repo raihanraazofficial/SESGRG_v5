@@ -91,7 +91,7 @@ const NewsEvents = () => {
   };
 
   const generateBlogContent = (item) => {
-    // Advanced function to parse and format description content from Google Sheets
+    generateAdvancedBlogContent(item, 'news');
     const parseDescription = (description) => {
       if (!description) return '';
       
