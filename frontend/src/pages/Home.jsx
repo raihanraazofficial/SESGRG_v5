@@ -3,6 +3,150 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import apiService from "../services/api";
+
+// Latest News Section Component
+const LatestNewsSection = () => {
+  const [latestNews, setLatestNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLatestNews();
+  }, []);
+
+  const fetchLatestNews = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getNewsEvents({
+        page: 1,
+        per_page: 4,
+        sort_by: 'date',
+        sort_order: 'desc'
+      });
+      setLatestNews(response.news_events || []);
+    } catch (error) {
+      console.error('Error fetching latest news:', error);
+      // Fallback to mock data if API fails
+      setLatestNews([
+        {
+          id: 1,
+          title: "International Smart Grid Conference 2024",
+          date: "2024-12-15",
+          category: "Upcoming Events",
+          description: "Join us for the annual international conference on smart grid innovations."
+        },
+        {
+          id: 2,
+          title: "Research Partnership with Tesla Energy",
+          date: "2024-11-28", 
+          category: "News",
+          description: "Strategic collaboration announced for next-generation energy storage research."
+        },
+        {
+          id: 3,
+          title: "Best Paper Award at IEEE Conference",
+          date: "2024-11-10",
+          category: "Events", 
+          description: "Our research on AI-powered grid optimization wins prestigious award."
+        },
+        {
+          id: 4,
+          title: "Smart Microgrid Installation Completed",
+          date: "2024-10-25",
+          category: "Events",
+          description: "Successfully installed demonstration microgrid system on campus."
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'Events':
+        return 'bg-blue-100 text-blue-700';
+      case 'News':
+        return 'bg-emerald-100 text-emerald-700';
+      case 'Upcoming Events':
+        return 'bg-purple-100 text-purple-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Latest News & Events
+            </h2>
+            <p className="text-xl text-gray-600">
+              Stay updated with our recent achievements, news, events, and upcoming activities.
+            </p>
+          </div>
+          <Link 
+            to="/news"
+            className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center text-lg"
+          >
+            View All <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, index) => (
+              <Card key={index} className="border-0 shadow-md">
+                <CardContent className="p-6">
+                  <div className="animate-pulse">
+                    <div className="h-4 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-3"></div>
+                    <div className="space-y-2">
+                      <div className="h-3 bg-gray-200 rounded"></div>
+                      <div className="h-3 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {latestNews.map((news, index) => (
+              <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
+                      {news.category}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                    {news.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
+                  <p className="text-gray-600 text-sm line-clamp-3">
+                    {news.description}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
 
 const Home = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
