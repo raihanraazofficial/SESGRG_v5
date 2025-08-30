@@ -1528,8 +1528,390 @@ def run_all_tests():
     
     return results, all_passed
 
+def test_cache_duration_verification():
+    """Test that cache duration is reduced to 30 seconds as per review request"""
+    print("22. Testing Cache Duration Verification - 30 SECONDS CACHE...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test cache status endpoint to verify cache duration
+        print("   1.1 Testing cache duration configuration...")
+        response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if response.status_code != 200:
+            print(f"      ❌ Cache status endpoint failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            cache_data = response.json()
+            cache_duration_minutes = cache_data.get("cache_duration_minutes", 0)
+            cache_duration_seconds = cache_duration_minutes * 60
+            
+            print(f"      📊 Current cache duration: {cache_duration_minutes} minutes ({cache_duration_seconds} seconds)")
+            
+            # Verify cache duration is 30 seconds (0.5 minutes)
+            if abs(cache_duration_seconds - 30) < 1:  # Allow 1 second tolerance
+                print("      ✅ Cache duration correctly set to 30 seconds")
+            else:
+                print(f"      ❌ Cache duration should be 30 seconds, but found {cache_duration_seconds} seconds")
+                all_tests_passed = False
+        
+        # 2. Test cache expiration after 30 seconds
+        print("   1.2 Testing cache expiration after 30 seconds...")
+        import time
+        
+        # Clear cache first
+        clear_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if clear_response.status_code == 200:
+            print("      ✅ Cache cleared successfully")
+        
+        # Make first request to populate cache
+        response1 = requests.get(f"{API_BASE_URL}/publications?per_page=1", timeout=30)
+        if response1.status_code == 200:
+            print("      ✅ First request made to populate cache")
+            
+            # Check cache status
+            cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+            if cache_response.status_code == 200:
+                cache_data = cache_response.json()
+                cached_items = cache_data.get("cached_items", 0)
+                print(f"      📊 Cache populated with {cached_items} items")
+            
+            # Wait for 35 seconds (longer than 30-second cache duration)
+            print("      ⏳ Waiting 35 seconds for cache to expire...")
+            time.sleep(35)
+            
+            # Make second request - should fetch fresh data
+            start_time = time.time()
+            response2 = requests.get(f"{API_BASE_URL}/publications?per_page=1", timeout=30)
+            request_time = time.time() - start_time
+            
+            if response2.status_code == 200:
+                print(f"      ✅ Second request after cache expiry: {request_time:.3f} seconds")
+                
+                # If cache expired, this should be a fresh fetch (slower)
+                if request_time > 0.1:  # Fresh fetch should take more time
+                    print("      ✅ Cache appears to have expired - fresh data fetched")
+                else:
+                    print("      ⚠️  Request was very fast - cache may not have expired")
+            else:
+                print("      ❌ Second request failed")
+                all_tests_passed = False
+        else:
+            print("      ❌ First request failed")
+            all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in cache duration verification: {e}")
+        return False
+
+def test_environment_variables_configuration():
+    """Test that Google Sheets API URLs are configurable via environment variables"""
+    print("23. Testing Environment Variables Configuration - GOOGLE SHEETS URLs...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test that environment variables are being read
+        print("   1.1 Testing environment variables configuration...")
+        
+        # Check if backend .env file exists and contains the required URLs
+        try:
+            with open('/app/backend/.env', 'r') as f:
+                env_content = f.read()
+                
+            required_env_vars = [
+                'PUBLICATIONS_API_URL',
+                'PROJECTS_API_URL', 
+                'ACHIEVEMENTS_API_URL',
+                'NEWS_EVENTS_API_URL'
+            ]
+            
+            missing_vars = []
+            for var in required_env_vars:
+                if var not in env_content:
+                    missing_vars.append(var)
+                else:
+                    print(f"      ✅ {var} found in environment variables")
+            
+            if missing_vars:
+                print(f"      ❌ Missing environment variables: {missing_vars}")
+                all_tests_passed = False
+            else:
+                print("      ✅ All required Google Sheets API URLs configured in environment")
+            
+        except Exception as e:
+            print(f"      ❌ Error reading backend .env file: {e}")
+            all_tests_passed = False
+        
+        # 2. Test that APIs are using the configured URLs
+        print("   1.2 Testing that APIs use environment-configured URLs...")
+        
+        # Test each endpoint to ensure they're working with configured URLs
+        endpoints = [
+            ("publications", "/api/publications"),
+            ("projects", "/api/projects"),
+            ("achievements", "/api/achievements"),
+            ("news-events", "/api/news-events")
+        ]
+        
+        for name, endpoint in endpoints:
+            response = requests.get(f"{API_BASE_URL}{endpoint}?per_page=1", timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                # Check if we're getting data (indicates URL is working)
+                data_key = name.replace("-", "_")  # Convert news-events to news_events
+                if data_key in data and len(data[data_key]) > 0:
+                    print(f"      ✅ {name.title()} API using configured URL successfully")
+                elif data_key in data:
+                    print(f"      ⚠️  {name.title()} API responding but no data (may be expected)")
+                else:
+                    print(f"      ❌ {name.title()} API response structure incorrect")
+                    all_tests_passed = False
+            else:
+                print(f"      ❌ {name.title()} API failed with status: {response.status_code}")
+                all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in environment variables testing: {e}")
+        return False
+
+def test_force_refresh_functionality():
+    """Test POST /api/clear-cache endpoint for force refresh functionality"""
+    print("24. Testing Force Refresh Functionality - CLEAR CACHE ENDPOINT...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test clear cache endpoint exists and works
+        print("   1.1 Testing POST /api/clear-cache endpoint...")
+        
+        # First populate cache by making requests
+        print("      📊 Populating cache with data...")
+        requests.get(f"{API_BASE_URL}/publications?per_page=1", timeout=15)
+        requests.get(f"{API_BASE_URL}/projects?per_page=1", timeout=15)
+        requests.get(f"{API_BASE_URL}/achievements?per_page=1", timeout=15)
+        
+        # Check cache status before clearing
+        cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_response.status_code == 200:
+            cache_data = cache_response.json()
+            cached_items_before = cache_data.get("cached_items", 0)
+            print(f"      📊 Cache items before clearing: {cached_items_before}")
+        
+        # Test clear cache endpoint
+        clear_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if clear_response.status_code != 200:
+            print(f"      ❌ Clear cache endpoint failed with status: {clear_response.status_code}")
+            all_tests_passed = False
+        else:
+            clear_data = clear_response.json()
+            if "message" in clear_data and "success" in clear_data["message"].lower():
+                print("      ✅ Clear cache endpoint working correctly")
+                print(f"      📋 Response: {clear_data}")
+            else:
+                print(f"      ❌ Unexpected clear cache response: {clear_data}")
+                all_tests_passed = False
+        
+        # 2. Verify cache was actually cleared
+        print("   1.2 Verifying cache was cleared...")
+        
+        cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_response.status_code == 200:
+            cache_data = cache_response.json()
+            cached_items_after = cache_data.get("cached_items", 0)
+            print(f"      📊 Cache items after clearing: {cached_items_after}")
+            
+            if cached_items_after == 0:
+                print("      ✅ Cache successfully cleared - 0 items remaining")
+            else:
+                print(f"      ❌ Cache not fully cleared - {cached_items_after} items remaining")
+                all_tests_passed = False
+        else:
+            print("      ❌ Could not verify cache status after clearing")
+            all_tests_passed = False
+        
+        # 3. Test immediate refresh after cache clear
+        print("   1.3 Testing immediate refresh after cache clear...")
+        
+        import time
+        start_time = time.time()
+        response = requests.get(f"{API_BASE_URL}/publications?per_page=1", timeout=30)
+        request_time = time.time() - start_time
+        
+        if response.status_code == 200:
+            print(f"      ✅ Immediate refresh working: {request_time:.3f} seconds")
+            
+            # This should be a fresh fetch (slower than cached)
+            if request_time > 0.1:
+                print("      ✅ Fresh data fetched after cache clear")
+            else:
+                print("      ⚠️  Request was very fast - may still be using cache")
+        else:
+            print("      ❌ Immediate refresh failed")
+            all_tests_passed = False
+        
+        # 4. Test cache repopulation
+        print("   1.4 Testing cache repopulation...")
+        
+        cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_response.status_code == 200:
+            cache_data = cache_response.json()
+            cached_items_repopulated = cache_data.get("cached_items", 0)
+            print(f"      📊 Cache items after repopulation: {cached_items_repopulated}")
+            
+            if cached_items_repopulated > 0:
+                print("      ✅ Cache successfully repopulated after clear")
+            else:
+                print("      ⚠️  Cache not repopulated - may be expected behavior")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in force refresh functionality testing: {e}")
+        return False
+
+def test_all_data_endpoints_comprehensive():
+    """Test all 4 main data endpoints comprehensively as per review request"""
+    print("25. Testing All Data Endpoints - COMPREHENSIVE API TESTING...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test all 4 main endpoints as specified in review request
+        endpoints = [
+            ("publications", "/api/publications", "publications"),
+            ("projects", "/api/projects", "projects"), 
+            ("achievements", "/api/achievements", "achievements"),
+            ("news-events", "/api/news-events", "news_events")
+        ]
+        
+        for name, endpoint, data_key in endpoints:
+            print(f"   Testing {name.upper()} endpoint...")
+            
+            # 1. Basic functionality test
+            response = requests.get(f"{API_BASE_URL}{endpoint}", timeout=15)
+            if response.status_code != 200:
+                print(f"      ❌ {name} endpoint failed with status: {response.status_code}")
+                all_tests_passed = False
+                continue
+            
+            data = response.json()
+            
+            # 2. Check response structure
+            required_keys = [data_key, "pagination"]
+            missing_keys = [key for key in required_keys if key not in data]
+            if missing_keys:
+                print(f"      ❌ {name} missing keys: {missing_keys}")
+                all_tests_passed = False
+                continue
+            
+            items = data.get(data_key, [])
+            pagination = data.get("pagination", {})
+            
+            print(f"      ✅ {name} basic functionality: {len(items)} items, page {pagination.get('current_page', 1)}")
+            
+            # 3. Test pagination
+            if pagination.get("total_pages", 1) > 1:
+                page2_response = requests.get(f"{API_BASE_URL}{endpoint}?page=2", timeout=10)
+                if page2_response.status_code == 200:
+                    print(f"      ✅ {name} pagination working")
+                else:
+                    print(f"      ❌ {name} pagination failed")
+                    all_tests_passed = False
+            
+            # 4. Test filtering (if applicable)
+            if name == "publications":
+                # Test category filter
+                filter_response = requests.get(f"{API_BASE_URL}{endpoint}?category_filter=Journal Articles", timeout=10)
+                if filter_response.status_code == 200:
+                    print(f"      ✅ {name} category filtering working")
+                else:
+                    print(f"      ❌ {name} category filtering failed")
+                    all_tests_passed = False
+            
+            elif name == "projects":
+                # Test status filter
+                filter_response = requests.get(f"{API_BASE_URL}{endpoint}?status_filter=Active", timeout=10)
+                if filter_response.status_code == 200:
+                    print(f"      ✅ {name} status filtering working")
+                else:
+                    print(f"      ❌ {name} status filtering failed")
+                    all_tests_passed = False
+            
+            elif name in ["achievements", "news-events"]:
+                # Test category filter
+                filter_response = requests.get(f"{API_BASE_URL}{endpoint}?category_filter=Award", timeout=10)
+                if filter_response.status_code == 200:
+                    print(f"      ✅ {name} category filtering working")
+                else:
+                    print(f"      ❌ {name} category filtering failed")
+                    all_tests_passed = False
+            
+            # 5. Test sorting
+            sort_response = requests.get(f"{API_BASE_URL}{endpoint}?sort_by=date&sort_order=desc", timeout=10)
+            if sort_response.status_code == 200:
+                print(f"      ✅ {name} sorting working")
+            else:
+                print(f"      ❌ {name} sorting failed")
+                all_tests_passed = False
+            
+            # 6. Test per_page parameter
+            per_page_response = requests.get(f"{API_BASE_URL}{endpoint}?per_page=5", timeout=10)
+            if per_page_response.status_code == 200:
+                per_page_data = per_page_response.json()
+                per_page_items = per_page_data.get(data_key, [])
+                if len(per_page_items) <= 5:
+                    print(f"      ✅ {name} per_page parameter working")
+                else:
+                    print(f"      ❌ {name} per_page parameter not working correctly")
+                    all_tests_passed = False
+            else:
+                print(f"      ❌ {name} per_page parameter failed")
+                all_tests_passed = False
+        
+        # Test detail endpoints for achievements and news-events
+        print("   Testing detail endpoints...")
+        
+        # Test achievements detail endpoint
+        achievements_response = requests.get(f"{API_BASE_URL}/achievements?per_page=1", timeout=10)
+        if achievements_response.status_code == 200:
+            achievements_data = achievements_response.json()
+            achievements = achievements_data.get("achievements", [])
+            if len(achievements) > 0:
+                achievement_id = achievements[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/achievements/{achievement_id}", timeout=10)
+                if detail_response.status_code == 200:
+                    print("      ✅ Achievements detail endpoint working")
+                else:
+                    print("      ❌ Achievements detail endpoint failed")
+                    all_tests_passed = False
+        
+        # Test news-events detail endpoint
+        news_response = requests.get(f"{API_BASE_URL}/news-events?per_page=1", timeout=10)
+        if news_response.status_code == 200:
+            news_data = news_response.json()
+            news_events = news_data.get("news_events", [])
+            if len(news_events) > 0:
+                news_id = news_events[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=10)
+                if detail_response.status_code == 200:
+                    print("      ✅ News-events detail endpoint working")
+                else:
+                    print("      ❌ News-events detail endpoint failed")
+                    all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in comprehensive data endpoints testing: {e}")
+        return False
+
 if __name__ == "__main__":
-    print("Starting Backend API Testing Suite - GOOGLE SHEETS INTEGRATION FOCUS...")
+    print("Starting Backend API Testing Suite - UPDATED SESG RESEARCH WEBSITE...")
     print("=" * 60)
     
     # Run all tests including new Google Sheets integration tests
