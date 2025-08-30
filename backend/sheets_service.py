@@ -61,8 +61,8 @@ class SESGSheetsService:
             return self._get_mock_projects(page, per_page, status_filter, area_filter, 
                                          title_filter, sort_by, sort_order)
         else:
-            # TODO: Implement real Google Sheets integration
-            pass
+            return self._get_google_sheets_projects(page, per_page, status_filter, area_filter, 
+                                                  title_filter, sort_by, sort_order)
     
     def get_achievements(self,
                         page: int = 1,
