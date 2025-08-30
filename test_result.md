@@ -238,6 +238,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Backend API testing completed successfully. GET /api/achievements endpoint working perfectly with category filtering (Award: 7 items, Publication: 5 items, Grant: 6 items, Partnership: 7 items), sorting by date/title, pagination, and combined filtering. Achievement details endpoint (/api/achievements/{id}) working correctly with full content retrieval. All functionality ready for frontend integration."
+      - working: true
+        agent: "testing"
+        comment: "Re-tested Achievements API as specifically requested in review. CONFIRMED: All backend functionality working perfectly. Available categories: Award (7 items), Partnership (7 items), Publication (5 items), Grant (6 items). Note: Requested categories 'Awards', 'Recognition', 'Milestones' not available in current mock data - available categories are Award, Partnership, Publication, Grant. Search functionality working correctly. Sorting by date/title in both directions working. Pagination with multiple page sizes working properly. Detailed view endpoint working with rich blog-style content including headers, formatting, and comprehensive achievement descriptions. All backend APIs fully functional and production-ready."
 
   - task: "News & Events Page with Categories"
     implemented: true
