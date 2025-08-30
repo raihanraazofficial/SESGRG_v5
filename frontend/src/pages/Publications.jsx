@@ -376,12 +376,12 @@ Best regards,`;
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <div className="flex space-x-4">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-4 border-t border-gray-200 space-y-3 md:space-y-0">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
                       {publication.open_access && publication.full_paper_link ? (
                         <Button
                           variant="default"
-                          className="bg-emerald-600 hover:bg-emerald-700"
+                          className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base"
                           onClick={() => window.open(publication.full_paper_link, '_blank')}
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
@@ -391,6 +391,7 @@ Best regards,`;
                         <Button
                           variant="outline"
                           onClick={() => requestPaper(publication)}
+                          className="text-sm md:text-base"
                         >
                           <Mail className="h-4 w-4 mr-2" />
                           Request Full Paper
@@ -400,15 +401,11 @@ Best regards,`;
                       <Button
                         variant="outline"
                         onClick={() => copyPaperCitation(publication)}
+                        className="text-sm md:text-base"
                       >
                         <Copy className="h-4 w-4 mr-2" />
                         Copy Citation
                       </Button>
-                    </div>
-                    
-                    <div className="text-right">
-                      <p className="text-lg font-semibold text-gray-900">{publication.year}</p>
-                      <p className="text-sm text-gray-500">Published</p>
                     </div>
                   </div>
                 </CardContent>
