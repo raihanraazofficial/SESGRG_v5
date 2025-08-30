@@ -1604,8 +1604,8 @@ class SESGSheetsService:
             if isinstance(sheets_data, list):
                 data_rows = sheets_data
             else:
-                # Handle nested data structure from Google Sheets API - look for 'achievements' key first (user's script format)
-                data_rows = sheets_data.get('achievements', sheets_data.get('news_events', sheets_data.get('data', [])))
+                # Handle nested data structure from Google Sheets API - look for 'news_events' key first (user's script format)
+                data_rows = sheets_data.get('news_events', sheets_data.get('achievements', sheets_data.get('data', [])))
             
             for i, row in enumerate(data_rows):
                 try:
