@@ -582,9 +582,332 @@ def test_news_events_endpoint():
         print(f"   ❌ Error testing news-events endpoint: {e}")
         return False
 
+def test_featured_items_and_short_description():
+    """Test enhanced Achievements and News & Events APIs with featured item functionality and short description fix"""
+    print("18. Testing Featured Items and Short Description Fix...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test Featured Items in Achievements API
+        print("   1.1 Testing Featured Items in Achievements API...")
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ Achievements API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            print(f"      ✅ Successfully fetched {len(achievements)} achievements")
+            
+            # Check if featured field is present in response
+            featured_field_present = all("featured" in item for item in achievements)
+            if featured_field_present:
+                print("      ✅ Featured field present in all achievement items")
+            else:
+                print("      ❌ Featured field missing in some achievement items")
+                all_tests_passed = False
+            
+            # Check if featured items appear first
+            featured_items = [item for item in achievements if item.get("featured", 0) == 1]
+            non_featured_items = [item for item in achievements if item.get("featured", 0) == 0]
+            
+            if len(featured_items) > 0:
+                print(f"      ✅ Found {len(featured_items)} featured achievements")
+                
+                # Verify featured items appear first in the list
+                first_items_featured = True
+                for i in range(len(featured_items)):
+                    if i < len(achievements) and achievements[i].get("featured", 0) != 1:
+                        first_items_featured = False
+                        break
+                
+                if first_items_featured:
+                    print("      ✅ Featured achievements appear first in results")
+                else:
+                    print("      ❌ Featured achievements do not appear first in results")
+                    all_tests_passed = False
+                    
+                # Show sample featured item
+                sample_featured = featured_items[0]
+                print(f"      📌 Sample featured achievement: '{sample_featured.get('title', '')[:50]}...'")
+            else:
+                print("      ⚠️  No featured achievements found in current data")
+            
+            # Check short_description field mapping
+            short_desc_present = all("short_description" in item for item in achievements)
+            if short_desc_present:
+                print("      ✅ Short_description field present in all achievement items")
+                
+                # Verify short_description is mapped from Google Sheets 'description' column
+                sample_item = achievements[0] if achievements else None
+                if sample_item:
+                    short_desc = sample_item.get("short_description", "")
+                    if short_desc and len(short_desc) > 0:
+                        print(f"      ✅ Short_description field populated: '{short_desc[:50]}...'")
+                    else:
+                        print("      ⚠️  Short_description field empty in sample item")
+            else:
+                print("      ❌ Short_description field missing in some achievement items")
+                all_tests_passed = False
+        
+        # 2. Test Featured Items with Different Sorting Options
+        print("   1.2 Testing Featured Items Priority with Different Sorting...")
+        
+        sorting_tests = [
+            ("date", "desc", "newest first"),
+            ("date", "asc", "oldest first"),
+            ("title", "asc", "A-Z"),
+            ("title", "desc", "Z-A")
+        ]
+        
+        for sort_by, sort_order, description in sorting_tests:
+            response = requests.get(f"{API_BASE_URL}/achievements?sort_by={sort_by}&sort_order={sort_order}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                achievements = data.get("achievements", [])
+                
+                # Check if featured items still appear first regardless of sorting
+                featured_count = sum(1 for item in achievements if item.get("featured", 0) == 1)
+                if featured_count > 0:
+                    # Check if first N items are featured (where N is the number of featured items)
+                    first_n_featured = all(achievements[i].get("featured", 0) == 1 for i in range(min(featured_count, len(achievements))))
+                    
+                    if first_n_featured:
+                        print(f"      ✅ Featured items maintain priority with {description} sorting")
+                    else:
+                        print(f"      ❌ Featured items lost priority with {description} sorting")
+                        all_tests_passed = False
+                else:
+                    print(f"      ⚠️  No featured items to test with {description} sorting")
+            else:
+                print(f"      ❌ Sorting test failed for {description}")
+                all_tests_passed = False
+        
+        # 3. Test Featured Items in News & Events API
+        print("   2.1 Testing Featured Items in News & Events API...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ News-events API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            print(f"      ✅ Successfully fetched {len(news_events)} news & events")
+            
+            # Check if featured field is present in response
+            featured_field_present = all("featured" in item for item in news_events)
+            if featured_field_present:
+                print("      ✅ Featured field present in all news & events items")
+            else:
+                print("      ❌ Featured field missing in some news & events items")
+                all_tests_passed = False
+            
+            # Check if featured items appear first
+            featured_items = [item for item in news_events if item.get("featured", 0) == 1]
+            
+            if len(featured_items) > 0:
+                print(f"      ✅ Found {len(featured_items)} featured news & events")
+                
+                # Verify featured items appear first in the list
+                first_items_featured = True
+                for i in range(len(featured_items)):
+                    if i < len(news_events) and news_events[i].get("featured", 0) != 1:
+                        first_items_featured = False
+                        break
+                
+                if first_items_featured:
+                    print("      ✅ Featured news & events appear first in results")
+                else:
+                    print("      ❌ Featured news & events do not appear first in results")
+                    all_tests_passed = False
+                    
+                # Show sample featured item
+                sample_featured = featured_items[0]
+                print(f"      📌 Sample featured news/event: '{sample_featured.get('title', '')[:50]}...'")
+            else:
+                print("      ⚠️  No featured news & events found in current data")
+            
+            # Check both description and short_description fields
+            desc_fields_present = all("description" in item and "short_description" in item for item in news_events)
+            if desc_fields_present:
+                print("      ✅ Both 'description' and 'short_description' fields present in all news & events items")
+                
+                # Verify fields are properly populated
+                sample_item = news_events[0] if news_events else None
+                if sample_item:
+                    description = sample_item.get("description", "")
+                    short_description = sample_item.get("short_description", "")
+                    
+                    if description and short_description:
+                        print(f"      ✅ Description fields populated - desc: '{description[:30]}...', short: '{short_description[:30]}...'")
+                    else:
+                        print("      ⚠️  Some description fields empty in sample item")
+            else:
+                print("      ❌ Description or short_description fields missing in some news & events items")
+                all_tests_passed = False
+        
+        # 4. Test Featured Items Priority with Different Sorting in News & Events
+        print("   2.2 Testing Featured Items Priority with Different Sorting in News & Events...")
+        
+        for sort_by, sort_order, description in sorting_tests:
+            response = requests.get(f"{API_BASE_URL}/news-events?sort_by={sort_by}&sort_order={sort_order}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                
+                # Check if featured items still appear first regardless of sorting
+                featured_count = sum(1 for item in news_events if item.get("featured", 0) == 1)
+                if featured_count > 0:
+                    # Check if first N items are featured (where N is the number of featured items)
+                    first_n_featured = all(news_events[i].get("featured", 0) == 1 for i in range(min(featured_count, len(news_events))))
+                    
+                    if first_n_featured:
+                        print(f"      ✅ Featured items maintain priority with {description} sorting")
+                    else:
+                        print(f"      ❌ Featured items lost priority with {description} sorting")
+                        all_tests_passed = False
+                else:
+                    print(f"      ⚠️  No featured items to test with {description} sorting")
+            else:
+                print(f"      ❌ Sorting test failed for {description}")
+                all_tests_passed = False
+        
+        # 5. Test Detailed View Endpoints for Featured Items
+        print("   3.1 Testing Detailed View Endpoints...")
+        
+        # Test achievements detail endpoint
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            
+            if achievements:
+                achievement_id = achievements[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/achievements/{achievement_id}", timeout=10)
+                
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    required_fields = ["id", "title", "short_description", "category", "date", "featured"]
+                    
+                    missing_fields = [field for field in required_fields if field not in detail_data]
+                    if not missing_fields:
+                        print("      ✅ Achievement detail endpoint returns all required fields including featured")
+                    else:
+                        print(f"      ❌ Achievement detail endpoint missing fields: {missing_fields}")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ Achievement detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+        
+        # Test news-events detail endpoint
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            
+            if news_events:
+                news_id = news_events[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=10)
+                
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    required_fields = ["id", "title", "description", "short_description", "category", "date", "featured"]
+                    
+                    missing_fields = [field for field in required_fields if field not in detail_data]
+                    if not missing_fields:
+                        print("      ✅ News-events detail endpoint returns all required fields including featured and both description fields")
+                    else:
+                        print(f"      ❌ News-events detail endpoint missing fields: {missing_fields}")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ News-events detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+        
+        # 6. Test Pagination with Featured Items
+        print("   4.1 Testing Pagination with Featured Item Prioritization...")
+        
+        # Test different page sizes to ensure featured items maintain priority
+        page_sizes = [5, 10, 15]
+        for page_size in page_sizes:
+            # Test achievements
+            response = requests.get(f"{API_BASE_URL}/achievements?per_page={page_size}&page=1", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                achievements = data.get("achievements", [])
+                
+                featured_count = sum(1 for item in achievements if item.get("featured", 0) == 1)
+                if featured_count > 0:
+                    # Check if featured items are at the beginning
+                    first_items_featured = all(achievements[i].get("featured", 0) == 1 for i in range(min(featured_count, len(achievements))))
+                    
+                    if first_items_featured:
+                        print(f"      ✅ Achievements pagination (page_size={page_size}) maintains featured item priority")
+                    else:
+                        print(f"      ❌ Achievements pagination (page_size={page_size}) breaks featured item priority")
+                        all_tests_passed = False
+            
+            # Test news-events
+            response = requests.get(f"{API_BASE_URL}/news-events?per_page={page_size}&page=1", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                
+                featured_count = sum(1 for item in news_events if item.get("featured", 0) == 1)
+                if featured_count > 0:
+                    # Check if featured items are at the beginning
+                    first_items_featured = all(news_events[i].get("featured", 0) == 1 for i in range(min(featured_count, len(news_events))))
+                    
+                    if first_items_featured:
+                        print(f"      ✅ News-events pagination (page_size={page_size}) maintains featured item priority")
+                    else:
+                        print(f"      ❌ News-events pagination (page_size={page_size}) breaks featured item priority")
+                        all_tests_passed = False
+        
+        # 7. Test Backward Compatibility
+        print("   5.1 Testing Backward Compatibility...")
+        
+        # Ensure existing functionality still works
+        response = requests.get(f"{API_BASE_URL}/achievements?category_filter=Award", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            
+            # Check that category filtering still works with featured items
+            all_awards = all(item.get("category") == "Award" for item in achievements)
+            if all_awards and len(achievements) > 0:
+                print("      ✅ Category filtering works correctly with featured items")
+            else:
+                print("      ❌ Category filtering broken with featured items implementation")
+                all_tests_passed = False
+        
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            
+            # Check that category filtering still works with featured items
+            all_news = all(item.get("category") == "News" for item in news_events)
+            if all_news and len(news_events) > 0:
+                print("      ✅ News category filtering works correctly with featured items")
+            else:
+                print("      ❌ News category filtering broken with featured items implementation")
+                all_tests_passed = False
+        
+        if all_tests_passed:
+            print("   🎉 ALL Featured Items and Short Description tests PASSED!")
+        else:
+            print("   ⚠️  Some Featured Items and Short Description tests FAILED!")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Featured Items and Short Description testing: {e}")
+        return False
+
 def test_latex_rendering_support():
     """Test LaTeX rendering support in News & Events and Achievements APIs as per review request"""
-    print("18. Testing LaTeX Rendering Support in Blog System...")
+    print("19. Testing LaTeX Rendering Support in Blog System...")
     
     all_tests_passed = True
     
