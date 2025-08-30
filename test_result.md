@@ -234,16 +234,16 @@ frontend:
         comment: "Successfully implemented Achievements page with Google Sheets API integration, search functionality, pagination with go-to-page system, and blog-style content generation. Read More buttons open detailed blog-style content in new windows with rich formatting support."
 
   - task: "News & Events Page with Categories"
-    implemented: false
-    working: "NA"
+    implemented: true
+    working: true
     file: "pages/NewsEvents.jsx"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
     status_history:
-      - working: "NA"
+      - working: true
         agent: "main"
-        comment: "Implement News, Events, Upcoming Events categories with blog-style content generation"
+        comment: "Successfully implemented News & Events page with three categories (News, Events, Upcoming Events), Google Sheets API integration, search and filtering capabilities, pagination with go-to-page system, blog-style content generation, and embedded Google Calendar iframe at the bottom."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: false
