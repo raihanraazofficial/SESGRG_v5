@@ -21,7 +21,7 @@ const Publications = () => {
     sort_by: 'year',
     sort_order: 'desc',
     page: 1,
-    per_page: 20
+    per_page: 5
   });
   const [showFilters, setShowFilters] = useState(false);
   const [availableYears, setAvailableYears] = useState([]);
