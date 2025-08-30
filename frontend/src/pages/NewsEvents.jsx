@@ -298,14 +298,14 @@ const NewsEvents = () => {
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                 <Select
-                  value={filters.category_filter}
-                  onValueChange={(value) => handleFilterChange('category_filter', value)}
+                  value={filters.category_filter || "all"}
+                  onValueChange={(value) => handleFilterChange('category_filter', value === "all" ? "" : value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category} value={category}>{category}</SelectItem>
                     ))}
