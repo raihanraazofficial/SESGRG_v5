@@ -872,6 +872,12 @@ class SESGSheetsService:
         else:
             return publications
     
+    def clear_cache(self):
+        """Clear all cached data"""
+        self.cache.clear()
+        self.last_fetch_time.clear()
+        logger.info("Cache cleared successfully")
+    
     def _apply_project_filters(self, projects, status_filter, area_filter, title_filter):
         filtered = projects
         
