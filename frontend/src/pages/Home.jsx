@@ -329,77 +329,7 @@ const Home = () => {
       </section>
 
       {/* Latest News & Events Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Latest News & Events
-              </h2>
-              <p className="text-xl text-gray-600">
-                Stay updated with our recent achievements, news, events, and upcoming activities.
-              </p>
-            </div>
-            <Link 
-              to="/news"
-              className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center text-lg"
-            >
-              View All <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                title: "International Smart Grid Conference 2024",
-                date: "Dec 15, 2024",
-                type: "Upcoming Event",
-                excerpt: "Join us for the annual international conference on smart grid innovations."
-              },
-              {
-                title: "Research Partnership with Tesla Energy",
-                date: "Nov 28, 2024", 
-                type: "News",
-                excerpt: "Strategic collaboration announced for next-generation energy storage research."
-              },
-              {
-                title: "Best Paper Award at IEEE Conference",
-                date: "Nov 10, 2024",
-                type: "Achievement", 
-                excerpt: "Our research on AI-powered grid optimization wins prestigious award."
-              },
-              {
-                title: "Smart Microgrid Installation Completed",
-                date: "Oct 25, 2024",
-                type: "Event",
-                excerpt: "Successfully installed demonstration microgrid system on campus."
-              }
-            ].map((news, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      news.type === 'Event' ? 'bg-blue-100 text-blue-700' :
-                      news.type === 'News' ? 'bg-emerald-100 text-emerald-700' :
-                      news.type === 'Achievement' ? 'bg-amber-100 text-amber-700' :
-                      'bg-purple-100 text-purple-700'
-                    }`}>
-                      {news.type}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
-                    {news.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">{news.date}</p>
-                  <p className="text-gray-600 text-sm line-clamp-3">
-                    {news.excerpt}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <LatestNewsSection />
     </div>
   );
 };
