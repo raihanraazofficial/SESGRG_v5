@@ -90,8 +90,125 @@ const NewsEvents = () => {
   };
 
   const generateBlogContent = (item) => {
-    // Use the same advanced blog generator as achievements page with emerald theme
-    generateAdvancedBlogContent(item, 'achievement');
+    // Function to parse and format description content from Google Sheets
+    const parseDescription = (description) => {
+      if (!description) return '';
+      
+      return description.split('\n').map(paragraph => {
+        const trimmed = paragraph.trim();
+        if (!trimmed) return '';
+        
+        // Headers (lines starting with ##)
+        if (trimmed.startsWith('## ')) {
+          return `<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">${trimmed.substring(3)}</h2>`;
+        }
+        
+        // Subheaders (lines starting with ###)
+        if (trimmed.startsWith('### ')) {
+          return `<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">${trimmed.substring(4)}</h3>`;
+        }
+        
+        // Bold text (**text**)
+        let formatted = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic text (*text*)
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Bullet points (lines starting with -)
+        if (trimmed.startsWith('- ')) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.substring(2)}</li>`;
+        }
+        
+        // Numbered lists (lines starting with number.)
+        if (/^\d+\.\s/.test(trimmed)) {
+          return `<li class="text-gray-700 leading-relaxed mb-2">${formatted.replace(/^\d+\.\s/, '')}</li>`;
+        }
+        
+        // Quotes (lines starting with >)
+        if (trimmed.startsWith('> ')) {
+          return `<blockquote class="border-l-4 border-emerald-300 pl-6 my-6 italic text-lg text-gray-600 bg-emerald-50 py-4 rounded-r-lg">${formatted.substring(2)}</blockquote>`;
+        }
+        
+        // Links [text](url)
+        formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 hover:text-emerald-800 underline">$1</a>');
+        
+        // Regular paragraphs
+        return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${formatted}</p>`;
+      }).join('');
+    };
+
+    // Generate blog-style content from the news/event item
+    const blogHtml = `
+      <div class="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
+        <div class="mb-8">
+          <div class="flex items-center text-emerald-600 mb-4">
+            <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"></path>
+            </svg>
+            <span class="text-sm font-medium uppercase tracking-wide">${item.category || 'News & Events'}</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${item.title}</h1>
+          <div class="flex items-center text-gray-600 mb-8">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span class="text-lg">${formatDate(item.date)}</span>
+          </div>
+          ${item.category ? `
+          <div class="mb-6">
+            <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
+              ${item.category}
+            </span>
+          </div>
+          ` : ''}
+        </div>
+        
+        ${item.image ? `<div class="mb-12">
+          <img src="${item.image}" alt="${item.title}" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+        </div>` : ''}
+        
+        <div class="prose prose-lg max-w-none">
+          <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 mb-8 rounded-r-lg">
+            <p class="text-emerald-800 font-medium text-lg leading-relaxed">${item.description || item.short_description}</p>
+          </div>
+          
+          <div class="mt-8">
+            ${parseDescription(item.description || item.full_content || '')}
+          </div>
+          
+          <div class="mt-12 p-8 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">About This ${item.category || 'News & Events'}</h3>
+            <p class="text-gray-700 leading-relaxed">This represents an important update from our research journey at the Sustainable Energy and Smart Grid Research lab. It demonstrates our commitment to advancing the field through innovative solutions and collaborative efforts.</p>
+          </div>
+        </div>
+        
+        <div class="mt-12 text-center">
+          <button onclick="window.close()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            Close Article
+          </button>
+        </div>
+      </div>
+    `;
+    
+    const newWindow = window.open('', '_blank');
+    newWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${item.title} - SESG Research News & Events</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          .prose ul { list-style-type: disc; margin-left: 1.5rem; }
+          .prose ol { list-style-type: decimal; margin-left: 1.5rem; }
+        </style>
+      </head>
+      <body class="bg-gray-50">
+        ${blogHtml}
+      </body>
+      </html>
+    `);
+    newWindow.document.close();
   };
 
   return (
