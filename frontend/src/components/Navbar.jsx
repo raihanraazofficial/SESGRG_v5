@@ -23,13 +23,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
+          <Link to="/" className="flex items-center space-x-3">
+            <img 
+              src="/Logo.jpg" 
+              alt="SESG Logo" 
+              className="h-12 w-12 rounded-lg object-cover"
+            />
             <div>
-              <span className="font-bold text-xl text-gray-900">SESGL</span>
-              <p className="text-xs text-gray-600 -mt-1">Smart Energy Research</p>
+              <span className="font-bold text-lg text-gray-900">SESG Research</span>
+              <p className="text-xs text-gray-600 -mt-1">Sustainable Energy & Smart Grid</p>
             </div>
           </Link>
 
