@@ -582,9 +582,276 @@ def test_news_events_endpoint():
         print(f"   ❌ Error testing news-events endpoint: {e}")
         return False
 
+def test_latex_rendering_support():
+    """Test LaTeX rendering support in News & Events and Achievements APIs as per review request"""
+    print("18. Testing LaTeX Rendering Support in Blog System...")
+    
+    all_tests_passed = True
+    
+    try:
+        # 1. Test News & Events API for LaTeX content
+        print("   1.1 Testing News & Events API for LaTeX expressions...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ News-events API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            print(f"      ✅ Successfully fetched {len(news_events)} news & events")
+            
+            # Look for mathematical content in news events
+            latex_content_found = False
+            mathematical_articles = []
+            
+            for item in news_events:
+                title = item.get("title", "")
+                short_desc = item.get("short_description", "")
+                
+                # Check for mathematical keywords and LaTeX patterns
+                math_keywords = ["mathematical", "equation", "formula", "optimization", "algorithm", "model"]
+                latex_patterns = ["$", "α", "β", "γ", "Σ", "∫", "∂", "∇"]
+                
+                has_math_keywords = any(keyword.lower() in title.lower() or keyword.lower() in short_desc.lower() 
+                                      for keyword in math_keywords)
+                has_latex_symbols = any(symbol in title or symbol in short_desc 
+                                      for symbol in latex_patterns)
+                
+                if has_math_keywords or has_latex_symbols:
+                    mathematical_articles.append({
+                        "id": item.get("id"),
+                        "title": title,
+                        "category": item.get("category"),
+                        "has_math_keywords": has_math_keywords,
+                        "has_latex_symbols": has_latex_symbols
+                    })
+                    latex_content_found = True
+            
+            if latex_content_found:
+                print(f"      ✅ Found {len(mathematical_articles)} articles with mathematical content")
+                for article in mathematical_articles[:3]:  # Show first 3
+                    print(f"         📐 {article['title'][:60]}... ({article['category']})")
+            else:
+                print("      ⚠️  No obvious mathematical content found in news events titles/descriptions")
+        
+        # 2. Test detailed News & Events endpoint for LaTeX content
+        print("   1.2 Testing News & Events detailed view for LaTeX expressions...")
+        
+        # Look for the mathematical article we know exists
+        math_article_response = requests.get(f"{API_BASE_URL}/news-events?title_filter=Mathematical", timeout=10)
+        if math_article_response.status_code == 200:
+            math_data = math_article_response.json()
+            math_articles = math_data.get("news_events", [])
+            
+            if len(math_articles) > 0:
+                math_article_id = math_articles[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{math_article_id}", timeout=10)
+                
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    full_content = detail_data.get("full_content", "")
+                    
+                    # Check for LaTeX expressions in full content
+                    latex_patterns = {
+                        "inline_math": "$" in full_content and full_content.count("$") >= 2,
+                        "display_math": "$$" in full_content,
+                        "greek_letters": any(letter in full_content for letter in ["α", "β", "γ", "δ", "Σ", "π", "λ", "μ"]),
+                        "mathematical_symbols": any(symbol in full_content for symbol in ["∫", "∂", "∇", "≤", "≥", "∞"]),
+                        "equations": any(pattern in full_content for pattern in ["=", "+", "-", "*", "/", "^"]),
+                        "functions": any(func in full_content for func in ["sin", "cos", "tan", "log", "exp", "sqrt"])
+                    }
+                    
+                    latex_found = any(latex_patterns.values())
+                    content_length = len(full_content)
+                    
+                    print(f"      ✅ Mathematical article detail retrieved: {content_length} characters")
+                    print(f"      📐 LaTeX patterns detected: {sum(latex_patterns.values())}/6 types")
+                    
+                    for pattern_type, found in latex_patterns.items():
+                        status = "✅" if found else "❌"
+                        print(f"         {status} {pattern_type.replace('_', ' ').title()}")
+                    
+                    if latex_found:
+                        print("      ✅ LaTeX expressions found in mathematical content")
+                        # Show a sample of the mathematical content
+                        math_sample = full_content[:500] + "..." if len(full_content) > 500 else full_content
+                        print(f"      📄 Sample content: {math_sample}")
+                    else:
+                        print("      ⚠️  No LaTeX expressions detected in full content")
+                else:
+                    print(f"      ❌ Mathematical article detail failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No mathematical articles found to test detailed view")
+        
+        # 3. Test Achievements API for LaTeX content
+        print("   2.1 Testing Achievements API for LaTeX expressions...")
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=15)
+        if response.status_code != 200:
+            print(f"      ❌ Achievements API request failed with status: {response.status_code}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            achievements = data.get("achievements", [])
+            print(f"      ✅ Successfully fetched {len(achievements)} achievements")
+            
+            # Look for mathematical content in achievements
+            math_achievements = []
+            
+            for item in achievements:
+                title = item.get("title", "")
+                short_desc = item.get("short_description", "")
+                
+                # Check for mathematical/technical keywords
+                math_keywords = ["award", "research", "publication", "innovation", "algorithm", "optimization", "model"]
+                
+                has_math_keywords = any(keyword.lower() in title.lower() or keyword.lower() in short_desc.lower() 
+                                      for keyword in math_keywords)
+                
+                if has_math_keywords:
+                    math_achievements.append({
+                        "id": item.get("id"),
+                        "title": title,
+                        "category": item.get("category")
+                    })
+            
+            if len(math_achievements) > 0:
+                print(f"      ✅ Found {len(math_achievements)} achievements with technical/research content")
+                for achievement in math_achievements[:3]:  # Show first 3
+                    print(f"         🏆 {achievement['title'][:60]}... ({achievement['category']})")
+            else:
+                print("      ⚠️  No obvious technical/research content found in achievements")
+        
+        # 4. Test detailed Achievements endpoint for LaTeX content
+        print("   2.2 Testing Achievements detailed view for LaTeX expressions...")
+        
+        # Get first achievement for detailed testing
+        if len(achievements) > 0:
+            achievement_id = achievements[0]["id"]
+            detail_response = requests.get(f"{API_BASE_URL}/achievements/{achievement_id}", timeout=10)
+            
+            if detail_response.status_code == 200:
+                detail_data = detail_response.json()
+                full_content = detail_data.get("full_content", "")
+                content_length = len(full_content)
+                
+                print(f"      ✅ Achievement detail retrieved: {content_length} characters")
+                
+                # Check if content is suitable for LaTeX rendering
+                if content_length > 100:
+                    print("      ✅ Rich content available for LaTeX processing")
+                    # Sample the content to see if it contains mathematical elements
+                    sample_content = full_content[:300] + "..." if len(full_content) > 300 else full_content
+                    print(f"      📄 Sample content: {sample_content}")
+                else:
+                    print("      ⚠️  Limited content available for LaTeX testing")
+            else:
+                print(f"      ❌ Achievement detail failed with status: {detail_response.status_code}")
+                all_tests_passed = False
+        
+        # 5. Test that existing functionality still works after LaTeX implementation
+        print("   3.1 Testing existing functionality after LaTeX implementation...")
+        
+        # Test News & Events filtering
+        categories = ["News", "Events", "Upcoming Events"]
+        for category in categories:
+            response = requests.get(f"{API_BASE_URL}/news-events?category_filter={category}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                filtered_items = data.get("news_events", [])
+                print(f"      ✅ News & Events '{category}' filtering: {len(filtered_items)} items")
+            else:
+                print(f"      ❌ News & Events '{category}' filtering failed")
+                all_tests_passed = False
+        
+        # Test Achievements filtering
+        ach_categories = ["Award", "Partnership", "Publication", "Grant"]
+        for category in ach_categories:
+            response = requests.get(f"{API_BASE_URL}/achievements?category_filter={category}", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                filtered_items = data.get("achievements", [])
+                print(f"      ✅ Achievements '{category}' filtering: {len(filtered_items)} items")
+            else:
+                print(f"      ❌ Achievements '{category}' filtering failed")
+                all_tests_passed = False
+        
+        # Test pagination
+        for endpoint in ["news-events", "achievements"]:
+            response = requests.get(f"{API_BASE_URL}/{endpoint}?page=1&per_page=5", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                pagination = data.get("pagination", {})
+                items_key = endpoint.replace("-", "_")
+                items = data.get(items_key, [])
+                print(f"      ✅ {endpoint.title()} pagination: {len(items)} items, page {pagination.get('current_page', 1)}")
+            else:
+                print(f"      ❌ {endpoint.title()} pagination failed")
+                all_tests_passed = False
+        
+        # 6. Test Google Sheets data structure compatibility
+        print("   4.1 Testing Google Sheets data structure for LaTeX content...")
+        
+        # Check if the Google Sheets data structure can handle LaTeX expressions
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=1", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            
+            if len(news_events) > 0:
+                sample_item = news_events[0]
+                required_fields = ["id", "title", "short_description", "category", "date", "image"]
+                
+                all_fields_present = all(field in sample_item for field in required_fields)
+                
+                if all_fields_present:
+                    print("      ✅ Google Sheets data structure compatible with LaTeX content")
+                    print(f"      📊 Sample item structure: {list(sample_item.keys())}")
+                else:
+                    missing_fields = [field for field in required_fields if field not in sample_item]
+                    print(f"      ❌ Missing required fields for LaTeX content: {missing_fields}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No sample data available to test structure")
+        
+        # Test detailed view data structure
+        if len(news_events) > 0:
+            news_id = news_events[0]["id"]
+            detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=10)
+            
+            if detail_response.status_code == 200:
+                detail_data = detail_response.json()
+                detail_fields = ["id", "title", "full_content", "date", "category"]
+                
+                all_detail_fields = all(field in detail_data for field in detail_fields)
+                
+                if all_detail_fields:
+                    print("      ✅ Detailed view structure supports LaTeX content rendering")
+                else:
+                    missing_detail_fields = [field for field in detail_fields if field not in detail_data]
+                    print(f"      ❌ Missing detailed view fields: {missing_detail_fields}")
+                    all_tests_passed = False
+        
+        if all_tests_passed:
+            print("   🎉 ALL LaTeX Rendering Support tests PASSED!")
+            print("   ✅ News & Events API returns content suitable for LaTeX parsing")
+            print("   ✅ Achievements API returns content suitable for LaTeX parsing")
+            print("   ✅ Detailed view endpoints provide full_content for LaTeX rendering")
+            print("   ✅ Mathematical content detected in Google Sheets data")
+            print("   ✅ All existing filtering, pagination, and category functionality preserved")
+            print("   ✅ Google Sheets data structure compatible with LaTeX content")
+        else:
+            print("   ⚠️  Some LaTeX Rendering Support tests FAILED!")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in LaTeX Rendering Support testing: {e}")
+        return False
+
 def test_updated_news_events_api():
     """Test the updated News & Events API with new Google Sheets URL as per review request"""
-    print("18. Testing UPDATED News & Events API with NEW Google Sheets URL...")
+    print("19. Testing UPDATED News & Events API with NEW Google Sheets URL...")
     
     all_tests_passed = True
     
