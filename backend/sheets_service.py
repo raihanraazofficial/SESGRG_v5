@@ -960,7 +960,7 @@ class SESGSheetsService:
             # Apply filters
             filtered_pubs = self._apply_publication_filters(
                 publications, year_filter, area_filter, category_filter, 
-                author_filter, title_filter
+                author_filter, title_filter, search_filter
             )
             
             # Apply sorting
