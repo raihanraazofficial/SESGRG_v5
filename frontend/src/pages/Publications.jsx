@@ -57,9 +57,12 @@ const Publications = () => {
   };
 
   const handleFilterChange = (key, value) => {
+    // Convert "all" to empty string for backend compatibility
+    const processedValue = value === "all" ? "" : value;
+    
     setFilters(prev => ({
       ...prev,
-      [key]: value,
+      [key]: processedValue,
       page: 1 // Reset to first page when filtering
     }));
   };
