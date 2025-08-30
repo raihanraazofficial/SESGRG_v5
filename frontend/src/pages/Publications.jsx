@@ -381,15 +381,16 @@ Best regards,`;
                         </p>
                       </div>
 
-                      {/* Research Areas - Moved here and aligned with right side */}
+                      {/* Research Areas - Same style as category pills */}
                       <div className="flex flex-wrap gap-2">
                         {publication.research_areas.map((area, index) => (
                           <span
                             key={index}
-                            className={`px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap ${
-                              index % 3 === 0 ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
-                              index % 3 === 1 ? 'bg-blue-100 text-blue-800 border border-blue-200' :
-                              'bg-purple-100 text-purple-800 border border-purple-200'
+                            className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                              index % 4 === 0 ? 'bg-emerald-100 text-emerald-700' :
+                              index % 4 === 1 ? 'bg-blue-100 text-blue-700' :
+                              index % 4 === 2 ? 'bg-purple-100 text-purple-700' :
+                              'bg-orange-100 text-orange-700'
                             }`}
                           >
                             {area}
