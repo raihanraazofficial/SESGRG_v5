@@ -108,8 +108,7 @@ class SESGSheetsService:
         if self.use_mock_data:
             return self._get_mock_news_event_details(news_id)
         else:
-            # TODO: Implement real Google Sheets integration
-            pass
+            return self._get_google_sheets_news_event_details(news_id)
 
     def _get_mock_publications(self, page, per_page, year_filter, area_filter, 
                               category_filter, author_filter, title_filter, 
