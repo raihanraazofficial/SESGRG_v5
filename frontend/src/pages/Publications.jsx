@@ -261,7 +261,7 @@ Best regards,`;
                     <SelectValue placeholder="Research Area" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Areas</SelectItem>
+                    <SelectItem value="all">All Areas</SelectItem>
                     {researchAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
                     ))}
