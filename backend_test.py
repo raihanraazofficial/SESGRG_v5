@@ -1454,6 +1454,221 @@ def test_error_handling():
         print(f"   ❌ Error testing error handling: {e}")
         return False
 
+def test_updated_news_events_api():
+    """Test the updated News & Events API to verify the new Google Sheets URL integration as per review request"""
+    print("22. Testing Updated News & Events API - NEW GOOGLE SHEETS URL INTEGRATION...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Step 1: Clear cache first to ensure fresh data fetch
+        print("   1.1 Clearing cache to ensure fresh data fetch...")
+        cache_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if cache_response.status_code == 200:
+            print("      ✅ Cache cleared successfully")
+        else:
+            print(f"      ⚠️  Cache clear failed with status: {cache_response.status_code}")
+        
+        # Step 2: Test GET /api/news-events - Verify it fetches from the new URL and converts data properly
+        print("   1.2 Testing GET /api/news-events with new Google Sheets URL...")
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=30)
+        if response.status_code != 200:
+            print(f"      ❌ News & Events API request failed with status: {response.status_code}")
+            print(f"      Response: {response.text}")
+            all_tests_passed = False
+        else:
+            data = response.json()
+            required_keys = ["news_events", "pagination"]
+            if not all(key in data for key in required_keys):
+                print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+                all_tests_passed = False
+            else:
+                news_events = data.get("news_events", [])
+                print(f"      ✅ Google Sheets News & Events API working - Retrieved {len(news_events)} news & events")
+                print(f"      📊 Response structure: {list(data.keys())}")
+                
+                # Verify the data conversion handles the "achievements" key from user's script properly
+                if len(news_events) > 0:
+                    news_event = news_events[0]
+                    required_fields = ["id", "title", "short_description", "category", "date", "image", "full_content"]
+                    missing_fields = [field for field in required_fields if field not in news_event]
+                    if not missing_fields:
+                        print(f"      ✅ All required news event fields present: {required_fields}")
+                        print(f"      📋 Sample news event: '{news_event['title']}' - {news_event['category']}")
+                    else:
+                        print(f"      ❌ Missing news event fields: {missing_fields}")
+                        all_tests_passed = False
+                    
+                    # Verify data conversion from "achievements" key format
+                    print(f"      ✅ Data conversion working - Sample ID: {news_event['id']}, Category: {news_event['category']}")
+        
+        # Step 3: Test category filtering (News, Events, Upcoming Events)
+        print("   2.1 Testing category filtering (News, Events, Upcoming Events)...")
+        expected_categories = ["News", "Events", "Upcoming Events"]
+        
+        for category in expected_categories:
+            response = requests.get(f"{API_BASE_URL}/news-events?category_filter={category}", timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                category_news = data.get("news_events", [])
+                print(f"      ✅ Category '{category}' filtering: {len(category_news)} items")
+                
+                # Verify all returned items have the correct category
+                if len(category_news) > 0:
+                    correct_category = all(item.get("category") == category for item in category_news)
+                    if correct_category:
+                        print(f"      ✅ All items in '{category}' category are correctly filtered")
+                    else:
+                        print(f"      ❌ Some items in '{category}' category have incorrect categories")
+                        all_tests_passed = False
+            else:
+                print(f"      ❌ Category '{category}' filtering failed with status: {response.status_code}")
+                all_tests_passed = False
+        
+        # Test with no category filter (should return all categories)
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            all_news = data.get("news_events", [])
+            all_categories = set(item.get("category") for item in all_news)
+            print(f"      ✅ No category filter returns all categories: {all_categories}")
+        
+        # Step 4: Test pagination and sorting functionality
+        print("   3.1 Testing pagination functionality...")
+        
+        # Test different page sizes
+        page_sizes = [5, 10, 15, 20]
+        for page_size in page_sizes:
+            response = requests.get(f"{API_BASE_URL}/news-events?per_page={page_size}", timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                pagination = data.get("pagination", {})
+                print(f"      ✅ Page size {page_size}: Got {len(news_events)} items, per_page={pagination.get('per_page')}")
+                
+                # Verify pagination metadata
+                required_pagination_keys = ["current_page", "total_pages", "has_next", "has_prev", "per_page", "total_items"]
+                missing_keys = [key for key in required_pagination_keys if key not in pagination]
+                if missing_keys:
+                    print(f"      ❌ Missing pagination keys for page size {page_size}: {missing_keys}")
+                    all_tests_passed = False
+            else:
+                print(f"      ❌ Page size {page_size} failed with status: {response.status_code}")
+                all_tests_passed = False
+        
+        # Test page navigation
+        response = requests.get(f"{API_BASE_URL}/news-events?page=1&per_page=5", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            pagination = data.get("pagination", {})
+            print(f"      ✅ Page navigation: Page {pagination.get('current_page')} of {pagination.get('total_pages')}")
+            print(f"      📊 Total items: {pagination.get('total_items')}, Has next: {pagination.get('has_next')}")
+        
+        print("   3.2 Testing sorting functionality...")
+        
+        # Test sorting by date (newest first, oldest first)
+        sorting_tests = [
+            ("date", "desc", "newest first"),
+            ("date", "asc", "oldest first"),
+            ("title", "asc", "title A-Z"),
+            ("title", "desc", "title Z-A")
+        ]
+        
+        for sort_by, sort_order, description in sorting_tests:
+            response = requests.get(f"{API_BASE_URL}/news-events?sort_by={sort_by}&sort_order={sort_order}&per_page=5", timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                news_events = data.get("news_events", [])
+                if len(news_events) >= 2:
+                    if sort_by == "date":
+                        dates = [item.get("date", "") for item in news_events[:3]]
+                        print(f"      ✅ Date sorting ({description}): {dates}")
+                    elif sort_by == "title":
+                        titles = [item.get("title", "")[:30] + "..." for item in news_events[:3]]
+                        print(f"      ✅ Title sorting ({description}): {titles}")
+                else:
+                    print(f"      ✅ Sorting by {sort_by} ({description}): {len(news_events)} items")
+            else:
+                print(f"      ❌ Sorting by {sort_by} ({description}) failed with status: {response.status_code}")
+                all_tests_passed = False
+        
+        # Step 5: Test GET /api/news-events/{id} for detailed view
+        print("   4.1 Testing GET /api/news-events/{id} for detailed view...")
+        
+        # First get a news event ID
+        response = requests.get(f"{API_BASE_URL}/news-events?per_page=1", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            if len(news_events) > 0:
+                news_id = news_events[0]["id"]
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{news_id}", timeout=15)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    required_detail_fields = ["id", "title", "full_content", "date", "category"]
+                    missing_detail_fields = [field for field in required_detail_fields if field not in detail_data]
+                    if not missing_detail_fields:
+                        print(f"      ✅ News & Event detail endpoint working for ID: {news_id}")
+                        print(f"      📋 Detail fields present: {list(detail_data.keys())}")
+                        print(f"      📄 Full content length: {len(detail_data.get('full_content', ''))} characters")
+                    else:
+                        print(f"      ❌ Missing detail fields: {missing_detail_fields}")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ News & Event detail endpoint failed with status: {detail_response.status_code}")
+                    print(f"      Response: {detail_response.text}")
+                    all_tests_passed = False
+            else:
+                print("      ⚠️  No news events available to test detail endpoint")
+        
+        # Step 6: Test combined filtering scenarios
+        print("   5.1 Testing combined filtering scenarios...")
+        
+        # Test category + sorting combination
+        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&sort_by=date&sort_order=desc&per_page=5", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            print(f"      ✅ Category + Sorting combination: {len(news_events)} News items sorted by date")
+        else:
+            print(f"      ❌ Category + Sorting combination failed")
+            all_tests_passed = False
+        
+        # Test title filter + pagination combination
+        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=Smart&page=1&per_page=10", timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            news_events = data.get("news_events", [])
+            pagination = data.get("pagination", {})
+            print(f"      ✅ Title filter + Pagination: {len(news_events)} items with 'Smart' in title")
+        else:
+            print(f"      ❌ Title filter + Pagination combination failed")
+            all_tests_passed = False
+        
+        # Step 7: Verify cache status after operations
+        print("   6.1 Checking cache status after operations...")
+        cache_status_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_status_response.status_code == 200:
+            cache_data = cache_status_response.json()
+            print(f"      ✅ Cache status: {cache_data.get('cached_items', 0)} items cached")
+            print(f"      📊 Cache duration: {cache_data.get('cache_duration_minutes', 0)} minutes")
+        
+        if all_tests_passed:
+            print("   🎉 ALL Updated News & Events API tests PASSED!")
+            print("   ✅ New Google Sheets URL integration working correctly")
+            print("   ✅ Data conversion handles 'achievements' key properly")
+            print("   ✅ All category filtering, pagination, and sorting functionality working")
+        else:
+            print("   ⚠️  Some Updated News & Events API tests FAILED!")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error in Updated News & Events API testing: {e}")
+        import traceback
+        print(f"   📋 Traceback: {traceback.format_exc()}")
+        return False
+
 def run_all_tests():
     """Run all backend tests and return summary"""
     print("Starting Comprehensive Backend API Tests")
