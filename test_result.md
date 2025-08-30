@@ -248,7 +248,7 @@ frontend:
     file: "pages/NewsEvents.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
@@ -268,6 +268,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Re-tested News & Events API as specifically requested in review. CONFIRMED: All category filtering working perfectly - 'Events' category (10 items), 'Upcoming Events' category (10 items), 'News' category (11 items), 'Achievement' category (10 items). Search functionality working ('Smart Grid': 2 results, 'Mathematical': 1 result). Sorting by date/title in both directions working correctly. Pagination with multiple page sizes (5,10,15,20) working properly. Detailed view endpoint working with rich content. Mathematical content verified with Greek letters (α,β,γ,Σ), equations, and formulas in 'Advanced Mathematical Modeling' article (4630 characters). All backend APIs fully functional and ready for production."
+      - working: true
+        agent: "main"
+        comment: "FIXED category filter button issues: 1) Updated News & Events page to include missing 'Achievement' category button and added it to categories array. 2) Fixed Achievements page category filter buttons to use correct backend category names: 'Award' instead of 'Awards', 'Partnership' instead of 'Recognition', 'Publication' and 'Grant' instead of 'Milestones'. 3) Updated both top filter buttons and dropdown selections to match backend API categories exactly. 4) The frontend category filters now properly correspond to backend data structure. Ready for frontend testing to verify category filtering works correctly."
 
   - task: "Contact Page with Google Maps Integration"
     implemented: true
