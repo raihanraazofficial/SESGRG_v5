@@ -1056,7 +1056,7 @@ class SESGSheetsService:
                         # IEEE format structure - handle both new IEEE format and existing Google Sheets format
                         publication = {
                             "id": f"pub_{row.get('id', i):03d}",
-                            "category": str(row.get('category', 'Journal Articles')),
+                            "category": self._normalize_category(str(row.get('category', 'Journal Articles'))),
                             "authors": self._parse_authors(row.get('authors', [])),
                             "title": str(row.get('title', '')),
                             # Handle both IEEE format field and Google Sheets format field
