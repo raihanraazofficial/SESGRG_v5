@@ -468,14 +468,16 @@ Best regards,`;
 
         {/* Pagination */}
         {!loading && pagination.total_pages > 1 && (
-          <div className="mt-12 p-4 md:p-6 bg-white rounded-lg shadow space-y-4 md:space-y-0">
-            <div className="text-sm text-gray-600 text-center md:text-left">
+          <div className="mt-12 p-4 md:p-6 bg-white rounded-lg shadow">
+            <div className="text-sm text-gray-600 text-center mb-4">
               Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
               {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)} of{' '}
               {pagination.total_items} publications
             </div>
             
-            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between space-y-4 md:space-y-0">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              {/* Main Pagination Controls - Centered */}
+              <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-2 order-2 md:order-1">
                 <Button
                   variant="outline"
