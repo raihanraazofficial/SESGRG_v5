@@ -1549,7 +1549,7 @@ class SESGSheetsService:
                             "category": str(row.get('category', 'Award')),
                             "date": str(row.get('date', '')),
                             "image": str(row.get('image', 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800')),
-                            "full_content": str(row.get('full_content', ''))
+                            "full_content": str(row.get('description', row.get('full_content', '')))
                         }
                     else:
                         # Handle array format
