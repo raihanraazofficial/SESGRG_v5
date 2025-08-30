@@ -1010,7 +1010,7 @@ class SESGSheetsService:
                                             search_filter, sort_by, sort_order)
 
     def _convert_sheets_to_publications(self, sheets_data) -> List[Dict[str, Any]]:
-        """Convert Google Sheets data to publication format"""
+        """Convert Google Sheets data to IEEE publication format"""
         publications = []
         
         try:
@@ -1025,38 +1025,59 @@ class SESGSheetsService:
                 try:
                     # Handle object format (direct from Google Sheets API)
                     if isinstance(row, dict):
+                        # IEEE format structure
                         publication = {
                             "id": f"pub_{row.get('id', i):03d}",
-                            "title": str(row.get('title', '')),
-                            "authors": row.get('authors', []) if isinstance(row.get('authors'), list) else [str(row.get('authors', ''))],
-                            "publication_info": str(row.get('publication_info', '')),
-                            "year": str(row.get('year', datetime.now().year)),
                             "category": str(row.get('category', 'Journal Articles')),
-                            "research_areas": row.get('research_areas', []) if isinstance(row.get('research_areas'), list) else [str(row.get('research_areas', ''))],
+                            "authors": self._parse_authors(row.get('authors', '')),
+                            "title": str(row.get('title', '')),
+                            "journal_book_conference_name": str(row.get('journal_book_conference_name', '')),
+                            "volume": str(row.get('volume', '')),
+                            "issue": str(row.get('issue', '')),
+                            "editors": str(row.get('editors', '')),
+                            "publisher": str(row.get('publisher', '')),
+                            "location": str(row.get('location', '')),
+                            "pages": str(row.get('pages', '')),
+                            "year": str(row.get('year', datetime.now().year)),
                             "citations": int(row.get('citations', 0)) if str(row.get('citations', 0)).isdigit() else 0,
-                            "open_access": bool(row.get('open_access', False)),
-                            "full_paper_link": str(row.get('full_paper_link', '')) if row.get('full_paper_link') else None,
-                            "abstract": str(row.get('abstract', ''))
+                            "doi_link": str(row.get('doi_link', '')) if row.get('doi_link') else None,
+                            "research_areas": self._parse_research_areas(row.get('research_areas', '')),
+                            # Additional fields for functionality
+                            "open_access": bool(row.get('open_access', False)) or bool(row.get('doi_link', '')),
+                            "full_paper_link": str(row.get('doi_link', '')) if row.get('doi_link') else None,
                         }
                     else:
-                        # Handle array format (legacy support)
+                        # Handle array format for IEEE columns
+                        # Expected order: Category, Authors, Title, Journal/Book/Conference Name, Volume, Issue, 
+                        # Editors, Publisher, Location, Pages, Year, Citations, DOI/Link, Research Areas
+                        
                         # Skip header row if exists
-                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['title', 'paper title', 'publication title']:
+                        if i == 0 and isinstance(row, list) and len(row) > 0 and str(row[0]).lower() in ['category', 'type', 'publication type']:
                             continue
                         
                         publication = {
                             "id": f"pub_{i:03d}",
-                            "title": str(row[0]) if len(row) > 0 else "",
-                            "authors": [author.strip() for author in str(row[1]).split(',') if author.strip()] if len(row) > 1 else [],
-                            "publication_info": str(row[2]) if len(row) > 2 else "",
-                            "year": str(row[3]) if len(row) > 3 else str(datetime.now().year),
-                            "category": str(row[4]) if len(row) > 4 else "Journal Articles",
-                            "research_areas": [area.strip() for area in str(row[5]).split(',') if area.strip()] if len(row) > 5 else [],
-                            "citations": int(row[6]) if len(row) > 6 and str(row[6]).isdigit() else 0,
-                            "open_access": str(row[7]).lower() in ['true', 'yes', '1'] if len(row) > 7 else False,
-                            "full_paper_link": str(row[8]) if len(row) > 8 and str(row[8]).startswith('http') else None,
-                            "abstract": str(row[9]) if len(row) > 9 else ""
+                            "category": str(row[0]) if len(row) > 0 else "Journal Articles",
+                            "authors": self._parse_authors(str(row[1])) if len(row) > 1 else [],
+                            "title": str(row[2]) if len(row) > 2 else "",
+                            "journal_book_conference_name": str(row[3]) if len(row) > 3 else "",
+                            "volume": str(row[4]) if len(row) > 4 else "",
+                            "issue": str(row[5]) if len(row) > 5 else "",
+                            "editors": str(row[6]) if len(row) > 6 else "",
+                            "publisher": str(row[7]) if len(row) > 7 else "",
+                            "location": str(row[8]) if len(row) > 8 else "",
+                            "pages": str(row[9]) if len(row) > 9 else "",
+                            "year": str(row[10]) if len(row) > 10 else str(datetime.now().year),
+                            "citations": int(row[11]) if len(row) > 11 and str(row[11]).isdigit() else 0,
+                            "doi_link": str(row[12]) if len(row) > 12 and str(row[12]).startswith('http') else None,
+                            "research_areas": self._parse_research_areas(str(row[13])) if len(row) > 13 else [],
+                            # Additional fields for functionality
+                            "open_access": bool(str(row[12]).startswith('http')) if len(row) > 12 else False,
+                            "full_paper_link": str(row[12]) if len(row) > 12 and str(row[12]).startswith('http') else None,
                         }
+                    
+                    # Generate IEEE formatted publication info
+                    publication["ieee_formatted"] = self._generate_ieee_format(publication)
                     
                     # Only add if title is not empty
                     if publication["title"].strip():
@@ -1070,6 +1091,95 @@ class SESGSheetsService:
             logger.error(f"Error converting sheets data: {e}")
             
         return publications
+
+    def _parse_authors(self, authors_str: str) -> List[str]:
+        """Parse authors string into list"""
+        if not authors_str or authors_str.strip() == '':
+            return []
+        return [author.strip() for author in str(authors_str).split(',') if author.strip()]
+
+    def _parse_research_areas(self, areas_str: str) -> List[str]:
+        """Parse research areas string into list"""
+        if not areas_str or areas_str.strip() == '':
+            return []
+        return [area.strip() for area in str(areas_str).split(',') if area.strip()]
+
+    def _generate_ieee_format(self, publication: Dict[str, Any]) -> str:
+        """Generate IEEE formatted citation based on publication type"""
+        try:
+            authors = ", ".join(publication["authors"])
+            title = f'"{publication["title"]}"'
+            category = publication["category"]
+            
+            if category == "Journal Articles":
+                # IEEE Journal format: Authors, "Title," Journal Name, vol. X, no. Y, pp. Z-W, Year.
+                format_parts = [authors, title]
+                if publication["journal_book_conference_name"]:
+                    journal = publication["journal_book_conference_name"]
+                    # Make journal name italic (we'll handle this in frontend)
+                    format_parts.append(f"*{journal}*")
+                
+                if publication["volume"]:
+                    format_parts.append(f"vol. {publication['volume']}")
+                
+                if publication["issue"]:
+                    format_parts.append(f"no. {publication['issue']}")
+                
+                if publication["pages"]:
+                    format_parts.append(f"pp. {publication['pages']}")
+                
+                format_parts.append(publication["year"])
+                return ", ".join(format_parts) + "."
+                
+            elif category == "Conference Proceedings":
+                # IEEE Conference format: Authors, "Title," Conference Name, Location, pp. X-Y, Year.
+                format_parts = [authors, title]
+                if publication["journal_book_conference_name"]:
+                    conf = publication["journal_book_conference_name"]
+                    format_parts.append(f"*{conf}*")
+                
+                if publication["location"]:
+                    format_parts.append(publication["location"])
+                
+                if publication["pages"]:
+                    format_parts.append(f"pp. {publication['pages']}")
+                
+                format_parts.append(publication["year"])
+                return ", ".join(format_parts) + "."
+                
+            elif category == "Book Chapters":
+                # IEEE Book Chapter format: Authors, "Chapter Title," in Book Title, Editors, Ed(s). Publisher, Location, pp. X-Y, Year.
+                format_parts = [authors, title]
+                if publication["journal_book_conference_name"]:
+                    book = publication["journal_book_conference_name"]
+                    format_parts.append(f"in *{book}*")
+                
+                if publication["editors"]:
+                    format_parts.append(f"{publication['editors']}, Ed(s).")
+                
+                if publication["publisher"]:
+                    format_parts.append(publication["publisher"])
+                
+                if publication["location"]:
+                    format_parts.append(publication["location"])
+                
+                if publication["pages"]:
+                    format_parts.append(f"pp. {publication['pages']}")
+                
+                format_parts.append(publication["year"])
+                return ", ".join(format_parts) + "."
+            
+            else:
+                # Generic format
+                format_parts = [authors, title]
+                if publication["journal_book_conference_name"]:
+                    format_parts.append(f"*{publication['journal_book_conference_name']}*")
+                format_parts.append(publication["year"])
+                return ", ".join(format_parts) + "."
+                
+        except Exception as e:
+            logger.error(f"Error generating IEEE format: {e}")
+            return f"{', '.join(publication.get('authors', []))}, \"{publication.get('title', '')}\", {publication.get('year', '')}."
 
 
 # Global instance
