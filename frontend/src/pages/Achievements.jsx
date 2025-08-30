@@ -533,10 +533,22 @@ const Achievements = () => {
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Achievements</h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            Celebrating our milestones, awards, and recognition in sustainable energy and smart grid research. 
-            These achievements reflect our commitment to excellence and innovation in advancing the field.
-          </p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <p className="text-xl text-gray-600 max-w-4xl text-center">
+              Celebrating our milestones, awards, and recognition in sustainable energy and smart grid research. 
+              These achievements reflect our commitment to excellence and innovation in advancing the field.
+            </p>
+            <Button
+              onClick={() => fetchAchievements(true)}
+              disabled={refreshing}
+              variant="outline"
+              size="sm"
+              className="ml-4 flex-shrink-0"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing...' : 'Refresh'}
+            </Button>
+          </div>
         </div>
 
         {/* Category Filter Buttons */}
