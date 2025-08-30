@@ -9,17 +9,19 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Lab Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg">
-                <Zap className="h-5 w-5 text-white" />
-              </div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/Logo.jpg" 
+                alt="SESG Logo" 
+                className="h-10 w-10 rounded-lg object-cover"
+              />
               <div>
-                <span className="font-bold text-lg text-white">SESGL</span>
-                <p className="text-xs text-gray-400 -mt-1">Smart Energy Research</p>
+                <span className="font-bold text-lg text-white">SESG Research</span>
+                <p className="text-xs text-gray-400 -mt-1">Sustainable Energy & Smart Grid</p>
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
-              Advancing sustainable energy solutions through cutting-edge research in smart grids, renewable integration, and AI-powered energy systems.
+              Pioneering the future of energy through innovative research in smart grids, renewable integration, and AI-powered energy systems at BRAC University.
             </p>
           </div>
 
