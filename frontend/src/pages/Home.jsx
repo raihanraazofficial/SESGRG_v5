@@ -625,8 +625,8 @@ const Home = () => {
       {/* Latest News & Events Section */}
       <LatestNewsSection />
 
-      {/* Photo Gallery Section - Optimized for Smooth Scrolling */}
-      <section className="py-20 bg-gray-50 overflow-hidden">
+      {/* Photo Gallery Section - ULTRA-OPTIMIZED for Smooth Scrolling */}
+      <section className="py-20 bg-gray-50 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Photo Gallery</h2>
@@ -635,9 +635,9 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Smooth Right-to-Left Scrolling Gallery with Performance Optimization */}
-          <div className="relative overflow-hidden">
-            <div className="flex animate-scroll-right space-x-8 whitespace-nowrap">
+          {/* ULTRA-SMOOTH Right-to-Left Scrolling Gallery with GPU Acceleration */}
+          <div className="gallery-container relative overflow-hidden">
+            <div className="flex animate-scroll-right space-x-8 whitespace-nowrap performance-optimized">
               {[
                 {
                   url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
