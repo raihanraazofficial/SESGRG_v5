@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import apiService from "../services/api";
+import googleSheetsService from "../services/googleSheetsApi";
 
 // Latest News Section Component
 const LatestNewsSection = () => {
