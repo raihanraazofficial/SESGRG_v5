@@ -1,6 +1,8 @@
 import React from "react";
-import { Shield, Eye, UserCheck, Database, Lock, AlertCircle, Mail, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Shield, Eye, UserCheck, Database, Lock, AlertCircle, Mail, FileText, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 const PrivacyPolicy = () => {
   const sections = [
