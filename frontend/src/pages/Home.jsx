@@ -9,6 +9,7 @@ import googleSheetsService from "../services/googleSheetsApi";
 const LatestNewsSection = () => {
   const [latestNews, setLatestNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchLatestNews();
