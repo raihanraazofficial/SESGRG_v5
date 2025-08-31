@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Phone, ExternalLink, Linkedin, Github, ArrowLeft } from "lucide-react";
+import { Mail, ExternalLink, Linkedin, Github, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
