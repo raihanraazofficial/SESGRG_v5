@@ -261,7 +261,7 @@ const People = () => {
           {/* Expertise Areas */}
           {person.expertise && person.expertise.length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-gray-800 mb-2">Expertise Areas:</h4>
+              <h4 className="text-sm font-semibold text-gray-800 mb-2">Research Interest:</h4>
               <div className="flex flex-wrap gap-2">
                 {person.expertise.map((areaIndex) => (
                   <span
