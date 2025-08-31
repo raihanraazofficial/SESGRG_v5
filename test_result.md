@@ -126,6 +126,7 @@ user_problem_statement: |
   ✅ 16. Verified News Events page "Back to Top" button is correctly positioned after Google Calendar
   ✅ 17. Confirmed Privacy Policy and Terms & Conditions pages "Back to Top" buttons are properly positioned (no pagination conflicts)
   ✅ 18. All pages with pagination now have "Back to Top" buttons positioned at the very bottom after pagination controls
+  ✅ 19. Improved spacing for "Back to Top" buttons on News Events, Privacy Policy, and Terms & Conditions pages - added pt-8 for better visual separation from content cards
   
 backend:
   - task: "Complete Website Modifications as Per User Specifications"
