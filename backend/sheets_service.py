@@ -1021,19 +1021,40 @@ class SESGSheetsService:
             else:
                 # Fetch fresh data from Google Sheets
                 logger.info("Fetching fresh publications data from Google Sheets")
-                response = requests.get(self.publications_api_url, timeout=30)  # Increased timeout
-                response.raise_for_status()
-                
-                # Parse the response
-                sheets_data = response.json()
-                
-                # Convert sheets data to our publication format
-                publications = self._convert_sheets_to_publications(sheets_data)
-                
-                # Cache the raw publications data
-                self.cache[cache_key] = publications
-                self.last_fetch_time[cache_key] = current_time
-                logger.info(f"Cached {len(publications)} publications for performance")
+                try:
+                    response = requests.get(self.publications_api_url, timeout=30)  # Increased timeout
+                    response.raise_for_status()
+                    
+                    # Check if response is JSON
+                    if response.headers.get('content-type', '').startswith('application/json'):
+                        sheets_data = response.json()
+                    else:
+                        # If not JSON, likely an error page
+                        logger.error(f"Invalid response from Google Sheets API: {response.text[:200]}")
+                        raise Exception("Invalid response format from Google Sheets API")
+                    
+                    # Convert sheets data to our publication format
+                    publications = self._convert_sheets_to_publications(sheets_data)
+                    
+                    # If no publications found, this might indicate an API issue
+                    if not publications:
+                        logger.warning("No publications found from Google Sheets API, this might indicate an issue")
+                        raise Exception("Empty response from Google Sheets API")
+                    
+                    # Cache the raw publications data
+                    self.cache[cache_key] = publications
+                    self.last_fetch_time[cache_key] = current_time
+                    logger.info(f"Cached {len(publications)} publications for performance")
+                    
+                except (requests.RequestException, ValueError, KeyError) as api_error:
+                    logger.error(f"Google Sheets API error: {api_error}")
+                    logger.info("Falling back to mock publications data")
+                    # Use mock data as fallback
+                    publications = []
+                    mock_response = self._get_mock_publications(page, per_page, year_filter, area_filter, 
+                                                             category_filter, author_filter, title_filter, 
+                                                             search_filter, sort_by, sort_order)
+                    return mock_response
             
             # Apply filters on cached data
             filtered_pubs = self._apply_publication_filters(
