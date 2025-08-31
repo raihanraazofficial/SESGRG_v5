@@ -229,8 +229,8 @@ const People = () => {
   };
 
   const PersonCard = ({ person }) => (
-    <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized">
-      <CardContent className="p-0">
+    <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized h-full flex flex-col">
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Photo */}
         <div className="relative">
           <img 
@@ -247,14 +247,14 @@ const People = () => {
           </div>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 flex-grow flex flex-col">
           {/* Affiliation */}
           <div>
             <p className="text-sm font-medium text-emerald-600">{person.affiliation}</p>
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 text-sm leading-relaxed text-justify">
+          <p className="text-gray-600 text-sm leading-relaxed text-justify flex-grow">
             {person.description}
           </p>
 
@@ -275,34 +275,36 @@ const People = () => {
             </div>
           )}
 
-          {/* Contact Icons - Using simple-icons CDN */}
-          <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
-            {person.email && (
+          {/* Fixed Bottom Section - Research Profile Icons and Know More Button */}
+          <div className="mt-auto">
+            {/* Research Profile Icons - All icons for everyone */}
+            <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200 mb-4">
+              {/* Email - Always present */}
               <a 
-                href={`mailto:${person.email}`}
+                href={`mailto:${person.email || 'contact@bracu.ac.bd'}`}
                 className="p-2 bg-gray-100 hover:bg-red-100 rounded-full transition-colors group/icon"
                 title="Email"
               >
                 <img 
                   src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" 
                   alt="Email"
-                  className="h-4 w-4 text-gray-600 group-hover/icon:text-red-600" 
-                  style={{filter: 'invert(0.4)'}}
+                  className="h-4 w-4 filter-red" 
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(320deg) brightness(0.8)'}}
                 />
               </a>
-            )}
-            {person.phone && (
+              
+              {/* Call - Always present */}
               <a 
-                href={`tel:${person.phone}`}
+                href={`tel:${person.phone || '+880-2-9844051'}`}
                 className="p-2 bg-gray-100 hover:bg-emerald-100 rounded-full transition-colors group/icon"
                 title="Phone"
               >
-                <Phone className="h-4 w-4 text-gray-600 group-hover/icon:text-emerald-600" />
+                <Phone className="h-4 w-4 text-emerald-600" />
               </a>
-            )}
-            {person.googleScholar && (
+              
+              {/* Google Scholar - Always present */}
               <a 
-                href={person.googleScholar}
+                href={person.googleScholar || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-gray-100 hover:bg-blue-100 rounded-full transition-colors group/icon"
@@ -312,29 +314,13 @@ const People = () => {
                   src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlescholar.svg" 
                   alt="Google Scholar"
                   className="h-4 w-4" 
-                  style={{filter: 'invert(0.4)'}}
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(200deg) brightness(0.8)'}}
                 />
               </a>
-            )}
-            {person.orcid && (
+              
+              {/* ResearchGate - Always present */}
               <a 
-                href={person.orcid}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 bg-gray-100 hover:bg-green-100 rounded-full transition-colors group/icon"
-                title="ORCID"
-              >
-                <img 
-                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/orcid.svg" 
-                  alt="ORCID"
-                  className="h-4 w-4" 
-                  style={{filter: 'invert(0.4)'}}
-                />
-              </a>
-            )}
-            {person.researchGate && (
-              <a 
-                href={person.researchGate}
+                href={person.researchGate || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-gray-100 hover:bg-cyan-100 rounded-full transition-colors group/icon"
@@ -344,29 +330,29 @@ const People = () => {
                   src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/researchgate.svg" 
                   alt="ResearchGate"
                   className="h-4 w-4" 
-                  style={{filter: 'invert(0.4)'}}
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(170deg) brightness(0.8)'}}
                 />
               </a>
-            )}
-            {person.ieee && (
+              
+              {/* ORCID - Always present */}
               <a 
-                href={person.ieee}
+                href={person.orcid || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-gray-100 hover:bg-indigo-100 rounded-full transition-colors group/icon"
-                title="IEEE Xplore"
+                className="p-2 bg-gray-100 hover:bg-green-100 rounded-full transition-colors group/icon"
+                title="ORCID"
               >
                 <img 
-                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/ieee.svg" 
-                  alt="IEEE"
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/orcid.svg" 
+                  alt="ORCID"
                   className="h-4 w-4" 
-                  style={{filter: 'invert(0.4)'}}
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(90deg) brightness(0.8)'}}
                 />
               </a>
-            )}
-            {person.linkedin && (
+              
+              {/* LinkedIn - Always present */}
               <a 
-                href={person.linkedin}
+                href={person.linkedin || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-gray-100 hover:bg-blue-100 rounded-full transition-colors group/icon"
@@ -376,13 +362,13 @@ const People = () => {
                   src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
                   alt="LinkedIn"
                   className="h-4 w-4" 
-                  style={{filter: 'invert(0.4)'}}
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(200deg) brightness(0.8)'}}
                 />
               </a>
-            )}
-            {person.github && (
+              
+              {/* GitHub - Always present */}
               <a 
-                href={person.github}
+                href={person.github || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors group/icon"
@@ -395,11 +381,25 @@ const People = () => {
                   style={{filter: 'invert(0.4)'}}
                 />
               </a>
-            )}
-          </div>
+              
+              {/* IEEE - Always present */}
+              <a 
+                href={person.ieee || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-gray-100 hover:bg-indigo-100 rounded-full transition-colors group/icon"
+                title="IEEE Xplore"
+              >
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/ieee.svg" 
+                  alt="IEEE"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(220deg) brightness(0.8)'}}
+                />
+              </a>
+            </div>
 
-          {/* Know More Button */}
-          <div className="pt-2">
+            {/* Know More Button */}
             <Button 
               variant="outline" 
               size="sm" 
