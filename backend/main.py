@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime
-from sheets_service import sheets_service
+from sheets_service_optimized import sheets_service
 
 # Load environment variables
 load_dotenv()
