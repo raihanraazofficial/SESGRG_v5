@@ -288,7 +288,7 @@ async def get_achievement_details(achievement_id: str):
     """Get detailed achievement"""
     try:
         achievements_data = await fetch_sheets_data("achievements")
-        achievement = next((item for item in achievements_data if item["id"] == achievement_id), None)
+        achievement = next((item for item in achievements_data if str(item.get("id")) == str(achievement_id)), None)
         return achievement if achievement else {"error": "Achievement not found"}
     except Exception as e:
         return {"error": f"Failed to fetch achievement: {str(e)}"}
