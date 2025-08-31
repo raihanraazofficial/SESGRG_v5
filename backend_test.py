@@ -24,6 +24,12 @@ def get_api_urls():
             for line in f:
                 if line.startswith('REACT_APP_PUBLICATIONS_API_URL='):
                     urls['publications'] = line.split('=', 1)[1].strip()
+                elif line.startswith('REACT_APP_PROJECTS_API_URL='):
+                    urls['projects'] = line.split('=', 1)[1].strip()
+                elif line.startswith('REACT_APP_ACHIEVEMENTS_API_URL='):
+                    urls['achievements'] = line.split('=', 1)[1].strip()
+                elif line.startswith('REACT_APP_NEWS_EVENTS_API_URL='):
+                    urls['news_events'] = line.split('=', 1)[1].strip()
                 elif line.startswith('REACT_APP_BACKEND_URL='):
                     urls['backend'] = line.split('=', 1)[1].strip()
         return urls
@@ -32,16 +38,22 @@ def get_api_urls():
         return {}
 
 API_URLS = get_api_urls()
-if not API_URLS.get('publications'):
-    print("ERROR: Could not get REACT_APP_PUBLICATIONS_API_URL from frontend/.env")
-    sys.exit(1)
+required_apis = ['publications', 'projects', 'achievements', 'news_events']
+for api in required_apis:
+    if not API_URLS.get(api):
+        print(f"ERROR: Could not get REACT_APP_{api.upper()}_API_URL from frontend/.env")
+        sys.exit(1)
 
 PUBLICATIONS_API_URL = API_URLS['publications']
-FRONTEND_URL = "http://localhost:3000"  # Local frontend URL for testing
+PROJECTS_API_URL = API_URLS['projects']
+ACHIEVEMENTS_API_URL = API_URLS['achievements']
+NEWS_EVENTS_API_URL = API_URLS['news_events']
 
-print(f"Testing Publications IEEE Citation Formatting")
+print(f"Testing Google Sheets Integration and Performance Optimizations")
 print(f"Publications API: {PUBLICATIONS_API_URL}")
-print(f"Frontend URL: {FRONTEND_URL}")
+print(f"Projects API: {PROJECTS_API_URL}")
+print(f"Achievements API: {ACHIEVEMENTS_API_URL}")
+print(f"News Events API: {NEWS_EVENTS_API_URL}")
 print("=" * 80)
 
 def test_google_sheets_api_accessibility():
