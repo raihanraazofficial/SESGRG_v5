@@ -145,7 +145,7 @@ class GoogleSheetsService {
   // Publications API
   async getPublications(params = {}) {
     try {
-      const data = await this.fetchFromGoogleSheets(this.publicationsUrl);
+      const data = await this.fetchFromGoogleSheets(this.publicationsUrl, this.cacheKeys.publications);
       // Google Sheets API returns direct array of publications
       const publications = Array.isArray(data.publications) ? data.publications : 
                           (Array.isArray(data) ? data : []);
