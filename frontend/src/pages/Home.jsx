@@ -17,7 +17,7 @@ const LatestNewsSection = () => {
   const fetchLatestNews = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getNewsEvents({
+      const response = await googleSheetsService.getNewsEvents({
         page: 1,
         per_page: 4,
         sort_by: 'date',
