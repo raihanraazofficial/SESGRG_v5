@@ -376,93 +376,102 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Objectives */}
+          {/* Our Objectives & Research in Action - New Layout */}
           <div className="mb-20">
-            <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Objectives</h3>
-            <div className="space-y-8">
-              {objectives.map((objective, index) => (
-                <div 
-                  key={index}
-                  data-objective-index={index}
-                  className="flex items-center space-x-6 group"
-                >
-                  <div className={`relative flex-shrink-0 w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center transition-all duration-500 ${
-                    animatedObjectives.has(index) 
-                      ? 'bg-emerald-500 scale-110' 
-                      : 'bg-white'
-                  }`}>
-                    <span className={`text-2xl font-bold transition-colors duration-500 ${
-                      animatedObjectives.has(index) ? 'text-white' : 'text-emerald-500'
-                    }`}>
-                      {index + 1}
-                    </span>
-                    {animatedObjectives.has(index) && (
-                      <CheckCircle className="absolute -top-2 -right-2 h-6 w-6 text-emerald-600 animate-ping" />
-                    )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+              {/* Image Carousel - Left Side */}
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center lg:text-left">Our Research in Action</h3>
+                <div className="relative">
+                  <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                    {carouselImages.map((image, index) => (
+                      <div
+                        key={index}
+                        className={`absolute inset-0 transition-opacity duration-1000 ${
+                          index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <img 
+                          src={image.url}
+                          alt={image.alt}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        <div className="absolute bottom-6 left-6 text-white">
+                          <p className="text-lg font-semibold">{image.alt}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex-1 h-px bg-gray-200"></div>
-                  <div className="flex-1">
-                    <p className="text-lg text-gray-700 group-hover:text-emerald-600 transition-colors duration-300">
-                      {objective}
-                    </p>
+                  
+                  {/* Carousel Navigation */}
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
+                  >
+                    <ChevronLeft className="h-6 w-6 text-white" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
+                  >
+                    <ChevronRight className="h-6 w-6 text-white" />
+                  </button>
+
+                  {/* Carousel Indicators */}
+                  <div className="flex justify-center mt-6 space-x-2">
+                    {carouselImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === currentImageIndex 
+                            ? 'bg-emerald-600 scale-125' 
+                            : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Image Carousel */}
-          <div className="text-center">
-            <h3 className="text-3xl font-bold text-gray-900 mb-8">Our Research in Action</h3>
-            <div className="relative max-w-4xl mx-auto">
-              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
-                {carouselImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${
-                      index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  >
-                    <img 
-                      src={image.url}
-                      alt={image.alt}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 text-white">
-                      <p className="text-lg font-semibold">{image.alt}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
-              
-              {/* Carousel Navigation */}
-              <button
-                onClick={() => setCurrentImageIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
-              >
-                <ChevronLeft className="h-6 w-6 text-white" />
-              </button>
-              <button
-                onClick={() => setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 transition-all duration-200"
-              >
-                <ChevronRight className="h-6 w-6 text-white" />
-              </button>
 
-              {/* Carousel Indicators */}
-              <div className="flex justify-center mt-6 space-x-2">
-                {carouselImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === currentImageIndex 
-                        ? 'bg-emerald-600 scale-125' 
-                        : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                  />
-                ))}
+              {/* Objectives - Right Side */}
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center lg:text-left">Our Objectives</h3>
+                <div className="space-y-8">
+                  {objectives.map((objective, index) => (
+                    <div 
+                      key={index}
+                      data-objective-index={index}
+                      className="group"
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className={`relative flex-shrink-0 w-12 h-12 rounded-full border-3 border-emerald-500 flex items-center justify-center transition-all duration-500 ${
+                          animatedObjectives.has(index) 
+                            ? 'bg-emerald-500 scale-110' 
+                            : 'bg-white'
+                        }`}>
+                          <span className={`text-lg font-bold transition-colors duration-500 ${
+                            animatedObjectives.has(index) ? 'text-white' : 'text-emerald-500'
+                          }`}>
+                            {index + 1}
+                          </span>
+                          {animatedObjectives.has(index) && (
+                            <CheckCircle className="absolute -top-1 -right-1 h-5 w-5 text-emerald-600 animate-ping" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-lg text-gray-700 group-hover:text-emerald-600 transition-colors duration-300 leading-relaxed">
+                            {objective}
+                          </p>
+                          <div className={`mt-2 h-0.5 bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-500 ${
+                            animatedObjectives.has(index) ? 'w-full opacity-100' : 'w-0 opacity-0'
+                          }`}></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
