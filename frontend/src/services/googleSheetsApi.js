@@ -326,7 +326,12 @@ class GoogleSheetsService {
   async getNewsEvents(params = {}) {
     try {
       const data = await this.fetchFromGoogleSheets(this.newsEventsUrl);
-      const newsEvents = data.data || [];
+      const newsEvents = Array.isArray(data.news_events) ? data.news_events :
+                        (Array.isArray(data.data) ? data.data :
+                        (Array.isArray(data) ? data : []));
+
+      console.log('Raw news events data:', newsEvents.length, 'items');
+      console.log('First news event:', newsEvents[0]);
 
       // Apply client-side filtering
       let filteredData = newsEvents;
