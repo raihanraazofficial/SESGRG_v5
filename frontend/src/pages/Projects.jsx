@@ -202,7 +202,7 @@ const Projects = () => {
         {loading && (
           <div className="flex justify-center items-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">Loading Projects...</span>
+            <span className="ml-3 text-lg text-gray-600">⚡ Loading Projects...</span>
           </div>
         )}
 
