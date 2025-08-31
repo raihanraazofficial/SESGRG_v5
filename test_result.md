@@ -103,13 +103,14 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Modify existing SESG Research website to:
-  1. Update loading styles for Publications and Projects pages to match Achievements and News Events (skeleton cards instead of spinner)
-  2. Enhance Projects page to be similar to Publications page with:
-     - 3 statistics cards: Total Projects, Active Projects, Complete Projects
-     - Section filtering buttons: All Projects, Active, Completed, Planning
-     - Fix broken filter functionality (page goes blank on "show filter" click)
-     - Add comprehensive search, sorting and filtering mechanism like Publications page
+  Update SESG Research website Home page with comprehensive design enhancements:
+  1. Hero section: Update title to "Sustainable Energy & Smart Grid Research" and tagline to "Pioneering Research in Clean Energy, Renewable Integration, and Next-Generation Smart Grid Systems"
+  2. About Us section: Add animation to section name with underline, justify paragraph text
+  3. Our Objectives section: Move objectives to RIGHT side with animated underlines, move carousel to LEFT side 
+  4. Research Areas: Add 7th research area "Cybersecurity and AI for Power Infrastructure"
+  5. Latest News & Events: Restructure with featured story card and smaller news cards, ensure realtime sync
+  6. Add new Photo Gallery section with professional research images
+  7. Footer updates: New tagline, reorganize sections, dynamic year, add page links (FAQ, Privacy Policy, Terms & Conditions)
   
 backend:
   - task: "Fix Vercel Deployment Configuration Issues"
