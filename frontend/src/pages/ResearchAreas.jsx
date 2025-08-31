@@ -179,19 +179,20 @@ const ResearchAreas = () => {
     );
   };
 
-  // Get keyword variations for better matching
-  const getAreaKeywords = (areaTitle) => {
-    const keywordMap = {
-      "Smart Grid Technologies": ["smart grid", "grid technology", "intelligent grid", "grid modernization", "smart power", "grid automation"],
-      "Microgrids & Distributed Energy Systems": ["microgrid", "distributed energy", "local grid", "mini grid", "distributed generation", "peer-to-peer energy"],
-      "Renewable Energy Integration": ["renewable energy", "solar integration", "wind integration", "clean energy", "green energy", "sustainable energy"],
-      "Grid Optimization & Stability": ["grid optimization", "power system optimization", "grid stability", "load balancing", "power flow", "voltage control"],
-      "Energy Storage Systems": ["energy storage", "battery storage", "grid storage", "power storage", "battery management", "storage systems"],
-      "Power System Automation": ["power automation", "substation automation", "grid automation", "smart switching", "automated protection", "system automation"],
-      "Cybersecurity and AI for Power Infrastructure": ["cybersecurity", "power security", "grid security", "AI power", "machine learning energy", "intelligent systems"]
+  // Direct research area matching - use exact names from Google Sheets
+  const getExactAreaName = (areaTitle) => {
+    // Map from UI display names to exact Google Sheets research_areas values
+    const areaNameMap = {
+      "Smart Grid Technologies": "Smart Grid Technologies",
+      "Microgrids & Distributed Energy Systems": "Microgrids & Distributed Energy Systems", 
+      "Renewable Energy Integration": "Renewable Energy Integration",
+      "Grid Optimization & Stability": "Grid Optimization & Stability",
+      "Energy Storage Systems": "Energy Storage Systems",
+      "Power System Automation": "Power System Automation",
+      "Cybersecurity and AI for Power Infrastructure": "Cybersecurity and AI for Power Infrastructure"
     };
     
-    return keywordMap[areaTitle] || [areaTitle.toLowerCase()];
+    return areaNameMap[areaTitle] || areaTitle;
   };
 
   // Real-time data fetching using same method as main page (loadAllAreaStats)
