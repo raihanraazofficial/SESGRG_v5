@@ -215,9 +215,57 @@ code {
   display: none;
 }
 
-/* Optimize hover transitions */
+/* ULTRA-OPTIMIZED HOVER TRANSITIONS */
 .hover\:shadow-xl, .hover\:shadow-lg, .hover\:scale-105, .hover\:scale-110 {
   will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Advanced grid optimizations for Gallery */
+.gallery-grid {
+  /* Optimize grid reflow */
+  contain: layout style paint;
+  /* Prevent layout shifts */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+.gallery-grid > * {
+  /* Individual grid item optimization */
+  contain: layout style paint;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Critical rendering optimizations */
+.performance-optimized {
+  /* Reduce paint complexity */
+  will-change: transform, opacity;
+  contain: layout style paint;
+  /* GPU acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Optimize memory usage */
+  isolation: isolate;
+}
+
+/* Image loading optimization classes */
+.lazy-image {
+  /* Optimize image decoding */
+  decoding: async;
+  loading: lazy;
+  /* Prevent layout shift */
+  min-height: 200px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 /* Custom animations for SESG website */
