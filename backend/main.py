@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 import os
 import json
@@ -6,10 +7,19 @@ from typing import Optional
 import httpx
 import asyncio
 
-# Ultra-minimal FastAPI app for Vercel
+# FastAPI app for Vercel
 app = FastAPI(title="SESG Research API", version="1.0.0")
 
-# Google Sheets URLs (lightweight approach)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Google Sheets URLs (from environment or fallback)
 SHEETS_URLS = {
     "publications": os.environ.get("PUBLICATIONS_API_URL", ""),
     "projects": os.environ.get("PROJECTS_API_URL", ""),
@@ -18,29 +28,32 @@ SHEETS_URLS = {
 }
 
 async def fetch_sheets_data(sheet_type: str):
-    """Fetch data from Google Sheets with minimal dependencies"""
+    """Fetch data from Google Sheets with error handling"""
     url = SHEETS_URLS.get(sheet_type, "")
     if not url:
         return get_mock_data(sheet_type)
     
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=15.0) as client:
             response = await client.get(url)
             response.raise_for_status()
             data = response.json()
             
             # Handle different response structures
             if isinstance(data, dict):
+                # Try specific sheet type key first
                 if sheet_type in data:
                     return data[sheet_type]
-                elif 'publications' in data:
+                # Try common key patterns
+                elif 'publications' in data and sheet_type == 'publications':
                     return data['publications']
-                elif 'projects' in data:
+                elif 'projects' in data and sheet_type == 'projects':
                     return data['projects'] 
-                elif 'achievements' in data:
+                elif 'achievements' in data and sheet_type == 'achievements':
                     return data['achievements']
-                elif 'news_events' in data:
+                elif 'news_events' in data and sheet_type == 'news_events':
                     return data['news_events']
+                # Fallback to mock data
                 else:
                     return get_mock_data(sheet_type)
             elif isinstance(data, list):
@@ -49,11 +62,12 @@ async def fetch_sheets_data(sheet_type: str):
                 return get_mock_data(sheet_type)
                 
     except Exception as e:
+        print(f"Error fetching {sheet_type}: {str(e)}")
         # Fallback to mock data
         return get_mock_data(sheet_type)
 
 def get_mock_data(sheet_type: str):
-    """Fallback mock data"""
+    """Fallback mock data for testing and reliability"""
     if sheet_type == "publications":
         return [
             {
@@ -131,7 +145,7 @@ def get_mock_data(sheet_type: str):
     return []
 
 def paginate_data(data, page: int = 1, per_page: int = 20):
-    """Simple pagination"""
+    """Simple pagination helper"""
     start = (page - 1) * per_page
     end = start + per_page
     items = data[start:end]
@@ -149,7 +163,7 @@ def paginate_data(data, page: int = 1, per_page: int = 20):
     }
 
 def filter_data(data, category_filter=None, title_filter=None, search_filter=None):
-    """Simple filtering"""
+    """Simple filtering helper"""
     filtered = data
     
     if category_filter:
@@ -167,7 +181,7 @@ def filter_data(data, category_filter=None, title_filter=None, search_filter=Non
     
     return filtered
 
-# Routes
+# API Routes
 @app.get("/")
 async def root():
     return {"message": "SESG Research API", "version": "1.0.0", "status": "running"}
@@ -186,7 +200,7 @@ async def get_publications(
     sort_by: str = "year",
     sort_order: str = "desc"
 ):
-    """Get publications with basic filtering and pagination"""
+    """Get publications with filtering and pagination"""
     try:
         # Fetch data
         publications_data = await fetch_sheets_data("publications")
@@ -229,7 +243,7 @@ async def get_projects(
     status_filter: Optional[str] = None,
     title_filter: Optional[str] = None
 ):
-    """Get projects with basic filtering"""
+    """Get projects with filtering"""
     try:
         # Fetch data
         projects_data = await fetch_sheets_data("projects")
@@ -252,7 +266,7 @@ async def get_achievements(
     category_filter: Optional[str] = None,
     title_filter: Optional[str] = None
 ):
-    """Get achievements with basic filtering"""
+    """Get achievements with filtering"""
     try:
         # Fetch data
         achievements_data = await fetch_sheets_data("achievements")
@@ -271,7 +285,7 @@ async def get_news_events(
     category_filter: Optional[str] = None,
     title_filter: Optional[str] = None
 ):
-    """Get news and events with basic filtering"""
+    """Get news and events with filtering"""
     try:
         # Fetch data
         news_events_data = await fetch_sheets_data("news_events")
@@ -329,14 +343,14 @@ async def get_cache_status():
         "cached_items": 0,
         "last_fetch_times": {},
         "cache_duration_minutes": 0,
-        "message": "Ultra-lightweight mode - fetching fresh data each time",
+        "message": "Serverless mode - fetching fresh data each time",
         "data_sources": {k: "✅ Configured" if v else "❌ Missing" for k, v in SHEETS_URLS.items()}
     }
 
 @app.post("/api/clear-cache")
 async def clear_cache():
     """Clear cache endpoint"""
-    return {"message": "No cache to clear - ultra-lightweight mode fetches fresh data"}
+    return {"message": "No cache to clear - serverless mode fetches fresh data"}
 
-# Vercel handler
+# Vercel handler - this is crucial for deployment
 handler = Mangum(app)
