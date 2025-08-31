@@ -433,64 +433,82 @@ class GoogleSheetsService {
   // Utility method to generate IEEE citation (same as original apiService)
   generateIEEECitation(publication) {
     try {
-      // If IEEE formatted version is available, use it
-      if (publication.ieee_formatted) {
-        return publication.ieee_formatted;
-      }
-
-      // Fallback: Generate IEEE citation based on category
-      const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : publication.authors;
+      // Generate proper IEEE citation based on category with correct field names
+      const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : (publication.authors || '');
       const title = `"${publication.title}"`;
       const category = publication.category || 'Journal Articles';
       
       if (category === "Journal Articles") {
         let citation = `${authors}, ${title}`;
-        if (publication.journal_book_conference_name) {
-          citation += `, ${publication.journal_book_conference_name}`;
+        
+        if (publication.journal_name) {
+          citation += `, ${publication.journal_name}`;
         }
+        
         if (publication.volume) {
           citation += `, vol. ${publication.volume}`;
         }
+        
         if (publication.issue) {
           citation += `, no. ${publication.issue}`;
         }
+        
         if (publication.pages) {
           citation += `, pp. ${publication.pages}`;
         }
+        
         citation += `, ${publication.year}.`;
         return citation;
         
       } else if (category === "Conference Proceedings") {
         let citation = `${authors}, ${title}`;
-        if (publication.journal_book_conference_name) {
-          citation += `, ${publication.journal_book_conference_name}`;
+        
+        if (publication.conference_name) {
+          citation += `, ${publication.conference_name}`;
         }
-        if (publication.location) {
-          citation += `, ${publication.location}`;
+        
+        // Location (city, country)
+        const location = [];
+        if (publication.city) location.push(publication.city);
+        if (publication.country) location.push(publication.country);
+        if (location.length > 0) {
+          citation += `, ${location.join(', ')}`;
         }
+        
         if (publication.pages) {
           citation += `, pp. ${publication.pages}`;
         }
+        
         citation += `, ${publication.year}.`;
         return citation;
         
       } else if (category === "Book Chapters") {
         let citation = `${authors}, ${title}`;
-        if (publication.journal_book_conference_name) {
-          citation += `, in ${publication.journal_book_conference_name}`;
+        
+        if (publication.book_title) {
+          citation += `, ${publication.book_title}`;
         }
-        if (publication.editors) {
-          citation += `, ${publication.editors}, Ed(s).`;
+        
+        if (publication.editor) {
+          citation += `, ${publication.editor}, Ed(s).`;
         }
+        
         if (publication.publisher) {
           citation += ` ${publication.publisher}`;
         }
-        if (publication.location) {
-          citation += `, ${publication.location}`;
+        
+        // Location for book chapters
+        const location = [];
+        if (publication.city) location.push(publication.city);
+        if (publication.country) location.push(publication.country);
+        if (location.length > 0) {
+          citation += `, ${location.join(', ')}`;
         }
+        
         if (publication.pages) {
           citation += `, pp. ${publication.pages}`;
         }
+        
         citation += `, ${publication.year}.`;
         return citation;
       }
