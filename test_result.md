@@ -103,14 +103,14 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Update SESG Research website Home page with comprehensive design enhancements:
-  1. Hero section: Update title to "Sustainable Energy & Smart Grid Research" and tagline to "Pioneering Research in Clean Energy, Renewable Integration, and Next-Generation Smart Grid Systems"
-  2. About Us section: Add animation to section name with underline, justify paragraph text
-  3. Our Objectives section: Move objectives to RIGHT side with animated underlines, move carousel to LEFT side 
-  4. Research Areas: Add 7th research area "Cybersecurity and AI for Power Infrastructure"
-  5. Latest News & Events: Restructure with featured story card and smaller news cards, ensure realtime sync
-  6. Add new Photo Gallery section with professional research images
-  7. Footer updates: New tagline, reorganize sections, dynamic year, add page links (FAQ, Privacy Policy, Terms & Conditions)
+  COMPLETED: Modified existing SESG Research website according to specifications:
+  ✅ 1. Updated People.jsx with new advisor data (A.S. Nazmul Huda, Shameem Ahmad, Amirul Islam)
+  ✅ 2. Changed "Expertise Areas:" to "Research Interest:" with max 4 areas per person across all sections
+  ✅ 3. Added all required colored research profile icons to every card (Email, Phone, Google Scholar, ResearchGate, ORCID, LinkedIn, GitHub, IEEE)
+  ✅ 4. Fixed card layout with consistent positioning of Research Profiles icons and Know More Button
+  ✅ 5. Updated hero sections in ResearchAreas.jsx, NewsEvents.jsx, TermsConditions.jsx, PrivacyPolicy.jsx to match Publications page style
+  ✅ 6. Added "Back to Top" buttons to all updated pages
+  ✅ 7. Optimized advisor photos for better face visibility
   
 backend:
   - task: "Fix Vercel Deployment Configuration Issues"
