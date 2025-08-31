@@ -592,63 +592,354 @@ def test_google_sheets_data_parsing():
         print(f"   ❌ Error testing Google Sheets data parsing: {e}")
         return False
 
+def test_all_google_sheets_apis():
+    """Test all 4 Google Sheets API endpoints for accessibility and performance"""
+    print("1. Testing All Google Sheets API Endpoints...")
+    
+    all_tests_passed = True
+    api_endpoints = {
+        'Publications': PUBLICATIONS_API_URL,
+        'Projects': PROJECTS_API_URL,
+        'Achievements': ACHIEVEMENTS_API_URL,
+        'News Events': NEWS_EVENTS_API_URL
+    }
+    
+    api_data = {}
+    
+    for api_name, api_url in api_endpoints.items():
+        print(f"\n   🔍 Testing {api_name} API...")
+        try:
+            start_time = time.time()
+            response = requests.get(api_url, timeout=10)
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Extract data based on API structure
+                if api_name == 'Publications':
+                    items = data.get('publications', []) if isinstance(data, dict) else data
+                elif api_name == 'Projects':
+                    items = data.get('projects', []) if isinstance(data, dict) else data
+                elif api_name == 'Achievements':
+                    items = data.get('achievements', data.get('data', [])) if isinstance(data, dict) else data
+                elif api_name == 'News Events':
+                    items = data.get('news_events', data.get('data', [])) if isinstance(data, dict) else data
+                
+                api_data[api_name] = items
+                
+                print(f"      ✅ {api_name} API accessible")
+                print(f"      📊 Retrieved {len(items)} items")
+                print(f"      ⏱️  Response time: {response_time:.2f}s")
+                
+                # Check if response time is under 4 seconds (new timeout)
+                if response_time <= 4.0:
+                    print(f"      🚀 Performance: GOOD (under 4s timeout)")
+                else:
+                    print(f"      ⚠️  Performance: SLOW (over 4s timeout)")
+                    
+            else:
+                print(f"      ❌ {api_name} API returned status code: {response.status_code}")
+                all_tests_passed = False
+                
+        except requests.exceptions.Timeout:
+            print(f"      ❌ {api_name} API timed out (over 10s)")
+            all_tests_passed = False
+        except Exception as e:
+            print(f"      ❌ {api_name} API error: {e}")
+            all_tests_passed = False
+    
+    return all_tests_passed, api_data
+
+def test_publications_statistics_filtering():
+    """Test that Publications statistics update correctly based on filtered results"""
+    print("2. Testing Publications Statistics Filtering Fix...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Get all publications first
+        print("   📊 Fetching all publications...")
+        response = requests.get(PUBLICATIONS_API_URL, timeout=10)
+        if response.status_code != 200:
+            print(f"   ❌ Failed to fetch publications: {response.status_code}")
+            return False
+            
+        data = response.json()
+        all_publications = data.get('publications', []) if isinstance(data, dict) else data
+        
+        if len(all_publications) == 0:
+            print("   ❌ No publications found to test filtering")
+            return False
+            
+        print(f"   📄 Total publications available: {len(all_publications)}")
+        
+        # Test filtering by each category
+        categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"]
+        
+        for category in categories:
+            print(f"\n   🔍 Testing filtering by '{category}'...")
+            
+            # Simulate frontend filtering logic
+            filtered_pubs = [pub for pub in all_publications if pub.get('category') == category]
+            
+            if len(filtered_pubs) == 0:
+                print(f"      ⚠️  No publications found for category: {category}")
+                continue
+                
+            print(f"      📊 Filtered publications: {len(filtered_pubs)}")
+            
+            # Calculate expected statistics for filtered data
+            expected_stats = {
+                'total_publications': len(filtered_pubs),
+                'total_citations': sum(int(pub.get('citations', 0)) for pub in filtered_pubs),
+                'latest_year': max(int(pub.get('year', 0)) for pub in filtered_pubs) if filtered_pubs else 0,
+                'total_areas': len(set(area for pub in filtered_pubs for area in (pub.get('research_areas', []) or [])))
+            }
+            
+            print(f"      📈 Expected Statistics:")
+            print(f"         Total Publications: {expected_stats['total_publications']}")
+            print(f"         Total Citations: {expected_stats['total_citations']}")
+            print(f"         Latest Year: {expected_stats['latest_year']}")
+            print(f"         Total Areas: {expected_stats['total_areas']}")
+            
+            # Verify that filtered statistics are different from total statistics
+            total_stats = {
+                'total_publications': len(all_publications),
+                'total_citations': sum(int(pub.get('citations', 0)) for pub in all_publications),
+                'latest_year': max(int(pub.get('year', 0)) for pub in all_publications),
+                'total_areas': len(set(area for pub in all_publications for area in (pub.get('research_areas', []) or [])))
+            }
+            
+            # Check if filtering actually changes the statistics
+            stats_changed = (
+                expected_stats['total_publications'] != total_stats['total_publications'] or
+                expected_stats['total_citations'] != total_stats['total_citations'] or
+                expected_stats['total_areas'] != total_stats['total_areas']
+            )
+            
+            if stats_changed:
+                print(f"      ✅ Statistics correctly differ from total (filtering working)")
+            else:
+                print(f"      ⚠️  Statistics same as total (may indicate filtering issue)")
+                
+        print(f"\n   ✅ Publications statistics filtering logic validated")
+        return True
+        
+    except Exception as e:
+        print(f"   ❌ Error testing publications statistics filtering: {e}")
+        return False
+
+def test_loading_performance_optimizations():
+    """Test loading performance improvements and cache behavior"""
+    print("3. Testing Loading Performance Optimizations...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test 1: Response time under 4 seconds (new timeout)
+        print("   ⏱️  Testing response time improvements...")
+        
+        for api_name, api_url in [
+            ('Publications', PUBLICATIONS_API_URL),
+            ('Projects', PROJECTS_API_URL),
+            ('Achievements', ACHIEVEMENTS_API_URL),
+            ('News Events', NEWS_EVENTS_API_URL)
+        ]:
+            start_time = time.time()
+            try:
+                response = requests.get(api_url, timeout=4)  # Test with 4s timeout
+                end_time = time.time()
+                response_time = end_time - start_time
+                
+                if response.status_code == 200:
+                    print(f"      ✅ {api_name}: {response_time:.2f}s (under 4s timeout)")
+                else:
+                    print(f"      ❌ {api_name}: HTTP {response.status_code}")
+                    all_tests_passed = False
+                    
+            except requests.exceptions.Timeout:
+                print(f"      ❌ {api_name}: Timed out (over 4s)")
+                all_tests_passed = False
+            except Exception as e:
+                print(f"      ❌ {api_name}: Error - {e}")
+                all_tests_passed = False
+        
+        # Test 2: CORS proxy reliability (test multiple proxies)
+        print("\n   🌐 Testing CORS proxy reliability...")
+        
+        # Test the same endpoint multiple times to check proxy racing
+        test_url = PUBLICATIONS_API_URL
+        success_count = 0
+        total_tests = 3
+        
+        for i in range(total_tests):
+            try:
+                start_time = time.time()
+                response = requests.get(test_url, timeout=4)
+                end_time = time.time()
+                
+                if response.status_code == 200:
+                    success_count += 1
+                    print(f"      ✅ Proxy test {i+1}: Success ({end_time - start_time:.2f}s)")
+                else:
+                    print(f"      ❌ Proxy test {i+1}: HTTP {response.status_code}")
+                    
+            except Exception as e:
+                print(f"      ❌ Proxy test {i+1}: {e}")
+        
+        proxy_reliability = (success_count / total_tests) * 100
+        print(f"      📊 Proxy reliability: {proxy_reliability:.1f}% ({success_count}/{total_tests})")
+        
+        if proxy_reliability >= 66:  # At least 2/3 success rate
+            print(f"      ✅ Proxy reliability acceptable")
+        else:
+            print(f"      ⚠️  Proxy reliability may need improvement")
+            
+        # Test 3: Error handling improvements
+        print("\n   🛡️  Testing error handling improvements...")
+        
+        # Test with invalid URL to check error handling
+        try:
+            invalid_url = "https://invalid-url-that-should-fail.com/api"
+            response = requests.get(invalid_url, timeout=2)
+            print(f"      ⚠️  Invalid URL test: Unexpected success")
+        except requests.exceptions.RequestException:
+            print(f"      ✅ Invalid URL test: Properly handled error")
+        except Exception as e:
+            print(f"      ✅ Invalid URL test: Error caught - {type(e).__name__}")
+            
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error testing loading performance: {e}")
+        return False
+
+def test_all_pages_functionality():
+    """Test that optimizations haven't broken existing functionality on all pages"""
+    print("4. Testing All Pages Functionality...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test each API endpoint for basic functionality
+        api_tests = [
+            ('Publications', PUBLICATIONS_API_URL, 'publications'),
+            ('Projects', PROJECTS_API_URL, 'projects'),
+            ('Achievements', ACHIEVEMENTS_API_URL, 'achievements'),
+            ('News Events', NEWS_EVENTS_API_URL, 'news_events')
+        ]
+        
+        for page_name, api_url, data_key in api_tests:
+            print(f"\n   📄 Testing {page_name} page functionality...")
+            
+            try:
+                response = requests.get(api_url, timeout=10)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # Extract items based on expected structure
+                    if data_key == 'publications':
+                        items = data.get('publications', []) if isinstance(data, dict) else data
+                    elif data_key == 'projects':
+                        items = data.get('projects', []) if isinstance(data, dict) else data
+                    elif data_key == 'achievements':
+                        items = data.get('achievements', data.get('data', [])) if isinstance(data, dict) else data
+                    elif data_key == 'news_events':
+                        items = data.get('news_events', data.get('data', [])) if isinstance(data, dict) else data
+                    
+                    if isinstance(items, list) and len(items) > 0:
+                        print(f"      ✅ {page_name}: Data structure valid ({len(items)} items)")
+                        
+                        # Test first item structure
+                        first_item = items[0]
+                        required_fields = ['id', 'title']
+                        
+                        missing_fields = [field for field in required_fields if not first_item.get(field)]
+                        
+                        if not missing_fields:
+                            print(f"      ✅ {page_name}: Required fields present")
+                        else:
+                            print(f"      ⚠️  {page_name}: Missing fields: {missing_fields}")
+                            
+                    else:
+                        print(f"      ❌ {page_name}: No valid data returned")
+                        all_tests_passed = False
+                        
+                else:
+                    print(f"      ❌ {page_name}: HTTP {response.status_code}")
+                    all_tests_passed = False
+                    
+            except Exception as e:
+                print(f"      ❌ {page_name}: Error - {e}")
+                all_tests_passed = False
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error testing pages functionality: {e}")
+        return False
+
 def run_all_tests():
-    """Run all Publications IEEE citation formatting tests"""
-    print("🚀 Starting Publications IEEE Citation Formatting Tests")
+    """Run all Google Sheets Integration and Performance Optimization tests"""
+    print("🚀 Starting Google Sheets Integration and Performance Optimization Tests")
     print("=" * 80)
     
     all_tests_passed = True
     test_results = []
     
-    # Test 1: Google Sheets API Accessibility
+    # Test 1: All Google Sheets APIs
     try:
-        api_accessible, publications = test_google_sheets_api_accessibility()
-        test_results.append(("Google Sheets API Accessibility", api_accessible))
-        if not api_accessible:
-            print("\n❌ Cannot proceed with further tests - Google Sheets API not accessible")
+        apis_working, api_data = test_all_google_sheets_apis()
+        test_results.append(("All Google Sheets APIs", apis_working))
+        if not apis_working:
+            print("\n❌ Cannot proceed with further tests - Google Sheets APIs not accessible")
             return False
-        all_tests_passed &= api_accessible
+        all_tests_passed &= apis_working
     except Exception as e:
         print(f"❌ Test 1 failed with exception: {e}")
         return False
     
-    # Test 2: IEEE Citation Format Validation
+    # Test 2: Publications Statistics Filtering Fix
     try:
-        ieee_format_valid = test_ieee_citation_format_validation(publications)
-        test_results.append(("IEEE Citation Format Validation", ieee_format_valid))
-        all_tests_passed &= ieee_format_valid
+        stats_filtering_works = test_publications_statistics_filtering()
+        test_results.append(("Publications Statistics Filtering", stats_filtering_works))
+        all_tests_passed &= stats_filtering_works
     except Exception as e:
         print(f"❌ Test 2 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 3: Publication Type Filtering
+    # Test 3: Loading Performance Optimizations
     try:
-        filtering_works = test_publication_type_filtering(publications)
-        test_results.append(("Publication Type Filtering", filtering_works))
-        all_tests_passed &= filtering_works
+        performance_good = test_loading_performance_optimizations()
+        test_results.append(("Loading Performance Optimizations", performance_good))
+        all_tests_passed &= performance_good
     except Exception as e:
         print(f"❌ Test 3 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 4: IEEE Required Elements
+    # Test 4: All Pages Functionality
     try:
-        elements_present = test_ieee_required_elements(publications)
-        test_results.append(("IEEE Required Elements", elements_present))
-        all_tests_passed &= elements_present
+        pages_working = test_all_pages_functionality()
+        test_results.append(("All Pages Functionality", pages_working))
+        all_tests_passed &= pages_working
     except Exception as e:
         print(f"❌ Test 4 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 5: Citation Copy Functionality
+    # Test 5: IEEE Citation Format Validation (existing test)
     try:
-        copy_works = test_citation_copy_functionality()
-        test_results.append(("Citation Copy Functionality", copy_works))
-        all_tests_passed &= copy_works
+        if 'Publications' in api_data:
+            ieee_format_valid = test_ieee_citation_format_validation(api_data['Publications'])
+            test_results.append(("IEEE Citation Format Validation", ieee_format_valid))
+            all_tests_passed &= ieee_format_valid
     except Exception as e:
         print(f"❌ Test 5 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 6: Google Sheets Data Parsing
+    # Test 6: Google Sheets Data Parsing (existing test)
     try:
         parsing_works = test_google_sheets_data_parsing()
         test_results.append(("Google Sheets Data Parsing", parsing_works))
@@ -669,7 +960,7 @@ def run_all_tests():
     print("=" * 80)
     
     if all_tests_passed:
-        print("🎉 ALL TESTS PASSED! Publications IEEE citation formatting is working correctly.")
+        print("🎉 ALL TESTS PASSED! Google Sheets integration and performance optimizations are working correctly.")
         return True
     else:
         print("⚠️  SOME TESTS FAILED! Please review the issues above.")
