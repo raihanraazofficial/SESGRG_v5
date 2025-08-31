@@ -93,12 +93,14 @@ const Footer = () => {
                   Bangladesh
                 </p>
               </div>
-              <Link
-                to="/contact"
-                className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
-              >
-                View on Map →
-              </Link>
+              <div className="text-center mt-4">
+                <Link
+                  to="/contact"
+                  className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  View on Map →
+                </Link>
+              </div>
             </div>
           </div>
 
