@@ -197,18 +197,23 @@ def test_cors_configuration():
         return False
 
 def test_publications_endpoint():
-    """Test GET /api/publications endpoint with comprehensive testing as per review request"""
-    print("7. Testing GET /api/publications endpoint - COMPREHENSIVE PUBLICATIONS API TESTING...")
+    """Test GET /api/publications endpoint - COMPREHENSIVE REVIEW REQUEST TESTING"""
+    print("7. Testing GET /api/publications endpoint - ADDRESSING USER 'No publications found' ISSUE...")
     
     all_tests_passed = True
     
     try:
-        # 1. Google Sheets Integration Testing
-        print("   1.1 Testing Google Sheets Integration...")
-        response = requests.get(f"{API_BASE_URL}/publications", timeout=15)
+        # 1. Google Sheets Integration vs Mock Data Detection
+        print("   1.1 Testing Google Sheets Integration vs Mock Data...")
+        start_time = datetime.now()
+        response = requests.get(f"{API_BASE_URL}/publications", timeout=30)
+        response_time = (datetime.now() - start_time).total_seconds()
+        
         if response.status_code != 200:
-            print(f"      ❌ Basic Google Sheets API request failed with status: {response.status_code}")
+            print(f"      ❌ Publications API request failed with status: {response.status_code}")
+            print(f"      Response text: {response.text[:200]}")
             all_tests_passed = False
+            return False
         else:
             data = response.json()
             required_keys = ["publications", "pagination", "statistics"]
@@ -216,13 +221,83 @@ def test_publications_endpoint():
                 print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
                 all_tests_passed = False
             else:
-                print(f"      ✅ Google Sheets API integration working - Retrieved {len(data['publications'])} publications")
-                print(f"      📊 Response structure: {list(data.keys())}")
+                publications = data.get('publications', [])
+                print(f"      ✅ Publications API responding - Retrieved {len(publications)} publications")
+                print(f"      ⏱️  Response time: {response_time:.3f} seconds")
+                
+                # Detect if using Google Sheets or mock data
+                if len(publications) > 0:
+                    sample_pub = publications[0]
+                    # Check for Google Sheets indicators vs mock data patterns
+                    if 'ieee_formatted' in sample_pub and sample_pub.get('id', '').startswith('pub_'):
+                        print(f"      🔍 Data source analysis: Likely REAL Google Sheets data")
+                        print(f"      📄 Sample publication: '{sample_pub.get('title', '')[:50]}...'")
+                        print(f"      🏷️  Sample category: {sample_pub.get('category', 'N/A')}")
+                        print(f"      📊 Sample citations: {sample_pub.get('citations', 0)}")
+                    else:
+                        print(f"      🔍 Data source analysis: Likely MOCK data")
+                        print(f"      📄 Sample publication: '{sample_pub.get('title', '')[:50]}...'")
+                else:
+                    print(f"      ❌ CRITICAL: No publications returned - This explains user's 'No publications found' message!")
+                    all_tests_passed = False
         
-        # Test error handling when Google Sheets API is unavailable (simulate by invalid URL)
-        print("   1.2 Testing Google Sheets error handling...")
-        # This test would require modifying the service temporarily, so we'll test the fallback behavior
-        print("      ✅ Error handling implemented with fallback to mock data")
+        # 2. Cache Status Check
+        print("   1.2 Testing Cache Status and Fresh Data Fetching...")
+        cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_response.status_code == 200:
+            cache_data = cache_response.json()
+            print(f"      ✅ Cache status accessible")
+            print(f"      📦 Cached items: {cache_data.get('cached_items', 0)}")
+            print(f"      ⏰ Cache duration: {cache_data.get('cache_duration_minutes', 0)} minutes")
+            
+            # Check if data is being fetched fresh
+            if response_time > 1.0:
+                print(f"      🔄 Slow response suggests fresh Google Sheets fetch")
+            else:
+                print(f"      ⚡ Fast response suggests cached data")
+        else:
+            print(f"      ⚠️  Cache status endpoint not accessible")
+        
+        # 3. Clear Cache and Test Fresh Fetch
+        print("   1.3 Testing Fresh Data Fetch from Google Sheets...")
+        clear_cache_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if clear_cache_response.status_code == 200:
+            print(f"      ✅ Cache cleared successfully")
+            
+            # Now test fresh fetch
+            start_time = datetime.now()
+            fresh_response = requests.get(f"{API_BASE_URL}/publications", timeout=30)
+            fresh_response_time = (datetime.now() - start_time).total_seconds()
+            
+            if fresh_response.status_code == 200:
+                fresh_data = fresh_response.json()
+                fresh_publications = fresh_data.get('publications', [])
+                print(f"      ✅ Fresh fetch successful - {len(fresh_publications)} publications")
+                print(f"      ⏱️  Fresh fetch time: {fresh_response_time:.3f} seconds")
+                
+                if fresh_response_time > 1.0:
+                    print(f"      🌐 Slow response confirms Google Sheets API call")
+                else:
+                    print(f"      ⚠️  Fast response might indicate fallback to mock data")
+            else:
+                print(f"      ❌ Fresh fetch failed with status: {fresh_response.status_code}")
+                all_tests_passed = False
+        else:
+            print(f"      ⚠️  Cache clear endpoint not accessible")
+        
+        # 4. Error Handling Test - What happens when Google Sheets is down
+        print("   1.4 Testing Error Handling and Fallback Behavior...")
+        # We can't simulate Google Sheets being down, but we can check error responses
+        print("      ℹ️  Error handling test: Cannot simulate Google Sheets downtime in production")
+        print("      ℹ️  Checking if API has proper error handling structure...")
+        
+        if 'error' in data:
+            print(f"      ⚠️  API returned error: {data.get('error')}")
+            if len(data.get('publications', [])) > 0:
+                print(f"      ✅ Fallback data provided despite error")
+            else:
+                print(f"      ❌ No fallback data provided")
+                all_tests_passed = False
         
         # 2. New Search Filter Testing
         print("   2.1 Testing new search_filter parameter...")
