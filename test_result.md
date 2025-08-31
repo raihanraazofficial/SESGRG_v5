@@ -160,7 +160,7 @@ frontend:
 
   - task: "Fix IEEE Citation Formatting in Publications"
     implemented: true
-    working: true
+    working: false
     file: "Publications.jsx, googleSheetsApi.js"
     stuck_count: 0
     priority: "high"
@@ -169,6 +169,9 @@ frontend:
       - working: true
         agent: "main" 
         comment: "✅ IMPLEMENTED: Fixed IEEE citation formatting to properly display all required elements. Journal Articles now show: Authors (bold), 'Title', Journal Name (italic), vol. X, no. X, pp. XXX–XXX, Year. Conference Proceedings show: Authors (bold), 'Title', Conference Name (italic), Location, pp. XXX–XXX, Year. Book Chapters show: Authors (bold), 'Title', Book Title (italic), Editor Ed(s)., Publisher, Location, pp. XXX–XXX, Year. Updated both renderIEEEFormat function in Publications.jsx and generateIEEECitation in googleSheetsApi.js to use correct field names from Google Sheets data (journal_name, conference_name, book_title, volume, issue, pages, city, country, editor, publisher)."
+      - working: false
+        agent: "testing"
+        comment: "❌ PARTIAL FAILURE: IEEE citation formatting testing revealed issues with Conference Proceedings and Book Chapters. Journal Articles (5/5) work correctly with all required elements present. Conference Proceedings (5/5) are missing 'pages' field in Google Sheets data, causing incomplete citations. Book Chapters (6/6) are missing 'pages', 'city', and 'country' fields. Google Sheets API accessibility ✅, Citation copy functionality ✅, Data parsing ✅. The frontend code is correctly implemented but Google Sheets data is incomplete for some publication types. All 16 publications successfully retrieved and parsed."
 
 metadata:
   created_by: "main_agent"
