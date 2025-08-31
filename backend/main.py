@@ -51,6 +51,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# MongoDB connection (for Vercel, use MongoDB Atlas)
+mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+
+# Initialize MongoDB client with error handling
+try:
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[os.environ.get('DB_NAME', 'sesg_research_db')]
+except Exception as e:
+    logger.warning(f"MongoDB connection failed: {e}. API will work without database features.")
+    client = None
+    db = None
+
 # Basic routes
 @app.get("/")
 async def root():
