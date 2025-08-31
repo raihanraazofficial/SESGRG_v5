@@ -40,7 +40,12 @@ const Projects = () => {
   const statuses = ["Active", "Completed", "Planning"];
 
   useEffect(() => {
-    fetchProjects();
+    // Add a small delay to prevent multiple rapid calls
+    const timeoutId = setTimeout(() => {
+      fetchProjects();
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, [filters]);
 
   const fetchProjects = async (retryCount = 0) => {
