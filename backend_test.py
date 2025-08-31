@@ -57,7 +57,139 @@ print(f"Achievements API: {ACHIEVEMENTS_API_URL}")
 print(f"News Events API: {NEWS_EVENTS_API_URL}")
 print("=" * 80)
 
-def test_google_sheets_api_accessibility():
+def test_home_page_news_events_integration():
+    """Test the Home page Latest News & Events section integration specifically"""
+    print("1. Testing Home Page Latest News & Events Integration...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test 1: News Events API accessibility and response time
+        print("   📰 Testing News Events API for Home page...")
+        start_time = time.time()
+        response = requests.get(NEWS_EVENTS_API_URL, timeout=5)
+        end_time = time.time()
+        response_time = end_time - start_time
+        
+        if response.status_code == 200:
+            print(f"      ✅ News Events API accessible")
+            print(f"      ⏱️  Response time: {response_time:.2f}s")
+            
+            # Check if response time is under 4-5 seconds as requested
+            if response_time <= 4.0:
+                print(f"      🚀 Performance: EXCELLENT (under 4s)")
+            elif response_time <= 5.0:
+                print(f"      ✅ Performance: GOOD (under 5s)")
+            else:
+                print(f"      ⚠️  Performance: SLOW (over 5s - may need optimization)")
+                
+        else:
+            print(f"      ❌ News Events API returned status code: {response.status_code}")
+            all_tests_passed = False
+            return all_tests_passed
+            
+        # Test 2: Data structure validation for Home page display
+        print("\n   🏠 Testing data structure for Home page display...")
+        data = response.json()
+        news_events = data.get('news_events', data.get('data', [])) if isinstance(data, dict) else data
+        
+        if not isinstance(news_events, list):
+            print(f"      ❌ Expected list of news events, got: {type(news_events)}")
+            all_tests_passed = False
+            return all_tests_passed
+            
+        if len(news_events) == 0:
+            print(f"      ⚠️  No news events found - Home page will show empty state")
+            print(f"      ℹ️  This should trigger proper empty state handling")
+        else:
+            print(f"      ✅ Found {len(news_events)} news events for Home page")
+            
+            # Test first news event structure for Home page requirements
+            sample_event = news_events[0]
+            print(f"      📄 Sample event: '{sample_event.get('title', '')[:50]}...'")
+            
+            # Check required fields for Home page display
+            required_fields = ['id', 'title', 'date', 'category']
+            optional_fields = ['description', 'image_url', 'featured']
+            
+            missing_required = [field for field in required_fields if not sample_event.get(field)]
+            present_optional = [field for field in optional_fields if sample_event.get(field)]
+            
+            if missing_required:
+                print(f"      ❌ Missing required fields for Home page: {missing_required}")
+                all_tests_passed = False
+            else:
+                print(f"      ✅ All required fields present for Home page display")
+                
+            if present_optional:
+                print(f"      ✅ Optional fields available: {present_optional}")
+                
+            # Test date format for Home page sorting
+            event_date = sample_event.get('date')
+            if event_date:
+                try:
+                    # Try to parse date for sorting functionality
+                    from datetime import datetime
+                    if isinstance(event_date, str):
+                        # Common date formats
+                        date_formats = ['%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y', '%Y-%m-%d %H:%M:%S']
+                        parsed_date = None
+                        for fmt in date_formats:
+                            try:
+                                parsed_date = datetime.strptime(event_date, fmt)
+                                break
+                            except ValueError:
+                                continue
+                        
+                        if parsed_date:
+                            print(f"      ✅ Date format parseable for sorting: {event_date}")
+                        else:
+                            print(f"      ⚠️  Date format may need validation: {event_date}")
+                    else:
+                        print(f"      ✅ Date field type: {type(event_date)}")
+                except Exception as e:
+                    print(f"      ⚠️  Date parsing issue: {e}")
+                    
+        # Test 3: Featured news functionality for Home page
+        print("\n   ⭐ Testing featured news functionality...")
+        featured_events = [event for event in news_events if event.get('featured')]
+        
+        if featured_events:
+            print(f"      ✅ Found {len(featured_events)} featured events for Home page highlight")
+            featured_event = featured_events[0]
+            print(f"      🌟 Featured event: '{featured_event.get('title', '')[:50]}...'")
+        else:
+            print(f"      ℹ️  No featured events found - Home page will use latest event")
+            if news_events:
+                latest_event = news_events[0]  # Assuming sorted by date
+                print(f"      📅 Latest event: '{latest_event.get('title', '')[:50]}...'")
+                
+        # Test 4: Category filtering for Home page display
+        print("\n   🏷️  Testing category filtering for Home page...")
+        categories = list(set(event.get('category', 'General') for event in news_events))
+        print(f"      📋 Available categories: {categories}")
+        
+        for category in categories[:3]:  # Test first 3 categories
+            category_events = [event for event in news_events if event.get('category') == category]
+            print(f"      ✅ Category '{category}': {len(category_events)} events")
+            
+        # Test 5: Error handling simulation
+        print("\n   🛡️  Testing error handling for Home page...")
+        
+        # Test with invalid URL to verify error handling
+        try:
+            invalid_response = requests.get("https://invalid-news-api.com/test", timeout=2)
+            print(f"      ⚠️  Invalid URL test: Unexpected success")
+        except requests.exceptions.RequestException:
+            print(f"      ✅ Invalid URL properly handled - Home page should show error state")
+        except Exception as e:
+            print(f"      ✅ Error handling working - {type(e).__name__}")
+            
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error testing Home page News Events integration: {e}")
+        return False
     """Test if the Google Sheets API is accessible and returns valid data"""
     print("1. Testing Google Sheets API accessibility...")
     try:
