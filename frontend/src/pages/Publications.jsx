@@ -77,6 +77,7 @@ const Publications = () => {
       alert('Failed to load publications. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
+      setLoadingSource('');
     }
   };
 
