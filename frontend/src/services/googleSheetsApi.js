@@ -146,7 +146,8 @@ class GoogleSheetsService {
   async getProjects(params = {}) {
     try {
       const data = await this.fetchFromGoogleSheets(this.projectsUrl);
-      const projects = data.data || [];
+      // Projects API returns {projects: [...], pagination: {...}}
+      const projects = data.projects || data.data || [];
 
       // Apply client-side filtering
       let filteredData = projects;
