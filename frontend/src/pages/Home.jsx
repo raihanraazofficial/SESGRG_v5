@@ -14,8 +14,21 @@ const LatestNewsSection = () => {
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
   useEffect(() => {
-    // Start fetching immediately on component mount
-    fetchLatestNews();
+    // Start fetching immediately on component mount - Force initial load
+    const loadInitialNews = async () => {
+      console.log('🚀 Home Component: Starting initial news fetch...');
+      await fetchLatestNews(false);
+    };
+    
+    loadInitialNews();
+    
+    // Also set up interval for real-time updates every 5 minutes
+    const interval = setInterval(() => {
+      console.log('🔄 Home Component: Auto-refreshing news...');
+      fetchLatestNews(false);
+    }, 300000); // 5 minutes
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchLatestNews = async (forceRefresh = false) => {
