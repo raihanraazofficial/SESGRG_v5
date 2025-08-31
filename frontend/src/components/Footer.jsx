@@ -107,18 +107,41 @@ const Footer = () => {
             <h3 className="font-semibold text-white mb-4">Follow Us</h3>
             <div className="space-y-3">
               <div className="flex space-x-4">
-                {/* Social Media Links - Placeholders */}
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">Facebook</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                {/* Social Media Links */}
+                <a 
+                  href="#" 
+                  className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
+                  title="Facebook"
+                >
+                  <Facebook className="h-5 w-5 text-white" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">LinkedIn</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                <a 
+                  href="#" 
+                  className="w-10 h-10 bg-blue-700 hover:bg-blue-800 rounded-full flex items-center justify-center transition-colors"
+                  title="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5 text-white" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">Twitter</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                <a 
+                  href="#" 
+                  className="w-10 h-10 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center transition-colors"
+                  title="Twitter"
+                >
+                  <Twitter className="h-5 w-5 text-white" />
+                </a>
+                <a 
+                  href="#" 
+                  className="w-10 h-10 bg-pink-600 hover:bg-pink-700 rounded-full flex items-center justify-center transition-colors"
+                  title="Instagram"
+                >
+                  <Instagram className="h-5 w-5 text-white" />
+                </a>
+                <a 
+                  href="#" 
+                  className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors"
+                  title="YouTube"
+                >
+                  <Youtube className="h-5 w-5 text-white" />
                 </a>
               </div>
               <p className="text-sm text-gray-400 mt-4">
