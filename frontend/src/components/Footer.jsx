@@ -87,19 +87,17 @@ const Footer = () => {
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-emerald-400 mt-0.5" />
-                <p className="text-sm text-gray-400">
-                  BRAC University<br />
+                <div className="text-sm text-gray-400">
+                  <p>BRAC University<br />
                   66 Mohakhali, Dhaka 1212<br />
-                  Bangladesh
-                </p>
-              </div>
-              <div className="mt-4">
-                <Link
-                  to="/contact"
-                  className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
-                >
-                  View on Map →
-                </Link>
+                  Bangladesh</p>
+                  <Link
+                    to="/contact"
+                    className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors inline-block mt-2"
+                  >
+                    View on Map →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
