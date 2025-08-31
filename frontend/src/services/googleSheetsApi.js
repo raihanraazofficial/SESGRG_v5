@@ -64,9 +64,10 @@ class GoogleSheetsService {
       if (cacheKey) {
         const cachedData = this.getCachedData(cacheKey);
         if (cachedData) {
-          console.log('✅ Returning cached data for:', cacheKey);
+          console.log('⚡ Fast load: Using cached data for:', cacheKey);
           return cachedData;
         }
+        console.log('🌐 Cache miss: Fetching fresh data for:', cacheKey);
       }
 
       console.log('Fetching from Google Sheets URL:', url);
