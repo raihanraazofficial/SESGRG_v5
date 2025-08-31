@@ -359,8 +359,11 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">About Us</h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <div className="relative inline-block mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 animate-fade-in">About Us</h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full animate-pulse"></div>
+            </div>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
               The Sustainable Energy and Smart Grid Research lab at BRAC University is dedicated to advancing 
               cutting-edge research in renewable energy systems, smart grid technologies, and sustainable power 
               infrastructure. Our interdisciplinary team works to address the global energy challenges through 
