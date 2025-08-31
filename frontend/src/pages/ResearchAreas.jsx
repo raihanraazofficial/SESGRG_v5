@@ -144,19 +144,28 @@ const ResearchAreas = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Research Areas</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our multidisciplinary research spans across smart grid technologies, renewable energy systems, 
-            and AI-driven energy solutions to create a sustainable future.
-          </p>
+        {/* Header - Publications Style */}
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized -mx-4 sm:-mx-6 lg:-mx-8 mb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center mb-6">
+              <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Home
+              </Link>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">Research Areas</h1>
+            <p className="text-xl text-gray-300 max-w-3xl">
+              Our multidisciplinary research spans across smart grid technologies, renewable energy systems, 
+              and AI-driven energy solutions to create a sustainable future.
+            </p>
+          </div>
         </div>
 
         {/* Research Areas Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {researchAreas.map((area) => {
             const IconComponent = iconMap[area.icon];
             return (
