@@ -180,7 +180,7 @@ const LatestNewsSection = () => {
               </Link>
             </div>
           </div>
-        ) : latestNews.length === 0 ? (
+        ) : latestNews.length === 0 && hasAttemptedLoad ? (
           <div className="text-center py-16">
             <div className="mb-6">
               <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
