@@ -143,6 +143,135 @@ def test_ieee_citation_format_validation(publications):
     
     return all_tests_passed
 
+def generate_ieee_citation_test(publication):
+    """Generate IEEE citation using the same logic as frontend"""
+    try:
+        authors = publication.get('authors', '')
+        if isinstance(authors, list):
+            authors = ', '.join(authors)
+        
+        title = f'"{publication.get("title", "")}"'
+        category = publication.get('category', 'Journal Articles')
+        year = publication.get('year', '')
+        
+        if category == "Journal Articles":
+            citation = f"{authors}, {title}"
+            
+            if publication.get('journal_name'):
+                citation += f", {publication['journal_name']}"
+            
+            if publication.get('volume'):
+                citation += f", vol. {publication['volume']}"
+            
+            if publication.get('issue'):
+                citation += f", no. {publication['issue']}"
+            
+            if publication.get('pages'):
+                citation += f", pp. {publication['pages']}"
+            
+            citation += f", {year}."
+            return citation
+            
+        elif category == "Conference Proceedings":
+            citation = f"{authors}, {title}"
+            
+            if publication.get('conference_name'):
+                citation += f", {publication['conference_name']}"
+            
+            # Location (city, country)
+            location = []
+            if publication.get('city'):
+                location.append(publication['city'])
+            if publication.get('country'):
+                location.append(publication['country'])
+            if location:
+                citation += f", {', '.join(location)}"
+            
+            if publication.get('pages'):
+                citation += f", pp. {publication['pages']}"
+            
+            citation += f", {year}."
+            return citation
+            
+        elif category == "Book Chapters":
+            citation = f"{authors}, {title}"
+            
+            if publication.get('book_title'):
+                citation += f", {publication['book_title']}"
+            
+            if publication.get('editor'):
+                citation += f", {publication['editor']}, Ed(s)."
+            
+            if publication.get('publisher'):
+                citation += f" {publication['publisher']}"
+            
+            # Location for book chapters
+            location = []
+            if publication.get('city'):
+                location.append(publication['city'])
+            if publication.get('country'):
+                location.append(publication['country'])
+            if location:
+                citation += f", {', '.join(location)}"
+            
+            if publication.get('pages'):
+                citation += f", pp. {publication['pages']}"
+            
+            citation += f", {year}."
+            return citation
+        
+        # Generic fallback
+        return f"{authors}, {title}, {year}."
+        
+    except Exception as error:
+        return 'Citation format error'
+
+def validate_ieee_citation_format(citation, category):
+    """Validate IEEE citation format"""
+    import re
+    
+    # Remove HTML tags for validation
+    clean_citation = re.sub(r'<[^>]+>', '', citation)
+    
+    # Basic validation - check if citation has proper structure
+    if not clean_citation or len(clean_citation) < 10:
+        return False
+    
+    # Check for required elements based on category
+    if category == "Journal Articles":
+        # Should have: Authors, "Title", Journal, vol. X, no. X, pp. XXX, Year.
+        required_patterns = [
+            r'".+"',  # Title in quotes
+            r'vol\. \d+',  # Volume
+            r'no\. \d+',   # Issue number
+            r'pp\. .+',    # Pages
+            r'\d{4}\.$'    # Year at end
+        ]
+    elif category == "Conference Proceedings":
+        # Should have: Authors, "Title", Conference, Location, pp. XXX, Year.
+        required_patterns = [
+            r'".+"',       # Title in quotes
+            r'pp\. .+',    # Pages
+            r'\d{4}\.$'    # Year at end
+        ]
+    elif category == "Book Chapters":
+        # Should have: Authors, "Title", Book Title, Editor Ed(s)., Publisher, Location, pp. XXX, Year.
+        required_patterns = [
+            r'".+"',       # Title in quotes
+            r'Ed\(s\)\.',  # Editor format
+            r'pp\. .+',    # Pages
+            r'\d{4}\.$'    # Year at end
+        ]
+    else:
+        return True  # Unknown category, assume valid
+    
+    # Check if all required patterns are present
+    for pattern in required_patterns:
+        if not re.search(pattern, clean_citation):
+            return False
+    
+    return True
+
 def test_post_status_endpoint():
     """Test POST /api/status endpoint"""
     print("3. Testing POST /api/status endpoint...")
