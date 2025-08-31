@@ -87,12 +87,24 @@ const LatestNewsSection = () => {
               Stay updated with our recent achievements, news, events, and upcoming activities.
             </p>
           </div>
-          <Link 
-            to="/news"
-            className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center text-lg"
-          >
-            View All <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchLatestNews(true)}
+              disabled={refreshing}
+              className="flex items-center space-x-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+            </Button>
+            <Link 
+              to="/news"
+              className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center text-lg"
+            >
+              View All <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
         </div>
 
         {loading ? (
