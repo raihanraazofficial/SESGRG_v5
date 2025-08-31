@@ -197,35 +197,21 @@ const ResearchAreas = () => {
       console.log('📊 Learn More Raw API data - Projects:', projectsResponse.projects?.length, 'Publications:', publicationsResponse.publications?.length);
 
       // Use same filtering logic as main page
-      const areaKeywords = getAreaKeywords(areaTitle);
-      console.log('🎯 Learn More Area keywords for matching:', areaKeywords);
+      const exactAreaName = getExactAreaName(areaTitle);
+      console.log('🎯 Learn More Exact area name for matching:', exactAreaName);
       
-      // Filter projects using same logic as main page
+      // Filter projects using exact matching
       const areaProjects = projectsResponse.projects.filter(project => {
         if (project.research_areas && Array.isArray(project.research_areas)) {
-          return project.research_areas.some(projArea => 
-            areaKeywords.some(keyword => projArea.toLowerCase().includes(keyword.toLowerCase()))
-          );
-        }
-        if (project.title) {
-          return areaKeywords.some(keyword => 
-            project.title.toLowerCase().includes(keyword.toLowerCase())
-          );
+          return project.research_areas.includes(exactAreaName);
         }
         return false;
       });
 
-      // Filter publications using same logic as main page
+      // Filter publications using exact matching
       const areaPublications = publicationsResponse.publications.filter(pub => {
         if (pub.research_areas && Array.isArray(pub.research_areas)) {
-          return pub.research_areas.some(pubArea => 
-            areaKeywords.some(keyword => pubArea.toLowerCase().includes(keyword.toLowerCase()))
-          );
-        }
-        if (pub.title) {
-          return areaKeywords.some(keyword => 
-            pub.title.toLowerCase().includes(keyword.toLowerCase())
-          );
+          return pub.research_areas.includes(exactAreaName);
         }
         return false;
       });
