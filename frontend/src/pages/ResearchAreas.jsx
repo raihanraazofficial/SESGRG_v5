@@ -286,20 +286,12 @@ const ResearchAreas = () => {
         bookChapters: freshRealTimeData.publications.bookChapter.length
       });
 
-      // Update state and use fresh data
+      // Update state with fresh data
       setRealTimeData(freshRealTimeData);
-      projects = freshRealTimeData.projects;
-      publications = freshRealTimeData.publications;
-      lastUpdated = freshRealTimeData.lastUpdated;
       
     } catch (error) {
       console.error('❌ Learn More Error fetching real-time data:', error);
       setRealTimeData(prev => ({ ...prev, loading: false }));
-      
-      // Show 0 when API fails instead of mock data (same as main page)
-      projects = { active: [], completed: [], total: 0 };
-      publications = { journal: [], conference: [], bookChapter: [], total: 0 };
-      lastUpdated = 'Failed to load real-time data - showing 0 counts';
     }
   };
 
