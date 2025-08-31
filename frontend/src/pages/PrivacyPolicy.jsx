@@ -165,8 +165,8 @@ const PrivacyPolicy = () => {
           </CardContent>
         </Card>
 
-        {/* Back to Top - Performance Optimized */}
-        <div className="text-center pb-16">
+        {/* Back to Top - Performance Optimized - Added more spacing */}
+        <div className="text-center pt-8 pb-16">
           <Button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             size="lg" 
