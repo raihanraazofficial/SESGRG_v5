@@ -93,10 +93,10 @@ const Footer = () => {
                   Bangladesh
                 </p>
               </div>
-              <div className="flex justify-center mt-4">
+              <div className="mt-4">
                 <Link
                   to="/contact"
-                  className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors text-center"
+                  className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
                 >
                   View on Map →
                 </Link>
