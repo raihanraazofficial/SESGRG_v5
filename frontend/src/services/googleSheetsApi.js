@@ -166,7 +166,11 @@ class GoogleSheetsService {
     try {
       const data = await this.fetchFromGoogleSheets(this.projectsUrl);
       // Projects API returns {projects: [...], pagination: {...}}
-      const projects = data.projects || data.data || [];
+      const projects = Array.isArray(data.projects) ? data.projects : 
+                      (Array.isArray(data) ? data : []);
+
+      console.log('Raw projects data:', projects.length, 'items');
+      console.log('First project:', projects[0]);
 
       // Apply client-side filtering
       let filteredData = projects;
