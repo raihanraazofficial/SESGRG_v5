@@ -148,57 +148,57 @@ const People = () => {
   const collaborators = [
     {
       id: 7,
-      name: "Prof. Dr. James Miller",
-      designation: "Professor",
-      affiliation: "MIT, Department of Electrical Engineering and Computer Science",
-      description: "Collaborating on advanced energy storage and smart grid communication protocols research.",
-      expertise: [4, 0, 5, 1], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "jmiller@mit.edu",
-      phone: "+1-617-XXX-XXXX",
-      googleScholar: "https://scholar.google.com/citations?user=james-miller",
-      researchGate: "https://www.researchgate.net/profile/james-miller",
-      orcid: "https://orcid.org/0000-0000-0000-0007",
-      linkedin: "https://linkedin.com/in/james-miller",
-      github: "https://github.com/james-miller",
-      ieee: "https://ieeexplore.ieee.org/author/james-miller",
-      website: "https://www.mit.edu/~jmiller"
+      name: "No Name",
+      designation: "Collaborator",
+      affiliation: "No Affiliation",
+      description: "Collaborative research opportunities available. We welcome partnerships with international researchers and institutions.",
+      expertise: [0, 1, 2, 3], // Max 4 areas
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
+      email: "contact@bracu.ac.bd",
+      phone: "+880-2-9844051",
+      googleScholar: "#",
+      researchGate: "#",
+      orcid: "#",
+      linkedin: "#",
+      github: "#",
+      ieee: "#",
+      website: "#"
     },
     {
       id: 8,
-      name: "Dr. Li Wei",
-      designation: "Senior Research Scientist",
-      affiliation: "Tsinghua University, Department of Electrical Engineering",
-      description: "Joint research on AI applications in power systems and renewable energy forecasting models.",
-      expertise: [6, 2, 3, 0], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "li.wei@tsinghua.edu.cn",
-      phone: "+86-10-XXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=li-wei",
-      researchGate: "https://www.researchgate.net/profile/li-wei",
-      orcid: "https://orcid.org/0000-0000-0000-0008",
-      linkedin: "https://linkedin.com/in/li-wei",
-      github: "https://github.com/li-wei",
-      ieee: "https://ieeexplore.ieee.org/author/li-wei",
-      website: "https://www.tsinghua.edu.cn/faculty/liwei"
+      name: "No Name",
+      designation: "Collaborator",
+      affiliation: "No Affiliation", 
+      description: "Open collaboration position for researchers interested in sustainable energy and smart grid technologies.",
+      expertise: [4, 5, 6], // Max 4 areas
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
+      email: "contact@bracu.ac.bd",
+      phone: "+880-2-9844051",
+      googleScholar: "#",
+      researchGate: "#",
+      orcid: "#",
+      linkedin: "#",
+      github: "#",
+      ieee: "#",
+      website: "#"
     },
     {
       id: 9,
-      name: "Dr. Emma Thompson",
-      designation: "Principal Researcher",
-      affiliation: "Imperial College London, Department of Electrical and Electronic Engineering",
-      description: "Collaborative projects on grid modernization and sustainable energy policy frameworks.",
-      expertise: [0, 3, 5, 2], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "e.thompson@imperial.ac.uk",
-      phone: "+44-20-XXXX-XXXX",
-      googleScholar: "https://scholar.google.com/citations?user=emma-thompson",
-      researchGate: "https://www.researchgate.net/profile/emma-thompson",
-      orcid: "https://orcid.org/0000-0000-0000-0009",
-      linkedin: "https://linkedin.com/in/emma-thompson",
-      github: "https://github.com/emma-thompson",
-      ieee: "https://ieeexplore.ieee.org/author/emma-thompson",
-      website: "https://www.imperial.ac.uk/people/e.thompson"
+      name: "No Name",
+      designation: "Collaborator",
+      affiliation: "No Affiliation",
+      description: "Seeking collaborative partnerships for joint research projects in energy systems and grid modernization.",
+      expertise: [0, 2, 5], // Max 4 areas
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
+      email: "contact@bracu.ac.bd", 
+      phone: "+880-2-9844051",
+      googleScholar: "#",
+      researchGate: "#",
+      orcid: "#",
+      linkedin: "#",
+      github: "#",
+      ieee: "#",
+      website: "#"
     }
   ];
 
