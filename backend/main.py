@@ -14,11 +14,6 @@ from sheets_service_optimized import sheets_service
 # Load environment variables
 load_dotenv()
 
-# MongoDB connection (for Vercel, use MongoDB Atlas)
-mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'sesg_research_db')]
-
 # Create the main FastAPI app
 app = FastAPI(
     title="SESG Research API",
