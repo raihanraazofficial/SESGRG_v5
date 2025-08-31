@@ -23,11 +23,24 @@ const LatestNewsSection = () => {
     
     loadInitialNews();
     
+    // Debug: Force refresh after 5 seconds if no data loaded
+    const debugTimeout = setTimeout(() => {
+      if (!initialLoadComplete || latestNews.length === 0) {
+        console.log('🔧 Debug: Force refreshing after 5 seconds due to no initial data');
+        fetchLatestNews(true);
+      }
+    }, 5000);
+    
     // Also set up interval for real-time updates every 5 minutes
     const interval = setInterval(() => {
       console.log('🔄 Home Component: Auto-refreshing news...');
       fetchLatestNews(false);
     }, 300000); // 5 minutes
+    
+    return () => {
+      clearInterval(interval);
+      clearTimeout(debugTimeout);
+    };
     
     return () => clearInterval(interval);
   }, []);
