@@ -271,38 +271,41 @@ const ResearchAreas = () => {
     
     const detailHtml = `
       <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-        <!-- Enhanced Banner Section with Background Image -->
+        <!-- Enhanced Banner Section with Professional Blackish Overlay -->
         <div class="relative h-96 overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/90 via-slate-800/80 to-emerald-900/90"></div>
+          <!-- Professional Blackish Gradient Overlay for Better Text Contrast -->
+          <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80"></div>
           <img 
             src="${areaImage}" 
             alt="${area.title}" 
-            class="absolute inset-0 w-full h-full object-cover"
+            class="absolute inset-0 w-full h-full object-cover brightness-75 contrast-110"
             style="z-index: 1;"
             onerror="this.style.display='none'; console.log('Image failed to load: ${areaImage}');"
             onload="console.log('Image loaded successfully: ${areaImage}');"
           />
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center" style="z-index: 2;">
+          <!-- Additional Professional Dark Gradient for Text Readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" style="z-index: 2;"></div>
+          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center" style="z-index: 3;">
             <div class="text-white max-w-4xl">
-              <div class="flex items-center mb-4">
-                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
-                  <span class="text-2xl text-white">⚡</span>
+              <div class="flex items-center mb-6">
+                <div class="w-16 h-16 bg-white/30 backdrop-blur-md rounded-2xl flex items-center justify-center mr-4 shadow-xl border border-white/20">
+                  <span class="text-2xl text-white drop-shadow-lg">⚡</span>
                 </div>
                 <div>
-                  <h1 class="text-5xl md:text-6xl font-bold mb-2">${area.title}</h1>
-                  <div class="flex items-center space-x-6 text-emerald-200">
-                    <span class="flex items-center"><i class="fas fa-project-diagram mr-2"></i>${projects.total || area.projects} Projects</span>
-                    <span class="flex items-center"><i class="fas fa-file-alt mr-2"></i>${publications.total || area.publications} Publications</span>
-                    <span class="flex items-center"><i class="fas fa-users mr-2"></i>${areaPeople.length} Team Members</span>
+                  <h1 class="text-5xl md:text-6xl font-bold mb-3 text-white drop-shadow-xl" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">${area.title}</h1>
+                  <div class="flex items-center space-x-6 text-gray-100">
+                    <span class="flex items-center bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20"><i class="fas fa-project-diagram mr-2"></i>${projects?.total || 0} Projects</span>
+                    <span class="flex items-center bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20"><i class="fas fa-file-alt mr-2"></i>${publications?.total || 0} Publications</span>
+                    <span class="flex items-center bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20"><i class="fas fa-users mr-2"></i>${areaPeople.length} Team Members</span>
                   </div>
                 </div>
               </div>
-              <p class="text-xl text-gray-200 max-w-3xl leading-relaxed">${area.description}</p>
-              ${lastUpdated ? `<p class="text-sm text-emerald-200 mt-2">Last updated: ${lastUpdated}</p>` : ''}
+              <p class="text-xl text-gray-100 max-w-3xl leading-relaxed bg-black/20 backdrop-blur-sm p-4 rounded-xl border border-white/10" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">${area.description}</p>
+              ${lastUpdated ? `<p class="text-sm text-green-300 mt-3 bg-green-500/20 backdrop-blur-sm px-3 py-1 rounded-full inline-block border border-green-400/30">🕒 Real-time data updated: ${lastUpdated}</p>` : ''}
             </div>
           </div>
-          <!-- Decorative elements -->
-          <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent" style="z-index: 3;"></div>
+          <!-- Enhanced Bottom Gradient -->
+          <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 via-gray-50/80 to-transparent" style="z-index: 4;"></div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
