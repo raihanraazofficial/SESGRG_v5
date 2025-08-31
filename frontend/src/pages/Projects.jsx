@@ -43,29 +43,74 @@ const Projects = () => {
     fetchProjects();
   }, [filters]);
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (retryCount = 0) => {
     try {
       setLoading(true);
       setLoadingSource('⚡ Loading...');
       console.log('⚡ Fetching projects with filters:', filters);
+      
       const response = await googleSheetsService.getProjects(filters);
       
       const projectsData = response.projects || [];
-      setProjects(projectsData);
-      setPagination(response.pagination || {});
-      setStatistics(response.statistics || {});
+      console.log('✅ Projects API response:', {
+        projectsCount: projectsData.length,
+        statisticsReceived: !!response.statistics,
+        paginationReceived: !!response.pagination
+      });
       
-      // Extract unique research areas from all projects
-      if (projectsData.length > 0) {
-        const allAreas = projectsData.flatMap(project => project.research_areas || []);
-        const uniqueAreas = [...new Set(allAreas)].sort();
-        setAvailableAreas(uniqueAreas);
+      // Only update state if we have valid response
+      if (response && (projectsData.length > 0 || response.statistics)) {
+        setProjects(projectsData);
+        setPagination(response.pagination || {});
+        setStatistics(response.statistics || {
+          total_projects: 0,
+          active_projects: 0,
+          completed_projects: 0,
+          planning_projects: 0
+        });
+        
+        // Extract unique research areas from all projects
+        if (projectsData.length > 0) {
+          const allAreas = projectsData.flatMap(project => project.research_areas || []);
+          const uniqueAreas = [...new Set(allAreas)].sort();
+          setAvailableAreas(uniqueAreas);
+        }
+        
+        console.log('✅ Projects loaded successfully:', projectsData.length, 'items');
+      } else {
+        console.log('⚠️ Empty response received, keeping existing data');
+        // Keep existing data, just set default statistics if none exist
+        if (!statistics.total_projects) {
+          setStatistics({
+            total_projects: 0,
+            active_projects: 0,
+            completed_projects: 0,
+            planning_projects: 0
+          });
+        }
       }
-      
-      console.log('✅ Projects loaded:', projectsData.length, 'items');
     } catch (error) {
       console.error('❌ Error fetching projects:', error);
-      alert('Failed to load projects. Please check your internet connection and try again.');
+      
+      // Show user-friendly error message only on first attempt
+      if (retryCount === 0) {
+        console.log('🔄 Retrying projects fetch after error...');
+        // Retry once after a short delay
+        setTimeout(() => fetchProjects(1), 2000);
+        return;
+      }
+      
+      // On final failure, set empty defaults
+      console.error('❌ Final failure fetching projects');
+      setStatistics({
+        total_projects: 0,
+        active_projects: 0,
+        completed_projects: 0,
+        planning_projects: 0
+      });
+      
+      // Don't show alert immediately - user can use refresh button
+      console.log('💡 User can use Refresh Data button to retry');
     } finally {
       setLoading(false);
       setLoadingSource('');
