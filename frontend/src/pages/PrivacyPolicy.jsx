@@ -69,21 +69,21 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <div className="p-4 bg-emerald-100 rounded-full">
-              <Shield className="h-12 w-12 text-emerald-600" />
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header - Publications Style */}
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized -mx-4 sm:-mx-6 lg:-mx-8 mb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center mb-6">
+              <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Home
+              </Link>
             </div>
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Your privacy is important to us. This policy outlines how the Sustainable Energy and Smart Grid Research lab collects, uses, and protects your information.
-          </p>
-          <div className="mt-6 text-sm text-gray-500">
-            <p>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">Privacy Policy</h1>
+            <p className="text-xl text-gray-300 max-w-3xl">
+              We are committed to protecting your privacy and personal information. Learn how we collect, use, and safeguard your data.
+            </p>
           </div>
         </div>
 
