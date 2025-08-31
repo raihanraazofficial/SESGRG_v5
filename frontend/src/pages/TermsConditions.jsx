@@ -69,21 +69,21 @@ const TermsConditions = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <div className="p-4 bg-blue-100 rounded-full">
-              <FileText className="h-12 w-12 text-blue-600" />
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header - Publications Style */}
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized -mx-4 sm:-mx-6 lg:-mx-8 mb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center mb-6">
+              <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Home
+              </Link>
             </div>
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Terms & Conditions</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Please read these terms and conditions carefully before using the Sustainable Energy and Smart Grid Research lab website and services.
-          </p>
-          <div className="mt-6 text-sm text-gray-500">
-            <p>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">Terms & Conditions</h1>
+            <p className="text-xl text-gray-300 max-w-3xl">
+              Please read these terms and conditions carefully before using our research website and accessing our academic content.
+            </p>
           </div>
         </div>
 
