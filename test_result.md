@@ -270,9 +270,9 @@ frontend:
 
   - task: "Research Areas Real-Time Enhancements with Live Data Integration"
     implemented: true
-    working: true
+    working: false
     file: "ResearchAreas.jsx, googleSheetsApi.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -282,6 +282,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ RESEARCH AREAS GOOGLE SHEETS API INTEGRATION FULLY TESTED: Comprehensive testing completed on all 7 test categories with excellent results. Google Sheets API Integration ✅ - Both Projects and Publications APIs working with 2.62s total response time. Concurrent Promise.all Fetching ✅ - 100% success rate for concurrent API calls. Data Filtering and Processing ✅ - Research area filtering, Active/Completed project separation, publication category filtering all operational. API Performance and Reliability ✅ - Average 2.2s response time, well under 4s requirement, caching system operational, background refresh 100% success. Data Structure Validation ✅ - Proper research_areas and category fields verified for filtering functionality. Real-time Statistics Calculations ✅ - Accurate data processing for Research Areas Learn More functionality confirmed. Error Handling ✅ - Comprehensive timeout, invalid URL, empty response, rate limiting all properly handled. All requested testing requirements verified successfully. Research Areas page Google Sheets API integration is fully functional and ready for production use."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE IDENTIFIED: Research Areas page showing MOCK DATA instead of real-time data. Testing revealed: 1) Main cards display '12 Projects●' and '28 Papers●' which are hardcoded mock values, not real-time Google Sheets data. 2) Google Sheets API calls are FAILING with CORS errors - all 3 proxy services (allorigins, codetabs, corsproxy) are blocked. 3) Learn More functionality opens popup but shows 0 values for all statistics due to API failures. 4) Console shows 'All CORS proxies failed' errors repeatedly. 5) Real-time data indicator shows but data is actually fallback mock values. IMPACT: Users see outdated mock data (12 Projects, 28 Papers) instead of current research statistics. The Google Sheets integration is non-functional due to CORS proxy failures. This contradicts the user's requirement for real-time data display."
   
   - task: "Home Page UI/UX Final Optimizations - Advanced Bengali User Requirements"
     implemented: true
