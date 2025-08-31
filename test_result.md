@@ -310,6 +310,7 @@ test_plan:
     - "Frontend Data Fetching Verification - COMPLETED"
     - "IEEE Citation Formatting Testing - COMPLETED"
     - "Performance Optimizations and Statistics Filtering - COMPLETED"
+    - "Research Areas Page Google Sheets API Integration - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
