@@ -21,6 +21,7 @@ const Projects = () => {
     per_page: 20
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const researchAreas = [
     "Smart Grid Technologies",
