@@ -299,3 +299,97 @@ code {
     transform: translateY(0);
   }
 }
+
+/* Custom Tailwind styles and additional styling */
+
+/* Performance Optimizations for all pages */
+.performance-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+/* Lazy Image Loading */
+.lazy-image {
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Smooth animations */
+.smooth-animation {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* GPU acceleration for hero sections */
+.hero-section {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Preload critical fonts */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+  src: local('Inter');
+}
+
+/* Critical CSS for above-the-fold content */
+.hero-content {
+  contain: layout style paint;
+  will-change: contents;
+}
+
+/* Optimize button interactions */
+.btn-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: all 0.2s ease-out;
+}
+
+.btn-optimized:hover {
+  transform: translateY(-1px) translateZ(0);
+}
+
+/* Fast loading skeleton animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize card hover effects */
+.card-hover {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  will-change: transform, box-shadow;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* Optimize image transitions */
+.image-hover {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.image-hover:hover {
+  transform: scale(1.05) translateZ(0);
+}
