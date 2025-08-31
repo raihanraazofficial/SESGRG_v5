@@ -258,12 +258,12 @@ const People = () => {
             {person.description}
           </p>
 
-          {/* Expertise Areas */}
+          {/* Research Interest - Limited to max 4 areas */}
           {person.expertise && person.expertise.length > 0 && (
             <div>
               <h4 className="text-sm font-semibold text-gray-800 mb-2">Research Interest:</h4>
               <div className="flex flex-wrap gap-2">
-                {person.expertise.map((areaIndex) => (
+                {person.expertise.slice(0, 4).map((areaIndex) => (
                   <span
                     key={areaIndex}
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getResearchAreaColor(areaIndex)}`}
