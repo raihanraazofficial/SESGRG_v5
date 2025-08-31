@@ -257,6 +257,11 @@ const Home = () => {
       title: "Power System Automation",
       description: "Automated control systems for modern power grid operations.",
       image: carouselImages[0].url
+    },
+    {
+      title: "Cybersecurity and AI for Power Infrastructure",
+      description: "Advanced AI-driven cybersecurity solutions protecting critical power infrastructure from emerging threats.",
+      image: carouselImages[1].url
     }
   ];
 
