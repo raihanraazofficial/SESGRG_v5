@@ -92,8 +92,8 @@ const Publications = () => {
   };
 
   const copyPaperCitation = async (publication) => {
-    const citation = apiService.generateIEEECitation(publication);
-    const success = await apiService.copyToClipboard(citation);
+    const citation = googleSheetsService.generateIEEECitation(publication);
+    const success = await googleSheetsService.copyToClipboard(citation);
     if (success) {
       alert('Citation copied to clipboard!');
     } else {
