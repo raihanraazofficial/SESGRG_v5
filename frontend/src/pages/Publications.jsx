@@ -775,17 +775,17 @@ Best regards,`;
             </div>
           </div>
         )}
-      </div>
 
-      {/* Back to Top - Performance Optimized */}
-      <div className="text-center pb-16">
-        <Button 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          size="lg" 
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
-        >
-          Back to Top
-        </Button>
+        {/* Back to Top - Performance Optimized - Moved after pagination */}
+        <div className="text-center pt-8 pb-16">
+          <Button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            size="lg" 
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+          >
+            Back to Top
+          </Button>
+        </div>
       </div>
     </div>
   );
