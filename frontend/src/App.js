@@ -31,6 +31,7 @@ function App() {
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/news" element={<NewsEvents />} />
             <Route path="/news-events" element={<NewsEvents />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contacts />} />
             <Route path="/faq" element={<FAQ />} />
           </Routes>
