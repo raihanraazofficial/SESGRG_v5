@@ -10,6 +10,49 @@ class GoogleSheetsService {
     this.projectsUrl = process.env.REACT_APP_PROJECTS_API_URL;
     this.achievementsUrl = process.env.REACT_APP_ACHIEVEMENTS_API_URL;
     this.newsEventsUrl = process.env.REACT_APP_NEWS_EVENTS_API_URL;
+    
+    // Cache configuration
+    this.cacheTimeout = 5 * 60 * 1000; // 5 minutes cache
+    this.cacheKeys = {
+      publications: 'sesg_publications_cache',
+      projects: 'sesg_projects_cache',
+      achievements: 'sesg_achievements_cache',
+      newsEvents: 'sesg_news_events_cache'
+    };
+  }
+
+  // Cache management
+  setCacheData(key, data) {
+    try {
+      const cacheData = {
+        data: data,
+        timestamp: Date.now(),
+        expiry: Date.now() + this.cacheTimeout
+      };
+      localStorage.setItem(key, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('Cache storage failed:', error);
+    }
+  }
+
+  getCachedData(key) {
+    try {
+      const cached = localStorage.getItem(key);
+      if (!cached) return null;
+      
+      const cacheData = JSON.parse(cached);
+      
+      // Check if cache is still valid
+      if (Date.now() > cacheData.expiry) {
+        localStorage.removeItem(key);
+        return null;
+      }
+      
+      return cacheData.data;
+    } catch (error) {
+      console.warn('Cache retrieval failed:', error);
+      return null;
+    }
   }
 
   async fetchFromGoogleSheets(url) {
