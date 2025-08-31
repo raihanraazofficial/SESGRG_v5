@@ -495,9 +495,36 @@ Best regards,`;
 
         {/* Loading State */}
         {loading && (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">{loadingSource || 'Loading Publications...'}</span>
+          <div className="space-y-8">
+            {/* Statistics Cards Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {Array.from({ length: 4 }, (_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-white p-6 rounded-lg border shadow-sm">
+                    <div className="h-8 bg-gray-300 rounded w-16 mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-32"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Publications Skeleton */}
+            <div className="space-y-6">
+              {Array.from({ length: 5 }, (_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-white p-8 rounded-lg border shadow-sm">
+                    <div className="space-y-4">
+                      <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-20 bg-gray-100 rounded-lg"></div>
+                      <div className="flex space-x-2">
+                        <div className="h-6 bg-gray-300 rounded w-20"></div>
+                        <div className="h-6 bg-gray-300 rounded w-24"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
