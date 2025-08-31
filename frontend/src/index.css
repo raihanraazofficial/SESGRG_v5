@@ -88,9 +88,12 @@ code {
     scroll-behavior: smooth;
   }
   
-  /* Advanced scrolling performance optimizations */
+  /* ULTRA PERFORMANCE OPTIMIZATIONS FOR SMOOTH SCROLLING */
   * {
     -webkit-overflow-scrolling: touch;
+    /* Enable hardware acceleration for all elements */
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
   
   /* GPU acceleration for smooth scrolling */
@@ -98,20 +101,61 @@ code {
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
+    /* Enhanced scroll performance */
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+    /* Reduce paint complexity */
+    will-change: scroll-position;
   }
   
-  /* Optimize images for smooth scrolling */
+  /* Critical image optimizations for gallery performance */
   img {
     transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
+    /* Enhanced image performance */
+    image-rendering: optimizeQuality;
+    -webkit-image-rendering: optimizeQuality;
+    image-rendering: -webkit-optimize-contrast;
+    /* Lazy loading and decoding optimizations */
+    decoding: async;
+    loading: lazy;
+    /* GPU memory optimization */
+    will-change: transform, opacity;
+    contain: layout style paint;
   }
   
-  /* Optimize cards and interactive elements */
+  /* Ultra-optimized cards and interactive elements */
   .card, [class*="card"], [class*="Card"] {
     transform: translateZ(0);
+    will-change: transform, box-shadow, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    /* Contain paint operations */
+    contain: layout style paint;
+    /* Optimize compositing */
+    isolation: isolate;
+  }
+  
+  /* Optimize hover and transition states */
+  .group:hover img,
+  .hover\:scale-105:hover,
+  .hover\:scale-110:hover,
+  [class*="hover:"]:hover {
     will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+  
+  /* Performance boost for animations */
+  [class*="animate-"],
+  [class*="transition-"] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
 
