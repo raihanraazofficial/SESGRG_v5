@@ -77,9 +77,9 @@ const Gallery = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
             <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
@@ -94,9 +94,9 @@ const Gallery = () => {
         </div>
       </div>
 
-      {/* Gallery Grid */}
+      {/* ULTRA-OPTIMIZED Gallery Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="gallery-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {photos.map((photo, index) => (
             <Card key={index} className="group hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden">
               <div className="relative h-64 overflow-hidden">
