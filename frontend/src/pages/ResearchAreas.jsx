@@ -441,6 +441,8 @@ const ResearchAreas = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 [&>*:nth-last-child(1):nth-child(3n+1)]:lg:col-start-2">
             {researchAreas.map((area) => {
               const IconComponent = iconMap[area.icon];
+              const areaPeople = getPeopleByResearchArea(area.id);
+              
               return (
                 <Card key={area.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:scale-105 cursor-pointer">
                   <CardContent className="p-8" onClick={() => openDetailedPage(area)}>
@@ -456,27 +458,68 @@ const ResearchAreas = () => {
                       {area.description}
                     </p>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                          <Folder className="h-4 w-4 text-gray-400 mr-1" />
-                          <span className="text-sm text-gray-600">{area.projects} Projects</span>
-                        </div>
-                        <div className="flex items-center">
-                          <FileText className="h-4 w-4 text-gray-400 mr-1" />
-                          <span className="text-sm text-gray-600">{area.publications} Papers</span>
+                    {/* Enhanced stats with people count */}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center">
+                            <Folder className="h-4 w-4 text-gray-400 mr-1" />
+                            <span className="text-sm text-gray-600">{area.projects} Projects</span>
+                          </div>
+                          <div className="flex items-center">
+                            <FileText className="h-4 w-4 text-gray-400 mr-1" />
+                            <span className="text-sm text-gray-600">{area.publications} Papers</span>
+                          </div>
                         </div>
                       </div>
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 text-gray-400 mr-1" />
+                        <span className="text-sm text-gray-600">{areaPeople.length} Researchers</span>
+                      </div>
                     </div>
+
+                    {/* Team member preview */}
+                    {areaPeople.length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="text-sm font-semibold text-gray-800 mb-2">Research Team:</h4>
+                        <div className="flex -space-x-2 overflow-hidden">
+                          {areaPeople.slice(0, 4).map((person, index) => (
+                            <img
+                              key={person.id}
+                              src={person.photo}
+                              alt={person.name}
+                              className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+                              title={`${person.name} - ${person.category}`}
+                              onError={(e) => {
+                                e.target.src = 'https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg';
+                              }}
+                            />
+                          ))}
+                          {areaPeople.length > 4 && (
+                            <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-gray-200 flex items-center justify-center">
+                              <span className="text-xs text-gray-600">+{areaPeople.length - 4}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="mt-6 flex items-center justify-center">
                       <Button
                         variant="outline"
                         size="sm"
-                        className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200"
-                        onClick={(e) => {
+                        className="w-full group-hover:bg-emerald-50 group-hover:border-emerald-200 relative"
+                        onClick={async (e) => {
                           e.stopPropagation();
-                          openDetailedPage(area);
+                          const button = e.target.closest('button');
+                          const originalText = button.innerHTML;
+                          button.innerHTML = '<div class="flex items-center justify-center"><svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Loading...</div>';
+                          button.disabled = true;
+                          
+                          await openDetailedPage(area);
+                          
+                          button.innerHTML = originalText;
+                          button.disabled = false;
                         }}
                       >
                         Learn More <ArrowRight className="h-4 w-4 ml-2" />
