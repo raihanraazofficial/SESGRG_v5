@@ -84,6 +84,7 @@ const LatestNewsSection = () => {
       const newsEvents = response?.news_events || [];
       setLatestNews(newsEvents);
       setHasAttemptedLoad(true);
+      setInitialLoadComplete(true);
       
       console.log('✅ Homepage: Latest news loaded successfully:', newsEvents.length, 'items');
       
