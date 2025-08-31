@@ -668,6 +668,36 @@ class GoogleSheetsService {
     this.clearAllCache();
     return await this.getNewsEvents(params);
   }
+
+  // Background refresh mechanism for better user experience
+  async backgroundRefresh() {
+    try {
+      console.log('🔄 Starting background data refresh...');
+      
+      // Refresh all data in background (don't clear cache, just update it)
+      const promises = [
+        this.fetchFromGoogleSheets(this.publicationsUrl, this.cacheKeys.publications),
+        this.fetchFromGoogleSheets(this.projectsUrl, this.cacheKeys.projects),
+        this.fetchFromGoogleSheets(this.achievementsUrl, this.cacheKeys.achievements),
+        this.fetchFromGoogleSheets(this.newsEventsUrl, this.cacheKeys.newsEvents)
+      ];
+      
+      await Promise.allSettled(promises);
+      console.log('✅ Background refresh completed');
+      
+    } catch (error) {
+      console.warn('Background refresh failed:', error);
+    }
+  }
+
+  // Auto-start background refresh on service initialization
+  initBackgroundRefresh() {
+    // Start background refresh after 30 seconds, then every 4 minutes
+    setTimeout(() => {
+      this.backgroundRefresh();
+      setInterval(() => this.backgroundRefresh(), 4 * 60 * 1000); // Every 4 minutes
+    }, 30000); // Initial 30 second delay
+  }
 }
 
 // Export singleton instance
