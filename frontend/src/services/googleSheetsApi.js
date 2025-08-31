@@ -371,7 +371,7 @@ class GoogleSheetsService {
       };
     } catch (error) {
       console.error('Error fetching projects from Google Sheets:', error);
-      return { projects: [], pagination: {} };
+      return { projects: [], pagination: {}, statistics: {} };
     }
   }
 
