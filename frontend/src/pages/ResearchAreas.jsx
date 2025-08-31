@@ -251,14 +251,23 @@ const ResearchAreas = () => {
   };
 
   const openDetailedPage = async (area) => {
+    console.log('🚀 Opening detailed page for:', area.title);
+    
     // Fetch real-time data before opening the detailed page
     await fetchRealTimeData(area.id, area.title);
     
     const areaImage = getAreaImage(area.id);
     const areaPeople = getPeopleByResearchArea(area.id);
     
-    // Get real-time data
-    const { projects, publications, lastUpdated } = realTimeData;
+    // Get real-time data from state after fetch
+    const currentRealTimeData = realTimeData;
+    const { projects, publications, lastUpdated } = currentRealTimeData;
+    
+    console.log('📊 Using real-time data:', {
+      projects: projects,
+      publications: publications,
+      lastUpdated: lastUpdated
+    });
     
     const detailHtml = `
       <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
