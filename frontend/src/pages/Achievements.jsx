@@ -48,11 +48,14 @@ const Achievements = () => {
         ...filters,
         category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
       };
+      console.log('⚡ Fetching achievements with filters:', apiFilters);
       const response = await googleSheetsService.getAchievements(apiFilters);
       setAchievements(response.achievements || []);
       setPagination(response.pagination || {});
+      console.log('✅ Achievements loaded:', response.achievements?.length || 0, 'items');
     } catch (error) {
-      console.error('Error fetching achievements:', error);
+      console.error('❌ Error fetching achievements:', error);
+      alert('Failed to load achievements. Please check your internet connection and try again.');
       // Fallback to empty state on error
       setAchievements([]);
       setPagination({});
