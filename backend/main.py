@@ -329,7 +329,8 @@ async def get_cache_status():
         "cached_items": 0,
         "last_fetch_times": {},
         "cache_duration_minutes": 0,
-        "message": "Using Google Sheets API - no caching implemented"
+        "message": "Ultra-lightweight mode - fetching fresh data each time",
+        "data_sources": {k: "✅ Configured" if v else "❌ Missing" for k, v in SHEETS_URLS.items()}
     }
 
 @app.post("/api/clear-cache")
