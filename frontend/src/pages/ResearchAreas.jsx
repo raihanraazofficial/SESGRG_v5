@@ -103,12 +103,27 @@ const ResearchAreas = () => {
     "Cybersecurity and AI for Power Infrastructure"
   ];
 
-  // Get people working in specific research area
+  // Get area working in specific research area
   const getPeopleByResearchArea = (areaId) => {
     const areaIndex = areaId - 1; // Convert 1-based ID to 0-based index
     return researchAreaPeople.filter(person => 
       person.expertise.includes(areaIndex)
     );
+  };
+
+  // Get keyword variations for better matching
+  const getAreaKeywords = (areaTitle) => {
+    const keywordMap = {
+      "Smart Grid Technologies": ["smart grid", "grid technology", "intelligent grid", "grid modernization", "smart power", "grid automation"],
+      "Microgrids & Distributed Energy Systems": ["microgrid", "distributed energy", "local grid", "mini grid", "distributed generation", "peer-to-peer energy"],
+      "Renewable Energy Integration": ["renewable energy", "solar integration", "wind integration", "clean energy", "green energy", "sustainable energy"],
+      "Grid Optimization & Stability": ["grid optimization", "power system optimization", "grid stability", "load balancing", "power flow", "voltage control"],
+      "Energy Storage Systems": ["energy storage", "battery storage", "grid storage", "power storage", "battery management", "storage systems"],
+      "Power System Automation": ["power automation", "substation automation", "grid automation", "smart switching", "automated protection", "system automation"],
+      "Cybersecurity and AI for Power Infrastructure": ["cybersecurity", "power security", "grid security", "AI power", "machine learning energy", "intelligent systems"]
+    };
+    
+    return keywordMap[areaTitle] || [areaTitle.toLowerCase()];
   };
 
   // Real-time data fetching with improved filtering logic
