@@ -126,16 +126,94 @@ Best regards,`;
   };
 
   const renderIEEEFormat = (publication) => {
-    if (publication.ieee_formatted) {
-      // Replace *text* with <em>text</em> for italic formatting
-      return publication.ieee_formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    try {
+      // Generate proper IEEE citation based on category
+      const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : (publication.authors || '');
+      const title = `"${publication.title}"`;
+      const category = publication.category || 'Journal Articles';
+      
+      if (category === "Journal Articles") {
+        let citation = `<strong>${authors}</strong>, ${title}`;
+        
+        if (publication.journal_name) {
+          citation += `, <em>${publication.journal_name}</em>`;
+        }
+        
+        if (publication.volume) {
+          citation += `, vol. ${publication.volume}`;
+        }
+        
+        if (publication.issue) {
+          citation += `, no. ${publication.issue}`;
+        }
+        
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        
+        citation += `, ${publication.year}.`;
+        return citation;
+        
+      } else if (category === "Conference Proceedings") {
+        let citation = `<strong>${authors}</strong>, ${title}`;
+        
+        if (publication.conference_name) {
+          citation += `, <em>${publication.conference_name}</em>`;
+        }
+        
+        // Location (city, country)
+        const location = [];
+        if (publication.city) location.push(publication.city);
+        if (publication.country) location.push(publication.country);
+        if (location.length > 0) {
+          citation += `, ${location.join(', ')}`;
+        }
+        
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        
+        citation += `, ${publication.year}.`;
+        return citation;
+        
+      } else if (category === "Book Chapters") {
+        let citation = `<strong>${authors}</strong>, ${title}`;
+        
+        if (publication.book_title) {
+          citation += `, <em>${publication.book_title}</em>`;
+        }
+        
+        if (publication.editor) {
+          citation += `, ${publication.editor}, Ed(s).`;
+        }
+        
+        if (publication.publisher) {
+          citation += ` ${publication.publisher}`;
+        }
+        
+        // Location for book chapters
+        const location = [];
+        if (publication.city) location.push(publication.city);
+        if (publication.country) location.push(publication.country);
+        if (location.length > 0) {
+          citation += `, ${location.join(', ')}`;
+        }
+        
+        if (publication.pages) {
+          citation += `, pp. ${publication.pages}`;
+        }
+        
+        citation += `, ${publication.year}.`;
+        return citation;
+      }
+      
+      // Generic fallback
+      return `<strong>${authors}</strong>, ${title}, ${publication.year}.`;
+      
+    } catch (error) {
+      console.error('Error generating IEEE citation:', error);
+      return 'Citation format error';
     }
-    
-    // Fallback formatting
-    const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : publication.authors;
-    const title = `"${publication.title}"`;
-    
-    return `${authors}, ${title}, ${publication.year}.`;
   };
 
   const clearFilters = () => {
