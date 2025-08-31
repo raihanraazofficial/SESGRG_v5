@@ -194,99 +194,62 @@ const ResearchAreas = () => {
     return keywordMap[areaTitle] || [areaTitle.toLowerCase()];
   };
 
-  // Real-time data fetching with improved filtering logic
+  // Real-time data fetching using same method as main page (loadAllAreaStats)
   const fetchRealTimeData = async (areaId, areaTitle) => {
     setRealTimeData(prev => ({ ...prev, loading: true }));
     
     try {
-      console.log('🔍 Fetching real-time data for:', areaTitle);
+      console.log('🔍 Fetching real-time data for Learn More:', areaTitle);
       
-      // Fetch both projects and publications without area filter first
+      // Use exact same method as main page loadAllAreaStats function
       const [projectsResponse, publicationsResponse] = await Promise.all([
         googleSheetsService.getProjects({}),
         googleSheetsService.getPublications({})
       ]);
 
-      console.log('📊 Raw API data - Projects:', projectsResponse.projects?.length, 'Publications:', publicationsResponse.publications?.length);
+      console.log('📊 Learn More Raw API data - Projects:', projectsResponse.projects?.length, 'Publications:', publicationsResponse.publications?.length);
 
-      // Enhanced filtering logic with multiple matching strategies
+      // Use same filtering logic as main page
       const areaKeywords = getAreaKeywords(areaTitle);
-      console.log('🎯 Area keywords for matching:', areaKeywords);
-
-      // Filter projects with improved matching
+      console.log('🎯 Learn More Area keywords for matching:', areaKeywords);
+      
+      // Filter projects using same logic as main page
       const areaProjects = projectsResponse.projects.filter(project => {
-        // Strategy 1: Direct research_areas field matching
         if (project.research_areas && Array.isArray(project.research_areas)) {
-          const matchesArea = project.research_areas.some(area => 
-            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
+          return project.research_areas.some(projArea => 
+            areaKeywords.some(keyword => projArea.toLowerCase().includes(keyword.toLowerCase()))
           );
-          if (matchesArea) return true;
         }
-
-        // Strategy 2: Title keyword matching
         if (project.title) {
-          const matchesTitle = areaKeywords.some(keyword => 
+          return areaKeywords.some(keyword => 
             project.title.toLowerCase().includes(keyword.toLowerCase())
           );
-          if (matchesTitle) return true;
         }
+        return false;
+      });
 
-        // Strategy 3: Description matching
-        if (project.description) {
-          const matchesDesc = areaKeywords.some(keyword => 
-            project.description.toLowerCase().includes(keyword.toLowerCase())
+      // Filter publications using same logic as main page
+      const areaPublications = publicationsResponse.publications.filter(pub => {
+        if (pub.research_areas && Array.isArray(pub.research_areas)) {
+          return pub.research_areas.some(pubArea => 
+            areaKeywords.some(keyword => pubArea.toLowerCase().includes(keyword.toLowerCase()))
           );
-          if (matchesDesc) return true;
         }
-
+        if (pub.title) {
+          return areaKeywords.some(keyword => 
+            pub.title.toLowerCase().includes(keyword.toLowerCase())
+          );
+        }
         return false;
       });
 
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
-
-      // Filter publications with enhanced matching
-      const areaPublications = publicationsResponse.publications.filter(pub => {
-        // Strategy 1: Direct research_areas field matching
-        if (pub.research_areas && Array.isArray(pub.research_areas)) {
-          const matchesArea = pub.research_areas.some(area => 
-            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
-          );
-          if (matchesArea) return true;
-        }
-
-        // Strategy 2: Title keyword matching
-        if (pub.title) {
-          const matchesTitle = areaKeywords.some(keyword => 
-            pub.title.toLowerCase().includes(keyword.toLowerCase())
-          );
-          if (matchesTitle) return true;
-        }
-
-        // Strategy 3: Keywords/tags matching
-        if (pub.keywords && Array.isArray(pub.keywords)) {
-          const matchesKeywords = pub.keywords.some(keyword => 
-            areaKeywords.some(areaKeyword => keyword.toLowerCase().includes(areaKeyword.toLowerCase()))
-          );
-          if (matchesKeywords) return true;
-        }
-
-        // Strategy 4: Abstract matching (if available)
-        if (pub.abstract) {
-          const matchesAbstract = areaKeywords.some(keyword => 
-            pub.abstract.toLowerCase().includes(keyword.toLowerCase())
-          );
-          if (matchesAbstract) return true;
-        }
-
-        return false;
-      });
-
       const journalArticles = areaPublications.filter(p => p.category === 'Journal Articles');
       const conferenceProceedings = areaPublications.filter(p => p.category === 'Conference Proceedings'); 
       const bookChapters = areaPublications.filter(p => p.category === 'Book Chapters');
 
-      console.log('✅ Filtered results:', {
+      console.log('✅ Learn More Filtered results:', {
         totalProjects: areaProjects.length,
         activeProjects: activeProjects.length,
         completedProjects: completedProjects.length,
@@ -296,7 +259,8 @@ const ResearchAreas = () => {
         bookChapters: bookChapters.length
       });
 
-      setRealTimeData({
+      // Prepare real-time data object
+      const freshRealTimeData = {
         projects: {
           active: activeProjects,
           completed: completedProjects,
@@ -310,11 +274,32 @@ const ResearchAreas = () => {
         },
         loading: false,
         lastUpdated: new Date().toLocaleTimeString()
+      };
+
+      console.log('✅ Learn More Fresh real-time data prepared:', {
+        totalProjects: freshRealTimeData.projects.total,
+        activeProjects: freshRealTimeData.projects.active.length,
+        completedProjects: freshRealTimeData.projects.completed.length,
+        totalPublications: freshRealTimeData.publications.total,
+        journalArticles: freshRealTimeData.publications.journal.length,
+        conferenceProceedings: freshRealTimeData.publications.conference.length,
+        bookChapters: freshRealTimeData.publications.bookChapter.length
       });
 
+      // Update state and use fresh data
+      setRealTimeData(freshRealTimeData);
+      projects = freshRealTimeData.projects;
+      publications = freshRealTimeData.publications;
+      lastUpdated = freshRealTimeData.lastUpdated;
+      
     } catch (error) {
-      console.error('Error fetching real-time data:', error);
+      console.error('❌ Learn More Error fetching real-time data:', error);
       setRealTimeData(prev => ({ ...prev, loading: false }));
+      
+      // Show 0 when API fails instead of mock data (same as main page)
+      projects = { active: [], completed: [], total: 0 };
+      publications = { journal: [], conference: [], bookChapter: [], total: 0 };
+      lastUpdated = 'Failed to load real-time data - showing 0 counts';
     }
   };
 
