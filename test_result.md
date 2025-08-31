@@ -112,6 +112,15 @@ user_problem_statement: |
   ✅ 6. Added "Back to Top" buttons to all updated pages
   ✅ 7. Optimized advisor photos for better face visibility
   
+  NEW UPDATES - People Page Modifications:
+  ✅ 8. Updated Advisor 3 (Amirul Islam) with new image from GitHub repository and corrected department affiliation
+  ✅ 9. Removed call/phone icons from all person cards while keeping other research profile icons
+  ✅ 10. Replaced Team Member 1 with Raihan Uddin (Research Assistant, Department of EEE, BRAC University) with GitHub image
+  ✅ 11. Replaced Team Member 2 with Mumtahina Arika (Research Assistant, Department of EEE, BRAC University) with GitHub image
+  ✅ 12. Added placeholder entries using "No Name", "No Affiliation" with noimg.jpg for future team members and collaborators
+  ✅ 13. Adjusted IEEE icon layout to be more compact in single line with reduced gap spacing
+  ✅ 14. Optimized all photos and profile icons for better performance
+  
 backend:
   - task: "Complete Website Modifications as Per User Specifications"
     implemented: true
