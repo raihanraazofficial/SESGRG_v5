@@ -277,8 +277,8 @@ const People = () => {
 
           {/* Fixed Bottom Section - Research Profile Icons and Know More Button */}
           <div className="mt-auto">
-            {/* Research Profile Icons - All icons for everyone */}
-            <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200 mb-4">
+            {/* Research Profile Icons - All icons except phone */}
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200 mb-4">
               {/* Email - Always present */}
               <a 
                 href={`mailto:${person.email || 'contact@bracu.ac.bd'}`}
@@ -291,15 +291,6 @@ const People = () => {
                   className="h-4 w-4 filter-red" 
                   style={{filter: 'invert(0.2) sepia(1) saturate(5) hue-rotate(320deg) brightness(0.8)'}}
                 />
-              </a>
-              
-              {/* Call - Always present */}
-              <a 
-                href={`tel:${person.phone || '+880-2-9844051'}`}
-                className="p-2 bg-gray-100 hover:bg-emerald-100 rounded-full transition-colors group/icon"
-                title="Phone"
-              >
-                <Phone className="h-4 w-4 text-emerald-600" />
               </a>
               
               {/* Google Scholar - Always present */}
@@ -382,7 +373,7 @@ const People = () => {
                 />
               </a>
               
-              {/* IEEE - Always present */}
+              {/* IEEE - Always present, adjusted layout */}
               <a 
                 href={person.ieee || '#'}
                 target="_blank"
