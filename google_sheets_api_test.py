@@ -75,34 +75,50 @@ def test_google_sheets_api_endpoint(name, url):
         
         # 4. Data structure validation
         print("4. Testing data structure...")
-        if isinstance(data, dict):
-            if 'data' in data:
-                items = data['data']
-                print(f"   ✅ Data structure valid - found 'data' key with {len(items)} items")
-                
-                # Check if we have actual data
-                if len(items) > 0:
-                    sample_item = items[0]
-                    print(f"   📋 Sample item keys: {list(sample_item.keys())[:5]}...")
-                    
-                    # Validate required fields based on endpoint type
-                    required_fields = get_required_fields(name)
-                    missing_fields = [field for field in required_fields if field not in sample_item]
-                    
-                    if not missing_fields:
-                        print(f"   ✅ All required fields present for {name}")
-                    else:
-                        print(f"   ⚠️  Missing some expected fields: {missing_fields}")
-                        # Not a critical failure as Google Sheets structure might vary
-                else:
-                    print(f"   ⚠️  No data items found - sheet might be empty")
-                    all_tests_passed = False
+        items = []
+        
+        # Handle different response structures
+        if isinstance(data, list):
+            # Publications API returns a direct list
+            items = data
+            print(f"   ✅ Data structure valid - direct list with {len(items)} items")
+        elif isinstance(data, dict):
+            # Other APIs return objects with specific keys
+            if name == 'projects' and 'projects' in data:
+                items = data['projects']
+                print(f"   ✅ Data structure valid - found 'projects' key with {len(items)} items")
+                if 'pagination' in data:
+                    print(f"   ✅ Pagination info present: {data['pagination']}")
+            elif name == 'achievements' and 'achievements' in data:
+                items = data['achievements']
+                print(f"   ✅ Data structure valid - found 'achievements' key with {len(items)} items")
+            elif name == 'news_events' and 'news_events' in data:
+                items = data['news_events']
+                print(f"   ✅ Data structure valid - found 'news_events' key with {len(items)} items")
             else:
-                print(f"   ❌ Unexpected data structure - missing 'data' key")
+                print(f"   ❌ Unexpected data structure for {name}")
                 print(f"   📋 Available keys: {list(data.keys())}")
                 all_tests_passed = False
         else:
-            print(f"   ❌ Expected object, got {type(data)}")
+            print(f"   ❌ Unexpected data type: {type(data)}")
+            all_tests_passed = False
+        
+        # Check if we have actual data
+        if len(items) > 0:
+            sample_item = items[0]
+            print(f"   📋 Sample item keys: {list(sample_item.keys())[:8]}...")
+            
+            # Validate required fields based on endpoint type
+            required_fields = get_required_fields(name)
+            missing_fields = [field for field in required_fields if field not in sample_item]
+            
+            if not missing_fields:
+                print(f"   ✅ All required fields present for {name}")
+            else:
+                print(f"   ⚠️  Missing some expected fields: {missing_fields}")
+                # Not a critical failure as Google Sheets structure might vary
+        else:
+            print(f"   ⚠️  No data items found - sheet might be empty")
             all_tests_passed = False
         
         # 5. Browser compatibility test (simulate browser request)
