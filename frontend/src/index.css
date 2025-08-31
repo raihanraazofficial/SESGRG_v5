@@ -84,6 +84,14 @@ code {
     @apply bg-background text-foreground;
     scroll-behavior: smooth;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimize scrolling performance */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Photo Gallery Animation - Right to Left Rail Movement */
@@ -98,10 +106,18 @@ code {
 
 .animate-scroll-right {
   animation: scroll-left 40s linear infinite;
+  will-change: transform;
 }
 
 .animate-scroll-right:hover {
   animation-play-state: paused;
+}
+
+/* Performance optimizations */
+.animate-scroll-right * {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Custom animations for SESG website */
