@@ -402,6 +402,91 @@ def test_ieee_required_elements(publications):
     
     return all_tests_passed
 
+def test_citation_copy_functionality():
+    """Test the citation copy functionality (simulated)"""
+    print("5. Testing citation copy functionality...")
+    
+    # Since we can't test actual clipboard functionality in headless environment,
+    # we'll test the citation generation logic
+    
+    sample_publications = [
+        {
+            "id": "test_journal_1",
+            "title": "Smart Grid Optimization Using Machine Learning",
+            "authors": ["Rahman, M.A.", "Smith, J.B.", "Johnson, C.D."],
+            "category": "Journal Articles",
+            "journal_name": "IEEE Transactions on Smart Grid",
+            "volume": "15",
+            "issue": "3",
+            "pages": "123-135",
+            "year": "2024"
+        },
+        {
+            "id": "test_conference_1", 
+            "title": "Renewable Energy Integration in Microgrids",
+            "authors": ["Ahmed, S.R.", "Brown, K.L."],
+            "category": "Conference Proceedings",
+            "conference_name": "IEEE Power & Energy Society General Meeting",
+            "city": "Seattle",
+            "country": "USA",
+            "pages": "1-6",
+            "year": "2023"
+        },
+        {
+            "id": "test_book_1",
+            "title": "Advanced Energy Storage Systems",
+            "authors": ["Wilson, P.Q.", "Davis, R.T."],
+            "category": "Book Chapters",
+            "book_title": "Handbook of Sustainable Energy Technologies",
+            "editor": "Thompson, A.B.",
+            "publisher": "Springer",
+            "city": "New York",
+            "country": "USA", 
+            "pages": "45-78",
+            "year": "2022"
+        }
+    ]
+    
+    all_tests_passed = True
+    
+    for pub in sample_publications:
+        print(f"   \n   📄 Testing citation for: '{pub['title']}'")
+        print(f"      Category: {pub['category']}")
+        
+        # Generate citation
+        citation = generate_ieee_citation_test(pub)
+        print(f"      Generated citation: {citation}")
+        
+        # Validate citation format
+        format_valid = validate_ieee_citation_format(citation, pub['category'])
+        
+        if format_valid:
+            print(f"      ✅ Citation format validation passed")
+        else:
+            print(f"      ❌ Citation format validation failed")
+            all_tests_passed = False
+        
+        # Check for specific IEEE elements
+        if pub['category'] == "Journal Articles":
+            required_in_citation = [pub['journal_name'], f"vol. {pub['volume']}", f"no. {pub['issue']}", f"pp. {pub['pages']}"]
+        elif pub['category'] == "Conference Proceedings":
+            required_in_citation = [pub['conference_name'], f"pp. {pub['pages']}"]
+        elif pub['category'] == "Book Chapters":
+            required_in_citation = [pub['book_title'], "Ed(s).", pub['publisher'], f"pp. {pub['pages']}"]
+        
+        missing_elements = []
+        for element in required_in_citation:
+            if element not in citation:
+                missing_elements.append(element)
+        
+        if missing_elements:
+            print(f"      ❌ Missing elements in citation: {missing_elements}")
+            all_tests_passed = False
+        else:
+            print(f"      ✅ All required elements present in citation")
+    
+    return all_tests_passed
+
 def test_mongodb_connection():
     """Test MongoDB connection by creating and retrieving data"""
     print("5. Testing MongoDB connection...")
