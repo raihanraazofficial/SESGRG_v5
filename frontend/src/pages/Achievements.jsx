@@ -48,7 +48,7 @@ const Achievements = () => {
         ...filters,
         category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
       };
-      const response = await apiService.getAchievements(apiFilters);
+      const response = await googleSheetsService.getAchievements(apiFilters);
       setAchievements(response.achievements || []);
       setPagination(response.pagination || {});
     } catch (error) {
