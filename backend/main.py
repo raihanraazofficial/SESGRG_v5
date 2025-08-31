@@ -310,17 +310,17 @@ async def get_research_statistics():
         publications_data = await fetch_sheets_data("publications")
         projects_data = await fetch_sheets_data("projects")
         achievements_data = await fetch_sheets_data("achievements")
-        news_events_data = await fetch_sheets_data("news_events")
+        news_data = await fetch_sheets_data("news_events")
         
         return {
             "total_publications": len(publications_data),
             "total_citations": sum(pub.get("citations", 0) for pub in publications_data),
             "active_projects": len([p for p in projects_data if p.get("status") == "Active"]),
             "total_achievements": len(achievements_data),
-            "recent_news": len(news_events_data)
+            "recent_news": len(news_data)
         }
     except Exception as e:
-        return {"error": f"Failed to fetch research stats: {str(e)}"}
+        return {"error": f"Failed to fetch research statistics: {str(e)}"}
 
 @app.get("/api/cache-status")
 async def get_cache_status():
