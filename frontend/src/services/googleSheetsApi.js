@@ -88,7 +88,7 @@ class GoogleSheetsService {
           }
           
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+          const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout for faster failures
           
           const response = await fetch(proxyUrl, {
             method: 'GET',
