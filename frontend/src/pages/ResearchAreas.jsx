@@ -381,6 +381,21 @@ const ResearchAreas = () => {
         publications: publications,
         lastUpdated: lastUpdated
       });
+
+    } catch (error) {
+      console.error('Error fetching real-time data:', error);
+      setRealTimeData(prev => ({ ...prev, loading: false }));
+      
+      // Use mock data as fallback
+      const { projects, publications, lastUpdated } = {
+        projects: { active: [], completed: [], total: area.projects },
+        publications: { journal: [], conference: [], bookChapter: [], total: area.publications },
+        lastUpdated: 'Failed to load'
+      };
+      
+      const areaImage = getAreaImage(area.id);
+      const areaPeople = getPeopleByResearchArea(area.id);
+    }
     
     const detailHtml = `
       <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
