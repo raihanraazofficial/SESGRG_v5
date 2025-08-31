@@ -339,7 +339,7 @@ class GoogleSheetsService {
   // Achievements API
   async getAchievements(params = {}) {
     try {
-      const data = await this.fetchFromGoogleSheets(this.achievementsUrl);
+      const data = await this.fetchFromGoogleSheets(this.achievementsUrl, this.cacheKeys.achievements);
       const achievements = Array.isArray(data.achievements) ? data.achievements :
                          (Array.isArray(data.data) ? data.data :
                          (Array.isArray(data) ? data : []));
