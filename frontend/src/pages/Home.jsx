@@ -153,7 +153,10 @@ const LatestNewsSection = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => fetchLatestNews(true)}
+              onClick={() => {
+                console.log('🔄 Manual Refresh clicked - Force refreshing...');
+                fetchLatestNews(true);
+              }}
               disabled={refreshing}
               className="flex items-center space-x-2"
             >
