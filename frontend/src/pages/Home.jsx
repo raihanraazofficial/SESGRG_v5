@@ -449,8 +449,7 @@ const Home = () => {
           <div className="mb-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               {/* Image Carousel - Left Side */}
-              <div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center lg:text-left">Our Research in Action</h3>
+              <div className="flex flex-col justify-center">
                 <div className="relative">
                   <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                     {carouselImages.map((image, index) => (
