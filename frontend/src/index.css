@@ -78,6 +78,23 @@ code {
 
 @layer base {
   * {
+/* Photo Gallery Animation */
+@keyframes scroll-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-320px * 6));
+  }
+}
+
+.animate-scroll-right {
+  animation: scroll-right 30s linear infinite;
+}
+
+.animate-scroll-right:hover {
+  animation-play-state: paused;
+}
     @apply border-border;
     }
   body {
