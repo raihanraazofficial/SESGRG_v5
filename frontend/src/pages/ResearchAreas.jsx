@@ -442,10 +442,10 @@ const ResearchAreas = () => {
       console.error('Error fetching real-time data:', error);
       setRealTimeData(prev => ({ ...prev, loading: false }));
       
-      // Use mock data as fallback
-      projects = { active: [], completed: [], total: area.projects };
-      publications = { journal: [], conference: [], bookChapter: [], total: area.publications };
-      lastUpdated = 'Failed to load real-time data';
+      // Show 0 when API fails instead of mock data
+      projects = { active: [], completed: [], total: 0 };
+      publications = { journal: [], conference: [], bookChapter: [], total: 0 };
+      lastUpdated = 'Failed to load real-time data - showing 0 counts';
     }
     
     const detailHtml = `
