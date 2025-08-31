@@ -177,6 +177,18 @@ frontend:
         agent: "testing"
         comment: "❌ PARTIAL FAILURE: IEEE citation formatting testing revealed issues with Conference Proceedings and Book Chapters. Journal Articles (5/5) work correctly with all required elements present. Conference Proceedings (5/5) are missing 'pages' field in Google Sheets data, causing incomplete citations. Book Chapters (6/6) are missing 'pages', 'city', and 'country' fields. Google Sheets API accessibility ✅, Citation copy functionality ✅, Data parsing ✅. The frontend code is correctly implemented but Google Sheets data is incomplete for some publication types. All 16 publications successfully retrieved and parsed."
 
+  - task: "Home Page UI/UX Final Optimizations - Advanced Bengali User Requirements"
+    implemented: true
+    working: "NA"
+    file: "Home.jsx, index.css, Footer.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ FINAL OPTIMIZATIONS COMPLETED: 1) Objectives carousel vertical alignment: Fixed carousel to be perfectly vertically centered with objectives list using items-center alignment instead of items-start. 2) News & Events loading issue: Added hasAttemptedLoad state to prevent 'No Recent News' message from showing during initial loading, only shows after actual data fetch completes. 3) Advanced scrolling performance: Added GPU acceleration (transform: translateZ(0)), backface-visibility: hidden, will-change properties for all images, cards, hover transitions. Added transform-gpu class and optimized image loading with decoding='async'. 4) Footer View on Map centering: Wrapped the link in text-center div for proper center alignment. 5) Photo gallery rail animation: Enhanced with additional performance optimizations including will-change-transform classes and reduced transition durations for smoother experience. All photo sections now scroll smoothly without stuttering or scattering effect."
+
   - task: "Home Page UI/UX Improvements - Bengali User Requirements"
     implemented: true
     working: true
