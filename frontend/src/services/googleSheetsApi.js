@@ -331,6 +331,14 @@ class GoogleSheetsService {
       const endIndex = startIndex + perPage;
       const paginatedData = filteredData.slice(startIndex, endIndex);
 
+      // Calculate statistics (for ALL projects, not just filtered)
+      const statistics = {
+        total_projects: projects.length,
+        active_projects: projects.filter(p => p.status === 'Active').length,
+        completed_projects: projects.filter(p => p.status === 'Completed').length,
+        planning_projects: projects.filter(p => p.status === 'Planning').length
+      };
+
       return {
         projects: paginatedData,
         pagination: {
@@ -340,7 +348,8 @@ class GoogleSheetsService {
           total_pages: totalPages,
           has_prev: page > 1,
           has_next: page < totalPages
-        }
+        },
+        statistics
       };
     } catch (error) {
       console.error('Error fetching projects from Google Sheets:', error);
