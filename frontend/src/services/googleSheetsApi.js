@@ -70,82 +70,119 @@ class GoogleSheetsService {
         console.log('🌐 Cache miss: Fetching fresh data for:', cacheKey);
       }
 
-      console.log('Fetching from Google Sheets URL:', url);
+      console.log('Fetching directly from Google Apps Script URL:', url);
       
-      // Optimized proxy order - most reliable first
-      const corsProxies = [
-        'https://api.allorigins.win/get?url=', // Most reliable
-        'https://api.codetabs.com/v1/proxy?quest=', // Second most reliable
-        'https://corsproxy.io/?'  // Backup option
-      ];
-      
-      // Try proxies with reduced timeout for faster failures - race to get fastest response
-      const promises = corsProxies.map(async (proxy, i) => {
-        // Add small delay for non-primary proxies to prefer the fastest one
-        if (i > 0) {
-          await new Promise(resolve => setTimeout(resolve, i * 200)); // 200ms delay for each subsequent proxy
+      // First try direct fetch to Google Apps Script (CORS-free)
+      try {
+        console.log('🚀 Attempting direct fetch...');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+          mode: 'cors' // Explicitly set CORS mode
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Direct fetch successful!', data.length || Object.keys(data).length, 'items');
+        
+        // Cache the successful result
+        if (cacheKey) {
+          this.setCacheData(cacheKey, data);
         }
         
-        try {
-          let proxyUrl, isAllOrigins = false;
-          
-          if (proxy.includes('allorigins')) {
-            proxyUrl = `${proxy}${encodeURIComponent(url)}`;
-            isAllOrigins = true;
-          } else {
-            proxyUrl = `${proxy}${url}`;
-          }
-          
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout for faster failures
-          
-          const response = await fetch(proxyUrl, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            signal: controller.signal
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
-          let data;
-          if (isAllOrigins) {
-            const proxyData = await response.json();
-            if (!proxyData.contents) {
-              throw new Error('Invalid AllOrigins response');
-            }
-            data = JSON.parse(proxyData.contents);
-          } else {
-            data = await response.json();
-          }
-          
-          console.log(`✅ Success with proxy ${i + 1}: ${proxy.split('?')[0]} (${response.status})`);
-          
-          // Cache the successful result
-          if (cacheKey) {
-            this.setCacheData(cacheKey, data);
-          }
-          
-          return data;
-          
-        } catch (error) {
-          console.warn(`❌ Proxy ${i + 1} failed:`, error.name, error.message);
-          throw error;
-        }
-      });
-
-      // Use Promise.any to return the first successful result
-      try {
-        const data = await Promise.any(promises);
         return data;
-      } catch (error) {
-        throw new Error('All CORS proxies failed');
+        
+      } catch (directError) {
+        console.warn('❌ Direct fetch failed:', directError.message);
+        
+        // Fallback to CORS proxies
+        console.log('🔄 Falling back to CORS proxies...');
+        const corsProxies = [
+          'https://api.allorigins.win/get?url=', // Most reliable
+          'https://api.codetabs.com/v1/proxy?quest=', // Second most reliable
+          'https://corsproxy.io/?'  // Backup option
+        ];
+        
+        // Try proxies with reduced timeout for faster failures
+        const promises = corsProxies.map(async (proxy, i) => {
+          // Add small delay for non-primary proxies to prefer the fastest one
+          if (i > 0) {
+            await new Promise(resolve => setTimeout(resolve, i * 200));
+          }
+          
+          try {
+            let proxyUrl, isAllOrigins = false;
+            
+            if (proxy.includes('allorigins')) {
+              proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+              isAllOrigins = true;
+            } else {
+              proxyUrl = `${proxy}${url}`;
+            }
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            
+            const response = await fetch(proxyUrl, {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            let data;
+            if (isAllOrigins) {
+              const proxyData = await response.json();
+              if (!proxyData.contents) {
+                throw new Error('Invalid AllOrigins response');
+              }
+              data = JSON.parse(proxyData.contents);
+            } else {
+              data = await response.json();
+            }
+            
+            console.log(`✅ Success with proxy ${i + 1}: ${proxy.split('?')[0]} (${response.status})`);
+            
+            // Cache the successful result
+            if (cacheKey) {
+              this.setCacheData(cacheKey, data);
+            }
+            
+            return data;
+            
+          } catch (error) {
+            console.warn(`❌ Proxy ${i + 1} failed:`, error.name, error.message);
+            throw error;
+          }
+        });
+
+        // Use Promise.any to return the first successful result
+        try {
+          const data = await Promise.any(promises);
+          return data;
+        } catch (error) {
+          throw new Error('All fetch methods failed');
+        }
       }
       
     } catch (error) {
