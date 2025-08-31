@@ -420,7 +420,7 @@ class GoogleSheetsService {
   // News & Events API
   async getNewsEvents(params = {}) {
     try {
-      const data = await this.fetchFromGoogleSheets(this.newsEventsUrl);
+      const data = await this.fetchFromGoogleSheets(this.newsEventsUrl, this.cacheKeys.newsEvents);
       const newsEvents = Array.isArray(data.news_events) ? data.news_events :
                         (Array.isArray(data.data) ? data.data :
                         (Array.isArray(data) ? data : []));
