@@ -91,57 +91,57 @@ const People = () => {
   const teamMembers = [
     {
       id: 4,
-      name: "Md. Karim Rahman",
-      designation: "PhD Research Assistant",
-      affiliation: "BRAC University, Department of EEE",
-      description: "Researching microgrid integration and distributed energy systems for sustainable power networks.",
-      expertise: [1, 2, 4, 0], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "karim.rahman@g.bracu.ac.bd",
+      name: "Raihan Uddin",
+      designation: "Research Assistant",
+      affiliation: "Department of EEE, BRAC University",
+      description: "Early-career researcher in power system optimization, microgrids, and applying deep learning and machine learning techniques for sustainable energy systems.",
+      expertise: [1, 3, 2, 6], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Renewable Energy Integration, Cybersecurity and AI for Power Infrastructure
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Raihan%20Uddin.jpg",
+      email: "uddin.raihan@bracu.ac.bd",
       phone: "+880-1XXXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=karim-rahman",
-      researchGate: "https://www.researchgate.net/profile/karim-rahman",
+      googleScholar: "https://scholar.google.com/citations?user=raihan-uddin",
+      researchGate: "https://www.researchgate.net/profile/raihan-uddin",
       orcid: "https://orcid.org/0000-0000-0000-0004",
-      linkedin: "https://linkedin.com/in/karim-rahman",
-      github: "https://github.com/karim-rahman",
-      ieee: "https://ieeexplore.ieee.org/author/karim-rahman",
-      website: "https://karimrahman.dev"
+      linkedin: "https://linkedin.com/in/raihan-uddin",
+      github: "https://github.com/raihan-uddin",
+      ieee: "https://ieeexplore.ieee.org/author/raihan-uddin",
+      website: "https://raihanuddin.dev"
     },
     {
       id: 5,
-      name: "Fatima Khan",
-      designation: "MS Research Assistant",
-      affiliation: "BRAC University, Department of EEE",
-      description: "Working on cybersecurity aspects of smart grids and power system automation technologies.",
-      expertise: [6, 5, 0, 3], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "fatima.khan@g.bracu.ac.bd",
+      name: "Mumtahina Arika",
+      designation: "Research Assistant",
+      affiliation: "Department of EEE, BRAC University",
+      description: "Early-career researcher in renewable energy systems and AI-driven condition monitoring of electrical equipment and wind turbines.",
+      expertise: [2, 3], // Renewable Energy Integration, Grid Optimization & Stability
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Mumtahina%20Akira.jpg",
+      email: "mumtahina.arika@bracu.ac.bd",
       phone: "+880-1XXXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=fatima-khan",
-      researchGate: "https://www.researchgate.net/profile/fatima-khan",
+      googleScholar: "https://scholar.google.com/citations?user=mumtahina-arika",
+      researchGate: "https://www.researchgate.net/profile/mumtahina-arika",
       orcid: "https://orcid.org/0000-0000-0000-0005",
-      linkedin: "https://linkedin.com/in/fatima-khan",
-      github: "https://github.com/fatima-khan",
-      ieee: "https://ieeexplore.ieee.org/author/fatima-khan",
-      website: "https://fatimakhan.research.com"
+      linkedin: "https://linkedin.com/in/mumtahina-arika",
+      github: "https://github.com/mumtahina-arika",
+      ieee: "https://ieeexplore.ieee.org/author/mumtahina-arika",
+      website: "https://mumtahinaarika.research.com"
     },
     {
       id: 6,
-      name: "Ahmed Hassan",
-      designation: "Undergraduate Research Assistant",
-      affiliation: "BRAC University, Department of EEE",
-      description: "Contributing to renewable energy integration projects and grid stability analysis research.",
-      expertise: [2, 3, 1, 4], // Max 4 areas
-      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face&facepad=3",
-      email: "ahmed.hassan@g.bracu.ac.bd",
-      phone: "+880-1XXXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=ahmed-hassan",
-      researchGate: "https://www.researchgate.net/profile/ahmed-hassan",
-      orcid: "https://orcid.org/0000-0000-0000-0006",
-      linkedin: "https://linkedin.com/in/ahmed-hassan",
-      github: "https://github.com/ahmed-hassan",
-      ieee: "https://ieeexplore.ieee.org/author/ahmed-hassan",
-      website: "https://ahmedhassan.portfolio.com"
+      name: "No Name",
+      designation: "Research Assistant",
+      affiliation: "No Affiliation",
+      description: "Research assistant position available. We are looking for enthusiastic candidates to join our research team.",
+      expertise: [0, 1], // Smart Grid Technologies, Microgrids & Distributed Energy Systems
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
+      email: "contact@bracu.ac.bd",
+      phone: "+880-2-9844051",
+      googleScholar: "#",
+      researchGate: "#",
+      orcid: "#",
+      linkedin: "#",
+      github: "#",
+      ieee: "#",
+      website: "#"
     }
   ];
 
