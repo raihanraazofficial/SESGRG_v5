@@ -148,9 +148,7 @@ def test_google_sheets_api_endpoint(name, url):
         
         # 7. Data quality assessment
         print("7. Assessing data quality...")
-        if 'data' in data and len(data['data']) > 0:
-            items = data['data']
-            
+        if len(items) > 0:
             # Check for empty or null values
             empty_count = 0
             for item in items[:5]:  # Check first 5 items
@@ -171,6 +169,20 @@ def test_google_sheets_api_endpoint(name, url):
                     print("   ✅ Data structure consistent across items")
                 else:
                     print("   ⚠️  Inconsistent data structure across items")
+            
+            # Show sample data for verification
+            sample = items[0]
+            print(f"   📄 Sample {name} title: '{sample.get('title', 'N/A')[:50]}...'")
+            if name == 'publications':
+                print(f"   📊 Sample citations: {sample.get('citations', 'N/A')}")
+                print(f"   📅 Sample year: {sample.get('year', 'N/A')}")
+            elif name == 'projects':
+                print(f"   📊 Sample status: {sample.get('status', 'N/A')}")
+            elif name in ['achievements', 'news_events']:
+                print(f"   📅 Sample date: {sample.get('date', 'N/A')}")
+                print(f"   🏷️  Sample category: {sample.get('category', 'N/A')}")
+        else:
+            print("   ❌ No data available for quality assessment")
         
         return all_tests_passed
         
