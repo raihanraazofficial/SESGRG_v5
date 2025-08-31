@@ -111,39 +111,107 @@ const ResearchAreas = () => {
     );
   };
 
-  // Real-time data fetching with advanced caching
+  // Real-time data fetching with improved filtering logic
   const fetchRealTimeData = async (areaId, areaTitle) => {
     setRealTimeData(prev => ({ ...prev, loading: true }));
     
     try {
-      // Fetch both projects and publications concurrently for faster loading
+      console.log('🔍 Fetching real-time data for:', areaTitle);
+      
+      // Fetch both projects and publications without area filter first
       const [projectsResponse, publicationsResponse] = await Promise.all([
-        googleSheetsService.getProjects({ area_filter: areaTitle }),
-        googleSheetsService.getPublications({ area_filter: areaTitle })
+        googleSheetsService.getProjects({}),
+        googleSheetsService.getPublications({})
       ]);
 
-      // Filter projects by research area and get active + completed
-      const areaProjects = projectsResponse.projects.filter(project => 
-        project.research_areas && 
-        project.research_areas.some && 
-        project.research_areas.some(area => area.toLowerCase().includes(areaTitle.toLowerCase())) ||
-        project.title && project.title.toLowerCase().includes(areaTitle.toLowerCase())
-      );
+      console.log('📊 Raw API data - Projects:', projectsResponse.projects?.length, 'Publications:', publicationsResponse.publications?.length);
+
+      // Enhanced filtering logic with multiple matching strategies
+      const areaKeywords = getAreaKeywords(areaTitle);
+      console.log('🎯 Area keywords for matching:', areaKeywords);
+
+      // Filter projects with improved matching
+      const areaProjects = projectsResponse.projects.filter(project => {
+        // Strategy 1: Direct research_areas field matching
+        if (project.research_areas && Array.isArray(project.research_areas)) {
+          const matchesArea = project.research_areas.some(area => 
+            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
+          );
+          if (matchesArea) return true;
+        }
+
+        // Strategy 2: Title keyword matching
+        if (project.title) {
+          const matchesTitle = areaKeywords.some(keyword => 
+            project.title.toLowerCase().includes(keyword.toLowerCase())
+          );
+          if (matchesTitle) return true;
+        }
+
+        // Strategy 3: Description matching
+        if (project.description) {
+          const matchesDesc = areaKeywords.some(keyword => 
+            project.description.toLowerCase().includes(keyword.toLowerCase())
+          );
+          if (matchesDesc) return true;
+        }
+
+        return false;
+      });
 
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
 
-      // Filter publications by research area
-      const areaPublications = publicationsResponse.publications.filter(pub =>
-        (pub.research_areas && pub.research_areas.some && pub.research_areas.some(area => area.toLowerCase().includes(areaTitle.toLowerCase()))) ||
-        (pub.title && pub.title.toLowerCase().includes(areaTitle.toLowerCase())) ||
-        (pub.category && (areaTitle.toLowerCase().includes('smart grid') && pub.category.toLowerCase().includes('grid'))) ||
-        (pub.category && (areaTitle.toLowerCase().includes('renewable') && pub.category.toLowerCase().includes('energy')))
-      );
+      // Filter publications with enhanced matching
+      const areaPublications = publicationsResponse.publications.filter(pub => {
+        // Strategy 1: Direct research_areas field matching
+        if (pub.research_areas && Array.isArray(pub.research_areas)) {
+          const matchesArea = pub.research_areas.some(area => 
+            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
+          );
+          if (matchesArea) return true;
+        }
+
+        // Strategy 2: Title keyword matching
+        if (pub.title) {
+          const matchesTitle = areaKeywords.some(keyword => 
+            pub.title.toLowerCase().includes(keyword.toLowerCase())
+          );
+          if (matchesTitle) return true;
+        }
+
+        // Strategy 3: Keywords/tags matching
+        if (pub.keywords && Array.isArray(pub.keywords)) {
+          const matchesKeywords = pub.keywords.some(keyword => 
+            areaKeywords.some(areaKeyword => keyword.toLowerCase().includes(areaKeyword.toLowerCase()))
+          );
+          if (matchesKeywords) return true;
+        }
+
+        // Strategy 4: Abstract matching (if available)
+        if (pub.abstract) {
+          const matchesAbstract = areaKeywords.some(keyword => 
+            pub.abstract.toLowerCase().includes(keyword.toLowerCase())
+          );
+          if (matchesAbstract) return true;
+        }
+
+        return false;
+      });
 
       const journalArticles = areaPublications.filter(p => p.category === 'Journal Articles');
       const conferenceProceedings = areaPublications.filter(p => p.category === 'Conference Proceedings'); 
       const bookChapters = areaPublications.filter(p => p.category === 'Book Chapters');
+
+      console.log('✅ Filtered results:', {
+        totalProjects: areaProjects.length,
+        activeProjects: activeProjects.length,
+        completedProjects: completedProjects.length,
+        totalPublications: areaPublications.length,
+        journalArticles: journalArticles.length,
+        conferenceProceedings: conferenceProceedings.length,
+        bookChapters: bookChapters.length
+      });
 
       setRealTimeData({
         projects: {
