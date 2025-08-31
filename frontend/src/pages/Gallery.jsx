@@ -1,0 +1,138 @@
+import React from "react";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+
+const Gallery = () => {
+  const photos = [
+    {
+      url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
+      caption: "Solar Panel Installation Research",
+      category: "Renewable Energy"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1639313521811-fdfb1c040ddb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
+      caption: "Control Room Monitoring",
+      category: "Smart Grid"
+    },
+    {
+      url: "https://images.pexels.com/photos/3861435/pexels-photo-3861435.jpeg",
+      caption: "Laboratory Research Work",
+      category: "Research Activities"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1606206873764-fd15e242df52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
+      caption: "Laboratory Equipment Analysis",
+      category: "Research Activities"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1608037222011-cbf484177126?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
+      caption: "University Laboratory Environment",
+      category: "Research Activities"
+    },
+    {
+      url: "https://images.pexels.com/photos/8539753/pexels-photo-8539753.jpeg",
+      caption: "Professional Research Activities",
+      category: "Research Activities"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
+      caption: "Wind Turbine Research",
+      category: "Renewable Energy"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
+      caption: "Wind Farm Installation",
+      category: "Renewable Energy"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
+      caption: "Solar Panel Farm",
+      category: "Renewable Energy"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1467533003447-e295ff1b0435?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
+      caption: "Modern Wind Turbines",
+      category: "Renewable Energy"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGdyaWR8ZW58MHx8fHwxNzU2NTM1MTU3fDA&ixlib=rb-4.1.0&q=85",
+      caption: "Power Transmission Infrastructure",
+      category: "Smart Grid"
+    }
+  ];
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'Renewable Energy':
+        return 'bg-emerald-100 text-emerald-700';
+      case 'Smart Grid':
+        return 'bg-blue-100 text-blue-700';
+      case 'Research Activities':
+        return 'bg-purple-100 text-purple-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  return (
+    <div className="min-h-screen pt-20 bg-gray-50">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Photo Gallery</h1>
+          <p className="text-xl text-gray-300 max-w-3xl">
+            Explore our comprehensive collection of research activities, laboratory work, renewable energy installations, and smart grid technologies.
+          </p>
+        </div>
+      </div>
+
+      {/* Gallery Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {photos.map((photo, index) => (
+            <Card key={index} className="group hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden">
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src={photo.url}
+                  alt={photo.caption}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute top-4 left-4">
+                  <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(photo.category)}`}>
+                    {photo.category}
+                  </span>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                  <p className="text-sm font-semibold">{photo.caption}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Back to Top */}
+      <div className="text-center pb-16">
+        <Button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          size="lg" 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3"
+        >
+          Back to Top
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Gallery;
