@@ -49,6 +49,7 @@ const Publications = () => {
   const fetchPublications = async () => {
     try {
       setLoading(true);
+      setLoadingSource('⚡ Loading...'); // Start with generic loading
       console.log('Fetching publications with filters:', filters);
       
       const response = await googleSheetsService.getPublications(filters);
