@@ -11,10 +11,12 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
+  const [statistics, setStatistics] = useState({});
   const [filters, setFilters] = useState({
     status_filter: '',
     area_filter: '',
     title_filter: '',
+    search_filter: '',
     sort_by: 'start_date',
     sort_order: 'desc',
     page: 1,
@@ -22,6 +24,8 @@ const Projects = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [availableAreas, setAvailableAreas] = useState([]);
+  const [loadingSource, setLoadingSource] = useState('');
 
   const researchAreas = [
     "Smart Grid Technologies",
