@@ -245,7 +245,12 @@ class GoogleSheetsService {
   async getAchievements(params = {}) {
     try {
       const data = await this.fetchFromGoogleSheets(this.achievementsUrl);
-      const achievements = data.data || [];
+      const achievements = Array.isArray(data.achievements) ? data.achievements :
+                         (Array.isArray(data.data) ? data.data :
+                         (Array.isArray(data) ? data : []));
+
+      console.log('Raw achievements data:', achievements.length, 'items');
+      console.log('First achievement:', achievements[0]);
 
       // Apply client-side filtering
       let filteredData = achievements;
