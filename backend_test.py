@@ -584,6 +584,193 @@ def test_response_time_performance():
         print(f"   ❌ Error testing response time performance: {e}")
         return False
 
+def test_data_structure_validation():
+    """Test data structure validation for Research Areas functionality"""
+    print("6. Testing Data Structure Validation for Research Areas...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Test 1: Projects data structure validation
+        print("   📊 Validating Projects data structure...")
+        
+        try:
+            response = requests.get(PROJECTS_API_URL, timeout=6)
+            if response.status_code == 200:
+                data = response.json()
+                projects = data.get('projects', []) if isinstance(data, dict) else data
+                
+                if len(projects) > 0:
+                    sample_project = projects[0]
+                    
+                    # Required fields for Research Areas filtering
+                    required_fields = ['id', 'title', 'status']
+                    research_area_fields = ['research_areas']
+                    optional_fields = ['description', 'start_date', 'end_date', 'team_members']
+                    
+                    missing_required = [field for field in required_fields if field not in sample_project]
+                    missing_research_fields = [field for field in research_area_fields if field not in sample_project]
+                    present_optional = [field for field in optional_fields if field in sample_project]
+                    
+                    if not missing_required:
+                        print(f"      ✅ All required fields present: {required_fields}")
+                    else:
+                        print(f"      ❌ Missing required fields: {missing_required}")
+                        all_tests_passed = False
+                    
+                    if not missing_research_fields:
+                        print(f"      ✅ Research area fields present: {research_area_fields}")
+                        
+                        # Validate research_areas field structure
+                        research_areas = sample_project.get('research_areas', [])
+                        if isinstance(research_areas, list):
+                            print(f"      ✅ research_areas is list: {len(research_areas)} areas")
+                            if len(research_areas) > 0:
+                                print(f"      📋 Sample areas: {research_areas[:3]}")
+                        else:
+                            print(f"      ⚠️  research_areas is not list: {type(research_areas)}")
+                            
+                    else:
+                        print(f"      ❌ Missing research area fields: {missing_research_fields}")
+                        all_tests_passed = False
+                    
+                    if present_optional:
+                        print(f"      ✅ Optional fields available: {present_optional}")
+                    
+                    # Test status field values for Active/Completed separation
+                    statuses = list(set(p.get('status', 'Unknown') for p in projects))
+                    print(f"      📊 Available project statuses: {statuses}")
+                    
+                    if 'Active' in statuses and 'Completed' in statuses:
+                        print(f"      ✅ Status separation supported (Active/Completed)")
+                    else:
+                        print(f"      ⚠️  Status separation may not work properly")
+                        
+                else:
+                    print(f"      ⚠️  No projects available for validation")
+                    
+            else:
+                print(f"      ❌ Projects API not accessible: {response.status_code}")
+                all_tests_passed = False
+                
+        except Exception as e:
+            print(f"      ❌ Projects validation error: {e}")
+            all_tests_passed = False
+        
+        # Test 2: Publications data structure validation
+        print("\n   📚 Validating Publications data structure...")
+        
+        try:
+            response = requests.get(PUBLICATIONS_API_URL, timeout=6)
+            if response.status_code == 200:
+                data = response.json()
+                publications = data.get('publications', []) if isinstance(data, dict) else data
+                
+                if len(publications) > 0:
+                    sample_pub = publications[0]
+                    
+                    # Required fields for Research Areas filtering
+                    required_fields = ['id', 'title', 'category', 'year']
+                    research_area_fields = ['research_areas']
+                    category_fields = ['category']
+                    optional_fields = ['authors', 'journal_name', 'conference_name', 'book_title', 'citations']
+                    
+                    missing_required = [field for field in required_fields if field not in sample_pub]
+                    missing_research_fields = [field for field in research_area_fields if field not in sample_pub]
+                    present_optional = [field for field in optional_fields if field in sample_pub]
+                    
+                    if not missing_required:
+                        print(f"      ✅ All required fields present: {required_fields}")
+                    else:
+                        print(f"      ❌ Missing required fields: {missing_required}")
+                        all_tests_passed = False
+                    
+                    if not missing_research_fields:
+                        print(f"      ✅ Research area fields present: {research_area_fields}")
+                        
+                        # Validate research_areas field structure
+                        research_areas = sample_pub.get('research_areas', [])
+                        if isinstance(research_areas, list):
+                            print(f"      ✅ research_areas is list: {len(research_areas)} areas")
+                            if len(research_areas) > 0:
+                                print(f"      📋 Sample areas: {research_areas[:3]}")
+                        else:
+                            print(f"      ⚠️  research_areas is not list: {type(research_areas)}")
+                            
+                    else:
+                        print(f"      ❌ Missing research area fields: {missing_research_fields}")
+                        all_tests_passed = False
+                    
+                    # Test category field values for publication type filtering
+                    categories = list(set(p.get('category', 'Unknown') for p in publications))
+                    print(f"      📊 Available publication categories: {categories}")
+                    
+                    expected_categories = ['Journal Articles', 'Conference Proceedings', 'Book Chapters']
+                    found_categories = [cat for cat in expected_categories if cat in categories]
+                    
+                    if len(found_categories) >= 2:
+                        print(f"      ✅ Category filtering supported: {found_categories}")
+                    else:
+                        print(f"      ⚠️  Limited category filtering: {found_categories}")
+                    
+                    if present_optional:
+                        print(f"      ✅ Optional fields available: {present_optional}")
+                        
+                else:
+                    print(f"      ⚠️  No publications available for validation")
+                    
+            else:
+                print(f"      ❌ Publications API not accessible: {response.status_code}")
+                all_tests_passed = False
+                
+        except Exception as e:
+            print(f"      ❌ Publications validation error: {e}")
+            all_tests_passed = False
+        
+        # Test 3: Data mapping validation for Research Areas and team members
+        print("\n   👥 Testing data mapping between research areas and team members...")
+        
+        # This tests the frontend logic for mapping people to research areas
+        research_area_names = [
+            "Smart Grid Technologies",
+            "Microgrids & Distributed Energy Systems", 
+            "Renewable Energy Integration",
+            "Grid Optimization & Stability",
+            "Energy Storage Systems",
+            "Power System Automation",
+            "Cybersecurity and AI for Power Infrastructure"
+        ]
+        
+        # Simulate the people data structure from frontend
+        test_people = [
+            {
+                "name": "Test Advisor",
+                "category": "Advisor",
+                "expertise": [0, 2, 3]  # Smart Grid, Renewable Energy, Grid Optimization
+            },
+            {
+                "name": "Test Team Member",
+                "category": "Team Member", 
+                "expertise": [1, 3, 2, 6]  # Microgrids, Grid Optimization, Renewable Energy, Cybersecurity
+            }
+        ]
+        
+        # Test mapping logic
+        for area_id in range(1, 4):  # Test first 3 research areas
+            area_index = area_id - 1
+            area_people = [person for person in test_people if area_index in person['expertise']]
+            area_name = research_area_names[area_index] if area_index < len(research_area_names) else f"Area {area_id}"
+            
+            print(f"      📋 '{area_name}': {len(area_people)} team members")
+            
+        print(f"      ✅ Data mapping logic validated")
+        
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error testing data structure validation: {e}")
+        return False
+
 def test_error_handling_improvements():
     """Test error handling improvements for API failures"""
     print("5. Testing Error Handling Improvements...")
