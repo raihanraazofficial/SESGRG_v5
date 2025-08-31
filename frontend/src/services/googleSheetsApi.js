@@ -68,11 +68,11 @@ class GoogleSheetsService {
 
       console.log('Fetching from Google Sheets URL:', url);
       
-      // Optimized proxy order - fastest first
+      // Optimized proxy order - most reliable first
       const corsProxies = [
-        'https://api.allorigins.win/get?url=', // Usually fastest
-        'https://corsproxy.io/?',
-        'https://api.codetabs.com/v1/proxy?quest='
+        'https://api.allorigins.win/get?url=', // Most reliable
+        'https://api.codetabs.com/v1/proxy?quest=', // Second most reliable
+        'https://corsproxy.io/?'  // Backup option
       ];
       
       // Try proxies with reduced timeout for faster failures
