@@ -77,8 +77,11 @@ async def create_status_check(input: StatusCheckCreate):
 
 @app.get("/api/status", response_model=List[StatusCheck])
 async def get_status_checks():
-    status_checks = await db.status_checks.find().to_list(1000)
-    return [StatusCheck(**status_check) for status_check in status_checks]
+    if db is not None:
+        status_checks = await db.status_checks.find().to_list(1000)
+        return [StatusCheck(**status_check) for status_check in status_checks]
+    else:
+        return []
 
 # SESG Research Data API Endpoints
 @app.get("/api/publications")
