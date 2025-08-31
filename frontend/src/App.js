@@ -15,6 +15,8 @@ import NewsEvents from "./pages/NewsEvents";
 import Gallery from "./pages/Gallery";
 import Contacts from "./pages/Contacts";
 import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 
 function App() {
   return (
