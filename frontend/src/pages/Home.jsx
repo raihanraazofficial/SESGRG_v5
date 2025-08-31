@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
+import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRight, CheckCircle, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import googleSheetsService from "../services/googleSheetsApi";
