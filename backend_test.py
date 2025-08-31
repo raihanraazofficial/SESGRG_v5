@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Publications IEEE Citation Formatting Testing Suite
-Tests the Publications page IEEE citation formatting functionality:
-- Verify that all publication types display proper IEEE format
-- Test the citation copy functionality 
-- Check that all required IEEE elements are present
-- Test filtering by publication type
-- Verify that the Google Sheets data is being properly parsed and formatted
+Google Sheets Integration and Performance Optimization Testing Suite
+Tests the Google Sheets integration and performance optimizations:
+- Publications Statistics Filtering Fix: Verify statistics update based on filtered results
+- Loading Performance: Test cache behavior, timeout improvements, background refresh
+- All Pages Functionality: Verify optimizations haven't broken existing functionality
+- Google Sheets API Integration: Test all 4 API endpoints
+- Performance Metrics: Test loading times and cache utilization
 """
 
 import requests
