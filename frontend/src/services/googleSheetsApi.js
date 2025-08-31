@@ -12,7 +12,7 @@ class GoogleSheetsService {
     this.newsEventsUrl = process.env.REACT_APP_NEWS_EVENTS_API_URL;
     
     // Cache configuration
-    this.cacheTimeout = 5 * 60 * 1000; // 5 minutes cache
+    this.cacheTimeout = 3 * 60 * 1000; // 3 minutes cache for more responsive updates
     this.cacheKeys = {
       publications: 'sesg_publications_cache',
       projects: 'sesg_projects_cache',
