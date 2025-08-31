@@ -230,12 +230,12 @@ class GoogleSheetsService {
       const endIndex = startIndex + perPage;
       const paginatedData = filteredData.slice(startIndex, endIndex);
 
-      // Calculate statistics
+      // Calculate statistics based on FILTERED data to reflect current view
       const statistics = {
-        total_publications: publications.length,
-        total_citations: publications.reduce((sum, pub) => sum + (parseInt(pub.citations) || 0), 0),
-        latest_year: publications.reduce((latest, pub) => Math.max(latest, parseInt(pub.year) || 0), 0),
-        total_areas: [...new Set(publications.flatMap(pub => pub.research_areas || []))].length
+        total_publications: filteredData.length, // Use filtered data
+        total_citations: filteredData.reduce((sum, pub) => sum + (parseInt(pub.citations) || 0), 0), // Use filtered data
+        latest_year: filteredData.length > 0 ? filteredData.reduce((latest, pub) => Math.max(latest, parseInt(pub.year) || 0), 0) : new Date().getFullYear(),
+        total_areas: filteredData.length > 0 ? [...new Set(filteredData.flatMap(pub => pub.research_areas || []))].length : 0 // Use filtered data
       };
 
       return {
