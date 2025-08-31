@@ -262,16 +262,16 @@ const Projects = () => {
 
             {/* Advanced Filters */}
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                 <Select
-                  value={filters.status_filter}
+                  value={filters.status_filter || "all"}
                   onValueChange={(value) => handleFilterChange('status_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Project Status" />
+                    <SelectValue placeholder="Filter by Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Status</SelectItem>
+                    <SelectItem value="all">All Status</SelectItem>
                     {statuses.map(status => (
                       <SelectItem key={status} value={status}>{status}</SelectItem>
                     ))}
@@ -279,38 +279,61 @@ const Projects = () => {
                 </Select>
 
                 <Select
-                  value={filters.area_filter}
+                  value={filters.area_filter || "all"}
                   onValueChange={(value) => handleFilterChange('area_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Research Area" />
+                    <SelectValue placeholder="Filter by Research Area" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Areas</SelectItem>
-                    {researchAreas.map(area => (
+                    <SelectItem value="all">All Areas</SelectItem>
+                    {availableAreas.length > 0 ? availableAreas.map(area => (
+                      <SelectItem key={area} value={area}>{area}</SelectItem>
+                    )) : researchAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
                 <Select
-                  value={`${filters.sort_by}-${filters.sort_order}`}
-                  onValueChange={(value) => {
-                    const [sort_by, sort_order] = value.split('-');
-                    handleFilterChange('sort_by', sort_by);
-                    handleFilterChange('sort_order', sort_order);
-                  }}
+                  value={filters.title_filter || "all"}
+                  onValueChange={(value) => handleFilterChange('title_filter', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
+                    <SelectValue placeholder="Filter by Title" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="start_date-desc">Start Date (Newest)</SelectItem>
-                    <SelectItem value="start_date-asc">Start Date (Oldest)</SelectItem>
-                    <SelectItem value="title-asc">Title (A-Z)</SelectItem>
-                    <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                    <SelectItem value="all">All Titles</SelectItem>
+                    {projects.map(project => (
+                      <SelectItem key={project.id} value={project.title}>{project.title}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
+
+                <div className="flex space-x-2">
+                  <Select
+                    value={`${filters.sort_by}-${filters.sort_order}`}
+                    onValueChange={(value) => {
+                      const [sort_by, sort_order] = value.split('-');
+                      handleFilterChange('sort_by', sort_by);
+                      handleFilterChange('sort_order', sort_order);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="start_date-desc">Start Date (Newest)</SelectItem>
+                      <SelectItem value="start_date-asc">Start Date (Oldest)</SelectItem>
+                      <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                      <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                      <SelectItem value="status-asc">Status (A-Z)</SelectItem>
+                      <SelectItem value="status-desc">Status (Z-A)</SelectItem>
+                      <SelectItem value="area-asc">Research Area (A-Z)</SelectItem>
+                      <SelectItem value="area-desc">Research Area (Z-A)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             )}
 
