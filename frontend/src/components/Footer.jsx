@@ -21,7 +21,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
-              Pioneering the future of energy through innovative research in smart grids, renewable integration, and AI-powered energy systems at BRAC University.
+              Pioneering Research in Clean Energy, Renewable Integration, and Next-Generation Smart Grid Systems.
             </p>
           </div>
 
