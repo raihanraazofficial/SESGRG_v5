@@ -77,26 +77,71 @@ def test_google_sheets_api_accessibility():
         print(f"   ❌ Google Sheets API is not accessible: {e}")
         return False, []
 
-def test_root_endpoint():
-    """Test the root endpoint GET /api/"""
-    print("2. Testing root endpoint GET /api/...")
-    try:
-        response = requests.get(f"{API_BASE_URL}/", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get("message") == "Hello World":
-                print("   ✅ Root endpoint working correctly")
-                print(f"   Response: {data}")
-                return True
-            else:
-                print(f"   ❌ Unexpected response: {data}")
-                return False
+def test_ieee_citation_format_validation(publications):
+    """Test IEEE citation format validation for different publication types"""
+    print("2. Testing IEEE citation format validation...")
+    
+    all_tests_passed = True
+    ieee_format_tests = {
+        "Journal Articles": {
+            "required_elements": ["authors", "title", "journal_name", "volume", "issue", "pages", "year"],
+            "format_pattern": r"^.+, \".+\", .+, vol\. \d+, no\. \d+, pp\. .+, \d{4}\.$"
+        },
+        "Conference Proceedings": {
+            "required_elements": ["authors", "title", "conference_name", "city", "country", "pages", "year"],
+            "format_pattern": r"^.+, \".+\", .+, .+, pp\. .+, \d{4}\.$"
+        },
+        "Book Chapters": {
+            "required_elements": ["authors", "title", "book_title", "editor", "publisher", "city", "country", "pages", "year"],
+            "format_pattern": r"^.+, \".+\", .+, .+ Ed\(s\)\. .+, .+, pp\. .+, \d{4}\.$"
+        }
+    }
+    
+    # Group publications by category
+    publications_by_category = {}
+    for pub in publications:
+        category = pub.get('category', 'Unknown')
+        if category not in publications_by_category:
+            publications_by_category[category] = []
+        publications_by_category[category].append(pub)
+    
+    print(f"   📋 Found publication categories: {list(publications_by_category.keys())}")
+    
+    for category, expected_format in ieee_format_tests.items():
+        if category in publications_by_category:
+            category_pubs = publications_by_category[category]
+            print(f"   \n   🔍 Testing {category} ({len(category_pubs)} publications):")
+            
+            # Test first few publications of this category
+            for i, pub in enumerate(category_pubs[:3]):  # Test first 3 of each category
+                print(f"      📄 Publication {i+1}: '{pub.get('title', '')[:40]}...'")
+                
+                # Check required elements are present
+                missing_elements = []
+                for element in expected_format["required_elements"]:
+                    if not pub.get(element):
+                        missing_elements.append(element)
+                
+                if missing_elements:
+                    print(f"         ❌ Missing required elements: {missing_elements}")
+                    all_tests_passed = False
+                else:
+                    print(f"         ✅ All required elements present")
+                
+                # Generate IEEE citation using the same logic as frontend
+                citation = generate_ieee_citation_test(pub)
+                print(f"         📝 Generated citation: {citation[:100]}...")
+                
+                # Validate citation format
+                if validate_ieee_citation_format(citation, category):
+                    print(f"         ✅ IEEE format validation passed")
+                else:
+                    print(f"         ❌ IEEE format validation failed")
+                    all_tests_passed = False
         else:
-            print(f"   ❌ Status code: {response.status_code}")
-            return False
-    except Exception as e:
-        print(f"   ❌ Error testing root endpoint: {e}")
-        return False
+            print(f"   ⚠️  No publications found for category: {category}")
+    
+    return all_tests_passed
 
 def test_post_status_endpoint():
     """Test POST /api/status endpoint"""
