@@ -13,18 +13,26 @@ class GoogleSheetsService {
 
   async fetchFromGoogleSheets(url) {
     try {
+      console.log('Fetching from Google Sheets URL:', url);
+      
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        // Allow redirects
+        redirect: 'follow'
       });
 
+      console.log('Response status:', response.status, response.statusText);
+      console.log('Response URL:', response.url);
+
       if (!response.ok) {
-        throw new Error(`Google Sheets API request failed: ${response.status}`);
+        throw new Error(`Google Sheets API request failed: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log('Received data structure:', Object.keys(data));
       return data;
     } catch (error) {
       console.error('Google Sheets API error:', error);
