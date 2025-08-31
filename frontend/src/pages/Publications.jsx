@@ -235,6 +235,39 @@ Best regards,`;
     setAvailableAreas([]);
   };
 
+  const handleRefreshData = async () => {
+    try {
+      setRefreshing(true);
+      console.log('Refreshing publications data...');
+      
+      // Force refresh data (bypass cache)
+      const response = await googleSheetsService.forceRefreshPublications(filters);
+      console.log('Publications refreshed:', response);
+      
+      const pubs = response.publications || [];
+      setPublications(pubs);
+      setPagination(response.pagination || {});
+      setStatistics(response.statistics || {});
+      
+      // Update available filters
+      if (pubs.length > 0) {
+        const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
+        const allAreas = pubs.flatMap(pub => pub.research_areas || []);
+        const uniqueAreas = [...new Set(allAreas)].sort();
+        
+        setAvailableYears(uniqueYears);
+        setAvailableAreas(uniqueAreas);
+      }
+      
+      alert('Publications data refreshed successfully!');
+    } catch (error) {
+      console.error('Error refreshing publications:', error);
+      alert('Failed to refresh publications. Please try again.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <style>{`
