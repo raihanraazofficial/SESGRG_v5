@@ -295,20 +295,7 @@ const Projects = () => {
                   </SelectContent>
                 </Select>
 
-                <Select
-                  value={filters.title_filter || "all"}
-                  onValueChange={(value) => handleFilterChange('title_filter', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filter by Title" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Titles</SelectItem>
-                    {projects.map(project => (
-                      <SelectItem key={project.id} value={project.title}>{project.title}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+
 
                 <div className="flex space-x-2">
                   <Select
