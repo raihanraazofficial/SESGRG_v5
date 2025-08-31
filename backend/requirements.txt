@@ -1,5 +1,4 @@
 fastapi==0.104.1
 mangum==0.17.0
 httpx==0.25.0
-pymongo==4.6.1       # MongoDB synchronous
-motor==4.3.0   # MongoDB asynchronous
+pymongo==4.6.1
