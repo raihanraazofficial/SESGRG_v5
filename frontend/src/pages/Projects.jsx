@@ -42,11 +42,14 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
+      console.log('⚡ Fetching projects with filters:', filters);
       const response = await googleSheetsService.getProjects(filters);
       setProjects(response.projects || []);
       setPagination(response.pagination || {});
+      console.log('✅ Projects loaded:', response.projects?.length || 0, 'items');
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error('❌ Error fetching projects:', error);
+      alert('Failed to load projects. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
     }
