@@ -1,25 +1,34 @@
 import React from "react";
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
 const Contacts = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Contact Us</h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
+      {/* Header - Gallery Style */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Contact Us</h1>
+          <p className="text-xl text-gray-300 max-w-3xl">
             Get in touch with our research team. We welcome collaboration opportunities, 
             research inquiries, and partnership proposals in sustainable energy and smart grid technologies.
           </p>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Contact Information */}
           <div className="lg:col-span-1">
-            <Card className="h-full">
+            <Card className="h-full performance-optimized">
               <CardContent className="p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h2>
                 
@@ -111,7 +120,7 @@ const Contacts = () => {
 
           {/* Google Map */}
           <div className="lg:col-span-2">
-            <Card className="h-full">
+            <Card className="h-full performance-optimized">
               <CardContent className="p-0 h-full">
                 <div className="relative h-full min-h-[500px] rounded-lg overflow-hidden">
                   <iframe
@@ -134,7 +143,7 @@ const Contacts = () => {
         {/* Additional Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Research Collaboration */}
-          <Card className="hover:shadow-lg transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow performance-optimized">
             <CardContent className="p-6 text-center">
               <div className="p-3 bg-emerald-100 rounded-full w-fit mx-auto mb-4">
                 <svg className="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +158,7 @@ const Contacts = () => {
           </Card>
 
           {/* Student Opportunities */}
-          <Card className="hover:shadow-lg transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow performance-optimized">
             <CardContent className="p-6 text-center">
               <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-4">
                 <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +173,7 @@ const Contacts = () => {
           </Card>
 
           {/* Industry Partnerships */}
-          <Card className="hover:shadow-lg transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow performance-optimized">
             <CardContent className="p-6 text-center">
               <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-4">
                 <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,7 +190,7 @@ const Contacts = () => {
 
         {/* Directions */}
         <div className="mt-12">
-          <Card>
+          <Card className="performance-optimized">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Getting to BRAC University</h2>
               
@@ -225,6 +234,17 @@ const Contacts = () => {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Back to Top - Performance Optimized */}
+      <div className="text-center pb-16">
+        <Button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          size="lg" 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+        >
+          Back to Top
+        </Button>
       </div>
     </div>
   );

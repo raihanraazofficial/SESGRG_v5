@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Search, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, HelpCircle, ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion";
 import { faqData } from "../mock/data";
@@ -27,16 +29,24 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
+      {/* Header - Gallery Style */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Frequently Asked Questions</h1>
+          <p className="text-xl text-gray-300 max-w-3xl">
             Find answers to common questions about our research, programs, and collaboration opportunities.
           </p>
         </div>
+      </div>
 
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Search */}
         <div className="mb-12">
           <div className="relative max-w-md mx-auto">
@@ -59,7 +69,7 @@ const FAQ = () => {
                 <p className="text-gray-600">{category.description}</p>
               </div>
 
-              <Card className="border-0 shadow-lg">
+              <Card className="border-0 shadow-lg performance-optimized">
                 <CardContent className="p-8">
                   <Accordion type="single" collapsible className="space-y-4">
                     {category.faqs.map((faq) => (
@@ -120,13 +130,24 @@ const FAQ = () => {
               Contact Us
             </a>
             <a
-              href="mailto:info@smartgridlab.edu"
+              href="mailto:sesg@bracu.ac.bd"
               className="inline-flex items-center justify-center px-6 py-3 border border-emerald-600 text-emerald-600 font-medium rounded-lg hover:bg-emerald-50 transition-colors"
             >
               Email Directly
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Back to Top - Performance Optimized */}
+      <div className="text-center pb-16">
+        <Button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          size="lg" 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+        >
+          Back to Top
+        </Button>
       </div>
     </div>
   );
