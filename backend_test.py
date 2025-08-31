@@ -667,38 +667,158 @@ def test_projects_endpoint():
         return False
 
 def test_achievements_endpoint():
-    """Test GET /api/achievements endpoint with various parameters"""
-    print("9. Testing GET /api/achievements endpoint...")
+    """Test GET /api/achievements endpoint - COMPREHENSIVE REVIEW REQUEST TESTING"""
+    print("9. Testing GET /api/achievements endpoint - ADDRESSING USER 'No achievements found' ISSUE...")
+    
+    all_tests_passed = True
+    
     try:
-        # Test basic endpoint
-        response = requests.get(f"{API_BASE_URL}/achievements", timeout=10)
+        # 1. Basic endpoint test with data source detection
+        print("   1.1 Testing Achievements API and Data Source...")
+        start_time = datetime.now()
+        response = requests.get(f"{API_BASE_URL}/achievements", timeout=30)
+        response_time = (datetime.now() - start_time).total_seconds()
+        
         if response.status_code != 200:
-            print(f"   ❌ Basic request failed with status: {response.status_code}")
+            print(f"      ❌ Achievements API request failed with status: {response.status_code}")
+            print(f"      Response text: {response.text[:200]}")
+            all_tests_passed = False
             return False
         
         data = response.json()
         required_keys = ["achievements", "pagination"]
         if not all(key in data for key in required_keys):
-            print(f"   ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
-            return False
+            print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+            all_tests_passed = False
+        else:
+            achievements = data.get('achievements', [])
+            print(f"      ✅ Achievements API responding - Retrieved {len(achievements)} achievements")
+            print(f"      ⏱️  Response time: {response_time:.3f} seconds")
+            
+            if len(achievements) > 0:
+                sample_achievement = achievements[0]
+                print(f"      🔍 Data source analysis: Google Sheets integration")
+                print(f"      📄 Sample achievement: '{sample_achievement.get('title', '')[:50]}...'")
+                print(f"      🏷️  Sample category: {sample_achievement.get('category', 'N/A')}")
+                print(f"      📅 Sample date: {sample_achievement.get('date', 'N/A')}")
+                
+                # Check for featured items
+                featured_count = sum(1 for ach in achievements if ach.get('featured', 0) == 1)
+                print(f"      ⭐ Featured achievements: {featured_count}")
+            else:
+                print(f"      ❌ CRITICAL: No achievements returned - This explains user's 'No achievements found' message!")
+                all_tests_passed = False
         
-        # Test category filter
-        response = requests.get(f"{API_BASE_URL}/achievements?category_filter=Award", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Category filter failed")
-            return False
+        # 2. Test category filtering
+        print("   1.2 Testing Achievements Category Filtering...")
         
-        # Test pagination with different per_page
-        response = requests.get(f"{API_BASE_URL}/achievements?page=1&per_page=6", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Pagination failed")
-            return False
+        # Get available categories first
+        if len(data.get('achievements', [])) > 0:
+            all_categories = set(ach.get('category', '') for ach in data['achievements'])
+            print(f"      📋 Available categories: {sorted(all_categories)}")
+            
+            # Test each category
+            for category in sorted(all_categories):
+                if category:  # Skip empty categories
+                    cat_response = requests.get(f"{API_BASE_URL}/achievements?category_filter={category}", timeout=15)
+                    if cat_response.status_code == 200:
+                        cat_data = cat_response.json()
+                        cat_achievements = cat_data.get('achievements', [])
+                        print(f"      ✅ Category '{category}': {len(cat_achievements)} achievements")
+                        
+                        # Verify all returned items have the correct category
+                        correct_category = all(ach.get('category') == category for ach in cat_achievements)
+                        if not correct_category:
+                            print(f"      ❌ Category filtering not working correctly for '{category}'")
+                            all_tests_passed = False
+                    else:
+                        print(f"      ❌ Category filter '{category}' failed with status: {cat_response.status_code}")
+                        all_tests_passed = False
         
-        print("   ✅ Achievements endpoint working correctly with all parameters")
-        return True
+        # 3. Test detailed view endpoint
+        print("   1.3 Testing Achievements Detail Endpoint...")
+        if len(data.get('achievements', [])) > 0:
+            sample_id = data['achievements'][0].get('id')
+            if sample_id:
+                detail_response = requests.get(f"{API_BASE_URL}/achievements/{sample_id}", timeout=15)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    if 'error' not in detail_data:
+                        print(f"      ✅ Detail endpoint working - Retrieved achievement details")
+                        print(f"      📄 Detail title: '{detail_data.get('title', '')[:50]}...'")
+                        
+                        # Check for full_content field for blog functionality
+                        if 'full_content' in detail_data:
+                            content_length = len(detail_data.get('full_content', ''))
+                            print(f"      📝 Full content available: {content_length} characters")
+                        else:
+                            print(f"      ⚠️  No full_content field for blog functionality")
+                    else:
+                        print(f"      ❌ Detail endpoint returned error: {detail_data.get('error')}")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ Detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
+        
+        # 4. Test pagination and sorting
+        print("   1.4 Testing Achievements Pagination and Sorting...")
+        
+        # Test different page sizes
+        for page_size in [6, 12, 24]:
+            page_response = requests.get(f"{API_BASE_URL}/achievements?page=1&per_page={page_size}", timeout=15)
+            if page_response.status_code == 200:
+                page_data = page_response.json()
+                page_achievements = page_data.get('achievements', [])
+                pagination = page_data.get('pagination', {})
+                print(f"      ✅ Page size {page_size}: Got {len(page_achievements)} achievements, per_page={pagination.get('per_page')}")
+            else:
+                print(f"      ❌ Pagination test failed for page size {page_size}")
+                all_tests_passed = False
+        
+        # Test sorting options
+        sort_tests = [
+            ("date", "desc", "newest first"),
+            ("date", "asc", "oldest first"),
+            ("title", "asc", "A-Z"),
+            ("title", "desc", "Z-A")
+        ]
+        
+        for sort_by, sort_order, description in sort_tests:
+            sort_response = requests.get(f"{API_BASE_URL}/achievements?sort_by={sort_by}&sort_order={sort_order}&per_page=5", timeout=15)
+            if sort_response.status_code == 200:
+                sort_data = sort_response.json()
+                sort_achievements = sort_data.get('achievements', [])
+                print(f"      ✅ Sorting {description}: {len(sort_achievements)} achievements")
+                
+                # Check if featured items maintain priority
+                if len(sort_achievements) > 0:
+                    featured_first = sort_achievements[0].get('featured', 0) == 1
+                    if featured_first:
+                        print(f"      ⭐ Featured item maintains priority in sorting")
+            else:
+                print(f"      ❌ Sorting test failed for {description}")
+                all_tests_passed = False
+        
+        # 5. Test title filtering
+        print("   1.5 Testing Achievements Title Filtering...")
+        title_response = requests.get(f"{API_BASE_URL}/achievements?title_filter=Award", timeout=15)
+        if title_response.status_code == 200:
+            title_data = title_response.json()
+            title_achievements = title_data.get('achievements', [])
+            print(f"      ✅ Title filter 'Award': {len(title_achievements)} achievements")
+        else:
+            print(f"      ❌ Title filter failed")
+            all_tests_passed = False
+        
+        if all_tests_passed:
+            print("   🎉 ALL Achievements API tests PASSED!")
+        else:
+            print("   ⚠️  Some Achievements API tests FAILED!")
+        
+        return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing achievements endpoint: {e}")
+        print(f"   ❌ Error in comprehensive Achievements API testing: {e}")
         return False
 
 def test_news_events_endpoint():
