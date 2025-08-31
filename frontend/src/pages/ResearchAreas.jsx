@@ -32,34 +32,20 @@ const ResearchAreas = () => {
       const stats = {};
       
       researchAreas.forEach(area => {
-        const areaKeywords = getAreaKeywords(area.title);
+        const exactAreaName = getExactAreaName(area.title);
         
-        // Filter projects
+        // Filter projects using exact research area name matching
         const areaProjects = projectsResponse.projects.filter(project => {
           if (project.research_areas && Array.isArray(project.research_areas)) {
-            return project.research_areas.some(projArea => 
-              areaKeywords.some(keyword => projArea.toLowerCase().includes(keyword.toLowerCase()))
-            );
-          }
-          if (project.title) {
-            return areaKeywords.some(keyword => 
-              project.title.toLowerCase().includes(keyword.toLowerCase())
-            );
+            return project.research_areas.includes(exactAreaName);
           }
           return false;
         });
 
-        // Filter publications
+        // Filter publications using exact research area name matching
         const areaPublications = publicationsResponse.publications.filter(pub => {
           if (pub.research_areas && Array.isArray(pub.research_areas)) {
-            return pub.research_areas.some(pubArea => 
-              areaKeywords.some(keyword => pubArea.toLowerCase().includes(keyword.toLowerCase()))
-            );
-          }
-          if (pub.title) {
-            return areaKeywords.some(keyword => 
-              pub.title.toLowerCase().includes(keyword.toLowerCase())
-            );
+            return pub.research_areas.includes(exactAreaName);
           }
           return false;
         });
