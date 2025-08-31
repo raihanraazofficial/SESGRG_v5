@@ -167,8 +167,16 @@ const ResearchAreas = () => {
     }
   };
 
-  const openDetailedPage = (area) => {
+  const openDetailedPage = async (area) => {
+    // Fetch real-time data before opening the detailed page
+    await fetchRealTimeData(area.id, area.title);
+    
     const areaImage = getAreaImage(area.id);
+    const areaPeople = getPeopleByResearchArea(area.id);
+    
+    // Get real-time data
+    const { projects, publications, lastUpdated } = realTimeData;
+    
     const detailHtml = `
       <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <!-- Enhanced Banner Section with Background Image -->
@@ -178,9 +186,11 @@ const ResearchAreas = () => {
             src="${areaImage}" 
             alt="${area.title}" 
             class="absolute inset-0 w-full h-full object-cover"
-            style="z-index: -1;"
+            style="z-index: 1;"
+            onerror="this.style.display='none'; console.log('Image failed to load: ${areaImage}');"
+            onload="console.log('Image loaded successfully: ${areaImage}');"
           />
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center" style="z-index: 2;">
             <div class="text-white max-w-4xl">
               <div class="flex items-center mb-4">
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
@@ -189,19 +199,96 @@ const ResearchAreas = () => {
                 <div>
                   <h1 class="text-5xl md:text-6xl font-bold mb-2">${area.title}</h1>
                   <div class="flex items-center space-x-6 text-emerald-200">
-                    <span class="flex items-center"><i class="fas fa-project-diagram mr-2"></i>${area.projects} Active Projects</span>
-                    <span class="flex items-center"><i class="fas fa-file-alt mr-2"></i>${area.publications} Publications</span>
+                    <span class="flex items-center"><i class="fas fa-project-diagram mr-2"></i>${projects.total || area.projects} Projects</span>
+                    <span class="flex items-center"><i class="fas fa-file-alt mr-2"></i>${publications.total || area.publications} Publications</span>
+                    <span class="flex items-center"><i class="fas fa-users mr-2"></i>${areaPeople.length} Team Members</span>
                   </div>
                 </div>
               </div>
               <p class="text-xl text-gray-200 max-w-3xl leading-relaxed">${area.description}</p>
+              ${lastUpdated ? `<p class="text-sm text-emerald-200 mt-2">Last updated: ${lastUpdated}</p>` : ''}
             </div>
           </div>
           <!-- Decorative elements -->
-          <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent" style="z-index: 3;"></div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <!-- Real-Time Projects & Publications Statistics -->
+          <section class="mb-16">
+            <div class="text-center mb-12">
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Real-Time Research Data</h2>
+              <div class="w-24 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <!-- Active Projects -->
+              <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${projects.active ? projects.active.length : '0'}</div>
+                <div class="text-blue-100 text-sm">Active Projects</div>
+              </div>
+              <!-- Completed Projects -->
+              <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${projects.completed ? projects.completed.length : '0'}</div>
+                <div class="text-green-100 text-sm">Completed Projects</div>
+              </div>
+              <!-- Journal Publications -->
+              <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.journal ? publications.journal.length : '0'}</div>
+                <div class="text-purple-100 text-sm">Journal Articles</div>
+              </div>
+              <!-- Conference Publications -->
+              <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.conference ? publications.conference.length : '0'}</div>
+                <div class="text-orange-100 text-sm">Conference Papers</div>
+              </div>
+              <!-- Book Chapters -->
+              <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.bookChapter ? publications.bookChapter.length : '0'}</div>
+                <div class="text-red-100 text-sm">Book Chapters</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Research Team Section -->
+          <section class="mb-16">
+            <div class="text-center mb-12">
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Team</h2>
+              <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              ${areaPeople.map(person => `
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow group">
+                  <div class="flex items-center space-x-4 mb-4">
+                    <img 
+                      src="${person.photo}" 
+                      alt="${person.name}"
+                      class="w-16 h-16 rounded-full object-cover"
+                      onerror="this.src='https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg';"
+                    />
+                    <div>
+                      <h3 class="font-bold text-gray-900 text-lg">${person.name}</h3>
+                      <p class="text-sm text-emerald-600">${person.designation}</p>
+                      <p class="text-xs text-gray-500">${person.affiliation}</p>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <span class="inline-block px-3 py-1 bg-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-100 text-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-800 text-xs font-medium rounded-full">
+                      ${person.category}
+                    </span>
+                  </div>
+                  <div class="space-y-2">
+                    <h4 class="text-sm font-semibold text-gray-800">Research Interest:</h4>
+                    <div class="flex flex-wrap gap-1">
+                      ${person.expertise.map(expertiseIndex => 
+                        `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">${researchAreaNames[expertiseIndex]}</span>`
+                      ).join('')}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
           <!-- Enhanced Overview Section -->
           <section class="mb-16">
             <div class="text-center mb-12">
@@ -264,32 +351,6 @@ const ResearchAreas = () => {
             </div>
           </section>
 
-          <!-- Enhanced Statistics Section -->
-          <section class="mb-16">
-            <div class="text-center mb-12">
-              <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Impact</h2>
-              <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto rounded-full"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-10 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mt-16 -mr-16"></div>
-                <div class="relative">
-                  <div class="text-6xl font-bold mb-3">${area.projects}</div>
-                  <div class="text-emerald-100 text-xl font-medium">Active Research Projects</div>
-                  <div class="mt-4 text-emerald-200">Ongoing innovative research initiatives</div>
-                </div>
-              </div>
-              <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl p-10 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mt-16 -mr-16"></div>
-                <div class="relative">
-                  <div class="text-6xl font-bold mb-3">${area.publications}</div>
-                  <div class="text-blue-100 text-xl font-medium">Published Research Papers</div>
-                  <div class="mt-4 text-blue-200">Peer-reviewed scientific contributions</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
           <!-- Enhanced Navigation Section -->
           <section class="mb-16">
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-900 rounded-3xl p-10 text-white">
@@ -300,14 +361,14 @@ const ResearchAreas = () => {
                 </p>
               </div>
               <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                <a href="/publications" class="inline-flex items-center justify-center px-8 py-4 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-semibold transition-colors group">
+                <a href="/publications" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-semibold transition-colors group">
                   <span class="mr-3">📚</span>
                   View Publications
                   <svg class="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M14 4h6m0 0v6m0-6L10 14"></path>
                   </svg>
                 </a>
-                <a href="/projects" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors border border-white/20 group">
+                <a href="/projects" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 rounded-xl font-semibold transition-colors border border-white/20 group">
                   <span class="mr-3">🔬</span>
                   View Projects
                   <svg class="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -344,6 +405,7 @@ const ResearchAreas = () => {
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
           .animate-float { animation: float 3s ease-in-out infinite; }
           @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+          img { max-width: 100%; height: auto; }
         </style>
       </head>
       <body class="bg-gray-50">
