@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight, Folder, FileText, Sun, Brain, ExternalLink, ArrowLeft } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight, Folder, FileText, Sun, Brain, ExternalLink, ArrowLeft, Users, BookOpen, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
+import googleSheetsService from "../services/googleSheetsApi";
 
 const ResearchAreas = () => {
   const [selectedArea, setSelectedArea] = useState(null);
