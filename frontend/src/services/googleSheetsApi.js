@@ -16,31 +16,66 @@ class GoogleSheetsService {
     try {
       console.log('Fetching from Google Sheets URL:', url);
       
-      // Use allorigins.win CORS proxy
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-      console.log('Using proxy URL:', proxyUrl);
+      // Try multiple CORS proxy services for reliability
+      const corsProxies = [
+        'https://corsproxy.io/?',
+        'https://api.codetabs.com/v1/proxy?quest=',
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.allorigins.win/get?url='
+      ];
       
-      const response = await fetch(proxyUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
+      let lastError = null;
+      
+      for (let i = 0; i < corsProxies.length; i++) {
+        try {
+          const proxy = corsProxies[i];
+          let proxyUrl, isAllOrigins = false;
+          
+          if (proxy.includes('allorigins')) {
+            proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+            isAllOrigins = true;
+          } else {
+            proxyUrl = `${proxy}${url}`;
+          }
+          
+          console.log(`Trying proxy ${i + 1}/${corsProxies.length}: ${proxy}`);
+          
+          const response = await fetch(proxyUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          });
 
-      console.log('Response status:', response.status, response.statusText);
+          console.log(`Proxy ${i + 1} response status:`, response.status, response.statusText);
 
-      if (!response.ok) {
-        throw new Error(`CORS Proxy request failed: ${response.status} ${response.statusText}`);
+          if (!response.ok) {
+            throw new Error(`Proxy request failed: ${response.status} ${response.statusText}`);
+          }
+
+          let data;
+          if (isAllOrigins) {
+            const proxyData = await response.json();
+            data = JSON.parse(proxyData.contents);
+          } else {
+            data = await response.json();
+          }
+          
+          console.log('Successfully fetched data via proxy:', proxy);
+          console.log('Data structure:', Object.keys(data));
+          return data;
+          
+        } catch (error) {
+          console.warn(`Proxy ${i + 1} failed:`, error.message);
+          lastError = error;
+          continue;
+        }
       }
-
-      const proxyData = await response.json();
-      console.log('Proxy response keys:', Object.keys(proxyData));
       
-      // allorigins returns data in { contents: "actual data" } format
-      const actualData = JSON.parse(proxyData.contents);
-      console.log('Actual data structure:', Object.keys(actualData));
-      return actualData;
+      // If all proxies fail, throw the last error
+      throw lastError || new Error('All CORS proxies failed');
+      
     } catch (error) {
       console.error('Google Sheets API error:', error);
       throw error;
