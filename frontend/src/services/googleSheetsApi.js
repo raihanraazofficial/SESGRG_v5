@@ -52,8 +52,12 @@ class GoogleSheetsService {
     try {
       const data = await this.fetchFromGoogleSheets(this.publicationsUrl);
       // Google Sheets API returns direct array of publications
-      const publications = Array.isArray(data) ? data : (data.data || []);
+      const publications = Array.isArray(data.publications) ? data.publications : 
+                          (Array.isArray(data) ? data : []);
 
+      console.log('Raw publications data:', publications.length, 'items');
+      console.log('First publication:', publications[0]);
+      
       // Apply client-side filtering and pagination
       let filteredData = publications;
 
