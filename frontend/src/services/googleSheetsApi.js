@@ -5,10 +5,12 @@
 
 class GoogleSheetsService {
   constructor() {
-    this.publicationsUrl = process.env.REACT_APP_PUBLICATIONS_API_URL;
-    this.projectsUrl = process.env.REACT_APP_PROJECTS_API_URL;
-    this.achievementsUrl = process.env.REACT_APP_ACHIEVEMENTS_API_URL;
-    this.newsEventsUrl = process.env.REACT_APP_NEWS_EVENTS_API_URL;
+    // Add CORS proxy to handle cross-origin requests
+    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+    this.publicationsUrl = corsProxy + process.env.REACT_APP_PUBLICATIONS_API_URL;
+    this.projectsUrl = corsProxy + process.env.REACT_APP_PROJECTS_API_URL;
+    this.achievementsUrl = corsProxy + process.env.REACT_APP_ACHIEVEMENTS_API_URL;
+    this.newsEventsUrl = corsProxy + process.env.REACT_APP_NEWS_EVENTS_API_URL;
   }
 
   async fetchFromGoogleSheets(url) {
