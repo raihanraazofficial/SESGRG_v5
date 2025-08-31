@@ -43,29 +43,56 @@ const LatestNewsSection = () => {
         console.log('⚡ Homepage: Fetching latest news & events...');
       }
       
-      // Always try to get fresh data first, with shorter timeout for better UX
-      const response = forceRefresh 
-        ? await googleSheetsService.forceRefreshNewsEvents({
-            page: 1,
-            per_page: 8,
-            sort_by: 'date',
-            sort_order: 'desc'
-          })
-        : await googleSheetsService.getNewsEvents({
-            page: 1,
-            per_page: 8,
-            sort_by: 'date',
-            sort_order: 'desc'
-          });
+      // Multiple retry attempts for better reliability
+      let response = null;
+      let attempts = 0;
+      const maxAttempts = 3;
       
-      const newsEvents = response.news_events || [];
+      while (attempts < maxAttempts && !response) {
+        try {
+          attempts++;
+          console.log(`📞 Homepage: API call attempt ${attempts}/${maxAttempts}`);
+          
+          response = forceRefresh 
+            ? await googleSheetsService.forceRefreshNewsEvents({
+                page: 1,
+                per_page: 8,
+                sort_by: 'date',
+                sort_order: 'desc'
+              })
+            : await googleSheetsService.getNewsEvents({
+                page: 1,
+                per_page: 8,
+                sort_by: 'date',
+                sort_order: 'desc'
+              });
+          
+          console.log('📊 Homepage: API Response received:', response);
+          break;
+          
+        } catch (attemptError) {
+          console.error(`❌ Homepage: Attempt ${attempts} failed:`, attemptError);
+          if (attempts === maxAttempts) {
+            throw attemptError;
+          }
+          // Wait 1 second before retry
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+      
+      const newsEvents = response?.news_events || [];
       setLatestNews(newsEvents);
       setHasAttemptedLoad(true);
       
-      console.log('✅ Homepage: Latest news loaded:', newsEvents.length, 'items');
+      console.log('✅ Homepage: Latest news loaded successfully:', newsEvents.length, 'items');
+      
+      // Log actual data for debugging
+      if (newsEvents.length > 0) {
+        console.log('📰 Homepage: First news item:', newsEvents[0]);
+      }
       
     } catch (error) {
-      console.error('❌ Homepage: Error fetching latest news:', error);
+      console.error('❌ Homepage: Final error after all attempts:', error);
       setError('Failed to load latest news. Please try refreshing the page.');
       setLatestNews([]);
       setHasAttemptedLoad(true);
