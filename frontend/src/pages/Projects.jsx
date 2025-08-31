@@ -98,11 +98,44 @@ const Projects = () => {
       status_filter: '',
       area_filter: '',
       title_filter: '',
+      search_filter: '',
       sort_by: 'start_date',
       sort_order: 'desc',
       page: 1,
       per_page: 20
     });
+    // Reset available options
+    setAvailableAreas([]);
+  };
+
+  const handleRefreshData = async () => {
+    try {
+      setRefreshing(true);
+      console.log('Refreshing projects data...');
+      
+      // Force refresh data (bypass cache)
+      const response = await googleSheetsService.forceRefreshProjects(filters);
+      console.log('Projects refreshed:', response);
+      
+      const projectsData = response.projects || [];
+      setProjects(projectsData);
+      setPagination(response.pagination || {});
+      setStatistics(response.statistics || {});
+      
+      // Update available filters
+      if (projectsData.length > 0) {
+        const allAreas = projectsData.flatMap(project => project.research_areas || []);
+        const uniqueAreas = [...new Set(allAreas)].sort();
+        setAvailableAreas(uniqueAreas);
+      }
+      
+      alert('Projects data refreshed successfully!');
+    } catch (error) {
+      console.error('Error refreshing projects:', error);
+      alert('Failed to refresh projects. Please try again.');
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const getStatusColor = (status) => {
