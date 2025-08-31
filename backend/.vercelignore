@@ -1,73 +1,7 @@
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
-env/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
-.mypy_cache/
-.pytest_cache/
-.hypothesis
-
-# Virtual environments  
-venv/
-.venv/
-ENV/
-env/
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Testing
-tests/
-test_*.py
-*_test.py
-
-# Documentation
-docs/
-*.md
-README*
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Environment files
 .env
 .env.*
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Large files
-*.zip
-*.tar.gz
-*.pdf
-*.doc
-*.docx
+venv/
+.venv/
