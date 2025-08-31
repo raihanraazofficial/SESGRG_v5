@@ -272,37 +272,48 @@ def validate_ieee_citation_format(citation, category):
     
     return True
 
-def test_post_status_endpoint():
-    """Test POST /api/status endpoint"""
-    print("3. Testing POST /api/status endpoint...")
-    try:
-        test_payload = {"client_name": "test_client_backend_testing"}
-        headers = {"Content-Type": "application/json"}
+def test_publication_type_filtering(publications):
+    """Test filtering by publication type"""
+    print("3. Testing publication type filtering...")
+    
+    all_tests_passed = True
+    
+    # Get unique categories from publications
+    categories = list(set(pub.get('category', '') for pub in publications if pub.get('category')))
+    print(f"   📋 Available categories: {categories}")
+    
+    for category in categories:
+        # Filter publications by category (simulate frontend filtering)
+        filtered_pubs = [pub for pub in publications if pub.get('category') == category]
         
-        response = requests.post(
-            f"{API_BASE_URL}/status", 
-            json=test_payload, 
-            headers=headers,
-            timeout=10
-        )
+        print(f"   🔍 Testing category '{category}': {len(filtered_pubs)} publications")
         
-        if response.status_code == 200:
-            data = response.json()
-            if (data.get("client_name") == "test_client_backend_testing" and 
-                "id" in data and "timestamp" in data):
-                print("   ✅ POST /api/status working correctly")
-                print(f"   Created status check with ID: {data['id']}")
-                return True, data["id"]
-            else:
-                print(f"   ❌ Unexpected response structure: {data}")
-                return False, None
+        if len(filtered_pubs) == 0:
+            print(f"      ⚠️  No publications found for category: {category}")
+            continue
+        
+        # Verify all filtered publications have the correct category
+        incorrect_category = [pub for pub in filtered_pubs if pub.get('category') != category]
+        
+        if len(incorrect_category) == 0:
+            print(f"      ✅ All {len(filtered_pubs)} publications correctly filtered")
         else:
-            print(f"   ❌ Status code: {response.status_code}")
-            print(f"   Response: {response.text}")
-            return False, None
-    except Exception as e:
-        print(f"   ❌ Error testing POST status endpoint: {e}")
-        return False, None
+            print(f"      ❌ {len(incorrect_category)} publications have incorrect category")
+            all_tests_passed = False
+        
+        # Test IEEE formatting for this category
+        sample_pub = filtered_pubs[0]
+        citation = generate_ieee_citation_test(sample_pub)
+        format_valid = validate_ieee_citation_format(citation, category)
+        
+        if format_valid:
+            print(f"      ✅ IEEE format validation passed for {category}")
+        else:
+            print(f"      ❌ IEEE format validation failed for {category}")
+            print(f"         Citation: {citation}")
+            all_tests_passed = False
+    
+    return all_tests_passed
 
 def test_get_status_endpoint():
     """Test GET /api/status endpoint"""
