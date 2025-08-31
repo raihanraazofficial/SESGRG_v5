@@ -259,7 +259,7 @@ class GoogleSheetsService {
   // Projects API
   async getProjects(params = {}) {
     try {
-      const data = await this.fetchFromGoogleSheets(this.projectsUrl);
+      const data = await this.fetchFromGoogleSheets(this.projectsUrl, this.cacheKeys.projects);
       // Projects API returns {projects: [...], pagination: {...}}
       const projects = Array.isArray(data.projects) ? data.projects : 
                       (Array.isArray(data) ? data : []);
