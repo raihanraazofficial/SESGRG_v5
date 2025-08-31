@@ -319,7 +319,7 @@ const Home = () => {
           <div className="text-center space-y-8">
             <div className={`transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
-                <span className="inline-block animate-pulse">Sustainable Energy</span>
+                <span className="inline-block animate-pulse">Sustainable Energy &</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 animate-bounce">
                   Smart Grid Research
@@ -329,8 +329,7 @@ const Home = () => {
             
             <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in">
-                Pioneering the future of energy through innovative research in smart grids, 
-                renewable integration, and AI-powered energy systems at BRAC University
+                Pioneering Research in Clean Energy, Renewable Integration, and Next-Generation Smart Grid Systems.
               </p>
             </div>
             
