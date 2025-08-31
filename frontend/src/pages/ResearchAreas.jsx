@@ -253,6 +253,10 @@ const ResearchAreas = () => {
   const openDetailedPage = async (area) => {
     console.log('🚀 Opening detailed page for:', area.title);
     
+    let projects, publications, lastUpdated;
+    const areaImage = getAreaImage(area.id);
+    const areaPeople = getPeopleByResearchArea(area.id);
+    
     // Show loading state
     setRealTimeData(prev => ({ ...prev, loading: true }));
     
@@ -367,34 +371,20 @@ const ResearchAreas = () => {
         bookChapters: freshRealTimeData.publications.bookChapter.length
       });
 
-      // Update state
+      // Update state and use fresh data
       setRealTimeData(freshRealTimeData);
+      projects = freshRealTimeData.projects;
+      publications = freshRealTimeData.publications;
+      lastUpdated = freshRealTimeData.lastUpdated;
       
-      const areaImage = getAreaImage(area.id);
-      const areaPeople = getPeopleByResearchArea(area.id);
-      
-      // Use fresh data directly instead of state
-      const { projects, publications, lastUpdated } = freshRealTimeData;
-      
-      console.log('📊 Using fresh real-time data for display:', {
-        projects: projects,
-        publications: publications,
-        lastUpdated: lastUpdated
-      });
-
     } catch (error) {
       console.error('Error fetching real-time data:', error);
       setRealTimeData(prev => ({ ...prev, loading: false }));
       
       // Use mock data as fallback
-      const { projects, publications, lastUpdated } = {
-        projects: { active: [], completed: [], total: area.projects },
-        publications: { journal: [], conference: [], bookChapter: [], total: area.publications },
-        lastUpdated: 'Failed to load'
-      };
-      
-      const areaImage = getAreaImage(area.id);
-      const areaPeople = getPeopleByResearchArea(area.id);
+      projects = { active: [], completed: [], total: area.projects };
+      publications = { journal: [], conference: [], bookChapter: [], total: area.publications };
+      lastUpdated = 'Failed to load real-time data';
     }
     
     const detailHtml = `
