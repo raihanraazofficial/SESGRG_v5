@@ -72,10 +72,10 @@ const People = () => {
       id: 3,
       name: "Amirul Islam, PhD",
       designation: "Assistant Professor",
-      affiliation: "Department of Electrical and Electronic Engineering, BRAC University",
+      affiliation: "Department of EEE, BRAC University",
       description: "Researcher in artificial intelligence and power systems with expertise in multimodal signal processing, smart grid automation, and interdisciplinary applications of AI.",
       expertise: [5, 6], // Max 4 areas: Power System Automation, Cybersecurity and AI for Power Infrastructure
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&facepad=3",
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Amirul%20Islam.jpg",
       email: "amirul.islam@bracu.ac.bd",
       phone: "+880-2-9844053",
       googleScholar: "https://scholar.google.com/citations?user=amirul-islam",
