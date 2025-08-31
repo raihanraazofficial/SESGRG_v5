@@ -36,6 +36,8 @@ function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contacts />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsConditions />} />
           </Routes>
         </main>
         <Footer />
