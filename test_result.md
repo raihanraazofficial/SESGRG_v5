@@ -103,10 +103,13 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Fix 500 INTERNAL_SERVER_ERROR on Vercel deployment (https://sesgrg-v4.vercel.app/). 
-  The SESG Research website has been fully developed with comprehensive backend APIs, Google Sheets integration, 
-  and frontend features, but the deployed site shows "500: INTERNAL_SERVER_ERROR, Code: FUNCTION_INVOCATION_FAILED".
-  Root cause identified as Vercel Deployment Protection blocking all API access with 401 Unauthorized responses.
+  Modify existing SESG Research website to:
+  1. Update loading styles for Publications and Projects pages to match Achievements and News Events (skeleton cards instead of spinner)
+  2. Enhance Projects page to be similar to Publications page with:
+     - 3 statistics cards: Total Projects, Active Projects, Complete Projects
+     - Section filtering buttons: All Projects, Active, Completed, Planning
+     - Fix broken filter functionality (page goes blank on "show filter" click)
+     - Add comprehensive search, sorting and filtering mechanism like Publications page
   
 backend:
   - task: "Fix Vercel Deployment Configuration Issues"
