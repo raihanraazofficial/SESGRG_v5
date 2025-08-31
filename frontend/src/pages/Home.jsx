@@ -694,6 +694,26 @@ const Home = () => {
                     </div>
                   </Card>
                 </div>
+              ).map((photo, index) => (
+                <div key={index} className="flex-shrink-0 w-80 group cursor-pointer inline-block performance-optimized">
+                  <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden transform hover:scale-105 will-change-transform performance-optimized">
+                    <div className="relative h-64 overflow-hidden">
+                      <img 
+                        src={photo.url}
+                        alt={photo.caption}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 lazy-image performance-optimized"
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority={index < 3 ? "high" : "low"}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                        <p className="text-sm font-semibold">{photo.caption}</p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
