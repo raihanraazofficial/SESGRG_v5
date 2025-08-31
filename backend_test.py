@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite
-Tests the basic FastAPI backend functionality including:
-- Server accessibility
-- Root endpoint
-- Status endpoints (POST and GET)
-- MongoDB connection
-- CORS configuration
+Publications IEEE Citation Formatting Testing Suite
+Tests the Publications page IEEE citation formatting functionality:
+- Verify that all publication types display proper IEEE format
+- Test the citation copy functionality 
+- Check that all required IEEE elements are present
+- Test filtering by publication type
+- Verify that the Google Sheets data is being properly parsed and formatted
 """
 
 import requests
@@ -14,27 +14,41 @@ import json
 import os
 from datetime import datetime
 import sys
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
-# Get backend URL from frontend .env file
-def get_backend_url():
+# Get Google Sheets API URLs from frontend .env file
+def get_api_urls():
     try:
+        urls = {}
         with open('/app/frontend/.env', 'r') as f:
             for line in f:
-                if line.startswith('REACT_APP_BACKEND_URL='):
-                    return line.split('=', 1)[1].strip()
+                if line.startswith('REACT_APP_PUBLICATIONS_API_URL='):
+                    urls['publications'] = line.split('=', 1)[1].strip()
+                elif line.startswith('REACT_APP_BACKEND_URL='):
+                    urls['backend'] = line.split('=', 1)[1].strip()
+        return urls
     except Exception as e:
         print(f"Error reading frontend .env: {e}")
-        return None
+        return {}
 
-BACKEND_URL = get_backend_url()
-if not BACKEND_URL:
-    print("ERROR: Could not get REACT_APP_BACKEND_URL from frontend/.env")
+API_URLS = get_api_urls()
+if not API_URLS.get('publications'):
+    print("ERROR: Could not get REACT_APP_PUBLICATIONS_API_URL from frontend/.env")
     sys.exit(1)
 
-API_BASE_URL = f"{BACKEND_URL}/api"
+PUBLICATIONS_API_URL = API_URLS['publications']
+FRONTEND_URL = "http://localhost:3000"  # Local frontend URL for testing
 
-print(f"Testing backend at: {API_BASE_URL}")
-print("=" * 60)
+print(f"Testing Publications IEEE Citation Formatting")
+print(f"Publications API: {PUBLICATIONS_API_URL}")
+print(f"Frontend URL: {FRONTEND_URL}")
+print("=" * 80)
 
 def test_server_accessibility():
     """Test if the backend server is running and accessible"""
