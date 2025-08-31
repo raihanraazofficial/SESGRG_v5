@@ -725,8 +725,8 @@ const ResearchAreas = () => {
               const areaPeople = getPeopleByResearchArea(area.id);
               
               return (
-                <Card key={area.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:scale-105 cursor-pointer">
-                  <CardContent className="p-8" onClick={() => openDetailedPage(area)}>
+                <Card key={area.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:scale-105 cursor-pointer flex flex-col">
+                  <CardContent className="p-8 flex flex-col flex-grow" onClick={() => openDetailedPage(area)}>
                     <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl mb-6 group-hover:from-emerald-200 group-hover:to-teal-200 transition-all duration-300">
                       <IconComponent className="h-8 w-8 text-emerald-600" />
                     </div>
@@ -735,7 +735,7 @@ const ResearchAreas = () => {
                       {area.title}
                     </h3>
                     
-                    <p className="text-gray-600 leading-relaxed mb-6">
+                    <p className="text-gray-600 leading-relaxed mb-6 flex-grow">
                       {area.description}
                     </p>
                     
@@ -800,7 +800,8 @@ const ResearchAreas = () => {
                       </div>
                     )}
 
-                    <div className="mt-6 flex items-center justify-center">
+                    {/* Fixed bottom Learn More button */}
+                    <div className="mt-auto">
                       <Button
                         variant="outline"
                         size="sm"
