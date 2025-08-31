@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Google Sheets Integration and Performance Optimization Testing Suite
-Tests the Google Sheets integration and performance optimizations:
-- Publications Statistics Filtering Fix: Verify statistics update based on filtered results
-- Loading Performance: Test cache behavior, timeout improvements, background refresh
-- All Pages Functionality: Verify optimizations haven't broken existing functionality
-- Google Sheets API Integration: Test all 4 API endpoints
-- Performance Metrics: Test loading times and cache utilization
+Google Sheets API Integration Testing Suite - Home Page Latest News & Events Focus
+Tests the Google Sheets API integration that powers the Home page Latest News & Events section:
+- All 4 Google Sheets APIs working correctly (Publications, Projects, Achievements, News Events)
+- News Events API specifically returns valid data for Home page
+- Response times are reasonable (under 4-5 seconds)
+- No authentication or access issues
+- Error handling works properly if API is temporarily unavailable
+- Verifies recent improvements to error handling, loading states, and caching
 """
 
 import requests
