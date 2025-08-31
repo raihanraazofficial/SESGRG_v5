@@ -159,34 +159,60 @@ code {
   }
 }
 
-/* Photo Gallery Animation - Right to Left Rail Movement */
+/* ULTRA-SMOOTH PHOTO GALLERY ANIMATION - RIGHT TO LEFT RAIL */
 @keyframes scroll-left {
   0% {
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
 }
 
 .animate-scroll-right {
-  animation: scroll-left 40s linear infinite;
+  animation: scroll-left 50s linear infinite;
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  /* Ultra performance optimizations */
+  contain: layout style paint;
+  isolation: isolate;
+  /* Smooth animation timing */
+  animation-timing-function: linear;
+  /* Prevent animation jank */
+  animation-fill-mode: both;
 }
 
 .animate-scroll-right:hover {
   animation-play-state: paused;
 }
 
-/* Advanced performance optimizations */
+/* CRITICAL: Gallery rail performance optimizations */
 .animate-scroll-right * {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
   will-change: transform;
+  /* Prevent layout thrashing */
+  contain: layout style paint;
+  /* Optimize compositing layers */
+  isolation: isolate;
+}
+
+/* Gallery container optimization */
+.gallery-container {
+  overflow: hidden;
+  /* Create compositing layer */
+  transform: translateZ(0);
+  will-change: scroll-position;
+  /* Prevent scrollbar flickering */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.gallery-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* Optimize hover transitions */
