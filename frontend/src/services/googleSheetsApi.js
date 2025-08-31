@@ -15,9 +15,12 @@ class GoogleSheetsService {
     try {
       console.log('Fetching from Google Sheets URL:', url);
       
+      // Try using CORS mode with credentials and additional headers
       const response = await fetch(url, {
         method: 'GET',
+        mode: 'cors',
         headers: {
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         // Allow redirects
@@ -36,8 +39,57 @@ class GoogleSheetsService {
       return data;
     } catch (error) {
       console.error('Google Sheets API error:', error);
-      throw error;
+      
+      // If CORS fails, try JSONP approach
+      console.log('Trying alternative approach...');
+      return await this.fetchWithJSONP(url);
     }
+  }
+
+  // JSONP fallback for CORS issues
+  async fetchWithJSONP(url) {
+    return new Promise((resolve, reject) => {
+      // Create a unique callback name
+      const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+      
+      // Create the script element
+      const script = document.createElement('script');
+      
+      // Add callback parameter to URL
+      const separator = url.includes('?') ? '&' : '?';
+      const jsonpUrl = `${url}${separator}callback=${callbackName}`;
+      
+      console.log('Trying JSONP URL:', jsonpUrl);
+      
+      // Define the callback function
+      window[callbackName] = function(data) {
+        console.log('JSONP callback received data:', data);
+        delete window[callbackName];
+        document.body.removeChild(script);
+        resolve(data);
+      };
+      
+      // Handle script errors
+      script.onerror = function() {
+        console.error('JSONP request failed');
+        delete window[callbackName];
+        document.body.removeChild(script);
+        reject(new Error('JSONP request failed'));
+      };
+      
+      // Set the script source and add to document
+      script.src = jsonpUrl;
+      document.body.appendChild(script);
+      
+      // Timeout after 30 seconds
+      setTimeout(() => {
+        if (window[callbackName]) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('JSONP request timeout'));
+        }
+      }, 30000);
+    });
   }
 
   // Publications API
