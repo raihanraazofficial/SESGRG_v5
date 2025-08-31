@@ -1,6 +1,8 @@
 import React from "react";
-import { FileText, Users, AlertTriangle, Shield, BookOpen, Scale, Gavel, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
+import { FileText, Users, AlertTriangle, Shield, BookOpen, Scale, Gavel, Mail, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 const TermsConditions = () => {
   const sections = [
