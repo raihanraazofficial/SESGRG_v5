@@ -348,9 +348,25 @@ const Projects = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <span className="ml-3 text-lg text-gray-600">⚡ Loading Projects...</span>
+          <div className="space-y-8">
+            {/* Statistics Cards Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {Array.from({ length: 3 }, (_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-white p-6 rounded-lg border shadow-sm">
+                    <div className="h-8 bg-gray-300 rounded w-16 mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-32"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Projects Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }, (_, i) => (
+                <SkeletonCard key={i} variant="regular" />
+              ))}
+            </div>
           </div>
         )}
 
