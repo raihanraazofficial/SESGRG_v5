@@ -677,55 +677,7 @@ const NewsEvents = () => {
             Upcoming Events
           </Button>
         </div>
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <p className="text-xl text-gray-600 max-w-4xl text-center">
-              Stay updated with the latest news, events, and achievements from our research lab. 
-              Discover our recent breakthroughs and upcoming activities in sustainable energy and smart grid research.
-            </p>
-            <Button
-              onClick={() => fetchNewsEvents(true)}
-              disabled={refreshing}
-              variant="outline"
-              size="sm"
-              className="ml-4 flex-shrink-0"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? 'Refreshing...' : 'Refresh'}
-            </Button>
-          </div>
 
-          {/* Category Filter Buttons */}
-          <div className="flex justify-center flex-wrap gap-4 mb-8">
-            <Button
-              variant={filters.category_filter === '' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', '')}
-              className="px-6 py-2"
-            >
-              All Categories
-            </Button>
-            <Button
-              variant={filters.category_filter === 'News' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'News')}
-              className="px-6 py-2"
-            >
-              News
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Events' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Events')}
-              className="px-6 py-2"
-            >
-              Events
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Upcoming Events' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Upcoming Events')}
-              className="px-6 py-2"
-            >
-              Upcoming Events
-            </Button>
-          </div>
-        </div>
 
         {/* Filters */}
         <Card className="mb-8">
