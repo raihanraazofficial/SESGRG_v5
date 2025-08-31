@@ -47,8 +47,13 @@ const Publications = () => {
   const fetchPublications = async () => {
     try {
       setLoading(true);
+      console.log('Fetching publications with filters:', filters);
+      
       const response = await googleSheetsService.getPublications(filters);
+      console.log('Publications response:', response);
+      
       const pubs = response.publications || [];
+      console.log('Publications data:', pubs.length, 'items');
       
       setPublications(pubs);
       setPagination(response.pagination || {});
@@ -65,6 +70,8 @@ const Publications = () => {
       }
     } catch (error) {
       console.error('Error fetching publications:', error);
+      // Show user-friendly error message
+      alert('Failed to load publications. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
     }
