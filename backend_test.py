@@ -858,75 +858,94 @@ def test_error_handling_improvements():
         return False
 
 def run_all_tests():
-    """Run focused Google Sheets API tests for Home page Latest News & Events section"""
-    print("🚀 Starting Google Sheets API Integration Tests - Home Page Latest News & Events Focus")
+    """Run comprehensive Google Sheets API tests for Research Areas page functionality"""
+    print("🚀 Starting Google Sheets API Integration Tests - Research Areas Page Focus")
     print("=" * 80)
     
     all_tests_passed = True
     test_results = []
     
-    # Test 1: Home Page News Events Integration (PRIMARY FOCUS)
+    # Test 1: Research Areas Google Sheets Integration (PRIMARY FOCUS)
     try:
-        home_news_working = test_home_page_news_events_integration()
-        test_results.append(("Home Page News Events Integration", home_news_working))
-        all_tests_passed &= home_news_working
+        research_areas_working = test_research_areas_google_sheets_integration()
+        test_results.append(("Research Areas Google Sheets Integration", research_areas_working))
+        all_tests_passed &= research_areas_working
     except Exception as e:
         print(f"❌ Test 1 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 2: All Google Sheets APIs Verification
+    # Test 2: Concurrent API Fetching (Promise.all simulation)
+    try:
+        concurrent_working = test_concurrent_api_fetching()
+        test_results.append(("Concurrent API Fetching (Promise.all)", concurrent_working))
+        all_tests_passed &= concurrent_working
+    except Exception as e:
+        print(f"❌ Test 2 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 3: All Google Sheets APIs Verification
     try:
         apis_working, api_data = test_all_google_sheets_apis()
         test_results.append(("All 4 Google Sheets APIs", apis_working))
         all_tests_passed &= apis_working
     except Exception as e:
-        print(f"❌ Test 2 failed with exception: {e}")
-        all_tests_passed = False
-    
-    # Test 3: Authentication and Access Verification
-    try:
-        auth_working = test_authentication_and_access()
-        test_results.append(("Authentication & Access", auth_working))
-        all_tests_passed &= auth_working
-    except Exception as e:
         print(f"❌ Test 3 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 4: Response Time Performance (Under 4-5 seconds requirement)
+    # Test 4: Caching and Background Refresh
+    try:
+        caching_working = test_caching_and_background_refresh()
+        test_results.append(("Caching & Background Refresh", caching_working))
+        all_tests_passed &= caching_working
+    except Exception as e:
+        print(f"❌ Test 4 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 5: Response Time Performance (Under 4-5 seconds requirement)
     try:
         performance_good = test_response_time_performance()
         test_results.append(("Response Time Performance", performance_good))
         all_tests_passed &= performance_good
     except Exception as e:
-        print(f"❌ Test 4 failed with exception: {e}")
+        print(f"❌ Test 5 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 5: Error Handling Verification
+    # Test 6: Data Structure Validation
+    try:
+        data_structure_valid = test_data_structure_validation()
+        test_results.append(("Data Structure Validation", data_structure_valid))
+        all_tests_passed &= data_structure_valid
+    except Exception as e:
+        print(f"❌ Test 6 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 7: Error Handling Verification
     try:
         error_handling_works = test_error_handling_improvements()
         test_results.append(("Error Handling", error_handling_works))
         all_tests_passed &= error_handling_works
     except Exception as e:
-        print(f"❌ Test 5 failed with exception: {e}")
+        print(f"❌ Test 7 failed with exception: {e}")
         all_tests_passed = False
     
     # Print summary
     print("\n" + "=" * 80)
-    print("📊 HOME PAGE LATEST NEWS & EVENTS - TEST RESULTS SUMMARY")
+    print("📊 RESEARCH AREAS PAGE - TEST RESULTS SUMMARY")
     print("=" * 80)
     
     for test_name, passed in test_results:
         status = "✅ PASSED" if passed else "❌ FAILED"
-        print(f"{test_name:<40} {status}")
+        print(f"{test_name:<45} {status}")
     
     print("=" * 80)
     
     if all_tests_passed:
-        print("🎉 ALL TESTS PASSED! Google Sheets API integration for Home page Latest News & Events is working correctly.")
-        print("✅ Backend data infrastructure is solid and ready for frontend testing.")
+        print("🎉 ALL TESTS PASSED! Google Sheets API integration for Research Areas page is working correctly.")
+        print("✅ Real-time data fetching, filtering, and concurrent API calls are all functional.")
+        print("✅ Backend data infrastructure is solid and ready for production use.")
         return True
     else:
-        print("⚠️  SOME TESTS FAILED! Please review the issues above before frontend testing.")
+        print("⚠️  SOME TESTS FAILED! Please review the issues above before deployment.")
         return False
 
 # Main execution
