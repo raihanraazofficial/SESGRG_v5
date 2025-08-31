@@ -71,7 +71,8 @@ async def api_root():
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
     status_obj = StatusCheck(**status_dict)
-    _ = await db.status_checks.insert_one(status_obj.dict())
+    if db is not None:
+        _ = await db.status_checks.insert_one(status_obj.dict())
     return status_obj
 
 @app.get("/api/status", response_model=List[StatusCheck])
