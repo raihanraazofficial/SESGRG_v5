@@ -173,6 +173,18 @@ frontend:
         agent: "testing"
         comment: "❌ PARTIAL FAILURE: IEEE citation formatting testing revealed issues with Conference Proceedings and Book Chapters. Journal Articles (5/5) work correctly with all required elements present. Conference Proceedings (5/5) are missing 'pages' field in Google Sheets data, causing incomplete citations. Book Chapters (6/6) are missing 'pages', 'city', and 'country' fields. Google Sheets API accessibility ✅, Citation copy functionality ✅, Data parsing ✅. The frontend code is correctly implemented but Google Sheets data is incomplete for some publication types. All 16 publications successfully retrieved and parsed."
 
+  - task: "Optimize Loading Performance and Fix Statistics Filtering"
+    implemented: true
+    working: true
+    file: "googleSheetsApi.js, Publications.jsx, Projects.jsx, Achievements.jsx, NewsEvents.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ DUAL OPTIMIZATION COMPLETE: 1) FIXED STATISTICS FILTERING: Publications page statistics (Total Publications, Citations, Latest Year, Total Areas) now correctly update based on filtered results instead of always showing all publications. When filtering by journals/conferences/books, statistics reflect only the selected category. 2) PERFORMANCE OPTIMIZATIONS: Reduced CORS proxy timeout from 8s to 4s for faster failures, reduced cache timeout from 5min to 3min for more responsive updates, reordered proxies by reliability, added 200ms progressive delays for proxy racing, implemented background data refresh every 4 minutes to pre-load fresh data, enhanced loading state indicators with better feedback (⚡ symbols), and added error handling with user-friendly alerts. These changes should significantly improve both loading speed and data accuracy across all pages."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
