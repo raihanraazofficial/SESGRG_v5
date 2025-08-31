@@ -307,7 +307,7 @@ Best regards,`;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
       <style>{`
         .ieee-citation em {
           font-style: italic;
