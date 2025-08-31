@@ -46,16 +46,29 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
+      setLoadingSource('⚡ Loading...');
       console.log('⚡ Fetching projects with filters:', filters);
       const response = await googleSheetsService.getProjects(filters);
-      setProjects(response.projects || []);
+      
+      const projectsData = response.projects || [];
+      setProjects(projectsData);
       setPagination(response.pagination || {});
-      console.log('✅ Projects loaded:', response.projects?.length || 0, 'items');
+      setStatistics(response.statistics || {});
+      
+      // Extract unique research areas from all projects
+      if (projectsData.length > 0) {
+        const allAreas = projectsData.flatMap(project => project.research_areas || []);
+        const uniqueAreas = [...new Set(allAreas)].sort();
+        setAvailableAreas(uniqueAreas);
+      }
+      
+      console.log('✅ Projects loaded:', projectsData.length, 'items');
     } catch (error) {
       console.error('❌ Error fetching projects:', error);
       alert('Failed to load projects. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
+      setLoadingSource('');
     }
   };
 
