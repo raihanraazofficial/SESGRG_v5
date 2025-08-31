@@ -631,9 +631,9 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Animated Scrolling Gallery */}
-          <div className="relative">
-            <div className="flex animate-scroll-right space-x-8">
+          {/* Smooth Right-to-Left Scrolling Gallery */}
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll-right space-x-8 whitespace-nowrap">
               {[
                 {
                   url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
@@ -658,8 +658,8 @@ const Home = () => {
                 {
                   url: "https://images.pexels.com/photos/8539753/pexels-photo-8539753.jpeg",
                   caption: "Professional Research Activities"
-                }
-              ].concat([
+                },
+                // Duplicate for continuous scroll effect
                 {
                   url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
                   caption: "Solar Panel Installation Research"
@@ -672,9 +672,9 @@ const Home = () => {
                   url: "https://images.pexels.com/photos/3861435/pexels-photo-3861435.jpeg",
                   caption: "Laboratory Research Work"
                 }
-              ]).map((photo, index) => (
-                <div key={index} className="flex-shrink-0 w-80 group cursor-pointer">
-                  <Card className="hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden">
+              ].map((photo, index) => (
+                <div key={index} className="flex-shrink-0 w-80 group cursor-pointer inline-block">
+                  <Card className="hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden transform hover:scale-105">
                     <div className="relative h-64 overflow-hidden">
                       <img 
                         src={photo.url}
