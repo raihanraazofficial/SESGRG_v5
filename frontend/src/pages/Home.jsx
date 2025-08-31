@@ -625,7 +625,7 @@ const Home = () => {
       {/* Latest News & Events Section */}
       <LatestNewsSection />
 
-      {/* Photo Gallery Section */}
+      {/* Photo Gallery Section - Optimized for Smooth Scrolling */}
       <section className="py-20 bg-gray-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -635,7 +635,7 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Smooth Right-to-Left Scrolling Gallery */}
+          {/* Smooth Right-to-Left Scrolling Gallery with Performance Optimization */}
           <div className="relative overflow-hidden">
             <div className="flex animate-scroll-right space-x-8 whitespace-nowrap">
               {[
@@ -677,14 +677,15 @@ const Home = () => {
                   caption: "Laboratory Research Work"
                 }
               ].map((photo, index) => (
-                <div key={index} className="flex-shrink-0 w-80 group cursor-pointer inline-block">
-                  <Card className="hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden transform hover:scale-105">
+                <div key={index} className="flex-shrink-0 w-80 group cursor-pointer inline-block transform-gpu">
+                  <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden transform hover:scale-105 will-change-transform">
                     <div className="relative h-64 overflow-hidden">
                       <img 
                         src={photo.url}
                         alt={photo.caption}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 will-change-transform"
                         loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
