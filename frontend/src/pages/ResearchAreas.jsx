@@ -15,6 +15,67 @@ const ResearchAreas = () => {
     lastUpdated: null
   });
   const [peopleData, setPeopleData] = useState([]);
+  const [areaStats, setAreaStats] = useState({}); // New state for area-wise stats
+
+  // Load real-time stats for all areas on component mount
+  useEffect(() => {
+    loadAllAreaStats();
+  }, []);
+
+  const loadAllAreaStats = async () => {
+    try {
+      const [projectsResponse, publicationsResponse] = await Promise.all([
+        googleSheetsService.getProjects({}),
+        googleSheetsService.getPublications({})
+      ]);
+
+      const stats = {};
+      
+      researchAreas.forEach(area => {
+        const areaKeywords = getAreaKeywords(area.title);
+        
+        // Filter projects
+        const areaProjects = projectsResponse.projects.filter(project => {
+          if (project.research_areas && Array.isArray(project.research_areas)) {
+            return project.research_areas.some(projArea => 
+              areaKeywords.some(keyword => projArea.toLowerCase().includes(keyword.toLowerCase()))
+            );
+          }
+          if (project.title) {
+            return areaKeywords.some(keyword => 
+              project.title.toLowerCase().includes(keyword.toLowerCase())
+            );
+          }
+          return false;
+        });
+
+        // Filter publications
+        const areaPublications = publicationsResponse.publications.filter(pub => {
+          if (pub.research_areas && Array.isArray(pub.research_areas)) {
+            return pub.research_areas.some(pubArea => 
+              areaKeywords.some(keyword => pubArea.toLowerCase().includes(keyword.toLowerCase()))
+            );
+          }
+          if (pub.title) {
+            return areaKeywords.some(keyword => 
+              pub.title.toLowerCase().includes(keyword.toLowerCase())
+            );
+          }
+          return false;
+        });
+
+        stats[area.id] = {
+          projects: areaProjects.length,
+          publications: areaPublications.length
+        };
+      });
+
+      setAreaStats(stats);
+      console.log('📊 Loaded area stats:', stats);
+    } catch (error) {
+      console.error('Failed to load area stats:', error);
+    }
+  };
 
   const iconMap = {
     Lightbulb: Lightbulb,
