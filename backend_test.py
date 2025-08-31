@@ -48,7 +48,7 @@ PROJECTS_API_URL = API_URLS['projects']
 ACHIEVEMENTS_API_URL = API_URLS['achievements']
 NEWS_EVENTS_API_URL = API_URLS['news_events']
 
-print(f"🚀 Testing Google Sheets API Integration - Home Page Latest News & Events Focus")
+print(f"🚀 Testing Google Sheets API Integration - Research Areas Page Focus")
 print(f"Publications API: {PUBLICATIONS_API_URL}")
 print(f"Projects API: {PROJECTS_API_URL}")
 print(f"Achievements API: {ACHIEVEMENTS_API_URL}")
