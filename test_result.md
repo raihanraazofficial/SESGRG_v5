@@ -158,6 +158,18 @@ frontend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETE: All 4 Google Sheets API endpoints tested successfully. Publications API returns 15 items with proper structure, Projects API returns 3 items with pagination, Achievements API returns 5 items with featured functionality, News Events API returns 3 items with categories. All APIs have proper CORS configuration, valid JSON responses, and work without authentication. Frontend service integration tested - filtering, pagination, search, and data processing all working correctly. Response times average 2-3 seconds. The website can now fully operate without backend dependencies, completely bypassing the Vercel deployment protection issue."
 
+  - task: "Fix IEEE Citation Formatting in Publications"
+    implemented: true
+    working: true
+    file: "Publications.jsx, googleSheetsApi.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main" 
+        comment: "✅ IMPLEMENTED: Fixed IEEE citation formatting to properly display all required elements. Journal Articles now show: Authors (bold), 'Title', Journal Name (italic), vol. X, no. X, pp. XXX–XXX, Year. Conference Proceedings show: Authors (bold), 'Title', Conference Name (italic), Location, pp. XXX–XXX, Year. Book Chapters show: Authors (bold), 'Title', Book Title (italic), Editor Ed(s)., Publisher, Location, pp. XXX–XXX, Year. Updated both renderIEEEFormat function in Publications.jsx and generateIEEECitation in googleSheetsApi.js to use correct field names from Google Sheets data (journal_name, conference_name, book_title, volume, issue, pages, city, country, editor, publisher)."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
