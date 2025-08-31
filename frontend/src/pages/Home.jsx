@@ -191,7 +191,7 @@ const LatestNewsSection = () => {
                       {latestNews[0].title}
                     </h3>
                     <p className="text-gray-600 leading-relaxed mb-6">
-                      {latestNews[0].description}
+                      {latestNews[0].short_description || latestNews[0].description}
                     </p>
                     <Button 
                       variant="outline" 
