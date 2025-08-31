@@ -586,42 +586,87 @@ def test_google_sheets_data_parsing():
         print(f"   ❌ Error testing Google Sheets data parsing: {e}")
         return False
 
-def test_cors_configuration():
-    """Test CORS configuration"""
-    print("6. Testing CORS configuration...")
+def run_all_tests():
+    """Run all Publications IEEE citation formatting tests"""
+    print("🚀 Starting Publications IEEE Citation Formatting Tests")
+    print("=" * 80)
+    
+    all_tests_passed = True
+    test_results = []
+    
+    # Test 1: Google Sheets API Accessibility
     try:
-        # Make a preflight request
-        headers = {
-            'Origin': 'https://example.com',
-            'Access-Control-Request-Method': 'POST',
-            'Access-Control-Request-Headers': 'Content-Type'
-        }
-        
-        response = requests.options(f"{API_BASE_URL}/status", headers=headers, timeout=10)
-        
-        # Check if CORS headers are present
-        cors_headers = {
-            'access-control-allow-origin': response.headers.get('access-control-allow-origin'),
-            'access-control-allow-methods': response.headers.get('access-control-allow-methods'),
-            'access-control-allow-headers': response.headers.get('access-control-allow-headers')
-        }
-        
-        if cors_headers['access-control-allow-origin']:
-            print("   ✅ CORS configuration is working")
-            print(f"   Allow-Origin: {cors_headers['access-control-allow-origin']}")
-            return True
-        else:
-            print("   ⚠️  CORS headers not found in preflight response")
-            # Try a simple GET request to check basic CORS
-            response = requests.get(f"{API_BASE_URL}/", headers={'Origin': 'https://example.com'}, timeout=10)
-            if 'access-control-allow-origin' in response.headers:
-                print("   ✅ Basic CORS working on GET requests")
-                return True
-            else:
-                print("   ❌ CORS not configured properly")
-                return False
+        api_accessible, publications = test_google_sheets_api_accessibility()
+        test_results.append(("Google Sheets API Accessibility", api_accessible))
+        if not api_accessible:
+            print("\n❌ Cannot proceed with further tests - Google Sheets API not accessible")
+            return False
+        all_tests_passed &= api_accessible
     except Exception as e:
-        print(f"   ❌ Error testing CORS: {e}")
+        print(f"❌ Test 1 failed with exception: {e}")
+        return False
+    
+    # Test 2: IEEE Citation Format Validation
+    try:
+        ieee_format_valid = test_ieee_citation_format_validation(publications)
+        test_results.append(("IEEE Citation Format Validation", ieee_format_valid))
+        all_tests_passed &= ieee_format_valid
+    except Exception as e:
+        print(f"❌ Test 2 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 3: Publication Type Filtering
+    try:
+        filtering_works = test_publication_type_filtering(publications)
+        test_results.append(("Publication Type Filtering", filtering_works))
+        all_tests_passed &= filtering_works
+    except Exception as e:
+        print(f"❌ Test 3 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 4: IEEE Required Elements
+    try:
+        elements_present = test_ieee_required_elements(publications)
+        test_results.append(("IEEE Required Elements", elements_present))
+        all_tests_passed &= elements_present
+    except Exception as e:
+        print(f"❌ Test 4 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 5: Citation Copy Functionality
+    try:
+        copy_works = test_citation_copy_functionality()
+        test_results.append(("Citation Copy Functionality", copy_works))
+        all_tests_passed &= copy_works
+    except Exception as e:
+        print(f"❌ Test 5 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Test 6: Google Sheets Data Parsing
+    try:
+        parsing_works = test_google_sheets_data_parsing()
+        test_results.append(("Google Sheets Data Parsing", parsing_works))
+        all_tests_passed &= parsing_works
+    except Exception as e:
+        print(f"❌ Test 6 failed with exception: {e}")
+        all_tests_passed = False
+    
+    # Print summary
+    print("\n" + "=" * 80)
+    print("📊 TEST RESULTS SUMMARY")
+    print("=" * 80)
+    
+    for test_name, passed in test_results:
+        status = "✅ PASSED" if passed else "❌ FAILED"
+        print(f"{test_name:<40} {status}")
+    
+    print("=" * 80)
+    
+    if all_tests_passed:
+        print("🎉 ALL TESTS PASSED! Publications IEEE citation formatting is working correctly.")
+        return True
+    else:
+        print("⚠️  SOME TESTS FAILED! Please review the issues above.")
         return False
 
 def test_publications_endpoint():
