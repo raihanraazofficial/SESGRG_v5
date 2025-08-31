@@ -16,26 +16,31 @@ class GoogleSheetsService {
     try {
       console.log('Fetching from Google Sheets URL:', url);
       
-      const response = await fetch(url, {
+      // Use allorigins.win CORS proxy
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      console.log('Using proxy URL:', proxyUrl);
+      
+      const response = await fetch(proxyUrl, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        // Allow redirects
-        redirect: 'follow'
       });
 
       console.log('Response status:', response.status, response.statusText);
-      console.log('Response URL:', response.url);
 
       if (!response.ok) {
-        throw new Error(`Google Sheets API request failed: ${response.status} ${response.statusText}`);
+        throw new Error(`CORS Proxy request failed: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
-      console.log('Received data structure:', Object.keys(data));
-      return data;
+      const proxyData = await response.json();
+      console.log('Proxy response keys:', Object.keys(proxyData));
+      
+      // allorigins returns data in { contents: "actual data" } format
+      const actualData = JSON.parse(proxyData.contents);
+      console.log('Actual data structure:', Object.keys(actualData));
+      return actualData;
     } catch (error) {
       console.error('Google Sheets API error:', error);
       throw error;
