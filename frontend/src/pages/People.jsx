@@ -30,37 +30,61 @@ const People = () => {
     return colors[index % colors.length];
   };
 
-  // Mock data - in production this would come from Google Sheets via API
+  // Updated advisor data as per user specifications
   const advisors = [
     {
       id: 1,
-      name: "Dr. Muhammad Rezwanul Haque",
-      designation: "Professor & Research Director",
-      affiliation: "BRAC University, Department of Electrical and Electronic Engineering",
-      description: "Leading expert in smart grid technologies and renewable energy integration with 20+ years of research experience.",
-      expertise: [0, 2, 6], // Indices for research areas
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-      email: "mrhaque@bracu.ac.bd",
+      name: "A. S. Nazmul Huda, PhD",
+      designation: "Associate Professor",
+      affiliation: "Department of EEE, BRAC University",
+      description: "Expert in power systems reliability, renewable energy, and smart grid optimization with strong focus on modeling, simulation, and condition monitoring.",
+      expertise: [0, 2, 3], // Max 4 areas: Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Nazmul%20Huda.jpg",
+      email: "nazmul.huda@bracu.ac.bd",
       phone: "+880-2-9844051",
-      googleScholar: "https://scholar.google.com/citations?user=example1",
+      googleScholar: "https://scholar.google.com/citations?user=nazmul-huda",
+      researchGate: "https://www.researchgate.net/profile/nazmul-huda",
       orcid: "https://orcid.org/0000-0000-0000-0001",
-      linkedin: "https://linkedin.com/in/example1",
-      website: "https://faculty.bracu.ac.bd/mrhaque"
+      linkedin: "https://linkedin.com/in/nazmul-huda",
+      github: "https://github.com/nazmul-huda",
+      ieee: "https://ieeexplore.ieee.org/author/nazmul-huda",
+      website: "https://engineering.bracu.ac.bd/profile/as-nazmul-huda-phd"
     },
     {
       id: 2,
-      name: "Dr. Sarah Ahmed",
+      name: "Shameem Ahmad, PhD",
       designation: "Associate Professor",
-      affiliation: "BRAC University, Department of Electrical and Electronic Engineering",
-      description: "Specialist in energy storage systems and grid optimization with focus on AI-powered solutions.",
-      expertise: [4, 3, 6], // Indices for research areas
-      photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face",
-      email: "sahmed@bracu.ac.bd",
+      affiliation: "Department of EEE, BRAC University",
+      description: "Specialist in smart grids, microgrids, and AI-driven power system control with expertise in renewable energy and advanced power converters.",
+      expertise: [1, 3, 0], // Max 4 areas: Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Smart Grid Technologies
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Shameem%20Ahmad.jpg",
+      email: "shameem.ahmad@bracu.ac.bd",
       phone: "+880-2-9844052",
-      googleScholar: "https://scholar.google.com/citations?user=example2",
-      researchGate: "https://www.researchgate.net/profile/example2",
-      linkedin: "https://linkedin.com/in/example2",
-      website: "https://faculty.bracu.ac.bd/sahmed"
+      googleScholar: "https://scholar.google.com/citations?user=shameem-ahmad",
+      researchGate: "https://www.researchgate.net/profile/shameem-ahmad",
+      orcid: "https://orcid.org/0000-0000-0000-0002",
+      linkedin: "https://linkedin.com/in/shameem-ahmad",
+      github: "https://github.com/shameem-ahmad",
+      ieee: "https://ieeexplore.ieee.org/author/shameem-ahmad",
+      website: "https://engineering.bracu.ac.bd/profile/shameem-ahmad-phd"
+    },
+    {
+      id: 3,
+      name: "Amirul Islam, PhD",
+      designation: "Assistant Professor",
+      affiliation: "Department of Electrical and Electronic Engineering, BRAC University",
+      description: "Researcher in artificial intelligence and power systems with expertise in multimodal signal processing, smart grid automation, and interdisciplinary applications of AI.",
+      expertise: [5, 6], // Max 4 areas: Power System Automation, Cybersecurity and AI for Power Infrastructure
+      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face&facepad=3",
+      email: "amirul.islam@bracu.ac.bd",
+      phone: "+880-2-9844053",
+      googleScholar: "https://scholar.google.com/citations?user=amirul-islam",
+      researchGate: "https://www.researchgate.net/profile/amirul-islam",
+      orcid: "https://orcid.org/0000-0000-0000-0003",
+      linkedin: "https://linkedin.com/in/amirul-islam",
+      github: "https://github.com/amirul-islam",
+      ieee: "https://ieeexplore.ieee.org/author/amirul-islam",
+      website: "https://engineering.bracu.ac.bd/profile/amirul-islam-phd"
     }
   ];
 
