@@ -27,6 +27,7 @@ const Publications = () => {
   const [availableYears, setAvailableYears] = useState([]);
   const [availableAreas, setAvailableAreas] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadingSource, setLoadingSource] = useState(''); // Track if loading from cache or fresh
 
   const researchAreas = [
     "Smart Grid Technologies",
