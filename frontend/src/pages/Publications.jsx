@@ -241,8 +241,17 @@ Best regards,`;
           font-style: italic;
           font-weight: normal;
         }
+        .ieee-citation strong {
+          font-weight: bold;
+        }
         .ieee-citation {
           line-height: 1.6;
+          font-size: 14px;
+        }
+        @media (min-width: 768px) {
+          .ieee-citation {
+            font-size: 16px;
+          }
         }
       `}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
