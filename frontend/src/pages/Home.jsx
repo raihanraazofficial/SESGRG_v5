@@ -29,13 +29,13 @@ const LatestNewsSection = () => {
       const response = forceRefresh 
         ? await googleSheetsService.forceRefreshNewsEvents({
             page: 1,
-            per_page: 4,
+            per_page: 8,
             sort_by: 'date',
             sort_order: 'desc'
           })
         : await googleSheetsService.getNewsEvents({
             page: 1,
-            per_page: 4,
+            per_page: 8,
             sort_by: 'date',
             sort_order: 'desc'
           });
