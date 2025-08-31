@@ -50,20 +50,32 @@ print(f"Publications API: {PUBLICATIONS_API_URL}")
 print(f"Frontend URL: {FRONTEND_URL}")
 print("=" * 80)
 
-def test_server_accessibility():
-    """Test if the backend server is running and accessible"""
-    print("1. Testing server accessibility...")
+def test_google_sheets_api_accessibility():
+    """Test if the Google Sheets API is accessible and returns valid data"""
+    print("1. Testing Google Sheets API accessibility...")
     try:
-        response = requests.get(f"{API_BASE_URL}/", timeout=10)
+        # Test direct access to Google Sheets API
+        response = requests.get(PUBLICATIONS_API_URL, timeout=30)
         if response.status_code == 200:
-            print("   ✅ Server is accessible")
-            return True
+            data = response.json()
+            publications = data.get('publications', []) if isinstance(data, dict) else data
+            print(f"   ✅ Google Sheets API is accessible")
+            print(f"   📊 Retrieved {len(publications)} publications")
+            
+            if len(publications) > 0:
+                sample_pub = publications[0]
+                print(f"   📄 Sample publication: '{sample_pub.get('title', '')[:50]}...'")
+                print(f"   🏷️  Sample category: {sample_pub.get('category', 'N/A')}")
+                return True, publications
+            else:
+                print("   ⚠️  No publications found in API response")
+                return False, []
         else:
-            print(f"   ❌ Server returned status code: {response.status_code}")
-            return False
+            print(f"   ❌ Google Sheets API returned status code: {response.status_code}")
+            return False, []
     except requests.exceptions.RequestException as e:
-        print(f"   ❌ Server is not accessible: {e}")
-        return False
+        print(f"   ❌ Google Sheets API is not accessible: {e}")
+        return False, []
 
 def test_root_endpoint():
     """Test the root endpoint GET /api/"""
