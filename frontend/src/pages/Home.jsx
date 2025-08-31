@@ -126,15 +126,14 @@ const LatestNewsSection = () => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Latest News & Events
-            </h2>
-            <p className="text-xl text-gray-600">
-              Stay updated with our recent achievements, news, events, and upcoming activities.
-            </p>
-          </div>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Latest News & Events
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Stay updated with our recent achievements, news, events, and upcoming activities.
+          </p>
+          <div className="flex justify-center items-center space-x-4">
           <div className="flex items-center space-x-4">
             <Button
               variant="outline"
