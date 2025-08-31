@@ -625,6 +625,41 @@ class GoogleSheetsService {
     if (!areas || !Array.isArray(areas)) return '';
     return areas.join(', ');
   }
+
+  // Clear all cached data
+  clearAllCache() {
+    try {
+      Object.values(this.cacheKeys).forEach(key => {
+        localStorage.removeItem(key);
+      });
+      console.log('✅ All cache cleared');
+      return true;
+    } catch (error) {
+      console.error('Cache clear failed:', error);
+      return false;
+    }
+  }
+
+  // Force refresh data (bypass cache)
+  async forceRefreshPublications(params = {}) {
+    this.clearAllCache();
+    return await this.getPublications(params);
+  }
+
+  async forceRefreshProjects(params = {}) {
+    this.clearAllCache();
+    return await this.getProjects(params);
+  }
+
+  async forceRefreshAchievements(params = {}) {
+    this.clearAllCache();
+    return await this.getAchievements(params);
+  }
+
+  async forceRefreshNewsEvents(params = {}) {
+    this.clearAllCache();
+    return await this.getNewsEvents(params);
+  }
 }
 
 // Export singleton instance
