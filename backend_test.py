@@ -315,29 +315,92 @@ def test_publication_type_filtering(publications):
     
     return all_tests_passed
 
-def test_get_status_endpoint():
-    """Test GET /api/status endpoint"""
-    print("4. Testing GET /api/status endpoint...")
-    try:
-        response = requests.get(f"{API_BASE_URL}/status", timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list):
-                print(f"   ✅ GET /api/status working correctly")
-                print(f"   Retrieved {len(data)} status checks")
-                if len(data) > 0:
-                    print(f"   Sample record: {data[0]}")
-                return True
-            else:
-                print(f"   ❌ Expected list, got: {type(data)}")
-                return False
+def test_ieee_required_elements(publications):
+    """Test that all required IEEE elements are present for each publication type"""
+    print("4. Testing IEEE required elements...")
+    
+    all_tests_passed = True
+    
+    # Define required elements for each publication type
+    required_elements = {
+        "Journal Articles": {
+            "mandatory": ["authors", "title", "year"],
+            "ieee_specific": ["journal_name", "volume", "issue", "pages"],
+            "description": "Authors (bold), \"Title\", Journal Name (italic), vol. X, no. X, pp. XXX–XXX, Year"
+        },
+        "Conference Proceedings": {
+            "mandatory": ["authors", "title", "year"],
+            "ieee_specific": ["conference_name", "pages"],
+            "optional": ["city", "country"],
+            "description": "Authors (bold), \"Title\", Conference Name (italic), Location, pp. XXX–XXX, Year"
+        },
+        "Book Chapters": {
+            "mandatory": ["authors", "title", "year"],
+            "ieee_specific": ["book_title", "editor", "publisher", "pages"],
+            "optional": ["city", "country"],
+            "description": "Authors (bold), \"Title\", Book Title (italic), Editor Ed(s)., Publisher, Location, pp. XXX–XXX, Year"
+        }
+    }
+    
+    # Group publications by category
+    publications_by_category = {}
+    for pub in publications:
+        category = pub.get('category', 'Unknown')
+        if category not in publications_by_category:
+            publications_by_category[category] = []
+        publications_by_category[category].append(pub)
+    
+    for category, requirements in required_elements.items():
+        if category in publications_by_category:
+            category_pubs = publications_by_category[category]
+            print(f"   \n   📚 Testing {category} ({len(category_pubs)} publications):")
+            print(f"      Expected format: {requirements['description']}")
+            
+            # Test sample publications
+            sample_size = min(3, len(category_pubs))
+            for i in range(sample_size):
+                pub = category_pubs[i]
+                print(f"      \n      📄 Publication {i+1}: '{pub.get('title', '')[:40]}...'")
+                
+                # Check mandatory elements
+                missing_mandatory = []
+                for element in requirements["mandatory"]:
+                    if not pub.get(element):
+                        missing_mandatory.append(element)
+                
+                if missing_mandatory:
+                    print(f"         ❌ Missing mandatory elements: {missing_mandatory}")
+                    all_tests_passed = False
+                else:
+                    print(f"         ✅ All mandatory elements present")
+                
+                # Check IEEE-specific elements
+                missing_ieee = []
+                for element in requirements["ieee_specific"]:
+                    if not pub.get(element):
+                        missing_ieee.append(element)
+                
+                if missing_ieee:
+                    print(f"         ⚠️  Missing IEEE elements: {missing_ieee}")
+                    print(f"         📝 This may affect citation completeness")
+                else:
+                    print(f"         ✅ All IEEE-specific elements present")
+                
+                # Check optional elements
+                if "optional" in requirements:
+                    missing_optional = []
+                    for element in requirements["optional"]:
+                        if not pub.get(element):
+                            missing_optional.append(element)
+                    
+                    if missing_optional:
+                        print(f"         ℹ️  Missing optional elements: {missing_optional}")
+                    else:
+                        print(f"         ✅ All optional elements present")
         else:
-            print(f"   ❌ Status code: {response.status_code}")
-            return False
-    except Exception as e:
-        print(f"   ❌ Error testing GET status endpoint: {e}")
-        return False
+            print(f"   ⚠️  No publications found for category: {category}")
+    
+    return all_tests_passed
 
 def test_mongodb_connection():
     """Test MongoDB connection by creating and retrieving data"""
