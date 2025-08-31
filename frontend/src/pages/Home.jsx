@@ -10,13 +10,17 @@ const LatestNewsSection = () => {
   const [latestNews, setLatestNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Start fetching immediately on component mount
     fetchLatestNews();
   }, []);
 
   const fetchLatestNews = async (forceRefresh = false) => {
     try {
+      setError(null);
+      
       if (forceRefresh) {
         setRefreshing(true);
         console.log('🔄 Homepage: Force refreshing latest news...');
@@ -25,7 +29,7 @@ const LatestNewsSection = () => {
         console.log('⚡ Homepage: Fetching latest news & events...');
       }
       
-      // Use force refresh if requested to bypass cache
+      // Always try to get fresh data first, with shorter timeout for better UX
       const response = forceRefresh 
         ? await googleSheetsService.forceRefreshNewsEvents({
             page: 1,
@@ -45,16 +49,9 @@ const LatestNewsSection = () => {
       
       console.log('✅ Homepage: Latest news loaded:', newsEvents.length, 'items');
       
-      // If no data from API, show a message instead of mock data
-      if (newsEvents.length === 0) {
-        console.log('ℹ️ Homepage: No news events found from API');
-        setLatestNews([]);
-      }
-      
     } catch (error) {
       console.error('❌ Homepage: Error fetching latest news:', error);
-      // Show user-friendly error message
-      alert('Failed to load latest news. Please check your internet connection and try again.');
+      setError('Failed to load latest news. Please try refreshing the page.');
       setLatestNews([]);
     } finally {
       setLoading(false);
