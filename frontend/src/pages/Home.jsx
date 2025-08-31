@@ -421,11 +421,11 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Our Objectives & Research in Action - New Layout */}
+          {/* Our Objectives & Research in Action - Dynamic Layout */}
           <div className="mb-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              {/* Image Carousel - Left Side */}
-              <div className="flex flex-col justify-center">
+              {/* Image Carousel - Left Side with Dynamic Positioning */}
+              <div className={`flex flex-col ${objectives.length >= 5 ? 'justify-center' : 'justify-start'}`}>
                 <div className="relative">
                   <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                     {carouselImages.map((image, index) => (
