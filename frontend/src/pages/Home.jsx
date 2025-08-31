@@ -98,6 +98,7 @@ const LatestNewsSection = () => {
       setError('Failed to load latest news. Please try refreshing the page.');
       setLatestNews([]);
       setHasAttemptedLoad(true);
+      setInitialLoadComplete(true);
     } finally {
       setLoading(false);
       setRefreshing(false);
