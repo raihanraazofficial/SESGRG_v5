@@ -156,11 +156,77 @@ const Projects = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Research Projects</h1>
+          <div className="flex items-center justify-center mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Research Projects</h1>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshData}
+              disabled={refreshing}
+              className="ml-4 flex items-center space-x-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
+            </Button>
+          </div>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
             Explore our ongoing and completed research projects in sustainable energy and smart grid technologies. 
             Discover how we're advancing the field through collaborative research and innovation.
           </p>
+          
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_projects || 0}</p>
+                <p className="text-gray-600 font-medium">Total Projects</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.active_projects || 0}</p>
+                <p className="text-gray-600 font-medium">Active Projects</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.completed_projects || 0}</p>
+                <p className="text-gray-600 font-medium">Completed Projects</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Status Filter Buttons */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+            <Button
+              variant={filters.status_filter === '' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('status_filter', '')}
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
+            >
+              All Projects
+            </Button>
+            <Button
+              variant={filters.status_filter === 'Active' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('status_filter', 'Active')}
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
+            >
+              Active
+            </Button>
+            <Button
+              variant={filters.status_filter === 'Completed' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('status_filter', 'Completed')}
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
+            >
+              Completed
+            </Button>
+            <Button
+              variant={filters.status_filter === 'Planning' ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('status_filter', 'Planning')}
+              className="px-3 py-2 md:px-6 text-sm md:text-base"
+            >
+              Planning
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
