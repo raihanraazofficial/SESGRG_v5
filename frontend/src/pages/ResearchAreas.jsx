@@ -293,68 +293,26 @@ const ResearchAreas = () => {
         publications: publicationsResponse.publications?.length
       });
 
-      // Enhanced filtering logic with multiple matching strategies
-      const areaKeywords = getAreaKeywords(area.title);
-      console.log('🎯 Area keywords for matching:', areaKeywords);
+      // Enhanced filtering logic with exact matching
+      const exactAreaName = getExactAreaName(area.title);
+      console.log('🎯 Area exact name for matching:', exactAreaName);
 
-      // Filter projects with improved matching
+      // Filter projects with exact matching
       const areaProjects = projectsResponse.projects.filter(project => {
-        // Strategy 1: Direct research_areas field matching
         if (project.research_areas && Array.isArray(project.research_areas)) {
-          const matchesArea = project.research_areas.some(area => 
-            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
-          );
-          if (matchesArea) return true;
+          return project.research_areas.includes(exactAreaName);
         }
-
-        // Strategy 2: Title keyword matching
-        if (project.title) {
-          const matchesTitle = areaKeywords.some(keyword => 
-            project.title.toLowerCase().includes(keyword.toLowerCase())
-          );
-          if (matchesTitle) return true;
-        }
-
-        // Strategy 3: Description matching
-        if (project.description) {
-          const matchesDesc = areaKeywords.some(keyword => 
-            project.description.toLowerCase().includes(keyword.toLowerCase())
-          );
-          if (matchesDesc) return true;
-        }
-
         return false;
       });
 
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
 
-      // Filter publications with enhanced matching
+      // Filter publications with exact matching
       const areaPublications = publicationsResponse.publications.filter(pub => {
-        // Strategy 1: Direct research_areas field matching
         if (pub.research_areas && Array.isArray(pub.research_areas)) {
-          const matchesArea = pub.research_areas.some(area => 
-            areaKeywords.some(keyword => area.toLowerCase().includes(keyword.toLowerCase()))
-          );
-          if (matchesArea) return true;
+          return pub.research_areas.includes(exactAreaName);
         }
-
-        // Strategy 2: Title keyword matching
-        if (pub.title) {
-          const matchesTitle = areaKeywords.some(keyword => 
-            pub.title.toLowerCase().includes(keyword.toLowerCase())
-          );
-          if (matchesTitle) return true;
-        }
-
-        // Strategy 3: Keywords/tags matching
-        if (pub.keywords && Array.isArray(pub.keywords)) {
-          const matchesKeywords = pub.keywords.some(keyword => 
-            areaKeywords.some(areaKeyword => keyword.toLowerCase().includes(areaKeyword.toLowerCase()))
-          );
-          if (matchesKeywords) return true;
-        }
-
         return false;
       });
 
