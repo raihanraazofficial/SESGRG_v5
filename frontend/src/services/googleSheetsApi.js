@@ -75,8 +75,13 @@ class GoogleSheetsService {
         'https://corsproxy.io/?'  // Backup option
       ];
       
-      // Try proxies with reduced timeout for faster failures
+      // Try proxies with reduced timeout for faster failures - race to get fastest response
       const promises = corsProxies.map(async (proxy, i) => {
+        // Add small delay for non-primary proxies to prefer the fastest one
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, i * 200)); // 200ms delay for each subsequent proxy
+        }
+        
         try {
           let proxyUrl, isAllOrigins = false;
           
@@ -102,18 +107,21 @@ class GoogleSheetsService {
           clearTimeout(timeoutId);
 
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
           let data;
           if (isAllOrigins) {
             const proxyData = await response.json();
+            if (!proxyData.contents) {
+              throw new Error('Invalid AllOrigins response');
+            }
             data = JSON.parse(proxyData.contents);
           } else {
             data = await response.json();
           }
           
-          console.log(`✅ Success with proxy ${i + 1}: ${proxy.split('?')[0]}`);
+          console.log(`✅ Success with proxy ${i + 1}: ${proxy.split('?')[0]} (${response.status})`);
           
           // Cache the successful result
           if (cacheKey) {
@@ -123,7 +131,7 @@ class GoogleSheetsService {
           return data;
           
         } catch (error) {
-          console.warn(`❌ Proxy ${i + 1} failed:`, error.message);
+          console.warn(`❌ Proxy ${i + 1} failed:`, error.name, error.message);
           throw error;
         }
       });
