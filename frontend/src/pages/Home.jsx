@@ -588,7 +588,7 @@ const Home = () => {
 
               {/* Objectives - Right Side */}
               <div className="flex flex-col justify-center">
-                <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center lg:text-left">Our Objectives</h3>
+                <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center">Our Objectives</h3>
                 <div className="space-y-8">
                   {objectives.map((objective, index) => (
                     <div 
