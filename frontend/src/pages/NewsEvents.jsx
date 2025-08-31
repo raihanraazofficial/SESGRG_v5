@@ -51,7 +51,7 @@ const NewsEvents = () => {
         ...filters,
         category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
       };
-      const response = await apiService.getNewsEvents(apiFilters);
+      const response = await googleSheetsService.getNewsEvents(apiFilters);
       setNewsEvents(response.news_events || []);
       setPagination(response.pagination || {});
     } catch (error) {
