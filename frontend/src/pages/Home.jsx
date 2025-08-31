@@ -134,7 +134,6 @@ const LatestNewsSection = () => {
             Stay updated with our recent achievements, news, events, and upcoming activities.
           </p>
           <div className="flex justify-center items-center space-x-4">
-          <div className="flex items-center space-x-4">
             <Button
               variant="outline"
               size="sm"
