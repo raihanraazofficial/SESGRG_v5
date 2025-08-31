@@ -822,40 +822,185 @@ def test_achievements_endpoint():
         return False
 
 def test_news_events_endpoint():
-    """Test GET /api/news-events endpoint with comprehensive filtering tests"""
-    print("10. Testing GET /api/news-events endpoint...")
+    """Test GET /api/news-events endpoint - COMPREHENSIVE REVIEW REQUEST TESTING"""
+    print("10. Testing GET /api/news-events endpoint - ADDRESSING USER 'No news-events found' ISSUE...")
+    
+    all_tests_passed = True
+    
     try:
-        # Test basic endpoint
-        response = requests.get(f"{API_BASE_URL}/news-events", timeout=10)
+        # 1. Basic endpoint test with data source detection
+        print("   1.1 Testing News-Events API and Data Source...")
+        start_time = datetime.now()
+        response = requests.get(f"{API_BASE_URL}/news-events", timeout=30)
+        response_time = (datetime.now() - start_time).total_seconds()
+        
         if response.status_code != 200:
-            print(f"   ❌ Basic request failed with status: {response.status_code}")
+            print(f"      ❌ News-Events API request failed with status: {response.status_code}")
+            print(f"      Response text: {response.text[:200]}")
+            all_tests_passed = False
             return False
         
         data = response.json()
         required_keys = ["news_events", "pagination"]
         if not all(key in data for key in required_keys):
-            print(f"   ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
-            return False
+            print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+            all_tests_passed = False
+        else:
+            news_events = data.get('news_events', [])
+            print(f"      ✅ News-Events API responding - Retrieved {len(news_events)} news & events")
+            print(f"      ⏱️  Response time: {response_time:.3f} seconds")
+            
+            if len(news_events) > 0:
+                sample_news = news_events[0]
+                print(f"      🔍 Data source analysis: Google Sheets integration")
+                print(f"      📄 Sample news/event: '{sample_news.get('title', '')[:50]}...'")
+                print(f"      🏷️  Sample category: {sample_news.get('category', 'N/A')}")
+                print(f"      📅 Sample date: {sample_news.get('date', 'N/A')}")
+                
+                # Check for both description fields
+                has_description = 'description' in sample_news
+                has_short_description = 'short_description' in sample_news
+                print(f"      📝 Description fields: description={has_description}, short_description={has_short_description}")
+                
+                # Check for featured items
+                featured_count = sum(1 for news in news_events if news.get('featured', 0) == 1)
+                print(f"      ⭐ Featured news/events: {featured_count}")
+            else:
+                print(f"      ❌ CRITICAL: No news/events returned - This explains user's 'No news-events found' message!")
+                all_tests_passed = False
         
-        print("   ✅ Basic endpoint structure correct")
+        # 2. Test category filtering
+        print("   1.2 Testing News-Events Category Filtering...")
         
-        # Test category filter
-        response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Category filter failed")
-            return False
+        # Get available categories first
+        if len(data.get('news_events', [])) > 0:
+            all_categories = set(news.get('category', '') for news in data['news_events'])
+            print(f"      📋 Available categories: {sorted(all_categories)}")
+            
+            # Test each category
+            for category in sorted(all_categories):
+                if category:  # Skip empty categories
+                    cat_response = requests.get(f"{API_BASE_URL}/news-events?category_filter={category}", timeout=15)
+                    if cat_response.status_code == 200:
+                        cat_data = cat_response.json()
+                        cat_news = cat_data.get('news_events', [])
+                        print(f"      ✅ Category '{category}': {len(cat_news)} news/events")
+                        
+                        # Verify all returned items have the correct category
+                        correct_category = all(news.get('category') == category for news in cat_news)
+                        if not correct_category:
+                            print(f"      ❌ Category filtering not working correctly for '{category}'")
+                            all_tests_passed = False
+                    else:
+                        print(f"      ❌ Category filter '{category}' failed with status: {cat_response.status_code}")
+                        all_tests_passed = False
         
-        # Test title filter
-        response = requests.get(f"{API_BASE_URL}/news-events?title_filter=Grant", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Title filter failed")
-            return False
+        # 3. Test detailed view endpoint
+        print("   1.3 Testing News-Events Detail Endpoint...")
+        if len(data.get('news_events', [])) > 0:
+            sample_id = data['news_events'][0].get('id')
+            if sample_id:
+                detail_response = requests.get(f"{API_BASE_URL}/news-events/{sample_id}", timeout=15)
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    if 'error' not in detail_data:
+                        print(f"      ✅ Detail endpoint working - Retrieved news/event details")
+                        print(f"      📄 Detail title: '{detail_data.get('title', '')[:50]}...'")
+                        
+                        # Check for full_content field for blog functionality
+                        if 'full_content' in detail_data:
+                            content_length = len(detail_data.get('full_content', ''))
+                            print(f"      📝 Full content available: {content_length} characters")
+                            
+                            # Check for mathematical content (LaTeX support)
+                            full_content = detail_data.get('full_content', '')
+                            math_indicators = ['$', 'α', 'β', 'γ', '∑', '∫', '√']
+                            math_count = sum(full_content.count(indicator) for indicator in math_indicators)
+                            if math_count > 0:
+                                print(f"      🧮 Mathematical content detected: {math_count} math symbols")
+                        else:
+                            print(f"      ⚠️  No full_content field for blog functionality")
+                    else:
+                        print(f"      ❌ Detail endpoint returned error: {detail_data.get('error')}")
+                        all_tests_passed = False
+                else:
+                    print(f"      ❌ Detail endpoint failed with status: {detail_response.status_code}")
+                    all_tests_passed = False
         
-        print("   ✅ News-events endpoint working correctly with all parameters")
-        return True
+        # 4. Test pagination and sorting
+        print("   1.4 Testing News-Events Pagination and Sorting...")
+        
+        # Test different page sizes
+        for page_size in [5, 15, 30]:
+            page_response = requests.get(f"{API_BASE_URL}/news-events?page=1&per_page={page_size}", timeout=15)
+            if page_response.status_code == 200:
+                page_data = page_response.json()
+                page_news = page_data.get('news_events', [])
+                pagination = page_data.get('pagination', {})
+                print(f"      ✅ Page size {page_size}: Got {len(page_news)} news/events, per_page={pagination.get('per_page')}")
+            else:
+                print(f"      ❌ Pagination test failed for page size {page_size}")
+                all_tests_passed = False
+        
+        # Test sorting options
+        sort_tests = [
+            ("date", "desc", "newest first"),
+            ("date", "asc", "oldest first"),
+            ("title", "asc", "A-Z"),
+            ("title", "desc", "Z-A")
+        ]
+        
+        for sort_by, sort_order, description in sort_tests:
+            sort_response = requests.get(f"{API_BASE_URL}/news-events?sort_by={sort_by}&sort_order={sort_order}&per_page=5", timeout=15)
+            if sort_response.status_code == 200:
+                sort_data = sort_response.json()
+                sort_news = sort_data.get('news_events', [])
+                print(f"      ✅ Sorting {description}: {len(sort_news)} news/events")
+                
+                # Check if featured items maintain priority
+                if len(sort_news) > 0:
+                    featured_first = sort_news[0].get('featured', 0) == 1
+                    if featured_first:
+                        print(f"      ⭐ Featured item maintains priority in sorting")
+            else:
+                print(f"      ❌ Sorting test failed for {description}")
+                all_tests_passed = False
+        
+        # 5. Test title filtering and search functionality
+        print("   1.5 Testing News-Events Title Filtering...")
+        
+        # Test common search terms
+        search_terms = ["Smart", "Grid", "Energy", "Research", "Grant"]
+        for term in search_terms:
+            title_response = requests.get(f"{API_BASE_URL}/news-events?title_filter={term}", timeout=15)
+            if title_response.status_code == 200:
+                title_data = title_response.json()
+                title_news = title_data.get('news_events', [])
+                print(f"      ✅ Title filter '{term}': {len(title_news)} news/events")
+            else:
+                print(f"      ❌ Title filter '{term}' failed")
+                all_tests_passed = False
+        
+        # 6. Test combined filtering
+        print("   1.6 Testing Combined News-Events Filtering...")
+        combined_response = requests.get(f"{API_BASE_URL}/news-events?category_filter=News&sort_by=date&sort_order=desc&per_page=5", timeout=15)
+        if combined_response.status_code == 200:
+            combined_data = combined_response.json()
+            combined_news = combined_data.get('news_events', [])
+            print(f"      ✅ Combined filtering (News + sorted): {len(combined_news)} news/events")
+        else:
+            print(f"      ❌ Combined filtering failed")
+            all_tests_passed = False
+        
+        if all_tests_passed:
+            print("   🎉 ALL News-Events API tests PASSED!")
+        else:
+            print("   ⚠️  Some News-Events API tests FAILED!")
+        
+        return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing news-events endpoint: {e}")
+        print(f"   ❌ Error in comprehensive News-Events API testing: {e}")
         return False
 
 def test_featured_items_and_short_description():
