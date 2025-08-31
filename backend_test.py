@@ -487,34 +487,103 @@ def test_citation_copy_functionality():
     
     return all_tests_passed
 
-def test_mongodb_connection():
-    """Test MongoDB connection by creating and retrieving data"""
-    print("5. Testing MongoDB connection...")
+def test_google_sheets_data_parsing():
+    """Test that Google Sheets data is being properly parsed and formatted"""
+    print("6. Testing Google Sheets data parsing and formatting...")
     
-    # First create a status check
-    success, created_id = test_post_status_endpoint()
-    if not success:
-        print("   ❌ Cannot test MongoDB - POST endpoint failed")
-        return False
+    all_tests_passed = True
     
-    # Then retrieve it
     try:
-        response = requests.get(f"{API_BASE_URL}/status", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            # Check if our created record exists
-            found = any(record.get("id") == created_id for record in data)
-            if found:
-                print("   ✅ MongoDB connection working - data persisted and retrieved")
-                return True
-            else:
-                print("   ❌ Created record not found in database")
-                return False
-        else:
-            print("   ❌ Could not retrieve data to verify MongoDB connection")
+        # Fetch data directly from Google Sheets API
+        response = requests.get(PUBLICATIONS_API_URL, timeout=30)
+        
+        if response.status_code != 200:
+            print(f"   ❌ Failed to fetch from Google Sheets API: {response.status_code}")
             return False
+        
+        data = response.json()
+        print(f"   ✅ Successfully fetched data from Google Sheets API")
+        
+        # Check data structure
+        publications = data.get('publications', []) if isinstance(data, dict) else data
+        
+        if not isinstance(publications, list):
+            print(f"   ❌ Expected list of publications, got: {type(publications)}")
+            return False
+        
+        if len(publications) == 0:
+            print(f"   ❌ No publications found in Google Sheets data")
+            return False
+        
+        print(f"   📊 Found {len(publications)} publications in Google Sheets")
+        
+        # Test data structure and field mapping
+        sample_pub = publications[0]
+        print(f"   📄 Sample publication fields: {list(sample_pub.keys())}")
+        
+        # Check for required fields
+        required_fields = ['id', 'title', 'authors', 'category', 'year']
+        missing_fields = []
+        
+        for field in required_fields:
+            if field not in sample_pub:
+                missing_fields.append(field)
+        
+        if missing_fields:
+            print(f"   ❌ Missing required fields: {missing_fields}")
+            all_tests_passed = False
+        else:
+            print(f"   ✅ All required fields present")
+        
+        # Check field data types and formats
+        print(f"   🔍 Validating field formats:")
+        
+        # Authors field
+        authors = sample_pub.get('authors')
+        if isinstance(authors, list):
+            print(f"      ✅ Authors field is properly formatted as list: {len(authors)} authors")
+        elif isinstance(authors, str):
+            print(f"      ℹ️  Authors field is string format (will be handled by frontend)")
+        else:
+            print(f"      ❌ Authors field has unexpected format: {type(authors)}")
+            all_tests_passed = False
+        
+        # Year field
+        year = sample_pub.get('year')
+        if isinstance(year, (int, str)) and str(year).isdigit():
+            print(f"      ✅ Year field is properly formatted: {year}")
+        else:
+            print(f"      ❌ Year field has invalid format: {year} ({type(year)})")
+            all_tests_passed = False
+        
+        # Category field
+        category = sample_pub.get('category')
+        valid_categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"]
+        if category in valid_categories:
+            print(f"      ✅ Category field is valid: {category}")
+        else:
+            print(f"      ⚠️  Category field may need validation: {category}")
+        
+        # Test category-specific fields
+        category_specific_fields = {
+            "Journal Articles": ["journal_name", "volume", "issue"],
+            "Conference Proceedings": ["conference_name"],
+            "Book Chapters": ["book_title", "editor", "publisher"]
+        }
+        
+        if category in category_specific_fields:
+            expected_fields = category_specific_fields[category]
+            present_fields = [field for field in expected_fields if sample_pub.get(field)]
+            missing_fields = [field for field in expected_fields if not sample_pub.get(field)]
+            
+            print(f"      ✅ Category-specific fields present: {present_fields}")
+            if missing_fields:
+                print(f"      ⚠️  Category-specific fields missing: {missing_fields}")
+        
+        return all_tests_passed
+        
     except Exception as e:
-        print(f"   ❌ Error testing MongoDB connection: {e}")
+        print(f"   ❌ Error testing Google Sheets data parsing: {e}")
         return False
 
 def test_cors_configuration():
