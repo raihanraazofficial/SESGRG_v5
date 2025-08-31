@@ -739,7 +739,7 @@ const ResearchAreas = () => {
                           <div className="flex items-center">
                             <Folder className="h-4 w-4 text-gray-400 mr-1" />
                             <span className="text-sm text-gray-600">
-                              {areaStats[area.id]?.projects || area.projects} Projects
+                              {areaStats[area.id]?.projects || 0} Projects
                               {areaStats[area.id] && (
                                 <span className="ml-1 text-green-600 text-xs">●</span>
                               )}
@@ -748,7 +748,7 @@ const ResearchAreas = () => {
                           <div className="flex items-center">
                             <FileText className="h-4 w-4 text-gray-400 mr-1" />
                             <span className="text-sm text-gray-600">
-                              {areaStats[area.id]?.publications || area.publications} Papers
+                              {areaStats[area.id]?.publications || 0} Papers
                               {areaStats[area.id] && (
                                 <span className="ml-1 text-green-600 text-xs">●</span>
                               )}
