@@ -19,12 +19,11 @@ coverage.xml
 .pytest_cache/
 .hypothesis
 
-# Virtual environments
+# Virtual environments  
 venv/
 .venv/
 ENV/
 env/
-.env
 
 # IDEs
 .vscode/
@@ -56,3 +55,19 @@ README*
 build/
 dist/
 *.egg-info/
+
+# Environment files
+.env
+.env.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Large files
+*.zip
+*.tar.gz
+*.pdf
+*.doc
+*.docx
