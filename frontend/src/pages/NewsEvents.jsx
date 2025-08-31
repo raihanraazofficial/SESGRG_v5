@@ -51,11 +51,14 @@ const NewsEvents = () => {
         ...filters,
         category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
       };
+      console.log('⚡ Fetching news events with filters:', apiFilters);
       const response = await googleSheetsService.getNewsEvents(apiFilters);
       setNewsEvents(response.news_events || []);
       setPagination(response.pagination || {});
+      console.log('✅ News events loaded:', response.news_events?.length || 0, 'items');
     } catch (error) {
-      console.error('Error fetching news events:', error);
+      console.error('❌ Error fetching news events:', error);
+      alert('Failed to load news & events. Please check your internet connection and try again.');
       // Fallback to empty state on error
       setNewsEvents([]);
       setPagination({});
