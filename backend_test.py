@@ -3324,118 +3324,154 @@ def test_all_data_endpoints_comprehensive():
         print(f"   ❌ Error in comprehensive data endpoints testing: {e}")
         return False
 
-if __name__ == "__main__":
-    print("Starting Backend API Testing Suite - UPDATED SESG RESEARCH WEBSITE...")
-    print("=" * 60)
+def run_comprehensive_backend_testing():
+    """Run comprehensive backend testing as requested in review"""
+    print("🔍 COMPREHENSIVE BACKEND API TESTING - ADDRESSING USER 'No data found' ISSUES")
+    print("=" * 80)
+    print(f"🌐 Testing backend at: {API_BASE_URL}")
+    print(f"📅 Test timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 80)
     
-    # Run all tests including new Google Sheets integration tests and review request tests
-    tests = [
-        test_server_accessibility,
-        test_root_endpoint,
-        test_post_status_endpoint,
-        test_get_status_endpoint,
-        test_mongodb_connection,
-        test_cors_configuration,
-        test_publications_endpoint,
-        test_projects_endpoint,
-        test_achievements_endpoint,
-        test_news_events_endpoint,
-        test_featured_items_and_short_description,
-        test_latex_rendering_support,
-        test_achievement_details_endpoint,
-        test_news_event_details_endpoint,
-        test_research_stats_endpoint,
-        test_error_handling,
-        # GOOGLE SHEETS INTEGRATION TESTS
-        test_google_sheets_projects_integration,
-        test_google_sheets_achievements_integration,
-        test_google_sheets_news_events_integration,
-        test_caching_verification,
-        test_error_handling_fallback,
-        test_real_vs_mock_data_verification,
-        test_news_events_comprehensive,
-        # NEW TESTS FOR REVIEW REQUEST - UPDATED NEWS & EVENTS API
-        test_updated_news_events_api,
-        # NEW TESTS FOR REVIEW REQUEST - UPDATED SESG RESEARCH WEBSITE
-        test_cache_duration_verification,
-        test_environment_variables_configuration,
-        test_force_refresh_functionality,
-        test_all_data_endpoints_comprehensive
+    # Test results tracking
+    test_results = {}
+    critical_issues = []
+    
+    # 1. Basic Backend Health Check
+    print("\n🏥 BASIC BACKEND HEALTH CHECK")
+    print("-" * 40)
+    
+    basic_tests = [
+        ("Server Accessibility", test_server_accessibility),
+        ("Root Endpoint", test_root_endpoint),
+        ("MongoDB Connection", test_mongodb_connection),
+        ("CORS Configuration", test_cors_configuration)
     ]
     
-    results = []
-    for test in tests:
+    for test_name, test_func in basic_tests:
         try:
-            if test.__name__ == 'test_post_status_endpoint':
-                result, _ = test()  # This test returns a tuple
-            else:
-                result = test()
-            results.append(result)
+            result = test_func()
+            test_results[test_name] = result
+            if not result:
+                critical_issues.append(f"Basic backend issue: {test_name} failed")
         except Exception as e:
-            print(f"Test {test.__name__} failed with exception: {e}")
-            results.append(False)
+            print(f"❌ {test_name} failed with exception: {e}")
+            test_results[test_name] = False
+            critical_issues.append(f"Basic backend exception in {test_name}: {str(e)}")
     
-    # Summary
-    print("\n" + "=" * 60)
-    print("BACKEND TESTING SUMMARY - UPDATED SESG RESEARCH WEBSITE")
-    print("=" * 60)
+    # 2. Main API Endpoints Testing (as requested in review)
+    print("\n🎯 MAIN API ENDPOINTS TESTING (Review Request Focus)")
+    print("-" * 60)
     
-    passed = sum(results)
-    total = len(results)
-    
-    print(f"Tests Passed: {passed}/{total}")
-    print(f"Success Rate: {(passed/total)*100:.1f}%")
-    
-    # Specific focus on review request tests
-    review_request_tests = [
-        "test_cache_duration_verification",
-        "test_environment_variables_configuration", 
-        "test_force_refresh_functionality",
-        "test_all_data_endpoints_comprehensive"
+    main_api_tests = [
+        ("Publications API", test_publications_endpoint),
+        ("Projects API", test_projects_endpoint),
+        ("Achievements API", test_achievements_endpoint),
+        ("News-Events API", test_news_events_endpoint)
     ]
     
-    review_results = []
-    for i, test in enumerate(tests):
-        if test.__name__ in review_request_tests:
-            review_results.append(results[i])
+    for test_name, test_func in main_api_tests:
+        try:
+            result = test_func()
+            test_results[test_name] = result
+            if not result:
+                critical_issues.append(f"Main API issue: {test_name} failed - This could cause 'No data found' messages")
+        except Exception as e:
+            print(f"❌ {test_name} failed with exception: {e}")
+            test_results[test_name] = False
+            critical_issues.append(f"Main API exception in {test_name}: {str(e)}")
     
-    review_passed = sum(review_results)
-    review_total = len(review_results)
+    # 3. Cache and Performance Testing
+    print("\n⚡ CACHE AND PERFORMANCE TESTING")
+    print("-" * 40)
     
-    print(f"\nReview Request Tests (New Features): {review_passed}/{review_total}")
+    try:
+        print("Testing cache status endpoint...")
+        cache_response = requests.get(f"{API_BASE_URL}/cache-status", timeout=10)
+        if cache_response.status_code == 200:
+            cache_data = cache_response.json()
+            print(f"✅ Cache Status: {cache_data.get('cached_items', 0)} items cached")
+            print(f"⏰ Cache Duration: {cache_data.get('cache_duration_minutes', 0)} minutes")
+            test_results["Cache Status"] = True
+        else:
+            print(f"❌ Cache status endpoint failed: {cache_response.status_code}")
+            test_results["Cache Status"] = False
+            
+        print("Testing cache clear endpoint...")
+        clear_response = requests.post(f"{API_BASE_URL}/clear-cache", timeout=10)
+        if clear_response.status_code == 200:
+            print("✅ Cache clear endpoint working")
+            test_results["Cache Clear"] = True
+        else:
+            print(f"❌ Cache clear endpoint failed: {clear_response.status_code}")
+            test_results["Cache Clear"] = False
+            
+    except Exception as e:
+        print(f"❌ Cache testing failed: {e}")
+        test_results["Cache Status"] = False
+        test_results["Cache Clear"] = False
     
-    # Google Sheets integration results
-    google_sheets_tests = [
-        "test_google_sheets_projects_integration",
-        "test_google_sheets_achievements_integration", 
-        "test_google_sheets_news_events_integration",
-        "test_caching_verification",
-        "test_real_vs_mock_data_verification"
-    ]
+    # 4. Generate Final Summary
+    print("\n" + "=" * 80)
+    print("🎯 COMPREHENSIVE BACKEND TESTING SUMMARY")
+    print("=" * 80)
     
-    google_sheets_results = []
-    for i, test in enumerate(tests):
-        if test.__name__ in google_sheets_tests:
-            google_sheets_results.append(results[i])
+    # Calculate statistics
+    passed_tests = sum(1 for result in test_results.values() if result)
+    total_tests = len(test_results)
+    success_rate = (passed_tests / total_tests) * 100 if total_tests > 0 else 0
     
-    google_sheets_passed = sum(google_sheets_results)
-    google_sheets_total = len(google_sheets_results)
+    print(f"📊 Overall Results: {passed_tests}/{total_tests} tests passed ({success_rate:.1f}%)")
+    print()
     
-    print(f"Google Sheets Integration Tests: {google_sheets_passed}/{google_sheets_total}")
+    # Detailed results
+    print("📋 Detailed Test Results:")
+    for test_name, result in test_results.items():
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"   {status} {test_name}")
     
-    if passed == total:
-        print("🎉 ALL TESTS PASSED! Updated SESG Research Website backend working perfectly.")
-        print("✅ Cache duration reduced to 30 seconds for real-time updates")
-        print("✅ Environment variables configured for Google Sheets API URLs")
-        print("✅ Force refresh functionality working via POST /api/clear-cache")
-        print("✅ All 4 main data endpoints responding successfully")
-        print("✅ Cache status endpoint providing monitoring information")
-    elif review_passed == review_total:
-        print("✅ REVIEW REQUEST FEATURES WORKING! All new changes implemented successfully.")
-        print("✅ Cache duration: 30 seconds ✅ Environment variables ✅ Force refresh ✅ All endpoints")
+    # Critical issues analysis
+    print()
+    if critical_issues:
+        print("🚨 CRITICAL ISSUES FOUND (Likely causing 'No data found' messages):")
+        for i, issue in enumerate(critical_issues, 1):
+            print(f"   {i}. {issue}")
     else:
-        print("⚠️  Some review request features need attention. Please review above.")
-        if review_passed > 0:
-            print(f"✅ {review_passed}/{review_total} new features working correctly")
+        print("✅ No critical issues found in backend APIs")
     
-    print("=" * 60)
+    # Google Sheets Integration Analysis
+    print()
+    print("🔍 GOOGLE SHEETS INTEGRATION ANALYSIS:")
+    main_apis = ["Publications API", "Projects API", "Achievements API", "News-Events API"]
+    working_apis = [api for api in main_apis if test_results.get(api, False)]
+    failing_apis = [api for api in main_apis if not test_results.get(api, False)]
+    
+    if len(working_apis) == 4:
+        print("   ✅ All 4 main APIs are working - Google Sheets integration appears functional")
+    elif len(working_apis) > 0:
+        print(f"   ⚠️  Partial functionality: {len(working_apis)}/4 APIs working")
+        print(f"   ✅ Working: {', '.join(working_apis)}")
+        if failing_apis:
+            print(f"   ❌ Failing: {', '.join(failing_apis)}")
+    else:
+        print("   ❌ All main APIs failing - Major Google Sheets integration issue")
+    
+    # Recommendations
+    print()
+    print("💡 RECOMMENDATIONS:")
+    if success_rate >= 90:
+        print("   ✅ Backend is healthy. If users see 'No data found', check frontend integration.")
+    elif success_rate >= 70:
+        print("   ⚠️  Backend has minor issues. Focus on fixing failing endpoints.")
+    else:
+        print("   🚨 Backend has major issues. Immediate attention required.")
+        
+    if failing_apis:
+        print(f"   🔧 Priority fix: {', '.join(failing_apis)}")
+    
+    print()
+    print("=" * 80)
+    
+    return test_results, critical_issues
+
+if __name__ == "__main__":
+    test_results, critical_issues = run_comprehensive_backend_testing()
