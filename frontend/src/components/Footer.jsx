@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Zap, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Zap, Mail, Phone, MapPin, ExternalLink, Facebook, Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
