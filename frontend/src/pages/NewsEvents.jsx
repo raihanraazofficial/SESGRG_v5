@@ -894,7 +894,7 @@ const NewsEvents = () => {
 
                         {/* Description */}
                         <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                          {item.description}
+                          {item.short_description || item.description}
                         </p>
 
                         {/* Read More Button */}
