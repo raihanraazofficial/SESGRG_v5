@@ -17,46 +17,31 @@ const LatestNewsSection = () => {
   const fetchLatestNews = async () => {
     try {
       setLoading(true);
+      console.log('⚡ Homepage: Fetching latest news & events...');
+      
       const response = await googleSheetsService.getNewsEvents({
         page: 1,
         per_page: 4,
         sort_by: 'date',
         sort_order: 'desc'
       });
-      setLatestNews(response.news_events || []);
+      
+      const newsEvents = response.news_events || [];
+      setLatestNews(newsEvents);
+      
+      console.log('✅ Homepage: Latest news loaded:', newsEvents.length, 'items');
+      
+      // If no data from API, show a message instead of mock data
+      if (newsEvents.length === 0) {
+        console.log('ℹ️ Homepage: No news events found from API');
+        setLatestNews([]);
+      }
+      
     } catch (error) {
-      console.error('Error fetching latest news:', error);
-      // Fallback to mock data if API fails
-      setLatestNews([
-        {
-          id: 1,
-          title: "International Smart Grid Conference 2024",
-          date: "2024-12-15",
-          category: "Upcoming Events",
-          description: "Join us for the annual international conference on smart grid innovations."
-        },
-        {
-          id: 2,
-          title: "Research Partnership with Tesla Energy",
-          date: "2024-11-28", 
-          category: "News",
-          description: "Strategic collaboration announced for next-generation energy storage research."
-        },
-        {
-          id: 3,
-          title: "Best Paper Award at IEEE Conference",
-          date: "2024-11-10",
-          category: "Events", 
-          description: "Our research on AI-powered grid optimization wins prestigious award."
-        },
-        {
-          id: 4,
-          title: "Smart Microgrid Installation Completed",
-          date: "2024-10-25",
-          category: "Events",
-          description: "Successfully installed demonstration microgrid system on campus."
-        }
-      ]);
+      console.error('❌ Homepage: Error fetching latest news:', error);
+      // Show user-friendly error message
+      alert('Failed to load latest news. Please check your internet connection and try again.');
+      setLatestNews([]);
     } finally {
       setLoading(false);
     }
