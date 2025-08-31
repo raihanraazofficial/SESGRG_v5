@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight, Folder, FileText, Sun, Brain, ExternalLink } from "lucide-react";
+import { Lightbulb, Zap, Battery, Shield, Cpu, Network, Leaf, ArrowRight, Folder, FileText, Sun, Brain, ExternalLink, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
