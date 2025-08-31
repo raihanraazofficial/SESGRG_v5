@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Google Sheets API Integration Testing Suite - Home Page Latest News & Events Focus
-Tests the Google Sheets API integration that powers the Home page Latest News & Events section:
-- All 4 Google Sheets APIs working correctly (Publications, Projects, Achievements, News Events)
-- News Events API specifically returns valid data for Home page
-- Response times are reasonable (under 4-5 seconds)
-- No authentication or access issues
-- Error handling works properly if API is temporarily unavailable
-- Verifies recent improvements to error handling, loading states, and caching
+Google Sheets API Integration Testing Suite - Research Areas Page Focus
+Tests the enhanced Research Areas page Google Sheets API integration and real-time data fetching functionality:
+- Google Sheets API Integration for Research Areas (Projects and Publications APIs with filtering)
+- Data Filtering and Processing (filtering by research area titles, publication categories)
+- API Performance and Reliability (response times, caching, error handling)
+- Data Structure Validation (proper fields for filtering)
+- Concurrent Promise.all fetching performance
+- Real-time statistics calculations
 """
 
 import requests
