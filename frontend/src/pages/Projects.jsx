@@ -40,7 +40,7 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getProjects(filters);
+      const response = await googleSheetsService.getProjects(filters);
       setProjects(response.projects || []);
       setPagination(response.pagination || {});
     } catch (error) {
