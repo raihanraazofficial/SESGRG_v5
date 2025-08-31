@@ -297,8 +297,8 @@ async def get_achievement_details(achievement_id: str):
 async def get_news_event_details(news_id: str):
     """Get detailed news/event"""
     try:
-        news_events_data = await fetch_sheets_data("news_events")
-        news = next((item for item in news_events_data if item["id"] == news_id), None)
+        news_data = await fetch_sheets_data("news_events")
+        news = next((item for item in news_data if str(item.get("id")) == str(news_id)), None)
         return news if news else {"error": "News/Event not found"}
     except Exception as e:
         return {"error": f"Failed to fetch news event: {str(e)}"}
