@@ -19,6 +19,9 @@ class GoogleSheetsService {
       achievements: 'sesg_achievements_cache',
       newsEvents: 'sesg_news_events_cache'
     };
+    
+    // Initialize background refresh for better performance
+    this.initBackgroundRefresh();
   }
 
   // Cache management
