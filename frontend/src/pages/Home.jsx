@@ -25,12 +25,20 @@ const LatestNewsSection = () => {
         console.log('⚡ Homepage: Fetching latest news & events...');
       }
       
-      const response = await googleSheetsService.getNewsEvents({
-        page: 1,
-        per_page: 4,
-        sort_by: 'date',
-        sort_order: 'desc'
-      });
+      // Use force refresh if requested to bypass cache
+      const response = forceRefresh 
+        ? await googleSheetsService.forceRefreshNewsEvents({
+            page: 1,
+            per_page: 4,
+            sort_by: 'date',
+            sort_order: 'desc'
+          })
+        : await googleSheetsService.getNewsEvents({
+            page: 1,
+            per_page: 4,
+            sort_by: 'date',
+            sort_order: 'desc'
+          });
       
       const newsEvents = response.news_events || [];
       setLatestNews(newsEvents);
