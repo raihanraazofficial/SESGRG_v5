@@ -360,7 +360,7 @@ Best regards,`;
 
         {/* Header - Original Content */}
         <div className="text-center mb-12">
-          <div className="hidden">{/* Hidden original header */}
+          <div style={{display: 'none'}}>{/* Hidden original header */}</div>
           
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
