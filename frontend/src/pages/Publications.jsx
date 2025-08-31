@@ -291,7 +291,19 @@ Best regards,`;
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Publications</h1>
+          <div className="flex items-center justify-center mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Publications</h1>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshData}
+              disabled={refreshing}
+              className="ml-4 flex items-center space-x-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
+            </Button>
+          </div>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
             Explore our research publications in sustainable energy and smart grid technologies. 
             Discover cutting-edge research that's shaping the future of energy systems.
