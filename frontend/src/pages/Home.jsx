@@ -598,6 +598,75 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Photo Gallery Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="relative inline-block mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">Photo Gallery</h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full animate-pulse"></div>
+            </div>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              Glimpses of our research activities, laboratory work, and sustainable energy installations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
+                caption: "Solar Panel Installation Research"
+              },
+              {
+                url: "https://images.unsplash.com/photo-1639313521811-fdfb1c040ddb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
+                caption: "Control Room Monitoring"
+              },
+              {
+                url: "https://images.pexels.com/photos/3861435/pexels-photo-3861435.jpeg",
+                caption: "Laboratory Research Work"
+              },
+              {
+                url: "https://images.unsplash.com/photo-1606206873764-fd15e242df52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
+                caption: "Laboratory Equipment Analysis"
+              },
+              {
+                url: "https://images.unsplash.com/photo-1608037222011-cbf484177126?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
+                caption: "University Laboratory Environment"
+              },
+              {
+                url: "https://images.pexels.com/photos/8539753/pexels-photo-8539753.jpeg",
+                caption: "Professional Research Activities"
+              }
+            ].map((photo, index) => (
+              <Card key={index} className="group hover:shadow-xl transition-all duration-500 border-0 shadow-lg overflow-hidden">
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={photo.url}
+                    alt={photo.caption}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                    <p className="text-sm font-semibold">{photo.caption}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white px-8 py-3"
+            >
+              View All Photos <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Latest News & Events Section */}
       <LatestNewsSection />
     </div>
