@@ -132,15 +132,19 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-gray-400">
-              © 2024 Sustainable Energy and Smart Grid Research. All rights reserved.
+              © {new Date().getFullYear()} Sustainable Energy and Smart Grid Research. All rights reserved.
             </p>
             <div className="flex items-center space-x-4 mt-4 md:mt-0">
               <Link to="/faq" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
                 FAQ
               </Link>
               <span className="text-gray-600">|</span>
-              <Link to="/contact" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
+              <Link to="/privacy" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
                 Privacy Policy
+              </Link>
+              <span className="text-gray-600">|</span>
+              <Link to="/terms" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
+                Terms & Conditions
               </Link>
               <span className="text-gray-600">|</span>
               <Link to="/contact" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
