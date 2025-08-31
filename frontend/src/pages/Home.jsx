@@ -12,6 +12,7 @@ const LatestNewsSection = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
   useEffect(() => {
     // Start fetching immediately on component mount - Force initial load
