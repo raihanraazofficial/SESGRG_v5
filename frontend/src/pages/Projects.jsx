@@ -73,10 +73,13 @@ const Projects = () => {
   };
 
   const handleFilterChange = (key, value) => {
+    // Convert "all" to empty string for backend compatibility
+    const processedValue = value === "all" ? "" : value;
+    
     setFilters(prev => ({
       ...prev,
-      [key]: value,
-      page: 1
+      [key]: processedValue,
+      page: 1 // Reset to first page when filtering
     }));
   };
 
