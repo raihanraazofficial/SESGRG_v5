@@ -160,25 +160,97 @@ const LatestNewsSection = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {latestNews.map((news, index) => (
-              <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
-                      {news.category}
-                    </span>
+          <div className="space-y-8">
+            {/* Featured Story Card */}
+            {latestNews.length > 0 && (
+              <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                  <div 
+                    className="h-64 lg:h-80 bg-cover bg-center relative"
+                    style={{
+                      backgroundImage: `url('https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxuZXdzJTIwZXZlbnR8ZW58MHx8fHwxNzU2NjU0MjE4fDA&ixlib=rb-4.1.0&q=85')`
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+                    <div className="absolute top-4 left-4">
+                      <span className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-full">
+                        Featured Story
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
-                    {news.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
-                  <p className="text-gray-600 text-sm line-clamp-3">
-                    {news.description}
-                  </p>
-                </CardContent>
+                  <CardContent className="p-8 flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className={`px-3 py-1 text-sm font-medium rounded-full ${getCategoryColor(latestNews[0].category)}`}>
+                        {latestNews[0].category}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {formatDate(latestNews[0].date)}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 hover:text-emerald-600 transition-colors">
+                      {latestNews[0].title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed mb-6">
+                      {latestNews[0].description}
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      className="self-start border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white"
+                    >
+                      Read More <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </div>
               </Card>
-            ))}
+            )}
+
+            {/* Smaller News Cards */}
+            {latestNews.length > 1 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {latestNews.slice(1, 5).map((news, index) => (
+                  <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
+                          {news.category}
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        {news.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {news.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Show all items if only 1-4 total */}
+            {latestNews.length <= 4 && latestNews.length > 1 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {latestNews.slice(1).map((news, index) => (
+                  <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
+                          {news.category}
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        {news.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {news.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
