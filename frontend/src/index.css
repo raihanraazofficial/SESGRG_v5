@@ -78,28 +78,30 @@ code {
 
 @layer base {
   * {
-/* Photo Gallery Animation */
-@keyframes scroll-right {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Photo Gallery Animation - Right to Left Rail Movement */
+@keyframes scroll-left {
   0% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(calc(-320px * 6));
+    transform: translateX(-100%);
   }
 }
 
 .animate-scroll-right {
-  animation: scroll-right 30s linear infinite;
+  animation: scroll-left 40s linear infinite;
 }
 
 .animate-scroll-right:hover {
   animation-play-state: paused;
-}
-    @apply border-border;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
 }
 
 /* Custom animations for SESG website */
