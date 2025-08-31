@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink } from "lucide-react";
+import RefreshButton from "../components/RefreshButton";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
