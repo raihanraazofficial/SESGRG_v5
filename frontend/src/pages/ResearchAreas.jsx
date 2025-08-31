@@ -8,6 +8,13 @@ import googleSheetsService from "../services/googleSheetsApi";
 
 const ResearchAreas = () => {
   const [selectedArea, setSelectedArea] = useState(null);
+  const [realTimeData, setRealTimeData] = useState({
+    projects: [],
+    publications: [],
+    loading: false,
+    lastUpdated: null
+  });
+  const [peopleData, setPeopleData] = useState([]);
 
   const iconMap = {
     Lightbulb: Lightbulb,
