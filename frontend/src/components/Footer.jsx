@@ -68,9 +68,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Reach Out to Us */}
+          {/* Find Us */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Reach Out to Us</h3>
+            <h3 className="font-semibold text-white mb-4">Find Us</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-emerald-400" />
@@ -85,28 +85,6 @@ const Footer = () => {
                 <Phone className="h-4 w-4 text-emerald-400" />
                 <p className="text-sm text-gray-400">+880-2-9844051-4</p>
               </div>
-              <div className="flex space-x-4 mt-4">
-                {/* Social Media Links - Placeholders */}
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">Facebook</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">LinkedIn</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <span className="sr-only">Twitter</span>
-                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Find Us */}
-          <div>
-            <h3 className="font-semibold text-white mb-4">Find Us</h3>
-            <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-emerald-400 mt-0.5" />
                 <p className="text-sm text-gray-400">
@@ -121,6 +99,31 @@ const Footer = () => {
               >
                 View on Map →
               </Link>
+            </div>
+          </div>
+
+          {/* Follow Us */}
+          <div>
+            <h3 className="font-semibold text-white mb-4">Follow Us</h3>
+            <div className="space-y-3">
+              <div className="flex space-x-4">
+                {/* Social Media Links - Placeholders */}
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <span className="sr-only">Facebook</span>
+                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <span className="sr-only">LinkedIn</span>
+                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <span className="sr-only">Twitter</span>
+                  <div className="h-5 w-5 bg-gray-400 rounded"></div>
+                </a>
+              </div>
+              <p className="text-sm text-gray-400 mt-4">
+                Stay connected with our latest research updates and announcements.
+              </p>
             </div>
           </div>
         </div>
