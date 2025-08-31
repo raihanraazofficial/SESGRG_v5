@@ -465,11 +465,11 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Our Objectives & Research in Action - Dynamic Layout */}
+          {/* Our Objectives & Research in Action - Vertically Centered Layout */}
           <div className="mb-20">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              {/* Image Carousel - Left Side with Dynamic Positioning */}
-              <div className={`flex flex-col ${objectives.length >= 5 ? 'justify-center' : 'justify-start'}`}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Image Carousel - Left Side with Vertical Center Alignment */}
+              <div className="flex flex-col justify-center">
                 <div className="relative">
                   <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
                     {carouselImages.map((image, index) => (
@@ -483,6 +483,7 @@ const Home = () => {
                           src={image.url}
                           alt={image.alt}
                           className="w-full h-full object-cover"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         <div className="absolute bottom-6 left-6 text-white">
@@ -524,7 +525,7 @@ const Home = () => {
               </div>
 
               {/* Objectives - Right Side */}
-              <div>
+              <div className="flex flex-col justify-center">
                 <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center lg:text-left">Our Objectives</h3>
                 <div className="space-y-8">
                   {objectives.map((objective, index) => (
