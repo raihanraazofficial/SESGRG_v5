@@ -213,6 +213,13 @@ async def clear_cache():
         logger.error(f"Error clearing cache: {e}")
         return {"error": "Failed to clear cache"}
 
+# Configure logging  
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Include the router in the main app
 app.include_router(api_router)
 
@@ -224,13 +231,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+# Export for Vercel
+app = app
