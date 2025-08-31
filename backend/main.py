@@ -336,7 +336,7 @@ async def get_cache_status():
 @app.post("/api/clear-cache")
 async def clear_cache():
     """Clear cache endpoint"""
-    return {"message": "No cache to clear - using direct API calls"}
+    return {"message": "No cache to clear - ultra-lightweight mode fetches fresh data"}
 
 # Vercel handler
 handler = Mangum(app)
