@@ -1499,19 +1499,38 @@ class SESGSheetsService:
             else:
                 # Fetch fresh data from Google Sheets
                 logger.info("Fetching fresh news events data from Google Sheets")
-                response = requests.get(self.news_events_api_url, timeout=30)
-                response.raise_for_status()
-                
-                # Parse the response
-                sheets_data = response.json()
-                
-                # Convert sheets data to our news events format
-                news_events = self._convert_sheets_to_news_events(sheets_data)
-                
-                # Cache the raw news events data
-                self.cache[cache_key] = news_events
-                self.last_fetch_time[cache_key] = current_time
-                logger.info(f"Cached {len(news_events)} news events for performance")
+                try:
+                    response = requests.get(self.news_events_api_url, timeout=30)
+                    response.raise_for_status()
+                    
+                    # Check if response is JSON
+                    if response.headers.get('content-type', '').startswith('application/json'):
+                        sheets_data = response.json()
+                    else:
+                        # If not JSON, likely an error page
+                        logger.error(f"Invalid response from Google Sheets API: {response.text[:200]}")
+                        raise Exception("Invalid response format from Google Sheets API")
+                    
+                    # Convert sheets data to our news events format
+                    news_events = self._convert_sheets_to_news_events(sheets_data)
+                    
+                    # If no news events found, this might indicate an API issue
+                    if not news_events:
+                        logger.warning("No news events found from Google Sheets API, this might indicate an issue")
+                        raise Exception("Empty response from Google Sheets API")
+                    
+                    # Cache the raw news events data
+                    self.cache[cache_key] = news_events
+                    self.last_fetch_time[cache_key] = current_time
+                    logger.info(f"Cached {len(news_events)} news events for performance")
+                    
+                except (requests.RequestException, ValueError, KeyError) as api_error:
+                    logger.error(f"Google Sheets API error: {api_error}")
+                    logger.info("Falling back to mock news events data")
+                    # Use mock data as fallback
+                    mock_response = self._get_mock_news_events(page, per_page, category_filter, 
+                                                            title_filter, sort_by, sort_order)
+                    return mock_response
             
             # Apply filters on cached data
             filtered_news = self._apply_news_filters(news_events, category_filter, title_filter)
