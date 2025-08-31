@@ -11,6 +11,7 @@ const LatestNewsSection = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
   useEffect(() => {
     // Start fetching immediately on component mount
@@ -46,6 +47,7 @@ const LatestNewsSection = () => {
       
       const newsEvents = response.news_events || [];
       setLatestNews(newsEvents);
+      setHasAttemptedLoad(true);
       
       console.log('✅ Homepage: Latest news loaded:', newsEvents.length, 'items');
       
@@ -53,6 +55,7 @@ const LatestNewsSection = () => {
       console.error('❌ Homepage: Error fetching latest news:', error);
       setError('Failed to load latest news. Please try refreshing the page.');
       setLatestNews([]);
+      setHasAttemptedLoad(true);
     } finally {
       setLoading(false);
       setRefreshing(false);
