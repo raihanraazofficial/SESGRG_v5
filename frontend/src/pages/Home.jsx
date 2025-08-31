@@ -125,6 +125,32 @@ const LatestNewsSection = () => {
               </Card>
             ))}
           </div>
+        ) : latestNews.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="mb-6">
+              <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No Recent News</h3>
+              <p className="text-gray-500">
+                No recent news or events are available at the moment. Please check back later.
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <Button
+                variant="outline"
+                onClick={() => fetchLatestNews(true)}
+                disabled={refreshing}
+                className="flex items-center space-x-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                Try Again
+              </Button>
+              <Link to="/news">
+                <Button className="bg-emerald-600 hover:bg-emerald-700">
+                  Visit News Page <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {latestNews.map((news, index) => (
