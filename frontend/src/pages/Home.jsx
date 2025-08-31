@@ -207,8 +207,8 @@ const LatestNewsSection = () => {
             {/* Smaller News Cards */}
             {latestNews.length > 1 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {latestNews.slice(1, 5).map((news, index) => (
-                  <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
+                {latestNews.slice(1, 8).map((news, index) => (
+                  <Card key={news.id || `news-${index}-${news.title?.slice(0,10)}`} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
@@ -220,31 +220,7 @@ const LatestNewsSection = () => {
                       </h3>
                       <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
                       <p className="text-gray-600 text-sm line-clamp-3">
-                        {news.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Show all items if only 1-4 total */}
-            {latestNews.length <= 4 && latestNews.length > 1 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {latestNews.slice(1).map((news, index) => (
-                  <Card key={news.id || index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
-                          {news.category}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
-                        {news.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 mb-3">{formatDate(news.date)}</p>
-                      <p className="text-gray-600 text-sm line-clamp-3">
-                        {news.description}
+                        {news.short_description || news.description}
                       </p>
                     </CardContent>
                   </Card>
