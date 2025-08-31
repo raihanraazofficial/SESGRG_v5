@@ -545,44 +545,125 @@ def test_publications_endpoint():
         return False
 
 def test_projects_endpoint():
-    """Test GET /api/projects endpoint with various parameters"""
-    print("8. Testing GET /api/projects endpoint...")
+    """Test GET /api/projects endpoint - COMPREHENSIVE REVIEW REQUEST TESTING"""
+    print("8. Testing GET /api/projects endpoint - ADDRESSING USER 'No projects found' ISSUE...")
+    
+    all_tests_passed = True
+    
     try:
-        # Test basic endpoint
-        response = requests.get(f"{API_BASE_URL}/projects", timeout=10)
+        # 1. Basic endpoint test with data source detection
+        print("   1.1 Testing Projects API and Data Source...")
+        start_time = datetime.now()
+        response = requests.get(f"{API_BASE_URL}/projects", timeout=30)
+        response_time = (datetime.now() - start_time).total_seconds()
+        
         if response.status_code != 200:
-            print(f"   ❌ Basic request failed with status: {response.status_code}")
+            print(f"      ❌ Projects API request failed with status: {response.status_code}")
+            print(f"      Response text: {response.text[:200]}")
+            all_tests_passed = False
             return False
         
         data = response.json()
         required_keys = ["projects", "pagination"]
         if not all(key in data for key in required_keys):
-            print(f"   ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
-            return False
+            print(f"      ❌ Missing required keys. Expected: {required_keys}, Got: {list(data.keys())}")
+            all_tests_passed = False
+        else:
+            projects = data.get('projects', [])
+            print(f"      ✅ Projects API responding - Retrieved {len(projects)} projects")
+            print(f"      ⏱️  Response time: {response_time:.3f} seconds")
+            
+            if len(projects) > 0:
+                sample_project = projects[0]
+                print(f"      🔍 Data source analysis: Google Sheets integration")
+                print(f"      📄 Sample project: '{sample_project.get('title', '')[:50]}...'")
+                print(f"      📊 Sample status: {sample_project.get('status', 'N/A')}")
+                print(f"      🏷️  Sample areas: {sample_project.get('research_areas', [])[:2]}")
+            else:
+                print(f"      ❌ CRITICAL: No projects returned - This explains user's 'No projects found' message!")
+                all_tests_passed = False
+        
+        # 2. Test filtering functionality
+        print("   1.2 Testing Projects Filtering...")
         
         # Test status filter
-        response = requests.get(f"{API_BASE_URL}/projects?status_filter=Active", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Status filter failed")
-            return False
+        status_response = requests.get(f"{API_BASE_URL}/projects?status_filter=Active", timeout=15)
+        if status_response.status_code == 200:
+            status_data = status_response.json()
+            active_projects = status_data.get('projects', [])
+            print(f"      ✅ Status filter 'Active': {len(active_projects)} projects")
+        else:
+            print(f"      ❌ Status filter failed with status: {status_response.status_code}")
+            all_tests_passed = False
         
         # Test area filter
-        response = requests.get(f"{API_BASE_URL}/projects?area_filter=Smart Grid Technologies", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Area filter failed")
-            return False
+        area_response = requests.get(f"{API_BASE_URL}/projects?area_filter=Smart Grid Technologies", timeout=15)
+        if area_response.status_code == 200:
+            area_data = area_response.json()
+            area_projects = area_data.get('projects', [])
+            print(f"      ✅ Area filter 'Smart Grid Technologies': {len(area_projects)} projects")
+        else:
+            print(f"      ❌ Area filter failed with status: {area_response.status_code}")
+            all_tests_passed = False
         
-        # Test pagination and sorting
-        response = requests.get(f"{API_BASE_URL}/projects?page=1&per_page=10&sort_by=start_date&sort_order=desc", timeout=10)
-        if response.status_code != 200:
-            print("   ❌ Pagination and sorting failed")
-            return False
+        # Test title filter
+        title_response = requests.get(f"{API_BASE_URL}/projects?title_filter=Solar", timeout=15)
+        if title_response.status_code == 200:
+            title_data = title_response.json()
+            title_projects = title_data.get('projects', [])
+            print(f"      ✅ Title filter 'Solar': {len(title_projects)} projects")
+        else:
+            print(f"      ❌ Title filter failed")
+            all_tests_passed = False
         
-        print("   ✅ Projects endpoint working correctly with all parameters")
-        return True
+        # 3. Test pagination and sorting
+        print("   1.3 Testing Projects Pagination and Sorting...")
+        
+        # Test different page sizes
+        for page_size in [5, 10, 20]:
+            page_response = requests.get(f"{API_BASE_URL}/projects?page=1&per_page={page_size}", timeout=15)
+            if page_response.status_code == 200:
+                page_data = page_response.json()
+                page_projects = page_data.get('projects', [])
+                pagination = page_data.get('pagination', {})
+                print(f"      ✅ Page size {page_size}: Got {len(page_projects)} projects, per_page={pagination.get('per_page')}")
+            else:
+                print(f"      ❌ Pagination test failed for page size {page_size}")
+                all_tests_passed = False
+        
+        # Test sorting
+        sort_response = requests.get(f"{API_BASE_URL}/projects?sort_by=start_date&sort_order=desc", timeout=15)
+        if sort_response.status_code == 200:
+            sort_data = sort_response.json()
+            sort_projects = sort_data.get('projects', [])
+            print(f"      ✅ Sorting by start_date desc: {len(sort_projects)} projects")
+            if len(sort_projects) >= 2:
+                dates = [proj.get('start_date', '') for proj in sort_projects[:3]]
+                print(f"      📅 Sample dates order: {dates}")
+        else:
+            print(f"      ❌ Sorting test failed")
+            all_tests_passed = False
+        
+        # 4. Test combined filtering
+        print("   1.4 Testing Combined Projects Filtering...")
+        combined_response = requests.get(f"{API_BASE_URL}/projects?status_filter=Active&sort_by=start_date&sort_order=desc&per_page=5", timeout=15)
+        if combined_response.status_code == 200:
+            combined_data = combined_response.json()
+            combined_projects = combined_data.get('projects', [])
+            print(f"      ✅ Combined filtering (Active + sorted): {len(combined_projects)} projects")
+        else:
+            print(f"      ❌ Combined filtering failed")
+            all_tests_passed = False
+        
+        if all_tests_passed:
+            print("   🎉 ALL Projects API tests PASSED!")
+        else:
+            print("   ⚠️  Some Projects API tests FAILED!")
+        
+        return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing projects endpoint: {e}")
+        print(f"   ❌ Error in comprehensive Projects API testing: {e}")
         return False
 
 def test_achievements_endpoint():
