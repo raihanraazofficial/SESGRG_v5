@@ -121,6 +121,12 @@ user_problem_statement: |
   ✅ 13. Adjusted IEEE icon layout to be more compact in single line with reduced gap spacing
   ✅ 14. Optimized all photos and profile icons for better performance
   
+  PAGINATION & BACK TO TOP BUTTON FIXES:
+  ✅ 15. Fixed Publications page "Back to Top" button positioning - moved after pagination section to avoid conflicts
+  ✅ 16. Verified News Events page "Back to Top" button is correctly positioned after Google Calendar
+  ✅ 17. Confirmed Privacy Policy and Terms & Conditions pages "Back to Top" buttons are properly positioned (no pagination conflicts)
+  ✅ 18. All pages with pagination now have "Back to Top" buttons positioned at the very bottom after pagination controls
+  
 backend:
   - task: "Complete Website Modifications as Per User Specifications"
     implemented: true
