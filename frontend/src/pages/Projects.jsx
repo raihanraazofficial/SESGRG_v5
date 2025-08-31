@@ -242,7 +242,7 @@ const Projects = () => {
                       <div className="flex items-center text-gray-600">
                         <Calendar className="h-4 w-4 mr-2 text-emerald-600" />
                         <span>
-                          {apiService.formatDate(project.start_date)} - {apiService.formatDate(project.end_date)}
+                          {googleSheetsService.formatDate(project.start_date)} - {googleSheetsService.formatDate(project.end_date)}
                         </span>
                       </div>
                       <div className="flex items-center text-gray-600">
