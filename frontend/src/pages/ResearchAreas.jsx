@@ -74,6 +74,13 @@ const ResearchAreas = () => {
       console.log('📊 Loaded area stats:', stats);
     } catch (error) {
       console.error('Failed to load area stats:', error);
+      // Set empty stats (0 for all areas) when API fails
+      const emptyStats = {};
+      researchAreas.forEach(area => {
+        emptyStats[area.id] = { projects: 0, publications: 0 };
+      });
+      setAreaStats(emptyStats);
+      console.log('⚠️ Using empty stats due to API failure');
     }
   };
 
