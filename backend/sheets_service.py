@@ -1419,19 +1419,38 @@ class SESGSheetsService:
             else:
                 # Fetch fresh data from Google Sheets
                 logger.info("Fetching fresh achievements data from Google Sheets")
-                response = requests.get(self.achievements_api_url, timeout=30)
-                response.raise_for_status()
-                
-                # Parse the response
-                sheets_data = response.json()
-                
-                # Convert sheets data to our achievements format
-                achievements = self._convert_sheets_to_achievements(sheets_data)
-                
-                # Cache the raw achievements data
-                self.cache[cache_key] = achievements
-                self.last_fetch_time[cache_key] = current_time
-                logger.info(f"Cached {len(achievements)} achievements for performance")
+                try:
+                    response = requests.get(self.achievements_api_url, timeout=30)
+                    response.raise_for_status()
+                    
+                    # Check if response is JSON
+                    if response.headers.get('content-type', '').startswith('application/json'):
+                        sheets_data = response.json()
+                    else:
+                        # If not JSON, likely an error page
+                        logger.error(f"Invalid response from Google Sheets API: {response.text[:200]}")
+                        raise Exception("Invalid response format from Google Sheets API")
+                    
+                    # Convert sheets data to our achievements format
+                    achievements = self._convert_sheets_to_achievements(sheets_data)
+                    
+                    # If no achievements found, this might indicate an API issue
+                    if not achievements:
+                        logger.warning("No achievements found from Google Sheets API, this might indicate an issue")
+                        raise Exception("Empty response from Google Sheets API")
+                    
+                    # Cache the raw achievements data
+                    self.cache[cache_key] = achievements
+                    self.last_fetch_time[cache_key] = current_time
+                    logger.info(f"Cached {len(achievements)} achievements for performance")
+                    
+                except (requests.RequestException, ValueError, KeyError) as api_error:
+                    logger.error(f"Google Sheets API error: {api_error}")
+                    logger.info("Falling back to mock achievements data")
+                    # Use mock data as fallback
+                    mock_response = self._get_mock_achievements(page, per_page, category_filter, 
+                                                             title_filter, sort_by, sort_order)
+                    return mock_response
             
             # Apply filters on cached data
             filtered_achievements = self._apply_achievement_filters(achievements, category_filter, title_filter)
