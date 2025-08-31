@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw } from "lucide-react";
+import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -202,81 +203,91 @@ const Projects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Research Projects</h1>
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
+      {/* Header - Gallery Style */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">Research Projects</h1>
+              <p className="text-xl text-gray-300 max-w-3xl">
+                Explore our ongoing and completed research projects in sustainable energy and smart grid technologies. 
+                Discover how we're advancing the field through collaborative research and innovation.
+              </p>
+            </div>
             <Button
               variant="outline"
               size="sm"
               onClick={handleRefreshData}
               disabled={refreshing}
-              className="ml-4 flex items-center space-x-2"
+              className="ml-4 flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900"
             >
               <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
               <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
             </Button>
           </div>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            Explore our ongoing and completed research projects in sustainable energy and smart grid technologies. 
-            Discover how we're advancing the field through collaborative research and innovation.
-          </p>
-          
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_projects || 0}</p>
-                <p className="text-gray-600 font-medium">Total Projects</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.active_projects || 0}</p>
-                <p className="text-gray-600 font-medium">Active Projects</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.completed_projects || 0}</p>
-                <p className="text-gray-600 font-medium">Completed Projects</p>
-              </CardContent>
-            </Card>
-          </div>
+        </div>
+      </div>
 
-          {/* Status Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
-            <Button
-              variant={filters.status_filter === '' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('status_filter', '')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
-            >
-              All Projects
-            </Button>
-            <Button
-              variant={filters.status_filter === 'Active' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('status_filter', 'Active')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
-            >
-              Active
-            </Button>
-            <Button
-              variant={filters.status_filter === 'Completed' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('status_filter', 'Completed')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
-            >
-              Completed
-            </Button>
-            <Button
-              variant={filters.status_filter === 'Planning' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('status_filter', 'Planning')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
-            >
-              Planning
-            </Button>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_projects || 0}</p>
+              <p className="text-gray-600 font-medium">Total Projects</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.active_projects || 0}</p>
+              <p className="text-gray-600 font-medium">Active Projects</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.completed_projects || 0}</p>
+              <p className="text-gray-600 font-medium">Completed Projects</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Status Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+          <Button
+            variant={filters.status_filter === '' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('status_filter', '')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base"
+          >
+            All Projects
+          </Button>
+          <Button
+            variant={filters.status_filter === 'Active' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('status_filter', 'Active')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base"
+          >
+            Active
+          </Button>
+          <Button
+            variant={filters.status_filter === 'Completed' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('status_filter', 'Completed')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base"
+          >
+            Completed
+          </Button>
+          <Button
+            variant={filters.status_filter === 'Planning' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('status_filter', 'Planning')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base"
+          >
+            Planning
+          </Button>
         </div>
 
         {/* Filters */}
@@ -345,8 +356,6 @@ const Projects = () => {
                   </SelectContent>
                 </Select>
 
-
-
                 <div className="flex space-x-2">
                   <Select
                     value={`${filters.sort_by}-${filters.sort_order}`}
@@ -411,14 +420,16 @@ const Projects = () => {
         {!loading && projects.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {projects.map((project) => (
-              <Card key={project.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <Card key={project.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden performance-optimized">
                 {/* Project Image */}
                 {project.image && (
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 lazy-image performance-optimized"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute top-4 right-4">
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}>
@@ -603,6 +614,17 @@ const Projects = () => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Back to Top - Performance Optimized */}
+      <div className="text-center pb-16">
+        <Button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          size="lg" 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+        >
+          Back to Top
+        </Button>
       </div>
     </div>
   );
