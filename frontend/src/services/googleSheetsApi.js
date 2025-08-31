@@ -282,6 +282,24 @@ class GoogleSheetsService {
       // Apply client-side filtering
       let filteredData = projects;
 
+      // Filter by general search (title, status, research area)
+      if (params.search_filter) {
+        const searchTerm = params.search_filter.toLowerCase();
+        filteredData = filteredData.filter(project => {
+          // Search in title
+          const titleMatch = project.title && project.title.toLowerCase().includes(searchTerm);
+          
+          // Search in status
+          const statusMatch = project.status && project.status.toLowerCase().includes(searchTerm);
+          
+          // Search in research areas
+          const areaMatch = project.research_areas && Array.isArray(project.research_areas) && 
+                           project.research_areas.some(area => area.toLowerCase().includes(searchTerm));
+          
+          return titleMatch || statusMatch || areaMatch;
+        });
+      }
+
       // Filter by title
       if (params.title_filter) {
         const titleTerm = params.title_filter.toLowerCase();
