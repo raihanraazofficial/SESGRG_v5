@@ -28,6 +28,7 @@ const ResearchAreas = () => {
     Brain: Brain
   };
 
+  // Enhanced image mapping with fallback
   const getAreaImage = (areaId) => {
     const imageMap = {
       1: "https://images.unsplash.com/photo-1715605569717-494ac7c5656a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwzfHxzbWFydCUyMGdyaWQlMjB0ZWNobm9sb2d5fGVufDB8fHx8MTc1NjY2Njg3Mnww&ixlib=rb-4.1.0&q=85", // Smart Grid Technologies
@@ -39,6 +40,131 @@ const ResearchAreas = () => {
       7: "https://images.pexels.com/photos/9799996/pexels-photo-9799996.jpeg" // Cybersecurity and AI for Power Infrastructure
     };
     return imageMap[areaId] || imageMap[1];
+  };
+
+  // People data for research areas - mirroring People.jsx structure
+  const researchAreaPeople = [
+    // Research area index mapping: 0-Smart Grid, 1-Microgrids, 2-Renewable Energy, 3-Grid Optimization, 4-Energy Storage, 5-Power System Automation, 6-Cybersecurity & AI
+    {
+      id: 1,
+      name: "A. S. Nazmul Huda, PhD",
+      designation: "Associate Professor",
+      affiliation: "Department of EEE, BRAC University",
+      category: "Advisor",
+      expertise: [0, 2, 3], // Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Nazmul%20Huda.jpg"
+    },
+    {
+      id: 2,
+      name: "Shameem Ahmad, PhD", 
+      designation: "Associate Professor",
+      affiliation: "Department of EEE, BRAC University",
+      category: "Advisor",
+      expertise: [1, 3, 0], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Smart Grid Technologies
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Shameem%20Ahmad.jpg"
+    },
+    {
+      id: 3,
+      name: "Amirul Islam, PhD",
+      designation: "Assistant Professor", 
+      affiliation: "Department of EEE, BRAC University",
+      category: "Advisor",
+      expertise: [5, 6], // Power System Automation, Cybersecurity and AI for Power Infrastructure
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Amirul%20Islam.jpg"
+    },
+    {
+      id: 4,
+      name: "Raihan Uddin",
+      designation: "Research Assistant",
+      affiliation: "Department of EEE, BRAC University", 
+      category: "Team Member",
+      expertise: [1, 3, 2, 6], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Renewable Energy Integration, Cybersecurity and AI for Power Infrastructure
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Raihan%20Uddin.jpg"
+    },
+    {
+      id: 5,
+      name: "Mumtahina Arika",
+      designation: "Research Assistant",
+      affiliation: "Department of EEE, BRAC University",
+      category: "Team Member", 
+      expertise: [2, 3], // Renewable Energy Integration, Grid Optimization & Stability
+      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Mumtahina%20Akira.jpg"
+    }
+  ];
+
+  // Research area names for mapping
+  const researchAreaNames = [
+    "Smart Grid Technologies",
+    "Microgrids & Distributed Energy Systems", 
+    "Renewable Energy Integration",
+    "Grid Optimization & Stability",
+    "Energy Storage Systems",
+    "Power System Automation",
+    "Cybersecurity and AI for Power Infrastructure"
+  ];
+
+  // Get people working in specific research area
+  const getPeopleByResearchArea = (areaId) => {
+    const areaIndex = areaId - 1; // Convert 1-based ID to 0-based index
+    return researchAreaPeople.filter(person => 
+      person.expertise.includes(areaIndex)
+    );
+  };
+
+  // Real-time data fetching with advanced caching
+  const fetchRealTimeData = async (areaId, areaTitle) => {
+    setRealTimeData(prev => ({ ...prev, loading: true }));
+    
+    try {
+      // Fetch both projects and publications concurrently for faster loading
+      const [projectsResponse, publicationsResponse] = await Promise.all([
+        googleSheetsService.getProjects({ area_filter: areaTitle }),
+        googleSheetsService.getPublications({ area_filter: areaTitle })
+      ]);
+
+      // Filter projects by research area and get active + completed
+      const areaProjects = projectsResponse.projects.filter(project => 
+        project.research_areas && 
+        project.research_areas.some && 
+        project.research_areas.some(area => area.toLowerCase().includes(areaTitle.toLowerCase())) ||
+        project.title && project.title.toLowerCase().includes(areaTitle.toLowerCase())
+      );
+
+      const activeProjects = areaProjects.filter(p => p.status === 'Active');
+      const completedProjects = areaProjects.filter(p => p.status === 'Completed');
+
+      // Filter publications by research area
+      const areaPublications = publicationsResponse.publications.filter(pub =>
+        (pub.research_areas && pub.research_areas.some && pub.research_areas.some(area => area.toLowerCase().includes(areaTitle.toLowerCase()))) ||
+        (pub.title && pub.title.toLowerCase().includes(areaTitle.toLowerCase())) ||
+        (pub.category && (areaTitle.toLowerCase().includes('smart grid') && pub.category.toLowerCase().includes('grid'))) ||
+        (pub.category && (areaTitle.toLowerCase().includes('renewable') && pub.category.toLowerCase().includes('energy')))
+      );
+
+      const journalArticles = areaPublications.filter(p => p.category === 'Journal Articles');
+      const conferenceProceedings = areaPublications.filter(p => p.category === 'Conference Proceedings'); 
+      const bookChapters = areaPublications.filter(p => p.category === 'Book Chapters');
+
+      setRealTimeData({
+        projects: {
+          active: activeProjects,
+          completed: completedProjects,
+          total: areaProjects.length
+        },
+        publications: {
+          journal: journalArticles,
+          conference: conferenceProceedings,
+          bookChapter: bookChapters,
+          total: areaPublications.length
+        },
+        loading: false,
+        lastUpdated: new Date().toLocaleTimeString()
+      });
+
+    } catch (error) {
+      console.error('Error fetching real-time data:', error);
+      setRealTimeData(prev => ({ ...prev, loading: false }));
+    }
   };
 
   const openDetailedPage = (area) => {
