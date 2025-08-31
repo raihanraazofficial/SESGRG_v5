@@ -165,7 +165,7 @@ const ResearchAreas = () => {
 
         {/* Research Areas Grid */}
         <div className="py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 [&>*:nth-last-child(1):nth-child(3n+1)]:lg:col-start-2">
             {researchAreas.map((area) => {
               const IconComponent = iconMap[area.icon];
               return (
