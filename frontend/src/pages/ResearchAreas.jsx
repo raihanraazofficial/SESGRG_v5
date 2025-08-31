@@ -683,9 +683,9 @@ const ResearchAreas = () => {
                     </div>
 
                     {/* Team member preview */}
-                    {areaPeople.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-sm font-semibold text-gray-800 mb-2">Research Team:</h4>
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-gray-800 mb-2">Research Team:</h4>
+                      {areaPeople.length > 0 ? (
                         <div className="flex -space-x-2 overflow-hidden">
                           {areaPeople.slice(0, 4).map((person, index) => (
                             <img
@@ -705,8 +705,10 @@ const ResearchAreas = () => {
                             </div>
                           )}
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="text-sm text-gray-500 italic">No Member Found</div>
+                      )}
+                    </div>
 
                     {/* Fixed bottom Learn More button */}
                     <div className="mt-auto">
