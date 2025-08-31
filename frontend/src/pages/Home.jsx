@@ -15,10 +15,15 @@ const LatestNewsSection = () => {
     fetchLatestNews();
   }, []);
 
-  const fetchLatestNews = async () => {
+  const fetchLatestNews = async (forceRefresh = false) => {
     try {
-      setLoading(true);
-      console.log('⚡ Homepage: Fetching latest news & events...');
+      if (forceRefresh) {
+        setRefreshing(true);
+        console.log('🔄 Homepage: Force refreshing latest news...');
+      } else {
+        setLoading(true);
+        console.log('⚡ Homepage: Fetching latest news & events...');
+      }
       
       const response = await googleSheetsService.getNewsEvents({
         page: 1,
@@ -45,6 +50,7 @@ const LatestNewsSection = () => {
       setLatestNews([]);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
