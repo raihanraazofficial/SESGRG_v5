@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "api/main.py": {
+    "main.py": {
       "runtime": "python3.11",
       "maxDuration": 30,
       "memory": 512
@@ -10,7 +10,8 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/main.py"
+      "dest": "main.py"
     }
   ]
 }
+
