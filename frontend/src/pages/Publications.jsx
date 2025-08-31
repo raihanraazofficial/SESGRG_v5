@@ -47,10 +47,10 @@ const Publications = () => {
     fetchPublications();
   }, [filters]);
 
-  const fetchPublications = async () => {
+  const fetchPublications = async (retryCount = 0) => {
     try {
       setLoading(true);
-      setLoadingSource('⚡ Loading...'); // Start with generic loading
+      setLoadingSource('⚡ Loading...');
       console.log('Fetching publications with filters:', filters);
       
       const response = await googleSheetsService.getPublications(filters);
@@ -59,23 +59,56 @@ const Publications = () => {
       const pubs = response.publications || [];
       console.log('Publications data:', pubs.length, 'items');
       
-      setPublications(pubs);
-      setPagination(response.pagination || {});
-      setStatistics(response.statistics || {});
-      
-      // Extract unique years and research areas from all publications
-      if (pubs.length > 0) {
-        const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
-        const allAreas = pubs.flatMap(pub => pub.research_areas || []);
-        const uniqueAreas = [...new Set(allAreas)].sort();
+      // Only update state if we have valid response
+      if (response && (pubs.length > 0 || response.statistics)) {
+        setPublications(pubs);
+        setPagination(response.pagination || {});
+        setStatistics(response.statistics || {});
         
-        setAvailableYears(uniqueYears);
-        setAvailableAreas(uniqueAreas);
+        // Extract unique years and research areas from all publications
+        if (pubs.length > 0) {
+          const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
+          const allAreas = pubs.flatMap(pub => pub.research_areas || []);
+          const uniqueAreas = [...new Set(allAreas)].sort();
+          
+          setAvailableYears(uniqueYears);
+          setAvailableAreas(uniqueAreas);
+        }
+        
+        console.log('✅ Publications loaded successfully:', pubs.length, 'items');
+      } else {
+        console.log('⚠️ Empty response received, keeping existing data');
+        // Keep existing data, just set default statistics if none exist
+        if (!statistics.total_publications) {
+          setStatistics({
+            total_publications: 0,
+            total_citations: 0,
+            latest_year: new Date().getFullYear(),
+            total_areas: 7
+          });
+        }
       }
     } catch (error) {
       console.error('Error fetching publications:', error);
-      // Show user-friendly error message
-      alert('Failed to load publications. Please check your internet connection and try again.');
+      
+      // Retry once on first failure
+      if (retryCount === 0) {
+        console.log('🔄 Retrying publications fetch after error...');
+        setTimeout(() => fetchPublications(1), 2000);
+        return;
+      }
+      
+      // On final failure, set empty defaults
+      console.error('❌ Final failure fetching publications');
+      setStatistics({
+        total_publications: 0,
+        total_citations: 0,
+        latest_year: new Date().getFullYear(),
+        total_areas: 7
+      });
+      
+      // Don't show alert immediately - user can use refresh button
+      console.log('💡 User can use Refresh Data button to retry');
     } finally {
       setLoading(false);
       setLoadingSource('');
