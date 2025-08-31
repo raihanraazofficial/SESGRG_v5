@@ -4,7 +4,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import apiService from "../services/api";
+import googleSheetsService from "../services/googleSheetsApi";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
