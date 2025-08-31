@@ -12,6 +12,7 @@ import Publications from "./pages/Publications";
 import Projects from "./pages/Projects";
 import Achievements from "./pages/Achievements";
 import NewsEvents from "./pages/NewsEvents";
+import Gallery from "./pages/Gallery";
 import Contacts from "./pages/Contacts";
 import FAQ from "./pages/FAQ";
 
