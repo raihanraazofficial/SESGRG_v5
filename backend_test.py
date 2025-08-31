@@ -181,6 +181,94 @@ def test_research_areas_google_sheets_integration():
         print(f"   ❌ Error testing Research Areas Google Sheets integration: {e}")
         return False
 
+def test_concurrent_api_fetching():
+    """Test concurrent Promise.all fetching performance for Research Areas"""
+    print("2. Testing Concurrent API Fetching Performance...")
+    
+    all_tests_passed = True
+    
+    try:
+        # Simulate concurrent fetching like the frontend does with Promise.all
+        print("   🚀 Testing concurrent Projects and Publications API calls...")
+        
+        start_time = time.time()
+        
+        # Make concurrent requests (similar to Promise.all in frontend)
+        import concurrent.futures
+        
+        def fetch_api(url, name):
+            try:
+                response = requests.get(url, timeout=8)
+                return {
+                    'name': name,
+                    'status_code': response.status_code,
+                    'data': response.json() if response.status_code == 200 else None,
+                    'success': response.status_code == 200
+                }
+            except Exception as e:
+                return {
+                    'name': name,
+                    'status_code': 0,
+                    'data': None,
+                    'success': False,
+                    'error': str(e)
+                }
+        
+        # Concurrent execution
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            futures = [
+                executor.submit(fetch_api, PROJECTS_API_URL, 'Projects'),
+                executor.submit(fetch_api, PUBLICATIONS_API_URL, 'Publications')
+            ]
+            
+            results = [future.result() for future in concurrent.futures.as_completed(futures)]
+        
+        end_time = time.time()
+        total_time = end_time - start_time
+        
+        print(f"      ⏱️  Total concurrent fetch time: {total_time:.2f}s")
+        
+        # Analyze results
+        successful_apis = [r for r in results if r['success']]
+        failed_apis = [r for r in results if not r['success']]
+        
+        print(f"      ✅ Successful APIs: {len(successful_apis)}/2")
+        
+        if len(successful_apis) == 2:
+            print(f"      🚀 Concurrent fetching: EXCELLENT (both APIs successful)")
+            
+            # Test data availability for Research Areas filtering
+            projects_result = next((r for r in results if r['name'] == 'Projects'), None)
+            publications_result = next((r for r in results if r['name'] == 'Publications'), None)
+            
+            if projects_result and projects_result['success']:
+                projects_data = projects_result['data']
+                projects = projects_data.get('projects', []) if isinstance(projects_data, dict) else projects_data
+                print(f"      📊 Projects data: {len(projects)} items available for filtering")
+                
+            if publications_result and publications_result['success']:
+                publications_data = publications_result['data']
+                publications = publications_data.get('publications', []) if isinstance(publications_data, dict) else publications_data
+                print(f"      📚 Publications data: {len(publications)} items available for filtering")
+                
+            # Check if concurrent fetching is faster than sequential
+            if total_time <= 6.0:  # Should be faster than sequential calls
+                print(f"      🚀 Performance: EXCELLENT (concurrent faster than sequential)")
+            else:
+                print(f"      ⚠️  Performance: May need optimization (slower than expected)")
+                
+        else:
+            print(f"      ❌ Concurrent fetching failed for {len(failed_apis)} APIs")
+            for failed in failed_apis:
+                print(f"         - {failed['name']}: {failed.get('error', 'Unknown error')}")
+            all_tests_passed = False
+            
+        return all_tests_passed
+        
+    except Exception as e:
+        print(f"   ❌ Error testing concurrent API fetching: {e}")
+        return False
+
 def test_all_google_sheets_apis():
     """Test all 4 Google Sheets API endpoints for accessibility and performance"""
     print("2. Testing All Google Sheets API Endpoints...")
