@@ -47,7 +47,7 @@ const Publications = () => {
   const fetchPublications = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getPublications(filters);
+      const response = await googleSheetsService.getPublications(filters);
       const pubs = response.publications || [];
       
       setPublications(pubs);
