@@ -1,10 +1,34 @@
 import React, { useState } from "react";
-import { Mail, Phone, ExternalLink, Linkedin, Github } from "lucide-react";
+import { Mail, Phone, ExternalLink, Linkedin, Github, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
 const People = () => {
   const [activeSection, setActiveSection] = useState("advisors");
+
+  const researchAreas = [
+    "Smart Grid Technologies",
+    "Microgrids & Distributed Energy Systems", 
+    "Renewable Energy Integration",
+    "Grid Optimization & Stability",
+    "Energy Storage Systems",
+    "Power System Automation",
+    "Cybersecurity and AI for Power Infrastructure"
+  ];
+
+  const getResearchAreaColor = (index) => {
+    const colors = [
+      'bg-emerald-100 text-emerald-700',
+      'bg-blue-100 text-blue-700',
+      'bg-purple-100 text-purple-700',
+      'bg-orange-100 text-orange-700',
+      'bg-red-100 text-red-700',
+      'bg-indigo-100 text-indigo-700',
+      'bg-pink-100 text-pink-700'
+    ];
+    return colors[index % colors.length];
+  };
 
   // Mock data - in production this would come from Google Sheets via API
   const advisors = [
@@ -14,6 +38,7 @@ const People = () => {
       designation: "Professor & Research Director",
       affiliation: "BRAC University, Department of Electrical and Electronic Engineering",
       description: "Leading expert in smart grid technologies and renewable energy integration with 20+ years of research experience.",
+      expertise: [0, 2, 6], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
       email: "mrhaque@bracu.ac.bd",
       phone: "+880-2-9844051",
@@ -28,6 +53,7 @@ const People = () => {
       designation: "Associate Professor",
       affiliation: "BRAC University, Department of Electrical and Electronic Engineering",
       description: "Specialist in energy storage systems and grid optimization with focus on AI-powered solutions.",
+      expertise: [4, 3, 6], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face",
       email: "sahmed@bracu.ac.bd",
       phone: "+880-2-9844052",
@@ -38,13 +64,14 @@ const People = () => {
     }
   ];
 
-  const researchAssistants = [
+  const teamMembers = [
     {
       id: 3,
       name: "Md. Karim Rahman",
       designation: "PhD Research Assistant",
       affiliation: "BRAC University, Department of EEE",
       description: "Researching microgrid integration and distributed energy systems for sustainable power networks.",
+      expertise: [1, 2, 4], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
       email: "karim.rahman@g.bracu.ac.bd",
       phone: "+880-1XXXXXXXXX",
@@ -59,6 +86,7 @@ const People = () => {
       designation: "MS Research Assistant",
       affiliation: "BRAC University, Department of EEE",
       description: "Working on cybersecurity aspects of smart grids and power system automation technologies.",
+      expertise: [6, 5, 0], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face",
       email: "fatima.khan@g.bracu.ac.bd",
       phone: "+880-1XXXXXXXXX",
@@ -72,6 +100,7 @@ const People = () => {
       designation: "Undergraduate Research Assistant",
       affiliation: "BRAC University, Department of EEE",
       description: "Contributing to renewable energy integration projects and grid stability analysis research.",
+      expertise: [2, 3, 1], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face",
       email: "ahmed.hassan@g.bracu.ac.bd",
       phone: "+880-1XXXXXXXXX",
@@ -88,6 +117,7 @@ const People = () => {
       designation: "Professor",
       affiliation: "MIT, Department of Electrical Engineering and Computer Science",
       description: "Collaborating on advanced energy storage and smart grid communication protocols research.",
+      expertise: [4, 0, 5], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=300&h=300&fit=crop&crop=face",
       email: "jmiller@mit.edu",
       phone: "+1-617-XXX-XXXX",
@@ -102,6 +132,7 @@ const People = () => {
       designation: "Senior Research Scientist",
       affiliation: "Tsinghua University, Department of Electrical Engineering",
       description: "Joint research on AI applications in power systems and renewable energy forecasting models.",
+      expertise: [6, 2, 3], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=300&fit=crop&crop=face",
       email: "li.wei@tsinghua.edu.cn",
       phone: "+86-10-XXXXXXXX",
@@ -116,6 +147,7 @@ const People = () => {
       designation: "Principal Researcher",
       affiliation: "Imperial College London, Department of Electrical and Electronic Engineering",
       description: "Collaborative projects on grid modernization and sustainable energy policy frameworks.",
+      expertise: [0, 3, 5], // Indices for research areas
       photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=300&h=300&fit=crop&crop=face",
       email: "e.thompson@imperial.ac.uk",
       phone: "+44-20-XXXX-XXXX",
@@ -130,8 +162,8 @@ const People = () => {
     switch (section) {
       case "advisors":
         return advisors;
-      case "research-assistants":
-        return researchAssistants;
+      case "team-members":
+        return teamMembers;
       case "collaborators":
         return collaborators;
       default:
@@ -143,8 +175,8 @@ const People = () => {
     switch (section) {
       case "advisors":
         return "Advisors";
-      case "research-assistants":
-        return "Research Assistants";
+      case "team-members":
+        return "Team Members";
       case "collaborators":
         return "Collaborators";
       default:
@@ -152,43 +184,17 @@ const People = () => {
     }
   };
 
-  const getProfileIcon = (type, url) => {
-    if (!url) return null;
-    
-    const iconClass = "h-4 w-4";
-    switch (type) {
-      case "email":
-        return <Mail className={iconClass} />;
-      case "phone":
-        return <Phone className={iconClass} />;
-      case "googleScholar":
-        return <svg className={iconClass} viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0.5 9.5 12 1l11.5 8.5-4.742 4.269C17.548 12.53 14.978 11.5 12 11.5c-2.977 0-5.548 1.03-6.758 2.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>;
-      case "orcid":
-        return <svg className={iconClass} viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947 0 .525-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.516.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.444h2.297c2.359 0 3.644-1.506 3.644-3.722 0-2.216-1.284-3.722-3.644-3.722h-2.297z"/></svg>;
-      case "researchGate":
-        return <svg className={iconClass} viewBox="0 0 24 24" fill="currentColor"><path d="M19.586 0H4.414C1.988 0 0 1.988 0 4.414v15.172C0 22.012 1.988 24 4.414 24h15.172C22.012 24 24 22.012 24 19.586V4.414C24 1.988 22.012 0 19.586 0z"/></svg>;
-      case "ieee":
-        return <svg className={iconClass} viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 12C1.5 6.2 6.2 1.5 12 1.5S22.5 6.2 22.5 12 17.8 22.5 12 22.5 1.5 17.8 1.5 12zm8.5-4v8h1v-3h2.5c1.4 0 2.5-1.1 2.5-2.5S14.9 8 13.5 8H10zm1 1h2.5c.8 0 1.5.7 1.5 1.5S14.3 12 13.5 12H11V9z"/></svg>;
-      case "linkedin":
-        return <Linkedin className={iconClass} />;
-      case "github":
-        return <Github className={iconClass} />;
-      case "website":
-        return <ExternalLink className={iconClass} />;
-      default:
-        return <ExternalLink className={iconClass} />;
-    }
-  };
-
   const PersonCard = ({ person }) => (
-    <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
+    <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized">
       <CardContent className="p-0">
         {/* Photo */}
         <div className="relative">
           <img 
             src={person.photo}
             alt={person.name}
-            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500 lazy-image performance-optimized"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           <div className="absolute bottom-4 left-4 text-white">
@@ -204,19 +210,41 @@ const People = () => {
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 text-sm leading-relaxed">
+          <p className="text-gray-600 text-sm leading-relaxed text-justify">
             {person.description}
           </p>
 
-          {/* Contact Icons */}
+          {/* Expertise Areas */}
+          {person.expertise && person.expertise.length > 0 && (
+            <div>
+              <h4 className="text-sm font-semibold text-gray-800 mb-2">Expertise Areas:</h4>
+              <div className="flex flex-wrap gap-2">
+                {person.expertise.map((areaIndex) => (
+                  <span
+                    key={areaIndex}
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getResearchAreaColor(areaIndex)}`}
+                  >
+                    {researchAreas[areaIndex]}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Contact Icons - Using simple-icons CDN */}
           <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
             {person.email && (
               <a 
                 href={`mailto:${person.email}`}
-                className="p-2 bg-gray-100 hover:bg-emerald-100 rounded-full transition-colors group/icon"
+                className="p-2 bg-gray-100 hover:bg-red-100 rounded-full transition-colors group/icon"
                 title="Email"
               >
-                <Mail className="h-4 w-4 text-gray-600 group-hover/icon:text-emerald-600" />
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/maildotru.svg" 
+                  alt="Email"
+                  className="h-4 w-4 text-gray-600 group-hover/icon:text-red-600" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.phone && (
@@ -236,9 +264,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-blue-100 rounded-full transition-colors group/icon"
                 title="Google Scholar"
               >
-                <svg className="h-4 w-4 text-gray-600 group-hover/icon:text-blue-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M5.242 13.769L0.5 9.5 12 1l11.5 8.5-4.742 4.269C17.548 12.53 14.978 11.5 12 11.5c-2.977 0-5.548 1.03-6.758 2.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
-                </svg>
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlescholar.svg" 
+                  alt="Google Scholar"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.orcid && (
@@ -249,9 +280,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-green-100 rounded-full transition-colors group/icon"
                 title="ORCID"
               >
-                <svg className="h-4 w-4 text-gray-600 group-hover/icon:text-green-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947 0 .525-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.516.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.444h2.297c2.359 0 3.644-1.506 3.644-3.722 0-2.216-1.284-3.722-3.644-3.722h-2.297z"/>
-                </svg>
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/orcid.svg" 
+                  alt="ORCID"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.researchGate && (
@@ -262,9 +296,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-cyan-100 rounded-full transition-colors group/icon"
                 title="ResearchGate"
               >
-                <svg className="h-4 w-4 text-gray-600 group-hover/icon:text-cyan-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.586 0H4.414C1.988 0 0 1.988 0 4.414v15.172C0 22.012 1.988 24 4.414 24h15.172C22.012 24 24 22.012 24 19.586V4.414C24 1.988 22.012 0 19.586 0z"/>
-                </svg>
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/researchgate.svg" 
+                  alt="ResearchGate"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.ieee && (
@@ -275,9 +312,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-indigo-100 rounded-full transition-colors group/icon"
                 title="IEEE Xplore"
               >
-                <svg className="h-4 w-4 text-gray-600 group-hover/icon:text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M1.5 12C1.5 6.2 6.2 1.5 12 1.5S22.5 6.2 22.5 12 17.8 22.5 12 22.5 1.5 17.8 1.5 12zm8.5-4v8h1v-3h2.5c1.4 0 2.5-1.1 2.5-2.5S14.9 8 13.5 8H10zm1 1h2.5c.8 0 1.5.7 1.5 1.5S14.3 12 13.5 12H11V9z"/>
-                </svg>
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/ieee.svg" 
+                  alt="IEEE"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.linkedin && (
@@ -288,7 +328,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-blue-100 rounded-full transition-colors group/icon"
                 title="LinkedIn"
               >
-                <Linkedin className="h-4 w-4 text-gray-600 group-hover/icon:text-blue-600" />
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" 
+                  alt="LinkedIn"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
             {person.github && (
@@ -299,7 +344,12 @@ const People = () => {
                 className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors group/icon"
                 title="GitHub"
               >
-                <Github className="h-4 w-4 text-gray-600 group-hover/icon:text-gray-800" />
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" 
+                  alt="GitHub"
+                  className="h-4 w-4" 
+                  style={{filter: 'invert(0.4)'}}
+                />
               </a>
             )}
           </div>
@@ -321,24 +371,32 @@ const People = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Team</h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
+      {/* Header - Gallery Style */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Our Team</h1>
+          <p className="text-xl text-gray-300 max-w-3xl">
             Meet the dedicated researchers, advisors, and collaborators who are advancing sustainable energy 
             and smart grid technologies at our research lab.
           </p>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Section Navigation */}
         <div className="flex justify-center mb-12">
           <div className="bg-white rounded-lg p-2 shadow-lg">
             <div className="flex space-x-2">
               {[
                 { key: "advisors", label: "Advisors" },
-                { key: "research-assistants", label: "Research Assistants" },
+                { key: "team-members", label: "Team Members" },
                 { key: "collaborators", label: "Collaborators" }
               ].map((section) => (
                 <Button
@@ -382,6 +440,17 @@ const People = () => {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Back to Top - Performance Optimized */}
+      <div className="text-center pb-16">
+        <Button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          size="lg" 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+        >
+          Back to Top
+        </Button>
       </div>
     </div>
   );
