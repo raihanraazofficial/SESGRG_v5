@@ -244,17 +244,20 @@ const Projects = () => {
               </Button>
             </div>
 
-            {/* Search */}
+            {/* Single Search Bar */}
             <div className="mb-4">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search projects by title..."
-                  value={filters.title_filter}
-                  onChange={(e) => handleFilterChange('title_filter', e.target.value)}
-                  className="pl-10"
+                  placeholder="Search by title, status, or research area..."
+                  value={filters.search_filter}
+                  onChange={(e) => handleFilterChange('search_filter', e.target.value)}
+                  className="pl-10 text-lg py-3"
                 />
               </div>
+              <p className="text-sm text-gray-500 mt-2">
+                You can search by project title, status, or research area
+              </p>
             </div>
 
             {/* Advanced Filters */}
