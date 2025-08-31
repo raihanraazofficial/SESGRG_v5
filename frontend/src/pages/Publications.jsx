@@ -26,6 +26,7 @@ const Publications = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [availableYears, setAvailableYears] = useState([]);
   const [availableAreas, setAvailableAreas] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const researchAreas = [
     "Smart Grid Technologies",
