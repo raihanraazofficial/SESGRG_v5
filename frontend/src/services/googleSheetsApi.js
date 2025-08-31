@@ -55,23 +55,29 @@ class GoogleSheetsService {
     }
   }
 
-  async fetchFromGoogleSheets(url) {
+  async fetchFromGoogleSheets(url, cacheKey = null) {
     try {
+      // Check cache first
+      if (cacheKey) {
+        const cachedData = this.getCachedData(cacheKey);
+        if (cachedData) {
+          console.log('✅ Returning cached data for:', cacheKey);
+          return cachedData;
+        }
+      }
+
       console.log('Fetching from Google Sheets URL:', url);
       
-      // Try multiple CORS proxy services for reliability
+      // Optimized proxy order - fastest first
       const corsProxies = [
+        'https://api.allorigins.win/get?url=', // Usually fastest
         'https://corsproxy.io/?',
-        'https://api.codetabs.com/v1/proxy?quest=',
-        'https://cors-anywhere.herokuapp.com/',
-        'https://api.allorigins.win/get?url='
+        'https://api.codetabs.com/v1/proxy?quest='
       ];
       
-      let lastError = null;
-      
-      for (let i = 0; i < corsProxies.length; i++) {
+      // Try proxies with reduced timeout for faster failures
+      const promises = corsProxies.map(async (proxy, i) => {
         try {
-          const proxy = corsProxies[i];
           let proxyUrl, isAllOrigins = false;
           
           if (proxy.includes('allorigins')) {
@@ -81,7 +87,8 @@ class GoogleSheetsService {
             proxyUrl = `${proxy}${url}`;
           }
           
-          console.log(`Trying proxy ${i + 1}/${corsProxies.length}: ${proxy}`);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
           
           const response = await fetch(proxyUrl, {
             method: 'GET',
@@ -89,12 +96,13 @@ class GoogleSheetsService {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
             },
+            signal: controller.signal
           });
 
-          console.log(`Proxy ${i + 1} response status:`, response.status, response.statusText);
+          clearTimeout(timeoutId);
 
           if (!response.ok) {
-            throw new Error(`Proxy request failed: ${response.status} ${response.statusText}`);
+            throw new Error(`HTTP ${response.status}`);
           }
 
           let data;
@@ -105,19 +113,28 @@ class GoogleSheetsService {
             data = await response.json();
           }
           
-          console.log('Successfully fetched data via proxy:', proxy);
-          console.log('Data structure:', Object.keys(data));
+          console.log(`✅ Success with proxy ${i + 1}: ${proxy.split('?')[0]}`);
+          
+          // Cache the successful result
+          if (cacheKey) {
+            this.setCacheData(cacheKey, data);
+          }
+          
           return data;
           
         } catch (error) {
-          console.warn(`Proxy ${i + 1} failed:`, error.message);
-          lastError = error;
-          continue;
+          console.warn(`❌ Proxy ${i + 1} failed:`, error.message);
+          throw error;
         }
+      });
+
+      // Use Promise.any to return the first successful result
+      try {
+        const data = await Promise.any(promises);
+        return data;
+      } catch (error) {
+        throw new Error('All CORS proxies failed');
       }
-      
-      // If all proxies fail, throw the last error
-      throw lastError || new Error('All CORS proxies failed');
       
     } catch (error) {
       console.error('Google Sheets API error:', error);
