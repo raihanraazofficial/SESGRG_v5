@@ -18,6 +18,7 @@ const ResearchAreas = () => {
   const [areaStats, setAreaStats] = useState({}); // New state for area-wise stats
 
   const { getPeopleByResearchArea, researchAreas: researchAreaNames } = usePeople();
+  const { getPublicationsByArea, publicationsData, getFilteredPublications } = usePublications();
 
   // Load real-time stats for all areas on component mount
   useEffect(() => {
