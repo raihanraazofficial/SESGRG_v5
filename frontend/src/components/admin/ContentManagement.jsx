@@ -319,7 +319,7 @@ const ContentManagement = () => {
               <div className="flex flex-col space-y-3 lg:space-y-4">
                 <div className="flex-1 min-h-0">
                   <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 text-sm lg:text-base xl:text-lg leading-tight">
-                    {item.name || item.title}
+                    {item.name || item.title || item.caption}
                   </h3>
                   
                   <div className="flex flex-wrap gap-1 lg:gap-2 mb-2 lg:mb-3">
