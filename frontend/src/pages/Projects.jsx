@@ -359,25 +359,6 @@ const Projects = () => {
                         {project.status}
                       </span>
                     </div>
-                    {/* Edit and Delete buttons on image */}
-                    <div className="absolute top-4 left-4 flex space-x-2">
-                      <button
-                        onClick={() => openEditModal(project)}
-                        className="relative p-2 bg-white/90 hover:bg-white text-gray-700 rounded-lg transition-colors shadow-sm"
-                        title={isAuthenticated ? "Edit Project" : "Login required to edit"}
-                      >
-                        {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-emerald-600" />}
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => openDeleteModal(project)}
-                        className="relative p-2 bg-white/90 hover:bg-white text-red-600 rounded-lg transition-colors shadow-sm"
-                        title={isAuthenticated ? "Delete Project" : "Login required to delete"}
-                      >
-                        {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-red-600" />}
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
                   </div>
                 )}
                 
