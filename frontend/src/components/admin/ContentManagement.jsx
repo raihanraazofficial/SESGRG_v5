@@ -323,6 +323,20 @@ const ContentManagement = () => {
           <Card key={item.id || index} className="admin-card hover:shadow-lg transition-all duration-200 border border-gray-200">
             <CardContent className="admin-card-content p-3 lg:p-4 xl:p-6">
               <div className="flex flex-col space-y-3 lg:space-y-4">
+                {/* Gallery thumbnail */}
+                {activeTab === 'gallery' && item.url && (
+                  <div className="w-full h-32 lg:h-40 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img
+                      src={item.url}
+                      alt={item.caption}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04MCA1MEg4MFY1MEgxMjBWNTBIMTIwVjcwSDEyMFY3MEg4MFY3MEg4MFY1MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+';
+                      }}
+                    />
+                  </div>
+                )}
+                
                 <div className="flex-1 min-h-0">
                   <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 text-sm lg:text-base xl:text-lg leading-tight">
                     {item.name || item.title || item.caption}
