@@ -629,4 +629,72 @@ const Home = () => {
   );
 };
 
+// Photo Gallery Section Component  
+const PhotoGallerySection = () => {
+  const { galleryItems } = useGallery();
+  
+  // Get first 12 gallery items for the scrolling section
+  const galleryPhotos = galleryItems.slice(0, 12);
+  
+  // Duplicate for continuous scroll effect
+  const scrollingPhotos = [...galleryPhotos, ...galleryPhotos.slice(0, 6)];
+
+  return (
+    <section className="py-20 bg-gray-50 performance-optimized">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Photo Gallery</h2>
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+            Glimpses of our research activities, laboratory work, and sustainable energy installations.
+          </p>
+        </div>
+
+        {/* ULTRA-SMOOTH Right-to-Left Scrolling Gallery with GPU Acceleration */}
+        <div className="gallery-container relative overflow-hidden">
+          <div className="flex animate-scroll-right space-x-8 whitespace-nowrap performance-optimized">
+            {scrollingPhotos.map((photo, index) => (
+              <div key={`${photo.id}-${index}`} className="flex-shrink-0 w-80 group cursor-pointer inline-block performance-optimized">
+                <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden transform hover:scale-105 will-change-transform performance-optimized">
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={photo.url}
+                      alt={photo.caption}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 lazy-image performance-optimized"
+                      loading="lazy"
+                      decoding="async"
+                      fetchpriority={index < 3 ? "high" : "low"}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-white/90 text-gray-800">
+                        {photo.category}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                      <p className="text-sm font-semibold">{photo.caption}</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-center mt-12">
+          <Link to="/gallery">
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white px-8 py-3"
+            >
+              View All Photos <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default Home;
