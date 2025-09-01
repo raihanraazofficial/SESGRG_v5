@@ -628,23 +628,24 @@ const NewsEvents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header - Publications Style */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized -mx-4 sm:-mx-6 lg:-mx-8 mb-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center mb-6">
-              <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                Back to Home
-              </Link>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">Latest News & Events</h1>
-            <p className="text-xl text-gray-300 max-w-3xl">
-              Stay updated with our recent achievements, research milestones, upcoming events, and important announcements from our laboratory.
-            </p>
+    <div className="min-h-screen pt-20 bg-gray-50">
+      {/* Header - People Style */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Home
+            </Link>
           </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Latest News & Events</h1>
+          <p className="text-xl text-gray-300 max-w-3xl">
+            Stay updated with our recent achievements, research milestones, upcoming events, and important announcements from our laboratory.
+          </p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Category Filter Buttons */}
         <div className="flex justify-center flex-wrap gap-4 mb-8">
