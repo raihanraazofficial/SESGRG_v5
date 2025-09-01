@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { usePeople } from "../contexts/PeopleContext";
+import { useAuth } from "../contexts/AuthContext";
 import EditPersonModal from "../components/EditPersonModal";
 import AuthModal from "../components/AuthModal";
 import AddPersonModal from "../components/AddPersonModal";
