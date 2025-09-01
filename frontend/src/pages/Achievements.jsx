@@ -323,25 +323,6 @@ const Achievements = () => {
                             <Trophy className="h-4 w-4 text-emerald-600" />
                           </div>
                         </div>
-                        {/* Action Buttons */}
-                        <div className="absolute bottom-4 right-4 flex space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEditClick(achievement)}
-                            className="bg-white/90 backdrop-blur-sm border-white hover:bg-white"
-                          >
-                            {isAuthenticated ? <Edit className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDeleteClick(achievement)}
-                            className="bg-red-500/90 backdrop-blur-sm border-red-500 text-white hover:bg-red-600"
-                          >
-                            {isAuthenticated ? <Trash2 className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
-                          </Button>
-                        </div>
                       </div>
                     )}
                     
