@@ -1287,6 +1287,13 @@ const NewsEvents = () => {
         onConfirm={handleSubmitDelete}
         newsEvent={selectedNewsEvent}
       />
+
+      {/* Calendar Settings Modal */}
+      <CalendarSettingsModal
+        isOpen={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        onSubmit={handleSubmitCalendarSettings}
+      />
     </div>
   );
 };
