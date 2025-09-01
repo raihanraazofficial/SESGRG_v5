@@ -8,21 +8,10 @@ import { useAuth } from "../contexts/AuthContext";
 
 const People = () => {
   const [activeSection, setActiveSection] = useState("advisors");
-  const [editingPerson, setEditingPerson] = useState(null);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deletingPerson, setDeletingPerson] = useState(null);
-  const [deletingCategory, setDeletingCategory] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
   
-  // Use Auth Context instead of local state
+  // Use Auth Context - no local state needed
   const { isAuthenticated } = useAuth();
-
-  const { peopleData, researchAreas, deletePerson } = usePeople();
+  const { peopleData, researchAreas } = usePeople();
 
   const getResearchAreaColor = (index) => {
     const colors = [
