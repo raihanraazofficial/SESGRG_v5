@@ -26,9 +26,15 @@ const ContactManagement = () => {
   const [isEditingContactInfo, setIsEditingContactInfo] = useState(false);
   const [isEditingInquiryTypes, setIsEditingInquiryTypes] = useState(false);
   const [isEditingMap, setIsEditingMap] = useState(false);
+  const [isEditingEmailjs, setIsEditingEmailjs] = useState(false);
+  const [isEditingCards, setIsEditingCards] = useState(false);
+  const [isEditingDirections, setIsEditingDirections] = useState(false);
   const [editingContactData, setEditingContactData] = useState(null);
   const [editingInquiryTypes, setEditingInquiryTypes] = useState([]);
   const [editingMapConfig, setEditingMapConfig] = useState(null);
+  const [editingEmailjsConfig, setEditingEmailjsConfig] = useState(null);
+  const [editingCards, setEditingCards] = useState([]);
+  const [editingDirections, setEditingDirections] = useState(null);
 
   const {
     contactInfo,
