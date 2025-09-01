@@ -79,25 +79,25 @@ const ContentManagement = () => {
       id: 'publications',
       label: 'Publications',
       icon: FileText,
-      count: publications?.length || 0
+      count: publicationsData?.length || 0
     },
     {
       id: 'projects',
       label: 'Projects',
       icon: FolderOpen,
-      count: projects?.length || 0
+      count: projectsData?.length || 0
     },
     {
       id: 'achievements',
       label: 'Achievements',
       icon: Trophy,
-      count: achievements?.length || 0
+      count: achievementsData?.length || 0
     },
     {
       id: 'news-events',
       label: 'News & Events',
       icon: Calendar,
-      count: newsEvents?.length || 0
+      count: newsEventsData?.length || 0
     }
   ];
 
