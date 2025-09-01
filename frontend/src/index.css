@@ -150,7 +150,34 @@ code {
     transform-style: preserve-3d;
   }
   
-  /* Performance boost for animations */
+  /* SMOOTH DROPDOWN ANIMATIONS */
+.select-content-smooth {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: var(--radix-select-content-transform-origin);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.select-trigger-smooth {
+  transition: all 0.15s ease-in-out;
+  will-change: border-color, box-shadow;
+}
+
+.select-trigger-smooth:hover {
+  border-color: hsl(var(--border)) !important;
+}
+
+.select-trigger-smooth[data-state="open"] {
+  border-color: hsl(var(--ring)) !important;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2) !important;
+}
+
+.select-item-smooth {
+  transition: background-color 0.1s ease-in-out;
+  will-change: background-color;
+}
+
+/* Performance boost for animations */
   [class*="animate-"],
   [class*="transition-"] {
     will-change: transform, opacity;
