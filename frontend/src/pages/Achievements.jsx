@@ -105,12 +105,21 @@ const Achievements = () => {
                 These achievements reflect our commitment to excellence and innovation in advancing the field.
               </p>
             </div>
+            
+            {/* Only show Admin Login button for non-authenticated users */}
+            {!isAuthenticated && (
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/admin/login"
+                  className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <Shield className="h-5 w-5 mr-2" />
+                  <span>Admin Login</span>
+                </Link>
+              </div>
+            )}
+            
             <div className="flex items-center space-x-3">
-              {isAuthenticated && (
-                <div className="bg-emerald-600/20 backdrop-blur-sm rounded-lg px-3 py-2 border border-emerald-400/30">
-                  <span className="text-emerald-400 text-sm font-medium">Admin Mode Active</span>
-                </div>
-              )}
               <Button
                 onClick={handleRefresh}
                 disabled={refreshing}
