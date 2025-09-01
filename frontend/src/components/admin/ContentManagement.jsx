@@ -50,6 +50,9 @@ import DeleteNewsEventModal from '../newsevents/DeleteNewsEventModal';
 // Import Calendar Management
 import CalendarManagement from './CalendarManagement';
 
+// Import Contact Management
+import ContactManagement from './ContactManagement';
+
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('people');
   const [searchTerm, setSearchTerm] = useState('');
