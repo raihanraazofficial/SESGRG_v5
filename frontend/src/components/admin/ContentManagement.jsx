@@ -190,6 +190,8 @@ const ContentManagement = () => {
         await addAchievement(itemData);
       } else if (editingCategory === 'news-events') {
         await addNewsEvent(itemData);
+      } else if (editingCategory === 'gallery') {
+        await addGalleryItem(itemData);
       }
       alert('Item added successfully!');
     } catch (error) {
