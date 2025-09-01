@@ -120,7 +120,6 @@ const People = () => {
   };
 
   const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
     setIsAuthModalOpen(false);
     
     // Execute pending action
