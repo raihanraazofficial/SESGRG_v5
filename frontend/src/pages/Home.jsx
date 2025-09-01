@@ -8,47 +8,53 @@ import googleSheetsService from "../services/googleSheetsApi";
 
 // Latest News Section Component
 const LatestNewsSection = () => {
+  const { newsEventsData, loading, getPaginatedNewsEvents } = useNewsEvents();
   const [latestNews, setLatestNews] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
   useEffect(() => {
-    // Start fetching immediately on component mount - Force initial load
-    const loadInitialNews = async () => {
-      console.log('🚀 Home Component: Starting initial news fetch...');
-      await fetchLatestNews(false);
-    };
-    
-    loadInitialNews();
-    
-    // Debug: Force refresh after 5 seconds if no data loaded
-    const debugTimeout = setTimeout(() => {
-      if (!initialLoadComplete || latestNews.length === 0) {
-        console.log('🔧 Debug: Force refreshing after 5 seconds due to no initial data');
-        fetchLatestNews(true);
-      }
-    }, 5000);
-    
-    // Also set up interval for real-time updates every 5 minutes
-    const interval = setInterval(() => {
-      console.log('🔄 Home Component: Auto-refreshing news...');
-      fetchLatestNews(false);
-    }, 300000); // 5 minutes
-    
-    return () => {
-      clearInterval(interval);
-      clearTimeout(debugTimeout);
-    };
-    
-    return () => clearInterval(interval);
-  }, []);
+    // Load latest news from localStorage context
+    if (newsEventsData.length > 0 || !loading) {
+      const result = getPaginatedNewsEvents({
+        page: 1,
+        per_page: 8,
+        sort_by: 'date',
+        sort_order: 'desc'
+      });
+      setLatestNews(result.news_events || []);
+      console.log('✅ Homepage: Latest news loaded from localStorage:', result.news_events?.length || 0, 'items');
+    }
+  }, [newsEventsData, loading, getPaginatedNewsEvents]);
 
   const fetchLatestNews = async (forceRefresh = false) => {
     try {
       setError(null);
+      
+      if (forceRefresh) {
+        setRefreshing(true);
+        console.log('🔄 Homepage: Force refreshing latest news...');
+      }
+      
+      // For localStorage system, we just re-apply filters
+      const result = getPaginatedNewsEvents({
+        page: 1,
+        per_page: 8,
+        sort_by: 'date',
+        sort_order: 'desc'
+      });
+      
+      setLatestNews(result.news_events || []);
+      console.log('✅ Homepage: Latest news refreshed:', result.news_events?.length || 0, 'items');
+      
+    } catch (error) {
+      console.error('❌ Homepage: Error loading latest news:', error);
+      setError('Failed to load latest news. Please try refreshing the page.');
+      setLatestNews([]);
+    } finally {
+      setRefreshing(false);
+    }
+  };
       
       if (forceRefresh) {
         setRefreshing(true);
