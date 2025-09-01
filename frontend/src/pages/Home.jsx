@@ -4,6 +4,7 @@ import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRigh
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useNewsEvents } from "../contexts/NewsEventsContext";
+import { useGallery } from "../contexts/GalleryContext";
 import googleSheetsService from "../services/googleSheetsApi";
 
 // Latest News Section Component
