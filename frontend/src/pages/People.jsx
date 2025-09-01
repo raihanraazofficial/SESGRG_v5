@@ -38,7 +38,7 @@ const People = () => {
       designation: "Associate Professor",
       affiliation: "Department of EEE, BRAC University",
       description: "Expert in power systems reliability, renewable energy, and smart grid optimization with strong focus on modeling, simulation, and condition monitoring.",
-      expertise: [0, 2, 3], // Max 4 areas: Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
+      expertise: [0, 2, 4], // Max 4 areas: Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
       photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Nazmul%20Huda.jpg",
       email: "nazmul.huda@bracu.ac.bd",
       phone: "+880-2-9844051",
