@@ -265,25 +265,6 @@ const Achievements = () => {
                           Featured Achievement
                         </span>
                       </div>
-                      {/* Action Buttons */}
-                      <div className="absolute bottom-6 right-6 flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleEditClick(achievements[0])}
-                          className="bg-white/90 backdrop-blur-sm border-white hover:bg-white"
-                        >
-                          {isAuthenticated ? <Edit className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDeleteClick(achievements[0])}
-                          className="bg-red-500/90 backdrop-blur-sm border-red-500 text-white hover:bg-red-600"
-                        >
-                          {isAuthenticated ? <Trash2 className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
-                        </Button>
-                      </div>
                     </div>
                   )}
                   
