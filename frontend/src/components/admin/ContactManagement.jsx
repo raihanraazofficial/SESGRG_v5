@@ -662,6 +662,136 @@ const ContactManagement = () => {
     </div>
   );
 
+  const renderEmailjsTab = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="h-5 w-5" />
+            EmailJS Configuration
+          </CardTitle>
+          <Button
+            onClick={isEditingEmailjs ? handleSaveEmailjsConfig : handleEditEmailjs}
+            size="sm"
+            className={isEditingEmailjs ? 'bg-green-600 hover:bg-green-700' : ''}
+          >
+            {isEditingEmailjs ? 'Save Changes' : 'Edit Settings'}
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {!isEditingEmailjs ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Service ID</h4>
+                  <p className="text-gray-600 font-mono text-sm bg-gray-50 p-2 rounded">
+                    {emailjsConfig.serviceId}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Template ID</h4>
+                  <p className="text-gray-600 font-mono text-sm bg-gray-50 p-2 rounded">
+                    {emailjsConfig.templateId}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Public Key</h4>
+                  <p className="text-gray-600 font-mono text-sm bg-gray-50 p-2 rounded">
+                    {emailjsConfig.publicKey}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Recipient Email</h4>
+                  <p className="text-gray-600 font-mono text-sm bg-gray-50 p-2 rounded">
+                    {emailjsConfig.toEmail}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-medium text-gray-900">Status:</h4>
+                <span className={`px-2 py-1 text-xs rounded-full ${
+                  emailjsConfig.enabled 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {emailjsConfig.enabled ? 'Enabled' : 'Disabled'}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Service ID</label>
+                  <input
+                    type="text"
+                    value={editingEmailjsConfig?.serviceId || ''}
+                    onChange={(e) => setEditingEmailjsConfig({
+                      ...editingEmailjsConfig,
+                      serviceId: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Template ID</label>
+                  <input
+                    type="text"
+                    value={editingEmailjsConfig?.templateId || ''}
+                    onChange={(e) => setEditingEmailjsConfig({
+                      ...editingEmailjsConfig,
+                      templateId: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Public Key</label>
+                  <input
+                    type="text"
+                    value={editingEmailjsConfig?.publicKey || ''}
+                    onChange={(e) => setEditingEmailjsConfig({
+                      ...editingEmailjsConfig,
+                      publicKey: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Recipient Email</label>
+                  <input
+                    type="email"
+                    value={editingEmailjsConfig?.toEmail || ''}
+                    onChange={(e) => setEditingEmailjsConfig({
+                      ...editingEmailjsConfig,
+                      toEmail: e.target.value
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="emailjs-enabled"
+                  checked={editingEmailjsConfig?.enabled || false}
+                  onChange={(e) => setEditingEmailjsConfig({
+                    ...editingEmailjsConfig,
+                    enabled: e.target.checked
+                  })}
+                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                />
+                <label htmlFor="emailjs-enabled" className="text-sm font-medium text-gray-700">
+                  Enable EmailJS Integration
+                </label>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Sub Navigation */}
