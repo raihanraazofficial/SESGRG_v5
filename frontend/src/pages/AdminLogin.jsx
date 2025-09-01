@@ -76,8 +76,12 @@ const AdminLogin = () => {
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-8 py-8 text-center">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-8 w-8 text-white" />
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden">
+              <img 
+                src="/Logo.jpg" 
+                alt="SESG Logo" 
+                className="w-14 h-14 rounded-full object-cover"
+              />
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">SESG Admin Panel</h1>
             <p className="text-emerald-100 text-sm">
