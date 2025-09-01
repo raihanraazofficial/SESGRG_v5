@@ -330,38 +330,38 @@ Best regards,`;
       `}</style>
       
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24 performance-optimized">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-12 md:py-24 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center mb-6">
+          <div className="flex items-center mb-4 md:mb-6">
             <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back to Home
+              <ArrowLeft className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+              <span className="text-sm md:text-base">Back to Home</span>
             </Link>
           </div>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">Publications</h1>
-              <p className="text-xl text-gray-300 max-w-3xl">
+              <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4">Publications</h1>
+              <p className="text-lg md:text-xl text-gray-300 max-w-3xl">
                 Explore our research publications in sustainable energy and smart grid technologies. 
                 Discover cutting-edge research that's shaping the future of energy systems.
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
               {isAuthenticated && (
-                <div className="flex items-center space-x-2 bg-emerald-600 px-3 py-1 rounded-full text-sm">
+                <div className="flex items-center space-x-2 bg-emerald-600/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30 text-sm">
                   <Shield className="h-4 w-4" />
-                  <span>Admin Mode Active</span>
+                  <span>Admin Mode</span>
                 </div>
               )}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={openAddModal}
-                className="ml-4 flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900"
+                className="flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900 w-full sm:w-auto"
               >
                 {!isAuthenticated && <Shield className="h-4 w-4" />}
                 <Plus className="h-4 w-4" />
-                <span className="hidden md:inline">Add Publication</span>
+                <span>Add Publication</span>
               </Button>
             </div>
           </div>
