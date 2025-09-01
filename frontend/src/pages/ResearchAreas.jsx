@@ -27,49 +27,33 @@ const ResearchAreas = () => {
 
   const loadAllAreaStats = async () => {
     try {
-      const [projectsResponse, publicationsResponse] = await Promise.all([
-        googleSheetsService.getProjects({}),
-        googleSheetsService.getPublications({})
-      ]);
-
       const stats = {};
       
       researchAreas.forEach(area => {
         const exactAreaName = getExactAreaName(area.title);
         
-        // Filter projects using exact research area name matching
-        const areaProjects = projectsResponse.projects.filter(project => {
-          if (project.research_areas && Array.isArray(project.research_areas)) {
-            return project.research_areas.includes(exactAreaName);
-          }
-          return false;
-        });
-
-        // Filter publications using exact research area name matching
-        const areaPublications = publicationsResponse.publications.filter(pub => {
-          if (pub.research_areas && Array.isArray(pub.research_areas)) {
-            return pub.research_areas.includes(exactAreaName);
-          }
-          return false;
-        });
-
+        // Get publications using localStorage context
+        const areaPublications = getPublicationsByArea(exactAreaName);
+        
+        // Note: Projects still need to be handled separately or integrated
+        // For now, we'll set projects to 0 since we're focusing on publications
         stats[area.id] = {
-          projects: areaProjects.length,
+          projects: 0, // TODO: Integrate projects when needed
           publications: areaPublications.length
         };
       });
 
       setAreaStats(stats);
-      console.log('📊 Loaded area stats:', stats);
+      console.log('📊 Loaded area stats from localStorage:', stats);
     } catch (error) {
       console.error('Failed to load area stats:', error);
-      // Set empty stats (0 for all areas) when API fails
+      // Set empty stats (0 for all areas) when loading fails
       const emptyStats = {};
       researchAreas.forEach(area => {
         emptyStats[area.id] = { projects: 0, publications: 0 };
       });
       setAreaStats(emptyStats);
-      console.log('⚠️ Using empty stats due to API failure');
+      console.log('⚠️ Using empty stats due to loading failure');
     }
   };
 
