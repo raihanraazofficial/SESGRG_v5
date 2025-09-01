@@ -295,10 +295,10 @@ const Achievements = () => {
                   setFilters(prev => ({ ...prev, sort_by, sort_order, page: 1 }));
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="dropdown-container">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-y-auto">
+                <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                   <SelectItem value="date-desc">Date (Newest First)</SelectItem>
                   <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
                   <SelectItem value="title-asc">Title (A-Z)</SelectItem>
