@@ -60,6 +60,18 @@
 ##     -agent: "main"  # or "testing" or "user"
 ##     -message: "Communication message between agents"
 
+  - task: "Admin Panel Content Management Modal Improvements and Responsive Design"
+    implemented: false
+    working: false
+    file: "ContentManagement.jsx, various modals, responsive CSS"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "STARTING: User reported issues in Bengali - 1) Need separate popup windows for CRUD operations with large overlay (full window if possible), 2) News Events delete functionality broken ('Failed to delete news event'), 3) Content Management section needs mobile/tablet responsive design for 1080px, 720px, 480px breakpoints. Currently investigating the delete issue in DeleteNewsEventModal.jsx and ContentManagement.jsx integration."
+
 # Protocol Guidelines for Main agent
 #
 # 1. Update Test Result File Before Testing:
