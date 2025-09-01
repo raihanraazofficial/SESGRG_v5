@@ -266,6 +266,11 @@ const ContentManagement = () => {
       return <CalendarManagement />;
     }
 
+    // Special handling for contact management
+    if (activeTab === 'contact') {
+      return <ContactManagement />;
+    }
+
     if (filteredData.length === 0) {
       return (
         <div className="text-center py-8 lg:py-16">
