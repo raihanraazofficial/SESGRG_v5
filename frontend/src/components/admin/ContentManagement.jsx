@@ -163,6 +163,8 @@ const ContentManagement = () => {
         await deleteAchievement(deletingItem.id);
       } else if (editingCategory === 'news-events') {
         await deleteNewsEvent(deletingItem.id);
+      } else if (editingCategory === 'gallery') {
+        await deleteGalleryItem(deletingItem.id);
       }
       
       setIsDeleteModalOpen(false);
