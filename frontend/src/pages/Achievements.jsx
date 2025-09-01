@@ -136,25 +136,9 @@ const Achievements = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Add Achievement Button */}
+        {/* Section Title */}
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Research Achievements</h2>
-          <Button
-            onClick={handleAddClick}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white"
-          >
-            {isAuthenticated ? (
-              <>
-                <Plus className="h-4 w-4 mr-2" />
-                Add New Achievement
-              </>
-            ) : (
-              <>
-                <Shield className="h-4 w-4 mr-2" />
-                Add New Achievement
-              </>
-            )}
-          </Button>
         </div>
 
         {/* Category Filter Buttons */}
