@@ -22,6 +22,7 @@ import TermsConditions from "./pages/TermsConditions";
 import { PeopleProvider } from "./contexts/PeopleContext";
 import { PublicationsProvider } from "./contexts/PublicationsContext";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
+import { AchievementsProvider } from "./contexts/AchievementsContext";
 
 function App() {
   return (
