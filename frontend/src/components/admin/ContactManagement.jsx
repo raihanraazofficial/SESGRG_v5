@@ -792,6 +792,164 @@ const ContactManagement = () => {
     </div>
   );
 
+  const renderCardsTab = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5" />
+            Content Cards Management
+          </CardTitle>
+          <div className="flex gap-2">
+            {isEditingCards && (
+              <Button onClick={handleAddCard} size="sm">
+                <Plus className="h-4 w-4 mr-1" />
+                Add Card
+              </Button>
+            )}
+            <Button
+              onClick={isEditingCards ? handleSaveCards : handleEditCards}
+              size="sm"
+              className={isEditingCards ? 'bg-green-600 hover:bg-green-700' : ''}
+            >
+              {isEditingCards ? 'Save Changes' : 'Edit Cards'}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {!isEditingCards ? (
+            <div className="space-y-4">
+              {cards.map((card) => (
+                <div key={card.id} className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">{card.title}</h4>
+                  <p className="text-gray-600 text-sm">{card.content}</p>
+                  <span className="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                    {card.icon}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {editingCards.map((card, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <input
+                    type="text"
+                    value={card.title}
+                    onChange={(e) => {
+                      const updated = [...editingCards];
+                      updated[index] = { ...updated[index], title: e.target.value };
+                      setEditingCards(updated);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                    placeholder="Card Title"
+                  />
+                  <textarea
+                    value={card.content}
+                    onChange={(e) => {
+                      const updated = [...editingCards];
+                      updated[index] = { ...updated[index], content: e.target.value };
+                      setEditingCards(updated);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                    rows={3}
+                    placeholder="Card Content"
+                  />
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={card.icon}
+                      onChange={(e) => {
+                        const updated = [...editingCards];
+                        updated[index] = { ...updated[index], icon: e.target.value };
+                        setEditingCards(updated);
+                      }}
+                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="collaboration">Collaboration</option>
+                      <option value="research">Research</option>
+                      <option value="support">Support</option>
+                      <option value="consultation">Consultation</option>
+                    </select>
+                    <Button
+                      onClick={() => handleRemoveCard(index)}
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderDirectionsTab = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            Directions Management
+          </CardTitle>
+          <Button
+            onClick={isEditingDirections ? handleSaveDirections : handleEditDirections}
+            size="sm"
+            className={isEditingDirections ? 'bg-green-600 hover:bg-green-700' : ''}
+          >
+            {isEditingDirections ? 'Save Changes' : 'Edit Directions'}
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {!isEditingDirections ? (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Title</h4>
+                <p className="text-gray-600">{directions.title}</p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Content</h4>
+                <p className="text-gray-600 whitespace-pre-line">{directions.content}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                <input
+                  type="text"
+                  value={editingDirections?.title || ''}
+                  onChange={(e) => setEditingDirections({
+                    ...editingDirections,
+                    title: e.target.value
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Directions Content</label>
+                <textarea
+                  value={editingDirections?.content || ''}
+                  onChange={(e) => setEditingDirections({
+                    ...editingDirections,
+                    content: e.target.value
+                  })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
+                  rows={6}
+                  placeholder="Enter detailed directions..."
+                />
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Sub Navigation */}
