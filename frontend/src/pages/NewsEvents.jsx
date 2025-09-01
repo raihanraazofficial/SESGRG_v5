@@ -49,7 +49,16 @@ const NewsEvents = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [selectedNewsEvent, setSelectedNewsEvent] = useState(null);
+  
+  // Calendar settings state
+  const [calendarSettings, setCalendarSettings] = useState({
+    title: 'Upcoming Events Calendar',
+    calendarUrl: 'https://calendar.google.com/calendar/embed?src=en.bd%23holiday%40group.v.calendar.google.com&ctz=Asia%2FDhaka',
+    height: '400px',
+    description: 'Stay updated with our upcoming events and important dates.'
+  });
 
   // Load news events whenever newsEventsData or filters change
   useEffect(() => {
