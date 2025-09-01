@@ -667,12 +667,12 @@ Best regards,`;
                   </div>
 
                   {/* Actions */}
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-3 border-t border-gray-200 space-y-2 md:space-y-0">
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-3 border-t border-gray-200 space-y-3 sm:space-y-0">
+                    <div className="flex flex-col xs:flex-row space-y-2 xs:space-y-0 xs:space-x-3 w-full sm:w-auto">
                       {/* Paper Link Button - Always show */}
                       <Button
                         variant="default"
-                        className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base w-full sm:w-auto"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base w-full xs:w-auto"
                         onClick={() => window.open(publication.paper_link || '#', '_blank')}
                         disabled={!publication.paper_link}
                       >
@@ -685,7 +685,7 @@ Best regards,`;
                         <Button
                           variant="outline"
                           onClick={() => requestPaper(publication)}
-                          className="text-sm md:text-base"
+                          className="text-sm md:text-base w-full xs:w-auto"
                         >
                           <Mail className="h-4 w-4 mr-2" />
                           Request Paper
@@ -695,7 +695,7 @@ Best regards,`;
                       <Button
                         variant="outline"
                         onClick={() => copyPaperCitation(publication)}
-                        className="text-sm md:text-base"
+                        className="text-sm md:text-base w-full xs:w-auto"
                       >
                         <Copy className="h-4 w-4 mr-2" />
                         Copy Citation
