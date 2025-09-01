@@ -1,10 +1,64 @@
-import React from "react";
-import { Mail, Phone, MapPin, Clock, Send, ArrowLeft } from "lucide-react";
+import React, { useState } from "react";
+import { Mail, Phone, MapPin, Clock, Send, ArrowLeft, User, Building, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { useContact } from "../contexts/ContactContext";
 
 const Contacts = () => {
+  const { contactInfo, inquiryTypes, submitInquiry, mapConfig } = useContact();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    organization: '',
+    subject: '',
+    inquiryType: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Submit to localStorage first
+      const result = submitInquiry(formData);
+      
+      if (result.success) {
+        // TODO: Add EmailJS integration here when keys are provided
+        setSubmitStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          organization: '',
+          subject: '',
+          inquiryType: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus({ type: 'error', message: result.error || 'Failed to send message. Please try again.' });
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus({ type: 'error', message: 'An error occurred. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
       {/* Header - Gallery Style */}
@@ -25,8 +79,9 @@ const Contacts = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* Contact Information */}
+        {/* Main Layout - Get in Touch Card and Contact Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Get In Touch Card */}
           <div className="lg:col-span-1">
             <Card className="h-full performance-optimized">
               <CardContent className="p-8">
@@ -39,105 +94,255 @@ const Contacts = () => {
                       <MapPin className="h-5 w-5 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
-                      <p className="text-gray-600">
-                        Sustainable Energy and Smart Grid Research<br />
-                        Department of Electrical and Electronic Engineering<br />
-                        BRAC University<br />
-                        66 Mohakhali, Dhaka 1212, Bangladesh
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="flex items-start space-x-4">
-                    <div className="p-3 bg-blue-100 rounded-full">
-                      <Mail className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                      <p className="text-gray-600">
-                        <a href="mailto:sesg@bracu.ac.bd" className="hover:text-blue-600 transition-colors">
-                          sesg@bracu.ac.bd
-                        </a>
-                      </p>
-                      <p className="text-gray-600">
-                        <a href="mailto:info@bracu.ac.bd" className="hover:text-blue-600 transition-colors">
-                          info@bracu.ac.bd
-                        </a>
+                      <h3 className="font-semibold text-gray-900 mb-1">Lab Address</h3>
+                      <p className="text-gray-600 whitespace-pre-line">
+                        {contactInfo.address.content}
                       </p>
                     </div>
                   </div>
 
                   {/* Phone */}
                   <div className="flex items-start space-x-4">
-                    <div className="p-3 bg-green-100 rounded-full">
-                      <Phone className="h-5 w-5 text-green-600" />
+                    <div className="p-3 bg-blue-100 rounded-full">
+                      <Phone className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                      <p className="text-gray-600">
-                        <a href="tel:+8802-9844051" className="hover:text-green-600 transition-colors">
-                          +880-2-9844051
-                        </a>
-                      </p>
-                      <p className="text-gray-600">
-                        <a href="tel:+8802-9844051-54" className="hover:text-green-600 transition-colors">
-                          +880-2-9844051-54
-                        </a>
-                      </p>
+                      {contactInfo.phone.numbers.map((number, index) => (
+                        <p key={index} className="text-gray-600">
+                          <a href={`tel:${number}`} className="hover:text-blue-600 transition-colors">
+                            {number}
+                          </a>
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex items-start space-x-4">
+                    <div className="p-3 bg-purple-100 rounded-full">
+                      <Mail className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
+                      {contactInfo.email.addresses.map((email, index) => (
+                        <p key={index} className="text-gray-600">
+                          <a href={`mailto:${email}`} className="hover:text-purple-600 transition-colors">
+                            {email}
+                          </a>
+                        </p>
+                      ))}
                     </div>
                   </div>
 
                   {/* Office Hours */}
                   <div className="flex items-start space-x-4">
-                    <div className="p-3 bg-purple-100 rounded-full">
-                      <Clock className="h-5 w-5 text-purple-600" />
+                    <div className="p-3 bg-yellow-100 rounded-full">
+                      <Clock className="h-5 w-5 text-yellow-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Office Hours</h3>
-                      <p className="text-gray-600">
-                        Sunday - Thursday: 9:00 AM - 5:00 PM<br />
-                        Friday: 9:00 AM - 12:00 PM<br />
-                        Saturday: Closed
+                      <p className="text-gray-600 whitespace-pre-line">
+                        {contactInfo.officeHours.schedule}
                       </p>
                     </div>
                   </div>
                 </div>
-
-                {/* Quick Contact Button */}
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700" size="lg">
-                    <a href="mailto:sesg@bracu.ac.bd" className="flex items-center w-full justify-center">
-                      <Send className="h-5 w-5 mr-2" />
-                      Send Us an Email
-                    </a>
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Google Map */}
-          <div className="lg:col-span-2">
+          {/* Contact Form */}
+          <div className="lg:col-span-1">
             <Card className="h-full performance-optimized">
-              <CardContent className="p-0 h-full">
-                <div className="relative h-full min-h-[500px] rounded-lg overflow-hidden">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.923235053417!2d90.42224541501535!3d23.77321088458117!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7715a40c603%3A0xec01cd75f33139f5!2sBRAC%20University!5e0!3m2!1sen!2sbd!4v1693140400000"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="BRAC University Location"
-                    className="rounded-lg"
-                  ></iframe>
-                </div>
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+                
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name and Email Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone and Organization Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                        placeholder="+880 XXX-XXXXXXX"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
+                        Organization
+                      </label>
+                      <input
+                        type="text"
+                        id="organization"
+                        name="organization"
+                        value={formData.organization}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                        placeholder="Your organization"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Inquiry Type */}
+                  <div>
+                    <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-2">
+                      Inquiry Type *
+                    </label>
+                    <select
+                      id="inquiryType"
+                      name="inquiryType"
+                      value={formData.inquiryType}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    >
+                      <option value="">Select inquiry type</option>
+                      {inquiryTypes.map((type) => (
+                        <option key={type.id} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Subject */}
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject *
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      placeholder="Brief subject of your inquiry"
+                    />
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={5}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
+                      placeholder="Please provide details about your inquiry..."
+                    />
+                  </div>
+
+                  {/* Submit Status */}
+                  {submitStatus && (
+                    <div className={`p-4 rounded-lg ${
+                      submitStatus.type === 'success' 
+                        ? 'bg-green-50 text-green-800 border border-green-200' 
+                        : 'bg-red-50 text-red-800 border border-red-200'
+                    }`}>
+                      {submitStatus.message}
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 py-3 text-lg"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-5 w-5 mr-2" />
+                        Send Message
+                      </>
+                    )}
+                  </Button>
+
+                  <p className="text-sm text-gray-500 text-center">
+                    For urgent matters, please call us directly at {contactInfo.phone.numbers[0]}
+                  </p>
+                </form>
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Map Section */}
+        <div className="mb-12">
+          <Card className="performance-optimized">
+            <CardContent className="p-0">
+              <div className="relative h-96 rounded-lg overflow-hidden">
+                <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg p-3">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Campus Location</h3>
+                  <p className="text-sm text-gray-600">Interactive map coming soon</p>
+                </div>
+                <iframe
+                  src={mapConfig.embedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={mapConfig.title}
+                  className="rounded-lg"
+                ></iframe>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Additional Information */}
