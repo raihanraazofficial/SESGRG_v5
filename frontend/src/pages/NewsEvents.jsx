@@ -711,7 +711,7 @@ const NewsEvents = () => {
 
             {/* Advanced Filters */}
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg dropdown-container" style={{overflow: 'visible'}}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Category</label>
                   <Select
