@@ -5,7 +5,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
 import { usePeople } from "../contexts/PeopleContext";
-import googleSheetsService from "../services/googleSheetsApi";
+import { usePublications } from "../contexts/PublicationsContext";
 
 const ResearchAreas = () => {
   const [selectedArea, setSelectedArea] = useState(null);
