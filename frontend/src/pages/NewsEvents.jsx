@@ -653,28 +653,28 @@ const NewsEvents = () => {
           <Button
             variant={filters.category_filter === '' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('category_filter', '')}
-            className="px-6 py-2"
+            className="px-6 py-2 filter-button"
           >
             All Categories
           </Button>
           <Button
             variant={filters.category_filter === 'News' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('category_filter', 'News')}
-            className="px-6 py-2"
+            className="px-6 py-2 filter-button"
           >
             News
           </Button>
           <Button
             variant={filters.category_filter === 'Events' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('category_filter', 'Events')}
-            className="px-6 py-2"
+            className="px-6 py-2 filter-button"
           >
             Events
           </Button>
           <Button
             variant={filters.category_filter === 'Upcoming Events' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('category_filter', 'Upcoming Events')}
-            className="px-6 py-2"
+            className="px-6 py-2 filter-button"
           >
             Upcoming Events
           </Button>
