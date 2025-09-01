@@ -86,7 +86,7 @@ const TermsConditions = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
 
         {/* Acceptance Notice */}
         <Card className="mb-8 border-0 shadow-lg border-l-4 border-l-blue-500">
