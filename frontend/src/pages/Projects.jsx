@@ -14,14 +14,12 @@ const Projects = () => {
   const { 
     getPaginatedProjects, 
     getFilterOptions, 
-    addProject, 
-    updateProject, 
-    deleteProject, 
-    getProjectById, 
     researchAreas,
     statuses,
     formatDate
   } = useProjects();
+  
+  const { isAuthenticated } = useAuth();
 
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
