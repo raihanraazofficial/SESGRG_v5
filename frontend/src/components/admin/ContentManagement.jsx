@@ -206,13 +206,13 @@ const ContentManagement = () => {
           ...peopleData.collaborators.map(p => ({ ...p, category: 'Collaborator' }))
         ];
       case 'publications':
-        return publications || [];
+        return publicationsData || [];
       case 'projects':
-        return projects || [];
+        return projectsData || [];
       case 'achievements':
-        return achievements || [];
+        return achievementsData || [];
       case 'news-events':
-        return newsEvents || [];
+        return newsEventsData || [];
       default:
         return [];
     }
