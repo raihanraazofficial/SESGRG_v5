@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-People Data Management System - Backend Infrastructure Testing Suite
-Tests the Google Sheets API infrastructure supporting the People data management system:
-1. Google Sheets API Integration: Verify data sources for People context
-2. Data Structure Validation: Ensure APIs support People/ResearchAreas integration
-3. Performance Testing: Check API response times for real-time sync
-4. Error Handling: Verify robust data fetching for localStorage integration
+Publications Architecture Overhaul - Backend Infrastructure Testing Suite
+Tests the Google Sheets API infrastructure supporting the new localStorage-based Publications system:
+1. Publications Google Sheets API Integration: Verify data migration source
+2. Data Structure Validation: Ensure APIs support Publications Context integration
+3. Performance Testing: Check API response times for initial data migration
+4. Error Handling: Verify robust data fetching for localStorage migration
+5. Publications Context Integration: Test data structure compatibility
 
 NOTE: This tests the backend API infrastructure only. Frontend features like localStorage,
-React Context API, real-time sync, and edit functionality require frontend testing tools.
+PublicationsContext, CRUD operations, authentication, and real-time sync require frontend testing tools.
 """
 
 import requests
