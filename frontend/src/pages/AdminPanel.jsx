@@ -294,21 +294,7 @@ const AdminPanel = () => {
           </div>
         );
       case 'content':
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">Content Management</h1>
-            <p className="text-gray-600">Manage all website content from one place</p>
-            <Card>
-              <CardContent className="p-8">
-                <div className="text-center text-gray-500">
-                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Centralized Content Management</p>
-                  <p className="text-sm">Coming in next phase...</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return <ContentManagement />;
       case 'pages':
         return (
           <div className="space-y-6">
