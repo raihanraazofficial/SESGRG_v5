@@ -369,22 +369,9 @@ const Achievements = () => {
           <div className="text-center py-20">
             <Trophy className="h-16 w-16 text-gray-300 mx-auto mb-6" />
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No achievements found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or add a new achievement.</p>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria.</p>
             <div className="flex justify-center space-x-4">
               <Button onClick={clearFilters}>Clear Search</Button>
-              <Button onClick={handleAddClick} className="bg-emerald-600 hover:bg-emerald-700">
-                {isAuthenticated ? (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Achievement
-                  </>
-                ) : (
-                  <>
-                    <Shield className="h-4 w-4 mr-2" />
-                    Add Achievement
-                  </>
-                )}
-              </Button>
             </div>
           </div>
         )}
