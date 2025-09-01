@@ -52,6 +52,7 @@ function App() {
           <Footer />
         </BrowserRouter>
       </div>
+      </PublicationsProvider>
     </PeopleProvider>
   );
 }
