@@ -75,6 +75,38 @@ const People = () => {
     }
   };
 
+  const handleDeletePerson = (person, category) => {
+    if (isAuthenticated) {
+      setDeletingPerson(person);
+      setDeletingCategory(category);
+      setIsDeleteModalOpen(true);
+    } else {
+      setPendingAction({ type: 'delete', person, category });
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingPerson || !deletingCategory) return;
+    
+    setIsDeleting(true);
+    try {
+      // Simulate slight delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      deletePerson(deletingCategory, deletingPerson.id);
+      
+      // Close modal and reset state
+      setIsDeleteModalOpen(false);
+      setDeletingPerson(null);
+      setDeletingCategory(null);
+    } catch (error) {
+      console.error('Error deleting person:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleAddPerson = () => {
     if (isAuthenticated) {
       setIsAddModalOpen(true);
@@ -96,6 +128,10 @@ const People = () => {
         setIsEditModalOpen(true);
       } else if (pendingAction.type === 'add') {
         setIsAddModalOpen(true);
+      } else if (pendingAction.type === 'delete') {
+        setDeletingPerson(pendingAction.person);
+        setDeletingCategory(pendingAction.category);
+        setIsDeleteModalOpen(true);
       }
       setPendingAction(null);
     }
