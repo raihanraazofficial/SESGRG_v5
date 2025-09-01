@@ -510,6 +510,9 @@ const ContentManagement = () => {
                 {activeTab === 'news-events' && newsEventCategories.map(category => (
                   <option key={category} value={category.toLowerCase()}>{category}</option>
                 ))}
+                {activeTab === 'gallery' && galleryCategories.map(category => (
+                  <option key={category} value={category.toLowerCase()}>{category}</option>
+                ))}
               </select>
             </div>
           </div>
