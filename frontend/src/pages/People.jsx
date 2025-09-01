@@ -69,31 +69,6 @@ const People = () => {
             <h3 className="text-lg font-bold">{person.name}</h3>
             <p className="text-sm opacity-90">{person.designation}</p>
           </div>
-          
-          {/* Edit and Delete Buttons - Only for authenticated users */}
-          {isAuthenticated && (
-            <div className="absolute top-4 right-4 flex space-x-2">
-              <Button
-                size="sm"
-                variant="secondary"
-                className="bg-white/90 hover:bg-white text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => handleEditPerson(person, activeSection === 'team-members' ? 'teamMembers' : activeSection)}
-                title="Edit Member"
-              >
-                <Edit3 className="h-4 w-4" />
-              </Button>
-              
-              <Button
-                size="sm"
-                variant="secondary"
-                className="bg-red-50/90 hover:bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => handleDeletePerson(person, activeSection === 'team-members' ? 'teamMembers' : activeSection)}
-                title="Delete Member"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
         </div>
 
         <div className="p-6 space-y-4 flex-grow flex flex-col">
