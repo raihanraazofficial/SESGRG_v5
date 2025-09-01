@@ -24,7 +24,7 @@ import { usePeople } from '../contexts/PeopleContext';
 import { usePublications } from '../contexts/PublicationsContext';
 import { useProjects } from '../contexts/ProjectsContext';
 import { useAchievements } from '../contexts/AchievementsContext';
-import { useNewsEvents } from '../contexts/NewsEventsContext';
+import { useContact } from '../contexts/ContactContext';
 import ContentManagement from '../components/admin/ContentManagement';
 import UserManagement from '../components/admin/UserManagement';
 import PageManagement from '../components/admin/PageManagement';
