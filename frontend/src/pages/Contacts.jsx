@@ -38,8 +38,43 @@ const Contacts = () => {
       const result = submitInquiry(formData);
       
       if (result.success) {
-        // TODO: Add EmailJS integration here when keys are provided
-        setSubmitStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' });
+        let emailSent = false;
+        
+        // Try to send email via EmailJS if enabled and configured
+        if (emailjsConfig.enabled && emailjsConfig.serviceId && emailjsConfig.templateId && emailjsConfig.publicKey) {
+          try {
+            const templateParams = {
+              from_name: formData.name,
+              from_email: formData.email,
+              phone: formData.phone || 'Not provided',
+              organization: formData.organization || 'Not provided',
+              subject: formData.subject,
+              inquiry_type: formData.inquiryType,
+              message: formData.message,
+              to_email: emailjsConfig.toEmail || 'raihanraaz.official@gmail.com'
+            };
+
+            await emailjs.send(
+              emailjsConfig.serviceId,
+              emailjsConfig.templateId,
+              templateParams,
+              emailjsConfig.publicKey
+            );
+            
+            emailSent = true;
+          } catch (emailError) {
+            console.error('EmailJS error:', emailError);
+            // Continue with success message even if email fails
+          }
+        }
+        
+        setSubmitStatus({ 
+          type: 'success', 
+          message: emailSent 
+            ? 'Message sent successfully! We will get back to you soon.' 
+            : 'Message received successfully! We will get back to you soon.'
+        });
+        
         setFormData({
           name: '',
           email: '',
