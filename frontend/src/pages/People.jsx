@@ -432,18 +432,32 @@ const People = () => {
           </div>
         </div>
 
-        {/* Add New Member Button */}
-        <div className="flex justify-center mb-8">
-          <Button
-            onClick={handleAddPerson}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300"
-            title={isAuthenticated ? "Add New Member" : "Authentication Required"}
-          >
-            <UserPlus className="h-5 w-5" />
-            <span>Add New {getSectionTitle(activeSection).slice(0, -1)}</span>
-            {!isAuthenticated && <Shield className="h-4 w-4 ml-1" />}
-          </Button>
-        </div>
+        {/* Add New Member Button - Only for authenticated users */}
+        {isAuthenticated && (
+          <div className="flex justify-center mb-8">
+            <Button
+              onClick={handleAddPerson}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300"
+              title="Add New Member"
+            >
+              <UserPlus className="h-5 w-5" />
+              <span>Add New {getSectionTitle(activeSection).slice(0, -1)}</span>
+            </Button>
+          </div>
+        )}
+
+        {/* Login Button for non-authenticated users */}
+        {!isAuthenticated && (
+          <div className="flex justify-center mb-8">
+            <Link
+              to="/admin/login"
+              className="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg border border-gray-300 hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+            >
+              <Shield className="h-5 w-5 mr-2" />
+              <span>Login to Manage Content</span>
+            </Link>
+          </div>
+        )}
 
         {/* Section Content */}
         <div className="mb-8">
