@@ -60,9 +60,45 @@ const People = () => {
   };
 
   const handleEditPerson = (person, category) => {
-    setEditingPerson(person);
-    setEditingCategory(category);
-    setIsEditModalOpen(true);
+    if (isAuthenticated) {
+      setEditingPerson(person);
+      setEditingCategory(category);
+      setIsEditModalOpen(true);
+    } else {
+      setPendingAction({ type: 'edit', person, category });
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleAddPerson = () => {
+    if (isAuthenticated) {
+      setIsAddModalOpen(true);
+    } else {
+      setPendingAction({ type: 'add', category: activeSection === 'team-members' ? 'teamMembers' : activeSection });
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setIsAuthModalOpen(false);
+    
+    // Execute pending action
+    if (pendingAction) {
+      if (pendingAction.type === 'edit') {
+        setEditingPerson(pendingAction.person);
+        setEditingCategory(pendingAction.category);
+        setIsEditModalOpen(true);
+      } else if (pendingAction.type === 'add') {
+        setIsAddModalOpen(true);
+      }
+      setPendingAction(null);
+    }
+  };
+
+  const handleCloseAuthModal = () => {
+    setIsAuthModalOpen(false);
+    setPendingAction(null);
   };
 
   const handleCloseEditModal = () => {
