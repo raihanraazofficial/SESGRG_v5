@@ -68,14 +68,17 @@ const Publications = () => {
         setPagination(response.pagination || {});
         setStatistics(response.statistics || {});
         
-        // Extract unique years and research areas from all publications
+        // Extract unique years and research areas from all publications for independent dropdown options
         if (pubs.length > 0) {
           const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
           const allAreas = pubs.flatMap(pub => pub.research_areas || []);
           const uniqueAreas = [...new Set(allAreas)].sort();
           
+          // Set both current and all options for independent filtering
           setAvailableYears(uniqueYears);
           setAvailableAreas(uniqueAreas);
+          setAllYears(uniqueYears);
+          setAllAreas(uniqueAreas);
         }
         
         console.log('✅ Publications loaded successfully:', pubs.length, 'items');
