@@ -13,6 +13,10 @@ const People = () => {
   const [editingPerson, setEditingPerson] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const { peopleData, researchAreas } = usePeople();
 
