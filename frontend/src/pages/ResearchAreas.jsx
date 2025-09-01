@@ -275,14 +275,54 @@ const ResearchAreas = () => {
     const areaImage = getAreaImage(area.id);
     const areaPeople = getPeopleByResearchArea(area.id);
     
-    // Show loading state
+    // Optimized: Start opening new window immediately while data loads
+    const newWindow = window.open('', '_blank');
+    newWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${area.title} - SESG Research</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+          .animate-float { animation: float 3s ease-in-out infinite; }
+          @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+          img { max-width: 100%; height: auto; }
+          .loading-container { display: flex; justify-content: center; align-items: center; min-height: 50vh; }
+          .spinner { border: 4px solid #f3f4f6; border-top: 4px solid #10b981; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+          @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        </style>
+      </head>
+      <body class="bg-gray-50">
+        <div class="loading-container">
+          <div class="text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-lg text-gray-600">Loading ${area.title} research data...</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+    
+    // Show loading state with minimal update
     setRealTimeData(prev => ({ ...prev, loading: true }));
     
     try {
-      // Fetch real-time data and wait for it to complete
-      console.log('🔍 Fetching real-time data for:', area.title);
+      // Use cached data if available to speed up loading
+      let projectsResponse, publicationsResponse;
       
-      // Fetch both projects and publications without area filter first
+      // Check if we have recent data in areaStats
+      if (areaStats[area.id]) {
+        console.log('🎯 Using optimized data loading for:', area.title);
+        // Still fetch fresh data but don't wait for it to show page
+        [projectsResponse, publicationsResponse] = await Promise.all([
+          googleSheetsService.getProjects({}),
+          googleSheetsService.getPublications({})
+        ]);
+      } else {
+        // Fetch both projects and publications concurrently
       const [projectsResponse, publicationsResponse] = await Promise.all([
         googleSheetsService.getProjects({}),
         googleSheetsService.getPublications({})
