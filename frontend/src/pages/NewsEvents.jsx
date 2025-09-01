@@ -742,7 +742,7 @@ const NewsEvents = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select Sort Option" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-64 overflow-y-auto">
                       <SelectItem value="date-desc">Date (Newest First)</SelectItem>
                       <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
                       <SelectItem value="title-asc">Title (A-Z)</SelectItem>
