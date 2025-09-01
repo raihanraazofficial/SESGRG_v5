@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Users, BookOpen, Lightbulb, Award, ChevronLeft, ChevronRight, CheckCircle, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { useNewsEvents } from "../contexts/NewsEventsContext";
 import googleSheetsService from "../services/googleSheetsApi";
 
 // Latest News Section Component
