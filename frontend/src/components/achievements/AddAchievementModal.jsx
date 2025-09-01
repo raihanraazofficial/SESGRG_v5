@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trophy, Loader2 } from 'lucide-react';
+import { X, Trophy, Loader2, Calendar, Tag, Image as ImageIcon, Star } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import RichTextEditor from '../RichTextEditor';
@@ -74,166 +74,206 @@ const AddAchievementModal = ({ isOpen, onClose, onAdd, categories }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-hidden">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div className="flex items-center justify-between p-6 border-b">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
+      <div className="bg-white rounded-xl w-full max-w-5xl my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+        
+        {/* Fixed Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
           <div className="flex items-center space-x-3">
             <div className="bg-emerald-100 p-2 rounded-full">
-              <Trophy className="h-5 w-5 text-emerald-600" />
+              <Trophy className="h-6 w-6 text-emerald-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Add New Achievement</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Add New Achievement</h2>
+              <p className="text-sm text-gray-600 mt-1">Create a new achievement record</p>
+            </div>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            disabled={loading}
+            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2"
           >
             <X className="h-6 w-6" />
-          </button>
+          </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Basic Information */}
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Title *
-              </label>
-              <Input
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                placeholder="Enter achievement title"
-                required
-              />
-            </div>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="p-6 space-y-8">
+            
+            {/* Basic Information */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
+                  <Trophy className="h-5 w-5 mr-2 text-emerald-600" />
+                  Basic Information
+                </h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Title *
+                    </label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                      placeholder="Enter achievement title"
+                      required
+                      className="text-base"
+                    />
+                  </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Short Description *
-              </label>
-              <textarea
-                value={formData.short_description}
-                onChange={(e) => handleInputChange('short_description', e.target.value)}
-                placeholder="Enter a brief description (will be shown on cards)"
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                required
-              />
-            </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Short Description *
+                    </label>
+                    <textarea
+                      value={formData.short_description}
+                      onChange={(e) => handleInputChange('short_description', e.target.value)}
+                      placeholder="Enter a brief description (will be shown on cards)"
+                      rows={4}
+                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      required
+                    />
+                  </div>
 
-            {/* Date and Category */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date *
-                </label>
-                <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => handleInputChange('date', e.target.value)}
-                  required
-                />
+                  {/* Date and Category */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <Calendar className="h-4 w-4 inline mr-2" />
+                        Date *
+                      </label>
+                      <Input
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) => handleInputChange('date', e.target.value)}
+                        required
+                        className="text-base"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <Tag className="h-4 w-4 inline mr-2" />
+                        Category *
+                      </label>
+                      <select
+                        value={formData.category}
+                        onChange={(e) => handleInputChange('category', e.target.value)}
+                        className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      >
+                        {categories.map(category => (
+                          <option key={category} value={category}>{category}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Image URL */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <ImageIcon className="h-4 w-4 inline mr-2" />
+                      Image URL (Optional)
+                    </label>
+                    <Input
+                      value={formData.image}
+                      onChange={(e) => handleInputChange('image', e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                      type="url"
+                      className="text-base"
+                    />
+                    {formData.image && (
+                      <div className="mt-4">
+                        <img 
+                          src={formData.image} 
+                          alt="Preview" 
+                          className="w-40 h-40 object-cover rounded-lg border shadow-sm"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Featured Checkbox */}
+                  <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={formData.featured}
+                      onChange={(e) => handleInputChange('featured', e.target.checked)}
+                      className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    />
+                    <label htmlFor="featured" className="flex items-center text-sm font-medium text-gray-700">
+                      <Star className="h-4 w-4 mr-2 text-yellow-500" />
+                      Featured Achievement (will appear first)
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => handleInputChange('category', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
             </div>
 
-            {/* Image URL */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Image URL (Optional)
-              </label>
-              <Input
-                value={formData.image}
-                onChange={(e) => handleInputChange('image', e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                type="url"
-              />
-              {formData.image && (
-                <div className="mt-2">
-                  <img 
-                    src={formData.image} 
-                    alt="Preview" 
-                    className="w-32 h-32 object-cover rounded border"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
+            {/* Rich Content Editor */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Full Description (Rich Content)
+                </h3>
+                <div className="text-sm text-gray-600 mb-4 p-4 bg-white rounded-md border">
+                  <p className="font-medium mb-2">Rich Text Editor Features:</p>
+                  <ul className="text-xs space-y-1">
+                    <li>• <strong>Text Formatting:</strong> Bold, Italic, Underline, Colors</li>
+                    <li>• <strong>Mathematics:</strong> LaTeX formulas with $$formula$$</li>
+                    <li>• <strong>Structure:</strong> Headers, Lists, Tables, Code blocks</li>
+                    <li>• <strong>Media:</strong> Images, Videos, Links</li>
+                    <li>• <strong>Advanced:</strong> Blockquotes, Subscript, Superscript</li>
+                  </ul>
+                </div>
+                <div className="bg-white rounded-lg border p-1">
+                  <RichTextEditor
+                    value={formData.description}
+                    onChange={(value) => handleInputChange('description', value)}
+                    placeholder="Write the full story of this achievement. You can use rich formatting, add images, LaTeX formulas, code blocks, tables, and more..."
                   />
                 </div>
-              )}
-            </div>
-
-            {/* Featured Checkbox */}
-            <div>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={formData.featured}
-                  onChange={(e) => handleInputChange('featured', e.target.checked)}
-                  className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                />
-                <span className="text-sm text-gray-700">Featured Achievement (will appear first)</span>
-              </label>
-            </div>
-
-            {/* Full Description with Rich Text Editor */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Description (Rich Content)
-              </label>
-              <div className="text-sm text-gray-600 mb-2">
-                Use the rich text editor below to write the full story. You can add formatting, LaTeX formulas, 
-                code blocks, images, videos, tables, and more.
               </div>
-              <RichTextEditor
-                value={formData.description}
-                onChange={(value) => handleInputChange('description', value)}
-                placeholder="Write the full story of this achievement. You can use rich formatting, add images, LaTeX formulas, code blocks, tables, and more..."
-              />
             </div>
-          </div>
+          </form>
+        </div>
 
-          {/* Form Actions */}
-          <div className="flex gap-4 pt-6 border-t">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Adding Achievement...
-                </>
-              ) : (
-                <>
-                  <Trophy className="h-4 w-4 mr-2" />
-                  Add Achievement
-                </>
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={loading}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+        {/* Fixed Footer with Actions */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 flex justify-end space-x-4 rounded-b-xl">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={loading}
+            className="px-6 py-2"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            onClick={handleSubmit}
+            className="bg-emerald-600 hover:bg-emerald-700 px-6 py-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              <>
+                <Trophy className="h-4 w-4 mr-2" />
+                Add Achievement
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );
