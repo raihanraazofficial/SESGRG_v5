@@ -589,25 +589,25 @@ Best regards,`;
                 <CardContent className="p-8">
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 lg:mr-6">
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 space-y-2 sm:space-y-0">
+                        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight flex-1 sm:mr-4">
                           {publication.title}
                         </h3>
-                        <div className="flex space-x-2 ml-4">
+                        <div className="flex space-x-2 sm:flex-shrink-0">
                           <button
                             onClick={() => openEditModal(publication)}
-                            className="p-2 text-gray-500 hover:text-emerald-600 transition-colors"
+                            className="relative p-2 text-gray-500 hover:text-emerald-600 transition-colors rounded-lg hover:bg-emerald-50"
                             title={isAuthenticated ? "Edit Publication" : "Login required to edit"}
                           >
-                            {!isAuthenticated && <Shield className="h-4 w-4 absolute -ml-1 -mt-1" />}
+                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-emerald-600" />}
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => openDeleteModal(publication)}
-                            className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+                            className="relative p-2 text-gray-500 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
                             title={isAuthenticated ? "Delete Publication" : "Login required to delete"}
                           >
-                            {!isAuthenticated && <Shield className="h-4 w-4 absolute -ml-1 -mt-1" />}
+                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-red-600" />}
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
