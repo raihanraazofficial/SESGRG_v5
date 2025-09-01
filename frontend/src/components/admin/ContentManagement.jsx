@@ -105,48 +105,36 @@ const ContentManagement = () => {
     },
     {
       id: 'calendar',
-      label: 'Calendar Widget',
+      label: 'Calendar',
       icon: Calendar,
-      count: null, // No count for settings
-      isSettings: true
+      count: null // Calendar doesn't have count
     }
   ];
 
-  // Handle CRUD operations
-  const handleAdd = (contentType) => {
-    setEditingCategory(contentType);
+  // Handle operations
+  const handleAdd = (category) => {
+    setEditingCategory(category);
     setIsAddModalOpen(true);
   };
 
-  const handleEdit = (item, contentType) => {
+  const handleEdit = (item, category) => {
     setEditingItem(item);
-    setEditingCategory(contentType);
+    setEditingCategory(category);
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = (item, contentType) => {
+  const handleDelete = (item, category) => {
     setDeletingItem(item);
-    setEditingCategory(contentType);
+    setEditingCategory(category);
     setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (!deletingItem || !editingCategory) return;
-    
-    setIsDeleting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsDeleting(true);
       
-      // Call appropriate delete function based on content type
       if (editingCategory === 'people') {
-        // Determine person category
-        let category = 'advisors';
-        if (peopleData.teamMembers?.some(p => p.id === deletingItem.id)) {
-          category = 'teamMembers';
-        } else if (peopleData.collaborators?.some(p => p.id === deletingItem.id)) {
-          category = 'collaborators';
-        }
-        deletePerson(category, deletingItem.id);
+        await deletePerson(deletingItem.id, deletingItem.category);
       } else if (editingCategory === 'publications') {
         await deletePublication(deletingItem.id);
       } else if (editingCategory === 'projects') {
@@ -250,16 +238,19 @@ const ContentManagement = () => {
 
     if (filteredData.length === 0) {
       return (
-        <div className="text-center py-16">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText className="h-8 w-8 text-gray-400" />
+        <div className="text-center py-8 lg:py-16">
+          <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4">
+            <FileText className="h-6 w-6 lg:h-8 lg:w-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No items found</h3>
-          <p className="text-gray-600 mb-6">
+          <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-2">No items found</h3>
+          <p className="text-sm lg:text-base text-gray-600 mb-4 lg:mb-6 px-4">
             {searchTerm ? 'No items match your search criteria.' : 'Get started by adding your first item.'}
           </p>
-          <Button onClick={() => handleAdd(activeTab)} className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button 
+            onClick={() => handleAdd(activeTab)} 
+            className="bg-emerald-600 hover:bg-emerald-700 text-sm lg:text-base px-4 lg:px-6 py-2 lg:py-3"
+          >
+            <Plus className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
             Add {contentTabs.find(t => t.id === activeTab)?.label.slice(0, -1)}
           </Button>
         </div>
@@ -267,84 +258,90 @@ const ContentManagement = () => {
     }
 
     return (
-      <div className="admin-content-grid grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+      <div className="admin-content-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 xl:gap-6">
         {filteredData.map((item, index) => (
-          <Card key={item.id || index} className="admin-card hover:shadow-lg transition-shadow">
-            <CardContent className="admin-card-content p-4 lg:p-6">
-              <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-4 gap-3 lg:gap-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 text-sm lg:text-base">
+          <Card key={item.id || index} className="admin-card hover:shadow-lg transition-all duration-200 border border-gray-200">
+            <CardContent className="admin-card-content p-3 lg:p-4 xl:p-6">
+              <div className="flex flex-col space-y-3 lg:space-y-4">
+                <div className="flex-1 min-h-0">
+                  <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 text-sm lg:text-base xl:text-lg leading-tight">
                     {item.name || item.title}
                   </h3>
-                  {item.category && (
-                    <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
-                      {item.category}
-                    </span>
-                  )}
-                  {item.status && (
-                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${
-                      item.status === 'Active' ? 'bg-green-100 text-green-700' :
-                      item.status === 'Completed' ? 'bg-blue-100 text-blue-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {item.status}
-                    </span>
-                  )}
+                  
+                  <div className="flex flex-wrap gap-1 lg:gap-2 mb-2 lg:mb-3">
+                    {item.category && (
+                      <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 text-xs lg:text-sm font-medium rounded-full">
+                        {item.category}
+                      </span>
+                    )}
+                    {item.status && (
+                      <span className={`inline-block px-2 py-1 text-xs lg:text-sm font-medium rounded-full ${
+                        item.status === 'Active' ? 'bg-green-100 text-green-700' :
+                        item.status === 'Completed' ? 'bg-blue-100 text-blue-700' :
+                        'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {item.status}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Display relevant info based on content type */}
+                  <div className="text-xs lg:text-sm text-gray-600 space-y-1">
+                    {activeTab === 'people' && (
+                      <>
+                        <p className="line-clamp-1">{item.designation}</p>
+                        <p className="text-emerald-600 line-clamp-1">{item.affiliation}</p>
+                      </>
+                    )}
+                    {activeTab === 'publications' && (
+                      <>
+                        <p className="line-clamp-1">{Array.isArray(item.authors) ? item.authors.join(', ') : item.authors}</p>
+                        <p>{item.year} • {item.category}</p>
+                      </>
+                    )}
+                    {activeTab === 'projects' && (
+                      <>
+                        <p className="line-clamp-1">{item.principal_investigator}</p>
+                        <p>{item.status}</p>
+                      </>
+                    )}
+                    {activeTab === 'achievements' && (
+                      <>
+                        <p className="line-clamp-2">{item.short_description}</p>
+                        <p>{new Date(item.date).toLocaleDateString()}</p>
+                      </>
+                    )}
+                    {activeTab === 'news-events' && (
+                      <>
+                        <p className="line-clamp-2">{item.short_description}</p>
+                        <p>{new Date(item.date).toLocaleDateString()}</p>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="admin-card-actions flex flex-row lg:flex-row space-x-2 lg:ml-4">
+                
+                <div className="admin-card-actions flex flex-row gap-2 pt-2 border-t border-gray-100">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleEdit(item, activeTab)}
-                    className="flex-1 lg:flex-none"
+                    className="flex-1 text-xs lg:text-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200"
                   >
-                    <Edit3 className="h-3 w-3 lg:h-4 lg:w-4" />
-                    <span className="ml-1 lg:hidden">Edit</span>
+                    <Edit3 className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
+                    <span className="hidden sm:inline">Edit</span>
+                    <span className="sm:hidden">Edit</span>
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleDelete(item, activeTab)}
-                    className="text-red-600 hover:text-red-700 flex-1 lg:flex-none"
+                    className="flex-1 text-xs lg:text-sm text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-200"
                   >
-                    <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
-                    <span className="ml-1 lg:hidden">Delete</span>
+                    <Trash2 className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
+                    <span className="hidden sm:inline">Delete</span>
+                    <span className="sm:hidden">Delete</span>
                   </Button>
                 </div>
-              </div>
-              
-              {/* Display relevant info based on content type */}
-              <div className="text-xs lg:text-sm text-gray-600">
-                {activeTab === 'people' && (
-                  <>
-                    <p className="mb-1">{item.designation}</p>
-                    <p className="text-emerald-600">{item.affiliation}</p>
-                  </>
-                )}
-                {activeTab === 'publications' && (
-                  <>
-                    <p className="mb-1 line-clamp-1">{Array.isArray(item.authors) ? item.authors.join(', ') : item.authors}</p>
-                    <p>{item.year} • {item.category}</p>
-                  </>
-                )}
-                {activeTab === 'projects' && (
-                  <>
-                    <p className="mb-1">{item.principal_investigator}</p>
-                    <p>{item.status}</p>
-                  </>
-                )}
-                {activeTab === 'achievements' && (
-                  <>
-                    <p className="mb-1 line-clamp-2">{item.short_description}</p>
-                    <p>{new Date(item.date).toLocaleDateString()}</p>
-                  </>
-                )}
-                {activeTab === 'news-events' && (
-                  <>
-                    <p className="mb-1 line-clamp-2">{item.short_description}</p>
-                    <p>{new Date(item.date).toLocaleDateString()}</p>
-                  </>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -354,141 +351,132 @@ const ContentManagement = () => {
   };
 
   return (
-    <div className="admin-content-management space-y-6">
-      <div className="admin-header flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Content Management</h1>
-          <p className="text-gray-600 mt-1 lg:mt-2 text-sm lg:text-base">Manage all website content from one place</p>
+    <div className="admin-content-management min-h-screen bg-gray-50 p-3 lg:p-6">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header */}
+        <div className="admin-header flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 lg:mb-6 gap-3 lg:gap-4">
+          <div>
+            <h1 className="text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">Content Management</h1>
+            <p className="text-sm lg:text-base text-gray-600 mt-1">Manage all your website content from one place</p>
+          </div>
+          {activeTab !== 'calendar' && (
+            <Button
+              onClick={() => handleAdd(activeTab)}
+              className="admin-add-button bg-emerald-600 hover:bg-emerald-700 text-sm lg:text-base px-3 lg:px-4 py-2 lg:py-3 w-full sm:w-auto"
+            >
+              <Plus className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+              Add {contentTabs.find(t => t.id === activeTab)?.label.slice(0, -1)}
+            </Button>
+          )}
         </div>
-        <Button 
-          onClick={() => handleAdd(activeTab)}
-          className="admin-add-button bg-emerald-600 hover:bg-emerald-700 w-full lg:w-auto"
-          disabled={activeTab === 'calendar'}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add New
-        </Button>
-      </div>
 
-      {/* Content Type Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="admin-tabs-container -mb-px">
-          {contentTabs.map((tab) => {
+        {/* Tabs */}
+        <div className="admin-tabs-container admin-content-tabs mb-4 lg:mb-6">
+          {contentTabs.map(tab => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`admin-tab-button py-2 px-3 lg:px-4 border-b-2 font-medium text-xs lg:text-sm whitespace-nowrap flex items-center space-x-2 transition-colors ${
+                className={`admin-tab-button flex items-center space-x-1 lg:space-x-2 px-3 lg:px-4 py-2 lg:py-3 rounded-lg font-medium transition-all duration-200 text-xs lg:text-sm xl:text-base ${
                   activeTab === tab.id
-                    ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-gray-200'
                 }`}
               >
                 <Icon className="h-3 w-3 lg:h-4 lg:w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                <span>{tab.label}</span>
                 {tab.count !== null && (
-                  <span className="bg-gray-100 text-gray-600 py-0.5 px-1.5 lg:px-2 rounded-full text-xs">
+                  <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${
+                    activeTab === tab.id
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-gray-200 text-gray-600'
+                  }`}>
                     {tab.count}
-                  </span>
-                )}
-                {tab.isSettings && (
-                  <span className="bg-blue-100 text-blue-600 py-0.5 px-1.5 lg:px-2 rounded-full text-xs">
-                    Settings
                   </span>
                 )}
               </button>
             );
           })}
-        </nav>
-      </div>
-
-      {/* Search and Filter */}
-      {activeTab !== 'calendar' && (
-        <div className="admin-search-filters flex flex-col lg:flex-row gap-3 lg:gap-4">
-          <div className="admin-search-input flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search content..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-          </div>
-          <div className="admin-filter-select flex items-center space-x-2 lg:min-w-[200px]">
-            <Filter className="h-4 w-4 text-gray-400 flex-shrink-0" />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 lg:py-3 text-sm lg:text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            >
-              <option value="all">All Categories</option>
-              {activeTab === 'people' && (
-                <>
-                  <option value="advisor">Advisors</option>
-                  <option value="team member">Team Members</option>
-                  <option value="collaborator">Collaborators</option>
-                </>
-              )}
-              {activeTab === 'publications' && (
-                <>
-                  <option value="journal articles">Journal Articles</option>
-                  <option value="conference proceedings">Conference Papers</option>
-                  <option value="book chapters">Book Chapters</option>
-                </>
-              )}
-              {activeTab === 'projects' && (
-                <>
-                  <option value="active">Active</option>
-                  <option value="completed">Completed</option>
-                  <option value="planning">Planning</option>
-                </>
-              )}
-              {activeTab === 'achievements' && (
-                <>
-                  <option value="award">Awards</option>
-                  <option value="grant">Grants</option>
-                  <option value="recognition">Recognition</option>
-                </>
-              )}
-              {activeTab === 'news-events' && (
-                <>
-                  <option value="news">News</option>
-                  <option value="events">Events</option>
-                  <option value="announcements">Announcements</option>
-                </>
-              )}
-            </select>
-          </div>
         </div>
-      )}
 
-      {/* Content Display */}
-      {renderContent()}
+        {/* Search and Filters */}
+        {activeTab !== 'calendar' && (
+          <div className="admin-search-filters flex flex-col sm:flex-row gap-3 lg:gap-4 mb-4 lg:mb-6 p-3 lg:p-4 bg-white rounded-lg border border-gray-200">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder={`Search ${contentTabs.find(t => t.id === activeTab)?.label.toLowerCase()}...`}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="admin-search-input w-full pl-10 pr-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+            </div>
+            <div className="sm:w-48 lg:w-56">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="admin-filter-select w-full px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white"
+              >
+                <option value="all">All Categories</option>
+                {activeTab === 'people' && (
+                  <>
+                    <option value="advisor">Advisors</option>
+                    <option value="team member">Team Members</option>
+                    <option value="collaborator">Collaborators</option>
+                  </>
+                )}
+                {activeTab === 'publications' && (
+                  <>
+                    <option value="journal article">Journal Articles</option>
+                    <option value="conference paper">Conference Papers</option>
+                    <option value="book chapter">Book Chapters</option>
+                  </>
+                )}
+                {activeTab === 'projects' && (
+                  <>
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
+                    <option value="planning">Planning</option>
+                  </>
+                )}
+                {activeTab === 'achievements' && achievementCategories.map(category => (
+                  <option key={category} value={category.toLowerCase()}>{category}</option>
+                ))}
+                {activeTab === 'news-events' && newsEventCategories.map(category => (
+                  <option key={category} value={category.toLowerCase()}>{category}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6">
+          {renderContent()}
+        </div>
+
+      </div>
 
       {/* Modals - People */}
       {activeTab === 'people' && (
         <>
+          <AddPersonModal
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+          />
+          
           <EditPersonModal
-            person={editingItem}
-            category={editingCategory}
             isOpen={isEditModalOpen}
             onClose={() => {
               setIsEditModalOpen(false);
               setEditingItem(null);
-              setEditingCategory(null);
             }}
-          />
-          
-          <AddPersonModal
-            isOpen={isAddModalOpen}
-            onClose={() => {
-              setIsAddModalOpen(false);
-              setEditingCategory(null);
-            }}
-            category={editingCategory}
+            person={editingItem}
           />
           
           <DeleteConfirmModal
@@ -496,11 +484,10 @@ const ContentManagement = () => {
             onClose={() => {
               setIsDeleteModalOpen(false);
               setDeletingItem(null);
-              setEditingCategory(null);
             }}
             onConfirm={handleConfirmDelete}
             person={deletingItem}
-            isLoading={isDeleting}
+            isDeleting={isDeleting}
           />
         </>
       )}
@@ -515,7 +502,7 @@ const ContentManagement = () => {
               setEditingCategory(null);
             }}
             onAdd={handleAddItem}
-            researchAreas={pubResearchAreas}
+            researchAreas={pubResearchAreas || []}
           />
           
           <EditPublicationModal
@@ -527,7 +514,7 @@ const ContentManagement = () => {
             }}
             onUpdate={handleEditItem}
             publication={editingItem}
-            researchAreas={pubResearchAreas}
+            researchAreas={pubResearchAreas || []}
           />
           
           <DeletePublicationModal
@@ -537,8 +524,9 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onDelete={() => handleConfirmDelete()}
+            onConfirm={handleConfirmDelete}
             publication={deletingItem}
+            isDeleting={isDeleting}
           />
         </>
       )}
@@ -577,8 +565,9 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onDelete={() => handleConfirmDelete()}
+            onConfirm={handleConfirmDelete}
             project={deletingItem}
+            isDeleting={isDeleting}
           />
         </>
       )}
@@ -615,8 +604,9 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onDelete={() => handleConfirmDelete()}
+            onConfirm={handleConfirmDelete}
             achievement={deletingItem}
+            isDeleting={isDeleting}
           />
         </>
       )}
@@ -653,11 +643,13 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onConfirm={() => handleConfirmDelete()}
+            onConfirm={handleConfirmDelete}
             newsEvent={deletingItem}
+            isDeleting={isDeleting}
           />
         </>
       )}
+
     </div>
   );
 };
