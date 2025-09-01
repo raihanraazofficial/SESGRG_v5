@@ -299,20 +299,6 @@ const People = () => {
           </div>
         </div>
 
-        {/* Add New Member Button - Only for authenticated users */}
-        {isAuthenticated && (
-          <div className="flex justify-center mb-8">
-            <Button
-              onClick={handleAddPerson}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300"
-              title="Add New Member"
-            >
-              <UserPlus className="h-5 w-5" />
-              <span>Add New {getSectionTitle(activeSection).slice(0, -1)}</span>
-            </Button>
-          </div>
-        )}
-
         {/* Login Button for non-authenticated users */}
         {!isAuthenticated && (
           <div className="flex justify-center mb-8">
@@ -320,7 +306,9 @@ const People = () => {
               to="/admin/login"
               className="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg border border-gray-300 hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
             >
-              <Shield className="h-5 w-5 mr-2" />
+              <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
               <span>Login to Manage Content</span>
             </Link>
           </div>
