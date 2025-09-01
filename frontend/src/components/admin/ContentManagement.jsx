@@ -267,13 +267,13 @@ const ContentManagement = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="admin-content-grid grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {filteredData.map((item, index) => (
-          <Card key={item.id || index} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
+          <Card key={item.id || index} className="admin-card hover:shadow-lg transition-shadow">
+            <CardContent className="admin-card-content p-4 lg:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-4 gap-3 lg:gap-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2">
+                  <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 text-sm lg:text-base">
                     {item.name || item.title}
                   </h3>
                   {item.category && (
@@ -291,27 +291,30 @@ const ContentManagement = () => {
                     </span>
                   )}
                 </div>
-                <div className="flex space-x-2 ml-4">
+                <div className="admin-card-actions flex flex-row lg:flex-row space-x-2 lg:ml-4">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleEdit(item, activeTab)}
+                    className="flex-1 lg:flex-none"
                   >
-                    <Edit3 className="h-4 w-4" />
+                    <Edit3 className="h-3 w-3 lg:h-4 lg:w-4" />
+                    <span className="ml-1 lg:hidden">Edit</span>
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleDelete(item, activeTab)}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-red-600 hover:text-red-700 flex-1 lg:flex-none"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3 w-3 lg:h-4 lg:w-4" />
+                    <span className="ml-1 lg:hidden">Delete</span>
                   </Button>
                 </div>
               </div>
               
               {/* Display relevant info based on content type */}
-              <div className="text-sm text-gray-600">
+              <div className="text-xs lg:text-sm text-gray-600">
                 {activeTab === 'people' && (
                   <>
                     <p className="mb-1">{item.designation}</p>
