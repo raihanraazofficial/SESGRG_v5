@@ -45,6 +45,7 @@ const AdminPanel = () => {
   const { getInquiryStats } = useContact();
 
   // Calculate statistics
+  const inquiryStats = getInquiryStats();
   const stats = {
     totalPeople: (peopleData?.advisors?.length || 0) + 
                  (peopleData?.teamMembers?.length || 0) + 
@@ -53,6 +54,8 @@ const AdminPanel = () => {
     totalProjects: projectsData?.length || 0,
     totalAchievements: achievementsData?.length || 0,
     totalNewsEvents: newsEventsData?.length || 0,
+    totalInquiries: inquiryStats?.total || 0,
+    newInquiries: inquiryStats?.new || 0,
     activeProjects: projectsData?.filter(p => p.status === 'Active')?.length || 0,
     completedProjects: projectsData?.filter(p => p.status === 'Completed')?.length || 0
   };
