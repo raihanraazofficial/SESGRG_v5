@@ -902,6 +902,36 @@ const NewsEvents = () => {
                   
                   <CardContent className="md:w-1/2 p-8 md:p-12">
                     <div className="space-y-6">
+                      {/* Edit/Delete Controls for Featured Item */}
+                      {isAuthenticated && (
+                        <div className="flex justify-end space-x-2 -mt-4 -mr-4">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditNewsEvent(newsEvents[0])}
+                            className="bg-white/90 hover:bg-white text-emerald-600 border-emerald-200"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteNewsEvent(newsEvents[0])}
+                            className="bg-white/90 hover:bg-red-50 text-red-600 border-red-200 hover:border-red-300"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                      {!isAuthenticated && (
+                        <div className="flex justify-end space-x-2 -mt-4 -mr-4">
+                          <div className="flex items-center text-gray-400 text-sm">
+                            <Shield className="h-4 w-4 mr-1" />
+                            <span>Authentication required</span>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Date and Location */}
                       <div className="space-y-2">
                         <div className="flex items-center text-blue-600">
