@@ -85,7 +85,7 @@ const AdminLogin = () => {
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">SESG Admin Panel</h1>
             <p className="text-emerald-100 text-sm">
-              Sustainable Energy & Smart Grid Research Lab
+              Sustainable Energy & Smart Grid Research
             </p>
           </div>
 
@@ -198,7 +198,7 @@ const AdminLogin = () => {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-white/60 text-sm">
-            © 2025 SESG Research Lab, BRAC University
+            © 2025 SESG Research, BRAC University
           </p>
         </div>
       </div>

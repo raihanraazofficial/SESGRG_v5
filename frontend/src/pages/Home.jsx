@@ -458,7 +458,7 @@ const Home = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">About Us</h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
-              The Sustainable Energy and Smart Grid Research lab at BRAC University is dedicated to advancing 
+              The Sustainable Energy and Smart Grid Research at BRAC University is dedicated to advancing 
               cutting-edge research in renewable energy systems, smart grid technologies, and sustainable power 
               infrastructure. Our interdisciplinary team works to address the global energy challenges through 
               innovative solutions and collaborative research.

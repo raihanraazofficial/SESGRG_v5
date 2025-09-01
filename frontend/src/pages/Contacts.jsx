@@ -41,7 +41,7 @@ const Contacts = () => {
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
                       <p className="text-gray-600">
-                        Sustainable Energy and Smart Grid Research Lab<br />
+                        Sustainable Energy and Smart Grid Research<br />
                         Department of Electrical and Electronic Engineering<br />
                         BRAC University<br />
                         66 Mohakhali, Dhaka 1212, Bangladesh
