@@ -219,6 +219,24 @@ const ContentManagement = () => {
     }
   };
 
+  // Get proper add button text
+  const getAddButtonText = () => {
+    switch (activeTab) {
+      case 'people':
+        return 'Add Person';
+      case 'publications':
+        return 'Add Publication';
+      case 'projects':
+        return 'Add Project';
+      case 'achievements':
+        return 'Add Achievement';
+      case 'news-events':
+        return 'Add News/Event';
+      default:
+        return 'Add Item';
+    }
+  };
+
   // Filter data based on search and category
   const filteredData = getTabData().filter(item => {
     const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
