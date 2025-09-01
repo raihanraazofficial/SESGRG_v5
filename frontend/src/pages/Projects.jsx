@@ -369,10 +369,10 @@ const Projects = () => {
                       handleFilterChange('sort_order', sort_order);
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="dropdown-container">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-64 overflow-y-auto">
+                    <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                       <SelectItem value="start_date-desc">Start Date (Newest)</SelectItem>
                       <SelectItem value="start_date-asc">Start Date (Oldest)</SelectItem>
                       <SelectItem value="title-asc">Title (A-Z)</SelectItem>
