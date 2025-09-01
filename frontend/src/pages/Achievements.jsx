@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import SkeletonCard from "../components/SkeletonCard";
 import LaTeXRenderer, { parseLatexContent } from "../components/LaTeXRenderer";
 import googleSheetsService from "../services/googleSheetsApi";
+import "../styles/smooth-filters.css";
 
 const Achievements = () => {
   const [achievements, setAchievements] = useState([]);
