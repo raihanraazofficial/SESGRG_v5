@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Plus, Loader2, FileText, BookOpen, Users } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import FullScreenModal from '../ui/FullScreenModal';
 
 const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
   const [formData, setFormData] = useState({
