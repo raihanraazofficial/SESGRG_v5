@@ -404,6 +404,7 @@ const ResearchAreas = () => {
       lastUpdated = 'Failed to load real-time data - showing 0 counts';
     }
     
+    // Generate the actual content after data is loaded
     const detailHtml = `
       <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <!-- Enhanced Banner Section with Professional Blackish Overlay -->
