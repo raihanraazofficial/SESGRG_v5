@@ -9,7 +9,8 @@ import {
   Edit3,
   Trash2,
   Search,
-  Filter
+  Filter,
+  Phone
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -19,6 +20,7 @@ import { usePublications } from '../../contexts/PublicationsContext';
 import { useProjects } from '../../contexts/ProjectsContext';
 import { useAchievements } from '../../contexts/AchievementsContext';
 import { useNewsEvents } from '../../contexts/NewsEventsContext';
+import { useContact } from '../../contexts/ContactContext';
 
 // Import People modals
 import EditPersonModal from '../EditPersonModal';
