@@ -976,6 +976,8 @@ const ContactManagement = () => {
       {activeSubTab === 'emailjs' && renderEmailjsTab()}
       {activeSubTab === 'inquiries' && renderInquiriesTab()}
       {activeSubTab === 'types' && renderInquiryTypesTab()}
+      {activeSubTab === 'cards' && renderCardsTab()}
+      {activeSubTab === 'directions' && renderDirectionsTab()}
       {activeSubTab === 'map' && renderMapTab()}
 
       {/* Inquiry Detail Modal */}
