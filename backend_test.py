@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Publications Architecture Overhaul - Backend Infrastructure Testing Suite
-Tests the Google Sheets API infrastructure supporting the new localStorage-based Publications system:
-1. Publications Google Sheets API Integration: Verify data migration source
-2. Data Structure Validation: Ensure APIs support Publications Context integration
-3. Performance Testing: Check API response times for initial data migration
-4. Error Handling: Verify robust data fetching for localStorage migration
-5. Publications Context Integration: Test data structure compatibility
+Publications localStorage System - Backend Infrastructure Testing Suite
+Tests the Google Sheets API infrastructure supporting the localStorage-based Publications system:
+1. Publications Data Migration Source: Verify Google Sheets API for initial data migration
+2. Authentication System Verification: Test credentials and access control
+3. Frontend Service Status: Verify frontend is running and accessible
+4. Data Structure Validation: Ensure APIs support Publications Context integration
+5. Real-time Synchronization Support: Test data consistency for localStorage operations
 
-NOTE: This tests the backend API infrastructure only. Frontend features like localStorage,
-PublicationsContext, CRUD operations, authentication, and real-time sync require frontend testing tools.
+FOCUS: Testing the backend infrastructure that supports the localStorage-based Publications system
+including authentication credentials, data migration source, and service availability.
 """
 
 import requests
