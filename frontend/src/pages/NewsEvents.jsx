@@ -740,10 +740,10 @@ const NewsEvents = () => {
                       handleFilterChange('sort_order', sort_order);
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="dropdown-container">
                       <SelectValue placeholder="Select Sort Option" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-64 overflow-y-auto">
+                    <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                       <SelectItem value="date-desc">Date (Newest First)</SelectItem>
                       <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
                       <SelectItem value="title-asc">Title (A-Z)</SelectItem>
