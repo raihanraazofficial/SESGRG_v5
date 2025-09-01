@@ -37,22 +37,22 @@ const AdminPanel = () => {
 
   // Context data for statistics
   const { peopleData } = usePeople();
-  const { publications } = usePublications();
-  const { projects } = useProjects();
-  const { achievements } = useAchievements();
-  const { newsEvents } = useNewsEvents();
+  const { publicationsData } = usePublications();
+  const { projectsData } = useProjects();
+  const { achievementsData } = useAchievements();
+  const { newsEventsData } = useNewsEvents();
 
   // Calculate statistics
   const stats = {
     totalPeople: (peopleData?.advisors?.length || 0) + 
                  (peopleData?.teamMembers?.length || 0) + 
                  (peopleData?.collaborators?.length || 0),
-    totalPublications: publications?.length || 0,
-    totalProjects: projects?.length || 0,
-    totalAchievements: achievements?.length || 0,
-    totalNewsEvents: newsEvents?.length || 0,
-    activeProjects: projects?.filter(p => p.status === 'Active')?.length || 0,
-    completedProjects: projects?.filter(p => p.status === 'Completed')?.length || 0
+    totalPublications: publicationsData?.length || 0,
+    totalProjects: projectsData?.length || 0,
+    totalAchievements: achievementsData?.length || 0,
+    totalNewsEvents: newsEventsData?.length || 0,
+    activeProjects: projectsData?.filter(p => p.status === 'Active')?.length || 0,
+    completedProjects: projectsData?.filter(p => p.status === 'Completed')?.length || 0
   };
 
   const handleLogout = () => {
