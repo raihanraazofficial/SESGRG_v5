@@ -463,7 +463,7 @@ Best regards,`;
 
             {/* Advanced Filters */}
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg dropdown-container" style={{overflow: 'visible'}}>
                 <Select
                   value={filters.year_filter || "all"}
                   onValueChange={(value) => handleFilterChange('year_filter', value)}
