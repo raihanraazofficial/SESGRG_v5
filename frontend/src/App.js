@@ -87,12 +87,13 @@ function App() {
                       </Routes>
                     </BrowserRouter>
                   </div>
-                </ContactProvider>
-              </NewsEventsProvider>
-            </AchievementsProvider>
-          </ProjectsProvider>
-        </PublicationsProvider>
-      </PeopleProvider>
+                </GalleryProvider>
+              </ContactProvider>
+            </NewsEventsProvider>
+          </AchievementsProvider>
+        </ProjectsProvider>
+      </PublicationsProvider>
+    </PeopleProvider>
     </AuthProvider>
   );
 }
