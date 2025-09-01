@@ -497,7 +497,7 @@ Best regards,`;
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by Research Area" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-64 overflow-y-auto">
                     <SelectItem value="all">All Areas</SelectItem>
                     {availableAreas.length > 0 ? availableAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
