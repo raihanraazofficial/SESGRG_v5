@@ -1185,6 +1185,44 @@ const NewsEvents = () => {
           </div>
         </div>
       </div>
+
+      {/* Authentication Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
+      {/* Add News Event Modal */}
+      <AddNewsEventModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={handleSubmitAdd}
+        categories={categories}
+      />
+
+      {/* Edit News Event Modal */}
+      <EditNewsEventModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedNewsEvent(null);
+        }}
+        onSubmit={handleSubmitEdit}
+        categories={categories}
+        newsEvent={selectedNewsEvent}
+      />
+
+      {/* Delete News Event Modal */}
+      <DeleteNewsEventModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedNewsEvent(null);
+        }}
+        onConfirm={handleSubmitDelete}
+        newsEvent={selectedNewsEvent}
+      />
     </div>
   );
 };
