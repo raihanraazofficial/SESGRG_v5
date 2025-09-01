@@ -19,11 +19,17 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 
 // Import context
+import { AuthProvider } from "./contexts/AuthContext";
 import { PeopleProvider } from "./contexts/PeopleContext";
 import { PublicationsProvider } from "./contexts/PublicationsContext";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 import { AchievementsProvider } from "./contexts/AchievementsContext";
 import { NewsEventsProvider } from "./contexts/NewsEventsContext";
+
+// Import admin components
+import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
