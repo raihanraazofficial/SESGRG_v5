@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw, ArrowLeft } from "lucide-react";
+import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
-import googleSheetsService from "../services/googleSheetsApi";
+import { useProjects } from "../contexts/ProjectsContext";
+import AuthModal from "../components/AuthModal";
+import AddProjectModal from "../components/projects/AddProjectModal";
+import EditProjectModal from "../components/projects/EditProjectModal";
+import DeleteProjectModal from "../components/projects/DeleteProjectModal";
 import "../styles/smooth-filters.css";
 
 const Projects = () => {
+  const { 
+    getPaginatedProjects, 
+    getFilterOptions, 
+    addProject, 
+    updateProject, 
+    deleteProject, 
+    getProjectById, 
+    researchAreas,
+    statuses,
+    formatDate
+  } = useProjects();
+
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
@@ -25,115 +41,63 @@ const Projects = () => {
     per_page: 20
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [availableAreas, setAvailableAreas] = useState([]);
-  const [allAreas, setAllAreas] = useState([]); // Store all areas independently for dropdown options
-  const [loadingSource, setLoadingSource] = useState('');
+  const [allAreas, setAllAreas] = useState([]);
 
-  const researchAreas = [
-    "Smart Grid Technologies",
-    "Microgrids & Distributed Energy Systems", 
-    "Renewable Energy Integration",
-    "Grid Optimization & Stability",
-    "Energy Storage Systems",
-    "Power System Automation",
-    "Cybersecurity and AI for Power Infrastructure"
-  ];
-
-  const statuses = ["Active", "Completed", "Planning"];
+  // Authentication and Modal states
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
-    // Add a small delay to prevent multiple rapid calls
-    const timeoutId = setTimeout(() => {
-      fetchProjects();
-    }, 100);
-    
-    return () => clearTimeout(timeoutId);
+    fetchProjects();
   }, [filters]);
 
-  const fetchProjects = async (retryCount = 0) => {
+  const fetchProjects = async () => {
     try {
       setLoading(true);
-      setLoadingSource('⚡ Loading...');
-      console.log('⚡ Fetching projects with filters:', filters);
       
-      const response = await googleSheetsService.getProjects(filters);
-      
+      const response = getPaginatedProjects(filters);
       const projectsData = response.projects || [];
-      console.log('✅ Projects API response:', {
-        projectsCount: projectsData.length,
-        statisticsReceived: !!response.statistics,
-        paginationReceived: !!response.pagination
-      });
       
-      // Only update state if we have valid response
-      if (response && (projectsData.length > 0 || response.statistics)) {
-        setProjects(projectsData);
-        setPagination(response.pagination || {});
-        setStatistics(response.statistics || {
-          total_projects: 0,
-          active_projects: 0,
-          completed_projects: 0,
-          planning_projects: 0
-        });
-        
-        // Extract unique research areas from all projects for independent dropdown options
-        if (projectsData.length > 0) {
-          const allAreas = projectsData.flatMap(project => project.research_areas || []);
-          const uniqueAreas = [...new Set(allAreas)].sort();
-          setAvailableAreas(uniqueAreas);
-          setAllAreas(uniqueAreas); // Store for independent filtering
-        }
-        
-        console.log('✅ Projects loaded successfully:', projectsData.length, 'items');
-      } else {
-        console.log('⚠️ Empty response received, keeping existing data');
-        // Keep existing data, just set default statistics if none exist
-        if (!statistics.total_projects) {
-          setStatistics({
-            total_projects: 0,
-            active_projects: 0,
-            completed_projects: 0,
-            planning_projects: 0
-          });
-        }
-      }
-    } catch (error) {
-      console.error('❌ Error fetching projects:', error);
-      
-      // Show user-friendly error message only on first attempt
-      if (retryCount === 0) {
-        console.log('🔄 Retrying projects fetch after error...');
-        // Retry once after a short delay
-        setTimeout(() => fetchProjects(1), 2000);
-        return;
-      }
-      
-      // On final failure, set empty defaults
-      console.error('❌ Final failure fetching projects');
-      setStatistics({
+      setProjects(projectsData);
+      setPagination(response.pagination || {});
+      setStatistics(response.statistics || {
         total_projects: 0,
         active_projects: 0,
         completed_projects: 0,
         planning_projects: 0
       });
       
-      // Don't show alert immediately - user can use refresh button
-      console.log('💡 User can use Refresh Data button to retry');
+      // Get filter options
+      const filterOptions = getFilterOptions();
+      setAvailableAreas(filterOptions.areas);
+      setAllAreas(filterOptions.areas);
+      
+      console.log('✅ Projects loaded successfully:', projectsData.length, 'items');
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setStatistics({
+        total_projects: 0,
+        active_projects: 0,
+        completed_projects: 0,
+        planning_projects: 0
+      });
     } finally {
       setLoading(false);
-      setLoadingSource('');
     }
   };
 
   const handleFilterChange = (key, value) => {
-    // Convert "all" to empty string for backend compatibility
     const processedValue = value === "all" ? "" : value;
     
     setFilters(prev => ({
       ...prev,
       [key]: processedValue,
-      page: 1 // Reset to first page when filtering
+      page: 1
     }));
   };
 
@@ -158,39 +122,6 @@ const Projects = () => {
       page: 1,
       per_page: 20
     });
-    // Reset available options
-    setAvailableAreas([]);
-  };
-
-  const handleRefreshData = async () => {
-    try {
-      setRefreshing(true);
-      console.log('Refreshing projects data...');
-      
-      // Force refresh data (bypass cache)
-      const response = await googleSheetsService.forceRefreshProjects(filters);
-      console.log('Projects refreshed:', response);
-      
-      const projectsData = response.projects || [];
-      setProjects(projectsData);
-      setPagination(response.pagination || {});
-      setStatistics(response.statistics || {});
-      
-      // Update available filters with all options (independent of current selection)
-      if (projectsData.length > 0) {
-        const allAreas = projectsData.flatMap(project => project.research_areas || []);
-        const uniqueAreas = [...new Set(allAreas)].sort();
-        setAvailableAreas(uniqueAreas);
-        setAllAreas(uniqueAreas);
-      }
-      
-      alert('Projects data refreshed successfully!');
-    } catch (error) {
-      console.error('Error refreshing projects:', error);
-      alert('Failed to refresh projects. Please try again.');
-    } finally {
-      setRefreshing(false);
-    }
   };
 
   const getStatusColor = (status) => {
@@ -206,8 +137,73 @@ const Projects = () => {
     }
   };
 
+  // Authentication handlers
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+  };
+
+  const handleAddProject = async (projectData) => {
+    try {
+      await addProject(projectData);
+      fetchProjects(); // Refresh the list
+      alert('Project added successfully!');
+    } catch (error) {
+      console.error('Error adding project:', error);
+      throw error;
+    }
+  };
+
+  const handleEditProject = async (id, projectData) => {
+    try {
+      await updateProject(id, projectData);
+      fetchProjects(); // Refresh the list
+      alert('Project updated successfully!');
+    } catch (error) {
+      console.error('Error updating project:', error);
+      throw error;
+    }
+  };
+
+  const handleDeleteProject = async (id) => {
+    try {
+      await deleteProject(id);
+      fetchProjects(); // Refresh the list
+      alert('Project deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      throw error;
+    }
+  };
+
+  const openAddModal = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setShowAddModal(true);
+  };
+
+  const openEditModal = (project) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedProject(project);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (project) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedProject(project);
+    setShowDeleteModal(true);
+  };
+
   return (
-    <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
+    <div className="min-h-screen pt-16 md:pt-20 bg-gray-50 performance-optimized">
       {/* Header - Gallery Style */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -217,25 +213,35 @@ const Projects = () => {
               Back to Home
             </Link>
           </div>
-          <div className="flex items-center justify-between mb-6">
-            <div>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
+            <div className="flex-1">
               <h1 className="text-4xl md:text-6xl font-bold mb-4">Research Projects</h1>
               <p className="text-xl text-gray-300 max-w-3xl">
                 Explore our ongoing and completed research projects in sustainable energy and smart grid technologies. 
                 Discover how we're advancing the field through collaborative research and innovation.
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefreshData}
-              disabled={refreshing}
-              className="ml-4 flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
-            </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+              {/* Add New Project Button */}
+              <Button
+                onClick={openAddModal}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 relative"
+                title={isAuthenticated ? "Add New Project" : "Login required to add projects"}
+              >
+                <Plus className="h-5 w-5" />
+                <span>Add New Project</span>
+                {!isAuthenticated && <Shield className="h-4 w-4 ml-1" />}
+              </Button>
+            </div>
           </div>
+          
+          {/* Authentication Status */}
+          {isAuthenticated && (
+            <div className="mt-6 inline-flex items-center space-x-2 bg-emerald-600/20 text-emerald-300 px-4 py-2 rounded-full border border-emerald-500/30">
+              <Shield className="h-4 w-4" />
+              <span className="text-sm font-medium">Admin Mode Active</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -314,14 +320,14 @@ const Projects = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search by title, status, or research area..."
+                  placeholder="Search by title, status, investigator, or research area..."
                   value={filters.search_filter}
                   onChange={(e) => handleFilterChange('search_filter', e.target.value)}
                   className="pl-10 text-lg py-3"
                 />
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                You can search by project title, status, or research area
+                You can search by project title, status, principal investigator, or research area
               </p>
             </div>
 
@@ -379,8 +385,6 @@ const Projects = () => {
                       <SelectItem value="title-desc">Title (Z-A)</SelectItem>
                       <SelectItem value="status-asc">Status (A-Z)</SelectItem>
                       <SelectItem value="status-desc">Status (Z-A)</SelectItem>
-                      <SelectItem value="area-asc">Research Area (A-Z)</SelectItem>
-                      <SelectItem value="area-desc">Research Area (Z-A)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -412,7 +416,7 @@ const Projects = () => {
             </div>
             
             {/* Projects Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {Array.from({ length: 6 }, (_, i) => (
                 <SkeletonCard key={i} variant="regular" />
               ))}
@@ -440,19 +444,61 @@ const Projects = () => {
                         {project.status}
                       </span>
                     </div>
+                    {/* Edit and Delete buttons on image */}
+                    <div className="absolute top-4 left-4 flex space-x-2">
+                      <button
+                        onClick={() => openEditModal(project)}
+                        className="relative p-2 bg-white/90 hover:bg-white text-gray-700 rounded-lg transition-colors shadow-sm"
+                        title={isAuthenticated ? "Edit Project" : "Login required to edit"}
+                      >
+                        {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-emerald-600" />}
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => openDeleteModal(project)}
+                        className="relative p-2 bg-white/90 hover:bg-white text-red-600 rounded-lg transition-colors shadow-sm"
+                        title={isAuthenticated ? "Delete Project" : "Login required to delete"}
+                      >
+                        {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-red-600" />}
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 )}
                 
                 <CardContent className="p-6">
                   <div className="space-y-4">
                     {/* Title and Description */}
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        {project.description}
-                      </p>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-600 leading-relaxed">
+                          {project.description}
+                        </p>
+                      </div>
+                      {/* Edit and Delete buttons for projects without images */}
+                      {!project.image && (
+                        <div className="flex space-x-2 ml-4">
+                          <button
+                            onClick={() => openEditModal(project)}
+                            className="relative p-2 text-gray-500 hover:text-emerald-600 transition-colors rounded-lg hover:bg-emerald-50"
+                            title={isAuthenticated ? "Edit Project" : "Login required to edit"}
+                          >
+                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-emerald-600" />}
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(project)}
+                            className="relative p-2 text-gray-500 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
+                            title={isAuthenticated ? "Delete Project" : "Login required to delete"}
+                          >
+                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-red-600" />}
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     {/* Project Details */}
@@ -460,13 +506,15 @@ const Projects = () => {
                       <div className="flex items-center text-gray-600">
                         <Calendar className="h-4 w-4 mr-2 text-emerald-600" />
                         <span>
-                          {googleSheetsService.formatDate(project.start_date)} - {googleSheetsService.formatDate(project.end_date)}
+                          {formatDate(project.start_date)} - {formatDate(project.end_date)}
                         </span>
                       </div>
-                      <div className="flex items-center text-gray-600">
-                        <DollarSign className="h-4 w-4 mr-2 text-emerald-600" />
-                        <span>{project.budget}</span>
-                      </div>
+                      {project.budget && (
+                        <div className="flex items-center text-gray-600">
+                          <DollarSign className="h-4 w-4 mr-2 text-emerald-600" />
+                          <span>{project.budget}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Principal Investigator */}
@@ -510,20 +558,37 @@ const Projects = () => {
                     </div>
 
                     {/* Funding Agency */}
-                    <div className="pt-4 border-t border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Funded by:</p>
-                          <p className="text-sm text-gray-600">{project.funding_agency}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center text-gray-600">
-                            <Users className="h-4 w-4 mr-1" />
-                            <span className="text-sm">{(project.team_members?.length || 0) + 1} members</span>
+                    {project.funding_agency && (
+                      <div className="pt-4 border-t border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">Funded by:</p>
+                            <p className="text-sm text-gray-600">{project.funding_agency}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="flex items-center text-gray-600">
+                              <Users className="h-4 w-4 mr-1" />
+                              <span className="text-sm">{(project.team_members?.length || 0) + 1} members</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Project Website Link */}
+                    {project.website && (
+                      <div className="pt-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => window.open(project.website, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Visit Project Website
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -535,101 +600,148 @@ const Projects = () => {
         {!loading && projects.length === 0 && (
           <div className="text-center py-20">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No projects found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
-            <Button onClick={clearFilters}>Clear All Filters</Button>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters, or add new projects.</p>
+            <div className="space-x-4">
+              <Button onClick={clearFilters}>Clear All Filters</Button>
+              <Button onClick={openAddModal} className="bg-emerald-600 hover:bg-emerald-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Project
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Pagination */}
         {!loading && pagination.total_pages > 1 && (
-          <div className="flex items-center justify-between mt-12 p-6 bg-white rounded-lg shadow">
-            <div className="text-sm text-gray-600">
+          <div className="mt-12 p-4 md:p-6 bg-white rounded-lg shadow">
+            <div className="text-sm text-gray-600 text-center mb-4">
               Showing {((pagination.current_page - 1) * pagination.per_page) + 1} to{' '}
               {Math.min(pagination.current_page * pagination.per_page, pagination.total_items)} of{' '}
               {pagination.total_items} projects
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => goToPage(pagination.current_page - 1)}
-                disabled={!pagination.has_prev}
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Previous
-              </Button>
-              
-              {/* Page Numbers */}
-              <div className="flex space-x-1">
-                {Array.from({ length: Math.min(5, pagination.total_pages) }, (_, i) => {
-                  let pageNum;
-                  if (pagination.total_pages <= 5) {
-                    pageNum = i + 1;
-                  } else if (pagination.current_page <= 3) {
-                    pageNum = i + 1;
-                  } else if (pagination.current_page >= pagination.total_pages - 2) {
-                    pageNum = pagination.total_pages - 4 + i;
-                  } else {
-                    pageNum = pagination.current_page - 2 + i;
-                  }
-                  
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={pageNum === pagination.current_page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => goToPage(pageNum)}
-                      className="w-10"
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(pagination.current_page - 1)}
+                  disabled={!pagination.has_prev}
+                  className="text-xs md:text-sm"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </Button>
+                
+                <div className="flex space-x-1">
+                  {Array.from({ length: Math.min(3, pagination.total_pages) }, (_, i) => {
+                    let pageNum;
+                    if (pagination.total_pages <= 3) {
+                      pageNum = i + 1;
+                    } else if (pagination.current_page <= 2) {
+                      pageNum = i + 1;
+                    } else if (pagination.current_page >= pagination.total_pages - 1) {
+                      pageNum = pagination.total_pages - 2 + i;
+                    } else {
+                      pageNum = pagination.current_page - 1 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={pageNum === pagination.current_page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => goToPage(pageNum)}
+                        className="w-8 md:w-10 text-xs md:text-sm"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => goToPage(pagination.current_page + 1)}
+                  disabled={!pagination.has_next}
+                  className="text-xs md:text-sm"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
               </div>
               
-              <Button
-                variant="outline"
-                onClick={() => goToPage(pagination.current_page + 1)}
-                disabled={!pagination.has_next}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            {/* Go to Page */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Go to page:</span>
-              <Input
-                type="number"
-                min="1"
-                max={pagination.total_pages}
-                className="w-20"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    const page = parseInt(e.target.value);
-                    if (page && page >= 1 && page <= pagination.total_pages) {
-                      goToPage(page);
-                      e.target.value = '';
+              <div className="flex items-center space-x-2">
+                <span className="text-xs md:text-sm text-gray-600">Go to page:</span>
+                <Input
+                  type="number"
+                  min="1"
+                  max={pagination.total_pages}
+                  className="w-16 md:w-20 text-xs md:text-sm"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      const page = parseInt(e.target.value);
+                      if (page && page >= 1 && page <= pagination.total_pages) {
+                        goToPage(page);
+                        e.target.value = '';
+                      }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}
+
+        {/* Back to Top */}
+        <div className="text-center pt-8 pb-16">
+          <Button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            size="lg" 
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
+          >
+            Back to Top
+          </Button>
+        </div>
       </div>
 
-      {/* Back to Top - Performance Optimized */}
-      <div className="text-center pb-16">
-        <Button 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          size="lg" 
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 performance-optimized"
-        >
-          Back to Top
-        </Button>
-      </div>
+      {/* Modals */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
+      <AddProjectModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddProject}
+        researchAreas={researchAreas}
+        statuses={statuses}
+      />
+
+      <EditProjectModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedProject(null);
+        }}
+        onUpdate={handleEditProject}
+        project={selectedProject}
+        researchAreas={researchAreas}
+        statuses={statuses}
+      />
+
+      <DeleteProjectModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedProject(null);
+        }}
+        onDelete={handleDeleteProject}
+        project={selectedProject}
+      />
     </div>
   );
 };
