@@ -16,11 +16,10 @@ const Achievements = () => {
     achievementsData,
     loading,
     categories,
-    addAchievement,
-    updateAchievement,
-    deleteAchievement,
     getPaginatedAchievements
   } = useAchievements();
+
+  const { isAuthenticated } = useAuth();
 
   const [achievements, setAchievements] = useState([]);
   const [pagination, setPagination] = useState({});
