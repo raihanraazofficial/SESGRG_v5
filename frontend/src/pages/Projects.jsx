@@ -76,11 +76,12 @@ const Projects = () => {
           planning_projects: 0
         });
         
-        // Extract unique research areas from all projects
+        // Extract unique research areas from all projects for independent dropdown options
         if (projectsData.length > 0) {
           const allAreas = projectsData.flatMap(project => project.research_areas || []);
           const uniqueAreas = [...new Set(allAreas)].sort();
           setAvailableAreas(uniqueAreas);
+          setAllAreas(uniqueAreas); // Store for independent filtering
         }
         
         console.log('✅ Projects loaded successfully:', projectsData.length, 'items');
