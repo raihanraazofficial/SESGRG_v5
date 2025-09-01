@@ -50,45 +50,32 @@ const NewsEvents = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedNewsEvent, setSelectedNewsEvent] = useState(null);
 
+  // Load news events whenever newsEventsData or filters change
   useEffect(() => {
-    fetchNewsEvents();
-  }, [filters]);
+    if (newsEventsData.length > 0 || !loading) {
+      const result = getPaginatedNewsEvents(filters);
+      setNewsEvents(result.news_events || []);
+      setPagination(result.pagination || {});
+    }
+  }, [newsEventsData, filters, getPaginatedNewsEvents, loading]);
 
   const fetchNewsEvents = async (forceRefresh = false) => {
     try {
       if (forceRefresh) {
         setRefreshing(true);
-        // Clear cache first
-        try {
-          await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/clear-cache`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-          });
-        } catch (cacheError) {
-          console.warn('Cache clear failed:', cacheError);
-        }
-      } else {
-        setLoading(true);
       }
       
-      // Convert 'all' to empty string for API
-      const apiFilters = {
-        ...filters,
-        category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
-      };
-      console.log('⚡ Fetching news events with filters:', apiFilters);
-      const response = await googleSheetsService.getNewsEvents(apiFilters);
-      setNewsEvents(response.news_events || []);
-      setPagination(response.pagination || {});
-      console.log('✅ News events loaded:', response.news_events?.length || 0, 'items');
+      // For localStorage system, we just re-apply filters
+      const result = getPaginatedNewsEvents(filters);
+      setNewsEvents(result.news_events || []);
+      setPagination(result.pagination || {});
+      console.log('✅ News events loaded:', result.news_events?.length || 0, 'items');
     } catch (error) {
-      console.error('❌ Error fetching news events:', error);
-      alert('Failed to load news & events. Please check your internet connection and try again.');
-      // Fallback to empty state on error
+      console.error('❌ Error loading news events:', error);
+      alert('Failed to load news & events. Please try again.');
       setNewsEvents([]);
       setPagination({});
     } finally {
-      setLoading(false);
       setRefreshing(false);
     }
   };
