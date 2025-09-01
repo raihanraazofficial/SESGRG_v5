@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import { usePublications } from "../contexts/PublicationsContext";
-import AuthModal from "../components/people/AuthModal";
+import AuthModal from "../components/AuthModal";
 import AddPublicationModal from "../components/publications/AddPublicationModal";
 import EditPublicationModal from "../components/publications/EditPublicationModal";
 import DeletePublicationModal from "../components/publications/DeletePublicationModal";
