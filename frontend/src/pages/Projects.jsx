@@ -475,13 +475,9 @@ const Projects = () => {
         {!loading && projects.length === 0 && (
           <div className="text-center py-20">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No projects found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters, or add new projects.</p>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
             <div className="space-x-4">
               <Button onClick={clearFilters}>Clear All Filters</Button>
-              <Button onClick={openAddModal} className="bg-emerald-600 hover:bg-emerald-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Add First Project
-              </Button>
             </div>
           </div>
         )}
