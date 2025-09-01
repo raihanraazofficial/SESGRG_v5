@@ -613,10 +613,16 @@ const ResearchAreas = () => {
           <!-- Enhanced Back Button -->
           <div class="text-center">
             <button 
-              onclick="window.history.back()" 
-              class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
+              onclick="window.close()" 
+              class="mr-4 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
             >
               ← Back to Research Areas
+            </button>
+            <button 
+              onclick="window.opener ? window.opener.focus() : window.history.back(); setTimeout(() => window.close(), 100);" 
+              class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
+            >
+              Close Window
             </button>
           </div>
         </div>
