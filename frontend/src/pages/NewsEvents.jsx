@@ -1193,17 +1193,45 @@ const NewsEvents = () => {
         <div className="mt-16">
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Upcoming Events Calendar</h3>
-              <div className="w-full h-96 rounded-lg overflow-hidden">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{calendarSettings.title}</h3>
+                  {calendarSettings.description && (
+                    <p className="text-gray-600">{calendarSettings.description}</p>
+                  )}
+                </div>
+                
+                {/* Calendar Edit Button */}
+                <div className="flex items-center space-x-2">
+                  {isAuthenticated ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleEditCalendar}
+                      className="flex items-center bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Calendar
+                    </Button>
+                  ) : (
+                    <div className="flex items-center text-gray-400 text-sm">
+                      <Shield className="h-4 w-4 mr-2" />
+                      <span>Calendar Settings</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="w-full rounded-lg overflow-hidden" style={{ height: calendarSettings.height }}>
                 <iframe
-                  src="https://calendar.google.com/calendar/embed?src=en.bd%23holiday%40group.v.calendar.google.com&ctz=Asia%2FDhaka"
+                  src={calendarSettings.calendarUrl}
                   style={{ border: 0 }}
                   width="100%"
                   height="100%"
                   frameBorder="0"
                   scrolling="no"
                   className="rounded-lg"
-                  title="SESG Research Events Calendar"
+                  title={calendarSettings.title}
                 />
               </div>
             </CardContent>
