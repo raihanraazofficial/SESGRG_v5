@@ -323,10 +323,11 @@ const ResearchAreas = () => {
         ]);
       } else {
         // Fetch both projects and publications concurrently
-      const [projectsResponse, publicationsResponse] = await Promise.all([
-        googleSheetsService.getProjects({}),
-        googleSheetsService.getPublications({})
-      ]);
+        [projectsResponse, publicationsResponse] = await Promise.all([
+          googleSheetsService.getProjects({}),
+          googleSheetsService.getPublications({})
+        ]);
+      }
 
       console.log('📊 Raw API responses:', {
         projects: projectsResponse.projects?.length,
