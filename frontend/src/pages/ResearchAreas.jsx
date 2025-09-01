@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
+import { usePeople } from "../contexts/PeopleContext";
 import googleSheetsService from "../services/googleSheetsApi";
 
 const ResearchAreas = () => {
@@ -14,8 +15,9 @@ const ResearchAreas = () => {
     loading: false,
     lastUpdated: null
   });
-  const [peopleData, setPeopleData] = useState([]);
   const [areaStats, setAreaStats] = useState({}); // New state for area-wise stats
+
+  const { getPeopleByResearchArea, researchAreas: researchAreaNames } = usePeople();
 
   // Load real-time stats for all areas on component mount
   useEffect(() => {
@@ -94,75 +96,6 @@ const ResearchAreas = () => {
       7: "https://images.pexels.com/photos/9799996/pexels-photo-9799996.jpeg" // Cybersecurity and AI for Power Infrastructure
     };
     return imageMap[areaId] || imageMap[1];
-  };
-
-  // People data for research areas - mirroring People.jsx structure
-  const researchAreaPeople = [
-    // Research area index mapping: 0-Smart Grid, 1-Microgrids, 2-Renewable Energy, 3-Grid Optimization, 4-Energy Storage, 5-Power System Automation, 6-Cybersecurity & AI
-    {
-      id: 1,
-      name: "A. S. Nazmul Huda, PhD",
-      designation: "Associate Professor",
-      affiliation: "Department of EEE, BRAC University",
-      category: "Advisor",
-      expertise: [0, 2, 3], // Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Nazmul%20Huda.jpg"
-    },
-    {
-      id: 2,
-      name: "Shameem Ahmad, PhD", 
-      designation: "Associate Professor",
-      affiliation: "Department of EEE, BRAC University",
-      category: "Advisor",
-      expertise: [1, 3, 0], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Smart Grid Technologies
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Shameem%20Ahmad.jpg"
-    },
-    {
-      id: 3,
-      name: "Amirul Islam, PhD",
-      designation: "Assistant Professor", 
-      affiliation: "Department of EEE, BRAC University",
-      category: "Advisor",
-      expertise: [5, 6], // Power System Automation, Cybersecurity and AI for Power Infrastructure
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Amirul%20Islam.jpg"
-    },
-    {
-      id: 4,
-      name: "Raihan Uddin",
-      designation: "Research Assistant",
-      affiliation: "Department of EEE, BRAC University", 
-      category: "Team Member",
-      expertise: [1, 3, 2, 6], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Renewable Energy Integration, Cybersecurity and AI for Power Infrastructure
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Raihan%20Uddin.jpg"
-    },
-    {
-      id: 5,
-      name: "Mumtahina Arika",
-      designation: "Research Assistant",
-      affiliation: "Department of EEE, BRAC University",
-      category: "Team Member", 
-      expertise: [2, 3], // Renewable Energy Integration, Grid Optimization & Stability
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Mumtahina%20Akira.jpg"
-    }
-  ];
-
-  // Research area names for mapping
-  const researchAreaNames = [
-    "Smart Grid Technologies",
-    "Microgrids & Distributed Energy Systems", 
-    "Renewable Energy Integration",
-    "Grid Optimization & Stability",
-    "Energy Storage Systems",
-    "Power System Automation",
-    "Cybersecurity and AI for Power Infrastructure"
-  ];
-
-  // Get area working in specific research area
-  const getPeopleByResearchArea = (areaId) => {
-    const areaIndex = areaId - 1; // Convert 1-based ID to 0-based index
-    return researchAreaPeople.filter(person => 
-      person.expertise.includes(areaIndex)
-    );
   };
 
   // Direct research area matching - use exact names from Google Sheets
@@ -513,38 +446,55 @@ const ResearchAreas = () => {
               <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Team</h2>
               <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              ${areaPeople.map(person => `
-                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow group">
-                  <div class="flex items-center space-x-4 mb-4">
-                    <img 
-                      src="${person.photo}" 
-                      alt="${person.name}"
-                      class="w-16 h-16 rounded-full object-cover"
-                      onerror="this.src='https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg';"
-                    />
-                    <div>
-                      <h3 class="font-bold text-gray-900 text-lg">${person.name}</h3>
-                      <p class="text-sm text-emerald-600">${person.designation}</p>
-                      <p class="text-xs text-gray-500">${person.affiliation}</p>
+            ${areaPeople.length > 0 ? `
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                ${areaPeople.map(person => `
+                  <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow group">
+                    <div class="flex items-center space-x-4 mb-4">
+                      <img 
+                        src="${person.photo}" 
+                        alt="${person.name}"
+                        class="w-16 h-16 rounded-full object-cover"
+                        onerror="this.src='https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg';"
+                      />
+                      <div>
+                        <h3 class="font-bold text-gray-900 text-lg">${person.name}</h3>
+                        <p class="text-sm text-emerald-600">${person.designation}</p>
+                        <p class="text-xs text-gray-500">${person.affiliation}</p>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <span class="inline-block px-3 py-1 bg-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-100 text-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-800 text-xs font-medium rounded-full">
+                        ${person.category}
+                      </span>
+                    </div>
+                    <div class="space-y-2">
+                      <h4 class="text-sm font-semibold text-gray-800">Research Interest:</h4>
+                      <div class="flex flex-wrap gap-1">
+                        ${person.expertise.map(expertiseIndex => 
+                          `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">${researchAreaNames[expertiseIndex]}</span>`
+                        ).join('')}
+                      </div>
                     </div>
                   </div>
-                  <div class="mb-3">
-                    <span class="inline-block px-3 py-1 bg-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-100 text-${person.category === 'Advisor' ? 'blue' : person.category === 'Team Member' ? 'green' : 'purple'}-800 text-xs font-medium rounded-full">
-                      ${person.category}
-                    </span>
-                  </div>
-                  <div class="space-y-2">
-                    <h4 class="text-sm font-semibold text-gray-800">Research Interest:</h4>
-                    <div class="flex flex-wrap gap-1">
-                      ${person.expertise.map(expertiseIndex => 
-                        `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">${researchAreaNames[expertiseIndex]}</span>`
-                      ).join('')}
-                    </div>
-                  </div>
+                `).join('')}
+              </div>
+            ` : `
+              <div class="text-center py-16">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <i class="fas fa-users text-4xl text-gray-400"></i>
                 </div>
-              `).join('')}
-            </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No Members Found in this Category</h3>
+                <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                  We are seeking members for our research team in ${area.title.toLowerCase()}. 
+                  Join us to contribute to cutting-edge research in sustainable energy and smart grid technologies.
+                </p>
+                <a href="mailto:sesg@bracu.ac.bd" class="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors">
+                  <i class="fas fa-envelope mr-2"></i>
+                  Express Interest
+                </a>
+              </div>
+            `}
           </section>
 
           <!-- Research Output Section (Previously Real-Time Research Data) -->
@@ -756,7 +706,7 @@ const ResearchAreas = () => {
                           )}
                         </div>
                       ) : (
-                        <div className="text-sm text-gray-500 italic">No Member Found</div>
+                        <div className="text-sm text-gray-500 italic">No Members Found</div>
                       )}
                     </div>
 
