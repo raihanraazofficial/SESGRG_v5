@@ -109,6 +109,58 @@ const NewsEvents = () => {
     });
   };
 
+  // Authentication functions
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+    
+    // Execute pending action if any
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
+  };
+
+  const requireAuth = (action) => {
+    if (isAuthenticated) {
+      action();
+    } else {
+      setPendingAction(() => action);
+      setShowAuthModal(true);
+    }
+  };
+
+  // CRUD functions
+  const handleAddNewsEvent = () => {
+    requireAuth(() => setShowAddModal(true));
+  };
+
+  const handleEditNewsEvent = (newsEvent) => {
+    requireAuth(() => {
+      setSelectedNewsEvent(newsEvent);
+      setShowEditModal(true);
+    });
+  };
+
+  const handleDeleteNewsEvent = (newsEvent) => {
+    requireAuth(() => {
+      setSelectedNewsEvent(newsEvent);
+      setShowDeleteModal(true);
+    });
+  };
+
+  const handleSubmitAdd = async (formData) => {
+    addNewsEvent(formData);
+  };
+
+  const handleSubmitEdit = async (id, formData) => {
+    updateNewsEvent(id, formData);
+  };
+
+  const handleSubmitDelete = async (id) => {
+    deleteNewsEvent(id);
+  };
+
   const getCategoryColor = (category) => {
     switch (category) {
       case 'News':
