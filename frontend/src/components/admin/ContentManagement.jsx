@@ -101,6 +101,13 @@ const ContentManagement = () => {
       label: 'News & Events',
       icon: Calendar,
       count: newsEventsData?.length || 0
+    },
+    {
+      id: 'calendar',
+      label: 'Calendar Widget',
+      icon: Calendar,
+      count: null, // No count for settings
+      isSettings: true
     }
   ];
 
