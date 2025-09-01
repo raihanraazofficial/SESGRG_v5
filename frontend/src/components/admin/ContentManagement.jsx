@@ -54,6 +54,11 @@ import CalendarManagement from './CalendarManagement';
 // Import Contact Management
 import ContactManagement from './ContactManagement';
 
+// Import Gallery modals
+import AddGalleryModal from '../gallery/AddGalleryModal';
+import EditGalleryModal from '../gallery/EditGalleryModal';
+import DeleteGalleryModal from '../gallery/DeleteGalleryModal';
+
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('people');
   const [searchTerm, setSearchTerm] = useState('');
