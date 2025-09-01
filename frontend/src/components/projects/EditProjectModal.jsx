@@ -138,8 +138,8 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
   if (!isOpen || !project) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-[1080px] my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center overflow-y-auto">
+      <div className="bg-white rounded-xl w-full max-w-[1080px] h-[720px] my-4 mx-4 shadow-2xl flex flex-col">
         
         {/* Fixed Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
@@ -362,84 +362,6 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
               </div>
             </div>
 
-            {/* Objectives */}
-            <div className="space-y-6">
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Objectives</h3>
-                {formData.objectives.map((objective, index) => (
-                  <div key={index} className="flex space-x-3 mb-3">
-                    <textarea
-                      value={objective}
-                      onChange={(e) => handleArrayChange('objectives', index, e.target.value)}
-                      placeholder={index === 0 ? "Enter main objective" : "Enter additional objective"}
-                      rows={3}
-                      className="flex-1 px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    />
-                    {formData.objectives.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayItem('objectives', index)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addArrayItem('objectives')}
-                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Objective
-                </Button>
-              </div>
-            </div>
-
-            {/* Expected Outcomes */}
-            <div className="space-y-6">
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Expected Outcomes</h3>
-                {formData.expected_outcomes.map((outcome, index) => (
-                  <div key={index} className="flex space-x-3 mb-3">
-                    <textarea
-                      value={outcome}
-                      onChange={(e) => handleArrayChange('expected_outcomes', index, e.target.value)}
-                      placeholder={index === 0 ? "Enter expected outcome" : "Enter additional expected outcome"}
-                      rows={3}
-                      className="flex-1 px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    />
-                    {formData.expected_outcomes.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayItem('expected_outcomes', index)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addArrayItem('expected_outcomes')}
-                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Expected Outcome
-                </Button>
-              </div>
-            </div>
-
             {/* Additional Information */}
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-lg">
@@ -483,42 +405,6 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
                         className="text-base"
                       />
                     </div>
-                  </div>
-
-                  {/* Keywords */}
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-semibold text-gray-700">Keywords</h4>
-                    {formData.keywords.map((keyword, index) => (
-                      <div key={index} className="flex space-x-3">
-                        <Input
-                          value={keyword}
-                          onChange={(e) => handleArrayChange('keywords', index, e.target.value)}
-                          placeholder={index === 0 ? "Enter keyword" : "Enter another keyword"}
-                          className="flex-1 text-base"
-                        />
-                        {formData.keywords.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeArrayItem('keywords', index)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => addArrayItem('keywords')}
-                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Keyword
-                    </Button>
                   </div>
 
                   {/* Featured checkbox */}
