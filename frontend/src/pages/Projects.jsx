@@ -39,14 +39,6 @@ const Projects = () => {
   const [availableAreas, setAvailableAreas] = useState([]);
   const [allAreas, setAllAreas] = useState([]);
 
-  // Authentication and Modal states
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-
   useEffect(() => {
     fetchProjects();
   }, [filters]);
