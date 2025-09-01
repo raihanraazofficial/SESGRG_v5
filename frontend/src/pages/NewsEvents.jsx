@@ -720,7 +720,7 @@ const NewsEvents = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-64 overflow-y-auto">
                       <SelectItem value="all">All Categories</SelectItem>
                       {categories.map(category => (
                         <SelectItem key={category} value={category}>{category}</SelectItem>
