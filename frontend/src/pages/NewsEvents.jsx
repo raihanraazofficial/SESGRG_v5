@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, Clock, ChevronLeft, ChevronRight, Loader2, ArrowRight, MapPin, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
+import { Search, Filter, Calendar, Clock, ChevronLeft, ChevronRight, Loader2, ArrowRight, MapPin, RefreshCw, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -7,12 +7,8 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import LaTeXRenderer, { parseLatexContent } from "../components/LaTeXRenderer";
-import AuthModal from "../components/AuthModal";
-import AddNewsEventModal from "../components/newsevents/AddNewsEventModal";
-import EditNewsEventModal from "../components/newsevents/EditNewsEventModal";
-import DeleteNewsEventModal from "../components/newsevents/DeleteNewsEventModal";
-import CalendarSettingsModal from "../components/newsevents/CalendarSettingsModal";
 import { useNewsEvents } from "../contexts/NewsEventsContext";
+import { useAuth } from "../contexts/AuthContext";
 import googleSheetsService from "../services/googleSheetsApi";
 import "../styles/smooth-filters.css";
 
@@ -21,11 +17,10 @@ const NewsEvents = () => {
     newsEventsData,
     loading,
     categories,
-    addNewsEvent,
-    updateNewsEvent,
-    deleteNewsEvent,
     getPaginatedNewsEvents
   } = useNewsEvents();
+
+  const { isAuthenticated } = useAuth();
 
   const [newsEvents, setNewsEvents] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -39,18 +34,6 @@ const NewsEvents = () => {
     per_page: 15
   });
   const [showFilters, setShowFilters] = useState(false);
-
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
-
-  // Modal states
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showCalendarModal, setShowCalendarModal] = useState(false);
-  const [selectedNewsEvent, setSelectedNewsEvent] = useState(null);
   
   // Calendar settings state
   const [calendarSettings, setCalendarSettings] = useState({
@@ -133,68 +116,6 @@ const NewsEvents = () => {
       page: 1,
       per_page: 15
     });
-  };
-
-  // Authentication functions
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-    setShowAuthModal(false);
-    
-    // Execute pending action if any
-    if (pendingAction) {
-      pendingAction();
-      setPendingAction(null);
-    }
-  };
-
-  const requireAuth = (action) => {
-    if (isAuthenticated) {
-      action();
-    } else {
-      setPendingAction(() => action);
-      setShowAuthModal(true);
-    }
-  };
-
-  // CRUD functions
-  const handleAddNewsEvent = () => {
-    requireAuth(() => setShowAddModal(true));
-  };
-
-  const handleEditNewsEvent = (newsEvent) => {
-    requireAuth(() => {
-      setSelectedNewsEvent(newsEvent);
-      setShowEditModal(true);
-    });
-  };
-
-  const handleDeleteNewsEvent = (newsEvent) => {
-    requireAuth(() => {
-      setSelectedNewsEvent(newsEvent);
-      setShowDeleteModal(true);
-    });
-  };
-
-  const handleSubmitAdd = async (formData) => {
-    addNewsEvent(formData);
-  };
-
-  const handleSubmitEdit = async (id, formData) => {
-    updateNewsEvent(id, formData);
-  };
-
-  const handleSubmitDelete = async (id) => {
-    deleteNewsEvent(id);
-  };
-
-  // Calendar settings functions
-  const handleEditCalendar = () => {
-    requireAuth(() => setShowCalendarModal(true));
-  };
-
-  const handleSubmitCalendarSettings = async (formData) => {
-    setCalendarSettings(formData);
-    console.log('✅ Calendar settings updated:', formData);
   };
 
   const getCategoryColor = (category) => {
@@ -320,7 +241,34 @@ const NewsEvents = () => {
           continue;
         }
         
-        // Handle tables (lines starting with |)
+        // Format text with markdown-like features
+        let formatted = processedLine;
+        
+        // Bold text **text**
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic text *text*
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Links [text](url)
+        formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 hover:text-emerald-800 underline">$1</a>');
+        
+        // Code `code`
+        formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-emerald-800 px-2 py-1 rounded text-sm font-mono">$1</code>');
+        
+        // Headings
+        if (trimmed.startsWith('### ')) {
+          result += `<h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">${formatted.substring(4)}</h3>`;
+          continue;
+        } else if (trimmed.startsWith('## ')) {
+          result += `<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">${formatted.substring(3)}</h2>`;
+          continue;
+        } else if (trimmed.startsWith('# ')) {
+          result += `<h1 class="text-3xl font-bold text-gray-900 mt-12 mb-8">${formatted.substring(2)}</h1>`;
+          continue;
+        }
+        
+        // Tables (lines starting with |)
         if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
           if (!inTable) {
             inTable = true;
@@ -329,131 +277,39 @@ const NewsEvents = () => {
           tableRows.push(trimmed);
           continue;
         } else if (inTable) {
-          // End of table, process it
+          // End of table
           result += processTable(tableRows);
           inTable = false;
           tableRows = [];
         }
         
-        // YouTube video links
-        if (trimmed.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/)) {
-          const videoId = trimmed.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/)[1];
-          result += `<div class="video-container my-8">
-            <div class="bg-gradient-to-r from-red-500 to-pink-500 p-4 rounded-t-lg">
-              <div class="flex items-center text-white">
-                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.30 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                <span class="font-medium">Video Content</span>
-              </div>
-            </div>
-            <div class="relative pb-9/16">
-              <iframe class="absolute top-0 left-0 w-full h-64 rounded-b-lg" 
-                src="https://www.youtube.com/embed/${videoId}" 
-                frameborder="0" allowfullscreen>
-              </iframe>
-            </div>
-          </div>`;
-          continue;
-        }
-        
-        // Regular video links
-        if (trimmed.match(/\.(mp4|avi|mov|wmv|flv|webm)$/i)) {
-          result += `<div class="video-container my-8 bg-black rounded-lg overflow-hidden">
-            <video controls class="w-full">
-              <source src="${trimmed}" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>`;
-          continue;
-        }
-        
-        // Image with caption [IMG:url:caption]
-        if (trimmed.match(/^\[IMG:([^:]+):?(.*?)\]$/)) {
-          const matches = trimmed.match(/^\[IMG:([^:]+):?(.*?)\]$/);
-          const imageUrl = matches[1];
-          const caption = matches[2] || '';
-          result += `<div class="my-8">
-            <img src="${imageUrl}" alt="${caption}" class="w-full h-auto rounded-lg shadow-lg">
-            ${caption ? `<p class="text-center text-gray-600 text-sm mt-2 italic">${caption}</p>` : ''}
-          </div>`;
-          continue;
-        }
-        
-        // Headers (lines starting with ##)
-        if (trimmed.startsWith('## ')) {
-          const headerText = trimmed.substring(3);
-          result += `<h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6 border-b-2 border-emerald-200 pb-3 flex items-center">
-            <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-lg mr-4">#</span>
-            ${headerText}
-          </h2>`;
-          continue;
-        }
-        
-        // Subheaders (lines starting with ###)
-        if (trimmed.startsWith('### ')) {
-          const subHeaderText = trimmed.substring(4);
-          result += `<h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 flex items-center">
-            <span class="w-1 h-8 bg-gradient-to-b from-emerald-500 to-purple-500 rounded-full mr-4"></span>
-            ${subHeaderText}
-          </h3>`;
-          continue;
-        }
-        
-        // Subsubheaders (lines starting with ####)
-        if (trimmed.startsWith('#### ')) {
-          const subSubHeaderText = trimmed.substring(5);
-          result += `<h4 class="text-xl font-medium text-gray-700 mt-8 mb-3 flex items-center">
-            <span class="w-2 h-2 bg-emerald-400 rounded-full mr-3"></span>
-            ${subSubHeaderText}
-          </h4>`;
-          continue;
-        }
-        
-        // Process regular text formatting
-        let formatted = trimmed;
-        
-        // Bold text (**text**)
-        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>');
-        
-        // Italic text (*text*)
-        formatted = formatted.replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>');
-        
-        // Inline code (`code`)
-        formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>');
-        
-        // Inline math $formula$
-        formatted = formatted.replace(/\$([^$]+)\$/g, '<span class="math-inline-content" data-math="$1"></span>');
-        
-        // Colored text [color:text]
-        formatted = formatted.replace(/\[([a-z]+):(.*?)\]/g, '<span class="text-$1-600 font-medium">$2</span>');
-        
-        // Links [text](url)
-        formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, 
-          `<a href="$2" target="_blank" class="text-emerald-600 hover:text-emerald-800 underline hover:bg-emerald-50 px-1 py-0.5 rounded transition-colors">$1 ↗</a>`);
-        
-        // Bullet points (lines starting with -)
-        if (trimmed.startsWith('- ')) {
+        // Lists (bullet points with - or *)
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
           if (!inList) {
-            result += '<ul class="list-none space-y-3 my-6">';
+            result += '<ul class="list-none space-y-4 my-8">';
             inList = true;
           }
           result += `<li class="flex items-start">
-            <span class="w-2 h-2 bg-emerald-500 rounded-full mt-3 mr-4 flex-shrink-0"></span>
+            <div class="flex-shrink-0 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-0.5 mr-4">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
             <span class="text-gray-700 leading-relaxed">${formatted.substring(2)}</span>
           </li>`;
           continue;
         }
         
         // Numbered lists (lines starting with number.)
-        if (/^\d+\.\s/.test(trimmed)) {
+        const numberedMatch = trimmed.match(/^(\d+)\.\s(.+)$/);
+        if (numberedMatch) {
+          const [, number, content] = numberedMatch;
           if (!inOrderedList) {
-            result += '<ol class="counter-reset list-none space-y-3 my-6">';
+            result += '<ol class="list-none space-y-4 my-8">';
             inOrderedList = true;
           }
-          const number = trimmed.match(/^(\d+)\./)[1];
           result += `<li class="flex items-start">
-            <span class="bg-emerald-100 text-emerald-800 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mr-4 flex-shrink-0 mt-0.5">${number}</span>
+            <span class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-4 flex-shrink-0 mt-0.5">${number}</span>
             <span class="text-gray-700 leading-relaxed">${formatted.replace(/^\d+\.\s/, '')}</span>
           </li>`;
           continue;
@@ -745,32 +601,18 @@ const NewsEvents = () => {
               </p>
             </div>
             
-            {/* Admin Controls */}
-            <div className="flex flex-col items-end space-y-4">
-              {isAuthenticated && (
-                <div className="flex items-center bg-emerald-600/20 backdrop-blur-sm rounded-full px-4 py-2 text-emerald-300 text-sm">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Admin Mode Active
-                </div>
-              )}
-              
-              <Button
-                onClick={handleAddNewsEvent}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-              >
-                {isAuthenticated ? (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New News/Event
-                  </>
-                ) : (
-                  <>
-                    <Shield className="h-4 w-4 mr-2" />
-                    Add New News/Event
-                  </>
-                )}
-              </Button>
-            </div>
+            {/* Only show Admin Login button for non-authenticated users */}
+            {!isAuthenticated && (
+              <div className="flex flex-col items-end space-y-4">
+                <Link
+                  to="/admin/login"
+                  className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <Shield className="h-5 w-5 mr-2" />
+                  <span>Admin Login</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -938,36 +780,6 @@ const NewsEvents = () => {
                   
                   <CardContent className="md:w-1/2 p-8 md:p-12">
                     <div className="space-y-6">
-                      {/* Edit/Delete Controls for Featured Item */}
-                      {isAuthenticated && (
-                        <div className="flex justify-end space-x-2 -mt-4 -mr-4">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEditNewsEvent(newsEvents[0])}
-                            className="bg-white/90 hover:bg-white text-emerald-600 border-emerald-200"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDeleteNewsEvent(newsEvents[0])}
-                            className="bg-white/90 hover:bg-red-50 text-red-600 border-red-200 hover:border-red-300"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                      {!isAuthenticated && (
-                        <div className="flex justify-end space-x-2 -mt-4 -mr-4">
-                          <div className="flex items-center text-gray-400 text-sm">
-                            <Shield className="h-4 w-4 mr-1" />
-                            <span>Authentication required</span>
-                          </div>
-                        </div>
-                      )}
-
                       {/* Date and Location */}
                       <div className="space-y-2">
                         <div className="flex items-center text-blue-600">
@@ -1031,35 +843,11 @@ const NewsEvents = () => {
                     
                     <CardContent className="p-6">
                       <div className="space-y-4">
-                        {/* Edit/Delete Controls */}
+                        {/* Title */}
                         <div className="flex justify-between items-start">
                           <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors flex-1 mr-2">
                             {item.title}
                           </h3>
-                          {isAuthenticated ? (
-                            <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleEditNewsEvent(item)}
-                                className="h-8 w-8 p-0 hover:bg-emerald-50 text-emerald-600"
-                              >
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleDeleteNewsEvent(item)}
-                                className="h-8 w-8 p-0 hover:bg-red-50 text-red-600"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Shield className="h-4 w-4 text-gray-400" />
-                            </div>
-                          )}
                         </div>
 
                         {/* Date and Location */}
@@ -1200,26 +988,6 @@ const NewsEvents = () => {
                     <p className="text-gray-600">{calendarSettings.description}</p>
                   )}
                 </div>
-                
-                {/* Calendar Edit Button */}
-                <div className="flex items-center space-x-2">
-                  {isAuthenticated ? (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleEditCalendar}
-                      className="flex items-center bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit Calendar
-                    </Button>
-                  ) : (
-                    <div className="flex items-center text-gray-400 text-sm">
-                      <Shield className="h-4 w-4 mr-2" />
-                      <span>Calendar Settings</span>
-                    </div>
-                  )}
-                </div>
               </div>
               
               <div className="w-full rounded-lg overflow-hidden" style={{ height: calendarSettings.height }}>
@@ -1249,51 +1017,6 @@ const NewsEvents = () => {
           </div>
         </div>
       </div>
-
-      {/* Authentication Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-      />
-
-      {/* Add News Event Modal */}
-      <AddNewsEventModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSubmit={handleSubmitAdd}
-        categories={categories}
-      />
-
-      {/* Edit News Event Modal */}
-      <EditNewsEventModal
-        isOpen={showEditModal}
-        onClose={() => {
-          setShowEditModal(false);
-          setSelectedNewsEvent(null);
-        }}
-        onSubmit={handleSubmitEdit}
-        categories={categories}
-        newsEvent={selectedNewsEvent}
-      />
-
-      {/* Delete News Event Modal */}
-      <DeleteNewsEventModal
-        isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setSelectedNewsEvent(null);
-        }}
-        onConfirm={handleSubmitDelete}
-        newsEvent={selectedNewsEvent}
-      />
-
-      {/* Calendar Settings Modal */}
-      <CalendarSettingsModal
-        isOpen={showCalendarModal}
-        onClose={() => setShowCalendarModal(false)}
-        onSubmit={handleSubmitCalendarSettings}
-      />
     </div>
   );
 };
