@@ -47,6 +47,7 @@ export const PeopleProvider = ({ children }) => {
       }
     };
 
+    // Execute immediately instead of waiting for effect
     loadDataFromStorage();
   }, []);
 
