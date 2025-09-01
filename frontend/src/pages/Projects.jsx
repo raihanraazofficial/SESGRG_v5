@@ -576,43 +576,6 @@ const Projects = () => {
           </Button>
         </div>
       </div>
-
-      {/* Modals */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-      />
-
-      <AddProjectModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onAdd={handleAddProject}
-        researchAreas={researchAreas}
-        statuses={statuses}
-      />
-
-      <EditProjectModal
-        isOpen={showEditModal}
-        onClose={() => {
-          setShowEditModal(false);
-          setSelectedProject(null);
-        }}
-        onUpdate={handleEditProject}
-        project={selectedProject}
-        researchAreas={researchAreas}
-        statuses={statuses}
-      />
-
-      <DeleteProjectModal
-        isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setSelectedProject(null);
-        }}
-        onDelete={handleDeleteProject}
-        project={selectedProject}
-      />
     </div>
   );
 };
