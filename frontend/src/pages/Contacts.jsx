@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useContact } from "../contexts/ContactContext";
+import emailjs from '@emailjs/browser';
 
 const Contacts = () => {
   const { contactInfo, inquiryTypes, submitInquiry, mapConfig } = useContact();
