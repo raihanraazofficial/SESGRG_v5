@@ -16,10 +16,19 @@ import googleSheetsService from "../services/googleSheetsApi";
 import "../styles/smooth-filters.css";
 
 const NewsEvents = () => {
+  const {
+    newsEventsData,
+    loading,
+    categories,
+    addNewsEvent,
+    updateNewsEvent,
+    deleteNewsEvent,
+    getPaginatedNewsEvents
+  } = useNewsEvents();
+
   const [newsEvents, setNewsEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [pagination, setPagination] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const [filters, setFilters] = useState({
     category_filter: '',
     title_filter: '',
@@ -30,7 +39,16 @@ const NewsEvents = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ["News", "Events", "Upcoming Events"];
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+
+  // Modal states
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedNewsEvent, setSelectedNewsEvent] = useState(null);
 
   useEffect(() => {
     fetchNewsEvents();
