@@ -60,10 +60,10 @@ const ContentManagement = () => {
 
   // Context data
   const { peopleData, deletePerson } = usePeople();
-  const { publications, addPublication, updatePublication, deletePublication, researchAreas: pubResearchAreas } = usePublications();
-  const { projects, addProject, updateProject, deleteProject, researchAreas: projResearchAreas, statuses } = useProjects();
-  const { achievements, addAchievement, updateAchievement, deleteAchievement } = useAchievements();
-  const { newsEvents, addNewsEvent, updateNewsEvent, deleteNewsEvent } = useNewsEvents();
+  const { publicationsData, addPublication, updatePublication, deletePublication, researchAreas: pubResearchAreas } = usePublications();
+  const { projectsData, addProject, updateProject, deleteProject, researchAreas: projResearchAreas, statuses } = useProjects();
+  const { achievementsData, addAchievement, updateAchievement, deleteAchievement } = useAchievements();
+  const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent } = useNewsEvents();
 
   // Content tabs
   const contentTabs = [
