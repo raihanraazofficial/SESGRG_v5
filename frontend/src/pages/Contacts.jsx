@@ -363,7 +363,7 @@ const Contacts = () => {
               <div className="relative h-96 rounded-lg overflow-hidden">
                 <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg p-3">
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Campus Location</h3>
-                  <p className="text-sm text-gray-600">Interactive map coming soon</p>
+  
                 </div>
                 <iframe
                   src={mapConfig.embedUrl}
