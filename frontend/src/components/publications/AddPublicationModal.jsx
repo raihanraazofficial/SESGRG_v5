@@ -143,35 +143,46 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-[1080px] my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
-        
-        {/* Fixed Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
-          <div className="flex items-center space-x-3">
-            <div className="bg-emerald-100 p-2 rounded-full">
-              <FileText className="h-6 w-6 text-emerald-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Add New Publication</h2>
-              <p className="text-sm text-gray-600 mt-1">Create a new research publication</p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2"
-            disabled={loading}
-          >
-            <X className="h-6 w-6" />
-          </Button>
-        </div>
+  const modalFooter = (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={onClose}
+        disabled={loading}
+        className="flex-1 sm:flex-none px-4 lg:px-6 py-2"
+      >
+        Cancel
+      </Button>
+      <Button
+        type="submit"
+        disabled={loading}
+        onClick={handleSubmit}
+        className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none px-4 lg:px-6 py-2"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            Adding...
+          </>
+        ) : (
+          'Add Publication'
+        )}
+      </Button>
+    </>
+  );
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
-          <form onSubmit={handleSubmit} className="p-6 space-y-8">
+  return (
+    <FullScreenModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Add New Publication"
+      description="Create a new research publication"
+      icon={FileText}
+      loading={loading}
+      footer={modalFooter}
+      className="max-w-[95vw] max-h-[95vh] lg:max-w-[1200px]"
+    >
             
             {/* Basic Information */}
             <div className="space-y-6">
