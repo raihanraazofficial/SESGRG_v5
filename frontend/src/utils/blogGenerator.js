@@ -479,7 +479,7 @@ export const generateAdvancedBlogContent = (item, type = 'news') => {
               <div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">About SESG Research</h3>
                 <p class="text-gray-700 leading-relaxed max-w-2xl">
-                  The Sustainable Energy and Smart Grid Research lab at BRAC University is dedicated to advancing 
+                  The Sustainable Energy and Smart Grid Research at BRAC University is dedicated to advancing 
                   research in renewable energy systems, smart grid technologies, and sustainable power infrastructure.
                 </p>
               </div>

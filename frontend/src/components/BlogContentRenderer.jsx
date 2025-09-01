@@ -232,7 +232,7 @@ const BlogContentRenderer = ({ achievement, onClose }) => {
           <h3 class="text-2xl font-bold text-gray-900 mb-4">About This Achievement</h3>
           <p class="text-gray-700 text-lg leading-relaxed mb-6">
             This achievement represents a significant milestone in our research journey at the 
-            Sustainable Energy and Smart Grid Research lab. It demonstrates our commitment to 
+            Sustainable Energy and Smart Grid Research. It demonstrates our commitment to 
             advancing the field through innovative solutions and collaborative efforts.
           </p>
           <div class="flex items-center text-gray-600">
