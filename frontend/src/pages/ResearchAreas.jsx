@@ -403,38 +403,65 @@ const ResearchAreas = () => {
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <!-- Real-Time Projects & Publications Statistics -->
+          <!-- Enhanced Overview Section -->
           <section class="mb-16">
             <div class="text-center mb-12">
-              <h2 class="text-4xl font-bold text-gray-900 mb-4">Real-Time Research Data</h2>
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Overview</h2>
               <div class="w-24 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto rounded-full"></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              <!-- Active Projects -->
-              <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white text-center">
-                <div class="text-3xl font-bold mb-2">${projects.active ? projects.active.length : '0'}</div>
-                <div class="text-blue-100 text-sm">Active Projects</div>
+            <div class="bg-white rounded-3xl p-10 shadow-xl border border-gray-100">
+              <div class="flex items-start space-x-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <span class="text-2xl text-emerald-600">🔬</span>
+                </div>
+                <div>
+                  <p class="text-lg text-gray-700 leading-relaxed">${area.overview}</p>
+                </div>
               </div>
-              <!-- Completed Projects -->
-              <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white text-center">
-                <div class="text-3xl font-bold mb-2">${projects.completed ? projects.completed.length : '0'}</div>
-                <div class="text-green-100 text-sm">Completed Projects</div>
-              </div>
-              <!-- Journal Publications -->
-              <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white text-center">
-                <div class="text-3xl font-bold mb-2">${publications.journal ? publications.journal.length : '0'}</div>
-                <div class="text-purple-100 text-sm">Journal Articles</div>
-              </div>
-              <!-- Conference Publications -->
-              <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white text-center">
-                <div class="text-3xl font-bold mb-2">${publications.conference ? publications.conference.length : '0'}</div>
-                <div class="text-orange-100 text-sm">Conference Papers</div>
-              </div>
-              <!-- Book Chapters -->
-              <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-6 text-white text-center">
-                <div class="text-3xl font-bold mb-2">${publications.bookChapter ? publications.bookChapter.length : '0'}</div>
-                <div class="text-red-100 text-sm">Book Chapters</div>
-              </div>
+            </div>
+          </section>
+
+          <!-- Enhanced Objectives Section -->
+          <section class="mb-16">
+            <div class="text-center mb-12">
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Objectives</h2>
+              <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              ${area.objectives.map((obj, index) => `
+                <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <span class="text-lg font-bold text-blue-600">${index + 1}</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-gray-900 mb-2">Objective ${index + 1}</h3>
+                      <p class="text-gray-700">${obj}</p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- Enhanced Applications Section -->
+          <section class="mb-16">
+            <div class="text-center mb-12">
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Key Applications</h2>
+              <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              ${area.applications.map((app, index) => `
+                <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-gray-100">
+                  <div class="text-center">
+                    <div class="w-14 h-14 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <span class="text-2xl">🎯</span>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Application ${index + 1}</h3>
+                    <p class="text-gray-700 text-sm">${app}</p>
+                  </div>
+                </div>
+              `).join('')}
             </div>
           </section>
 
@@ -475,6 +502,41 @@ const ResearchAreas = () => {
                   </div>
                 </div>
               `).join('')}
+            </div>
+          </section>
+
+          <!-- Research Output Section (Previously Real-Time Research Data) -->
+          <section class="mb-16">
+            <div class="text-center mb-12">
+              <h2 class="text-4xl font-bold text-gray-900 mb-4">Research Output</h2>
+              <div class="w-24 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <!-- Active Projects -->
+              <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${projects.active ? projects.active.length : '0'}</div>
+                <div class="text-blue-100 text-sm">Active Projects</div>
+              </div>
+              <!-- Completed Projects -->
+              <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${projects.completed ? projects.completed.length : '0'}</div>
+                <div class="text-green-100 text-sm">Completed Projects</div>
+              </div>
+              <!-- Journal Publications -->
+              <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.journal ? publications.journal.length : '0'}</div>
+                <div class="text-purple-100 text-sm">Journal Articles</div>
+              </div>
+              <!-- Conference Publications -->
+              <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.conference ? publications.conference.length : '0'}</div>
+                <div class="text-orange-100 text-sm">Conference Papers</div>
+              </div>
+              <!-- Book Chapters -->
+              <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-6 text-white text-center">
+                <div class="text-3xl font-bold mb-2">${publications.bookChapter ? publications.bookChapter.length : '0'}</div>
+                <div class="text-red-100 text-sm">Book Chapters</div>
+              </div>
             </div>
           </section>
 
