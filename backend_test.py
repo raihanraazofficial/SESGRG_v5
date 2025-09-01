@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
-Research Areas Page Modifications - Comprehensive Testing Suite
-Tests the recent modifications to Research Areas page as requested in review:
-1. Google Sheets API Integration: Verify all research area data fetching
-2. Section Reordering: Test Learn More detailed pages structure
-3. Loading Performance: Check optimized Learn More functionality
-4. Real-time Data: Ensure Research Output section displays correct statistics
+People Data Management System - Backend Infrastructure Testing Suite
+Tests the Google Sheets API infrastructure supporting the People data management system:
+1. Google Sheets API Integration: Verify data sources for People context
+2. Data Structure Validation: Ensure APIs support People/ResearchAreas integration
+3. Performance Testing: Check API response times for real-time sync
+4. Error Handling: Verify robust data fetching for localStorage integration
+
+NOTE: This tests the backend API infrastructure only. Frontend features like localStorage,
+React Context API, real-time sync, and edit functionality require frontend testing tools.
 """
 
 import requests
