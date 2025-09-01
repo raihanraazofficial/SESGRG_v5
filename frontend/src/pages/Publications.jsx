@@ -327,7 +327,7 @@ Best regards,`;
         }
       `}</style>
       {/* Header - People Style */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-16 performance-optimized">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
             <Link to="/" className="flex items-center text-white hover:text-emerald-400 transition-colors">
