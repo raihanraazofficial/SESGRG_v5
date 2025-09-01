@@ -351,15 +351,15 @@ const ContentManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="admin-content-management space-y-6">
+      <div className="admin-header flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Content Management</h1>
-          <p className="text-gray-600 mt-2">Manage all website content from one place</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Content Management</h1>
+          <p className="text-gray-600 mt-1 lg:mt-2 text-sm lg:text-base">Manage all website content from one place</p>
         </div>
         <Button 
           onClick={() => handleAdd(activeTab)}
-          className="bg-emerald-600 hover:bg-emerald-700"
+          className="admin-add-button bg-emerald-600 hover:bg-emerald-700 w-full lg:w-auto"
           disabled={activeTab === 'calendar'}
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -369,28 +369,29 @@ const ContentManagement = () => {
 
       {/* Content Type Tabs */}
       <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="admin-tabs-container -mb-px">
           {contentTabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center space-x-2 ${
+                className={`admin-tab-button py-2 px-3 lg:px-4 border-b-2 font-medium text-xs lg:text-sm whitespace-nowrap flex items-center space-x-2 transition-colors ${
                   activeTab === tab.id
                     ? 'border-emerald-500 text-emerald-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <Icon className="h-4 w-4" />
-                <span>{tab.label}</span>
+                <Icon className="h-3 w-3 lg:h-4 lg:w-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                 {tab.count !== null && (
-                  <span className="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+                  <span className="bg-gray-100 text-gray-600 py-0.5 px-1.5 lg:px-2 rounded-full text-xs">
                     {tab.count}
                   </span>
                 )}
                 {tab.isSettings && (
-                  <span className="bg-blue-100 text-blue-600 py-0.5 px-2 rounded-full text-xs">
+                  <span className="bg-blue-100 text-blue-600 py-0.5 px-1.5 lg:px-2 rounded-full text-xs">
                     Settings
                   </span>
                 )}
@@ -402,23 +403,23 @@ const ContentManagement = () => {
 
       {/* Search and Filter */}
       {activeTab !== 'calendar' && (
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
+        <div className="admin-search-filters flex flex-col lg:flex-row gap-3 lg:gap-4">
+          <div className="admin-search-input flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search content..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full pl-10 pr-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-gray-400" />
+          <div className="admin-filter-select flex items-center space-x-2 lg:min-w-[200px]">
+            <Filter className="h-4 w-4 text-gray-400 flex-shrink-0" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 lg:py-3 text-sm lg:text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             >
               <option value="all">All Categories</option>
               {activeTab === 'people' && (
