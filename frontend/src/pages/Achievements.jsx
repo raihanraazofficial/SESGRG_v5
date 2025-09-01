@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
+import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter, RefreshCw, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
-import AuthModal from "../components/AuthModal";
-import AddAchievementModal from "../components/achievements/AddAchievementModal";
-import EditAchievementModal from "../components/achievements/EditAchievementModal";
-import DeleteAchievementModal from "../components/achievements/DeleteAchievementModal";
 import { useAchievements } from "../contexts/AchievementsContext";
+import { useAuth } from "../contexts/AuthContext";
 import { generateBlogContent } from "../components/BlogContentRenderer";
 import "../styles/smooth-filters.css";
 
