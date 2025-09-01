@@ -636,7 +636,8 @@ const ContentManagement = () => {
               setEditingItem(null);
               setEditingCategory(null);
             }}
-            onUpdate={handleEditItem}
+            onSubmit={handleEditItem}
+            categories={newsEventCategories}
             newsEvent={editingItem}
           />
           
