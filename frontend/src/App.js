@@ -20,10 +20,12 @@ import TermsConditions from "./pages/TermsConditions";
 
 // Import context
 import { PeopleProvider } from "./contexts/PeopleContext";
+import { PublicationsProvider } from "./contexts/PublicationsContext";
 
 function App() {
   return (
     <PeopleProvider>
+      <PublicationsProvider>
       <div className="App min-h-screen bg-gray-50">
         <BrowserRouter>
           <Navbar />
