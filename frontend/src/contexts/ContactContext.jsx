@@ -394,6 +394,7 @@ export const ContactProvider = ({ children }) => {
     cards,
     directions,
     mapConfig,
+    emailjsConfig,
     inquiries,
     isLoading,
 
@@ -406,13 +407,18 @@ export const ContactProvider = ({ children }) => {
     deleteInquiryType,
 
     // Cards Methods
+    addCard,
     updateCard,
+    deleteCard,
 
     // Directions Methods
     updateDirections,
 
     // Map Methods
     updateMapConfig,
+
+    // EmailJS Methods
+    updateEmailjsConfig,
 
     // Inquiry Methods
     submitInquiry,
