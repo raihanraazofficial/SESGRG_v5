@@ -143,27 +143,19 @@ const Projects = () => {
                 Discover how we're advancing the field through collaborative research and innovation.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-              {/* Add New Project Button */}
-              <Button
-                onClick={openAddModal}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 relative"
-                title={isAuthenticated ? "Add New Project" : "Login required to add projects"}
-              >
-                <Plus className="h-5 w-5" />
-                <span>Add New Project</span>
-                {!isAuthenticated && <Shield className="h-4 w-4 ml-1" />}
-              </Button>
-            </div>
-          </div>
-          
-          {/* Authentication Status */}
-          {isAuthenticated && (
-            <div className="mt-6 inline-flex items-center space-x-2 bg-emerald-600/20 text-emerald-300 px-4 py-2 rounded-full border border-emerald-500/30">
-              <Shield className="h-4 w-4" />
-              <span className="text-sm font-medium">Admin Mode Active</span>
-            </div>
-          )}
+            
+            {/* Only show Admin Login button for non-authenticated users */}
+            {!isAuthenticated && (
+              <div className="flex flex-col items-start space-y-2">
+                <Link
+                  to="/admin/login"
+                  className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <Shield className="h-5 w-5 mr-2" />
+                  <span>Admin Login</span>
+                </Link>
+              </div>
+            )}
         </div>
       </div>
 
