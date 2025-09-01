@@ -1,20 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter, RefreshCw, ArrowLeft } from "lucide-react";
+import { Search, Trophy, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2, Filter, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
-import LaTeXRenderer, { parseLatexContent } from "../components/LaTeXRenderer";
-import googleSheetsService from "../services/googleSheetsApi";
+import AuthModal from "../components/AuthModal";
+import AddAchievementModal from "../components/achievements/AddAchievementModal";
+import EditAchievementModal from "../components/achievements/EditAchievementModal";
+import DeleteAchievementModal from "../components/achievements/DeleteAchievementModal";
+import { useAchievements } from "../contexts/AchievementsContext";
+import { generateBlogContent } from "../components/BlogContentRenderer";
 import "../styles/smooth-filters.css";
 
 const Achievements = () => {
+  const {
+    achievementsData,
+    loading,
+    categories,
+    addAchievement,
+    updateAchievement,
+    deleteAchievement,
+    getPaginatedAchievements
+  } = useAchievements();
+
   const [achievements, setAchievements] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [pagination, setPagination] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const [filters, setFilters] = useState({
     title_filter: '',
     category_filter: 'all',
@@ -24,48 +37,25 @@ const Achievements = () => {
     per_page: 12
   });
 
-  useEffect(() => {
-    fetchAchievements();
-  }, [filters]);
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
 
-  const fetchAchievements = async (forceRefresh = false) => {
-    try {
-      if (forceRefresh) {
-        setRefreshing(true);
-        // Clear cache first
-        try {
-          await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/clear-cache`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-          });
-        } catch (cacheError) {
-          console.warn('Cache clear failed:', cacheError);
-        }
-      } else {
-        setLoading(true);
-      }
-      
-      // Convert 'all' to empty string for API
-      const apiFilters = {
-        ...filters,
-        category_filter: filters.category_filter === 'all' ? '' : filters.category_filter
-      };
-      console.log('⚡ Fetching achievements with filters:', apiFilters);
-      const response = await googleSheetsService.getAchievements(apiFilters);
-      setAchievements(response.achievements || []);
-      setPagination(response.pagination || {});
-      console.log('✅ Achievements loaded:', response.achievements?.length || 0, 'items');
-    } catch (error) {
-      console.error('❌ Error fetching achievements:', error);
-      alert('Failed to load achievements. Please check your internet connection and try again.');
-      // Fallback to empty state on error
-      setAchievements([]);
-      setPagination({});
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+  // Modal states
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedAchievement, setSelectedAchievement] = useState(null);
+
+  // Load achievements whenever achievementsData or filters change
+  useEffect(() => {
+    if (achievementsData.length > 0 || !loading) {
+      const result = getPaginatedAchievements(filters);
+      setAchievements(result.achievements || []);
+      setPagination(result.pagination || {});
     }
-  };
+  }, [achievementsData, filters, getPaginatedAchievements, loading]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
@@ -104,81 +94,81 @@ const Achievements = () => {
     });
   };
 
-  // Helper function for processing LaTeX content and generating blog content - reuse same logic as before
-  const generateBlogContent = (achievement) => {
-    // Same complex processing function as before - truncated for brevity
-    const parseDescription = (description) => {
-      // Same LaTeX and content parsing logic
-      return description || '';
-    };
-
-    const blogHtml = `
-      <div class="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
-        <div class="mb-8">
-          <div class="flex items-center text-emerald-600 mb-4">
-            <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"></path>
-            </svg>
-            <span class="text-sm font-medium uppercase tracking-wide">Achievement</span>
-          </div>
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">${achievement.title}</h1>
-          <div class="flex items-center text-gray-600 mb-8">
-            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <span class="text-lg">${formatDate(achievement.date)}</span>
-          </div>
-          ${achievement.category ? `
-          <div class="mb-6">
-            <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
-              ${achievement.category}
-            </span>
-          </div>
-          ` : ''}
-        </div>
-        
-        ${achievement.image ? `<div class="mb-12">
-          <img src="${achievement.image}" alt="${achievement.title}" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
-        </div>` : ''}
-        
-        <div class="prose prose-lg max-w-none">
-          <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 mb-8 rounded-r-lg">
-            <p class="text-emerald-800 font-medium text-lg leading-relaxed">${achievement.short_description}</p>
-          </div>
-          
-          <div class="mt-8">
-            ${parseDescription(achievement.description || achievement.full_content || '')}
-          </div>
-          
-          <div class="mt-12 p-8 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl">
-            <h3 class="text-xl font-bold text-gray-900 mb-4">About This Achievement</h3>
-            <p class="text-gray-700 leading-relaxed">This achievement represents a significant milestone in our research journey at the Sustainable Energy and Smart Grid Research lab. It demonstrates our commitment to advancing the field through innovative solutions and collaborative efforts.</p>
-          </div>
-        </div>
-        
-        <div class="mt-12 text-center">
-          <button onclick="window.close()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-            Close Article
-          </button>
-        </div>
-      </div>
-    `;
+  // Authentication functions
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
     
-    const newWindow = window.open('', '_blank');
-    newWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${achievement.title} - SESG Research Achievement</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body class="bg-gray-50">
-        ${blogHtml}
-      </body>
-      </html>
-    `);
-    newWindow.document.close();
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
+  };
+
+  const requireAuth = (action) => {
+    if (isAuthenticated) {
+      action();
+    } else {
+      setPendingAction(() => action);
+      setShowAuthModal(true);
+    }
+  };
+
+  // CRUD handlers
+  const handleAddAchievement = async (achievementData) => {
+    try {
+      await addAchievement(achievementData);
+      console.log('✅ Achievement added successfully');
+    } catch (error) {
+      console.error('❌ Error adding achievement:', error);
+      throw error;
+    }
+  };
+
+  const handleUpdateAchievement = async (id, updatedData) => {
+    try {
+      await updateAchievement(id, updatedData);
+      console.log('✅ Achievement updated successfully');
+    } catch (error) {
+      console.error('❌ Error updating achievement:', error);  
+      throw error;
+    }
+  };
+
+  const handleDeleteAchievement = async (id) => {
+    try {
+      await deleteAchievement(id);
+      console.log('✅ Achievement deleted successfully');
+    } catch (error) {
+      console.error('❌ Error deleting achievement:', error);
+      throw error;
+    }
+  };
+
+  // Action handlers
+  const handleAddClick = () => {
+    requireAuth(() => setShowAddModal(true));
+  };
+
+  const handleEditClick = (achievement) => {
+    requireAuth(() => {
+      setSelectedAchievement(achievement);
+      setShowEditModal(true);
+    });
+  };
+
+  const handleDeleteClick = (achievement) => {
+    requireAuth(() => {
+      setSelectedAchievement(achievement);
+      setShowDeleteModal(true);
+    });
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    // Force re-render by updating filters
+    setFilters(prev => ({ ...prev }));
+    setTimeout(() => setRefreshing(false), 1000);
   };
 
   return (
@@ -200,21 +190,49 @@ const Achievements = () => {
                 These achievements reflect our commitment to excellence and innovation in advancing the field.
               </p>
             </div>
-            <Button
-              onClick={() => fetchAchievements(true)}
-              disabled={refreshing}
-              variant="outline"
-              size="sm"
-              className="ml-4 flex-shrink-0 border-white text-white hover:bg-white hover:text-gray-900"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? 'Refreshing...' : 'Refresh'}
-            </Button>
+            <div className="flex items-center space-x-3">
+              {isAuthenticated && (
+                <div className="bg-emerald-600/20 backdrop-blur-sm rounded-lg px-3 py-2 border border-emerald-400/30">
+                  <span className="text-emerald-400 text-sm font-medium">Admin Mode Active</span>
+                </div>
+              )}
+              <Button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                variant="outline"
+                size="sm"
+                className="border-white text-white hover:bg-white hover:text-gray-900"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Add Achievement Button */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">Research Achievements</h2>
+          <Button
+            onClick={handleAddClick}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          >
+            {isAuthenticated ? (
+              <>
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Achievement
+              </>
+            ) : (
+              <>
+                <Shield className="h-4 w-4 mr-2" />
+                Add New Achievement
+              </>
+            )}
+          </Button>
+        </div>
+
         {/* Category Filter Buttons */}
         <div className="flex justify-center flex-wrap gap-4 mb-8">
           <Button
@@ -224,34 +242,16 @@ const Achievements = () => {
           >
             All Categories
           </Button>
-          <Button
-            variant={filters.category_filter === 'Award' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Award')}
-            className="px-6 py-2 filter-button"
-          >
-            Awards
-          </Button>
-          <Button
-            variant={filters.category_filter === 'Partnership' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Partnership')}
-            className="px-6 py-2 filter-button"
-          >
-            Partnerships
-          </Button>
-          <Button
-            variant={filters.category_filter === 'Publication' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Publication')}
-            className="px-6 py-2 filter-button"
-          >
-            Publications
-          </Button>
-          <Button
-            variant={filters.category_filter === 'Grant' ? 'default' : 'outline'}
-            onClick={() => handleFilterChange('category_filter', 'Grant')}
-            className="px-6 py-2 filter-button"
-          >
-            Grants
-          </Button>
+          {categories.map(category => (
+            <Button
+              key={category}
+              variant={filters.category_filter === category ? 'default' : 'outline'}
+              onClick={() => handleFilterChange('category_filter', category)}
+              className="px-6 py-2 filter-button"
+            >
+              {category}s
+            </Button>
+          ))}
         </div>
 
         {/* Search and Filters */}
@@ -281,10 +281,9 @@ const Achievements = () => {
                 </SelectTrigger>
                 <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Award">Awards</SelectItem>
-                  <SelectItem value="Partnership">Partnerships</SelectItem>
-                  <SelectItem value="Publication">Publications</SelectItem>
-                  <SelectItem value="Grant">Grants</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -358,6 +357,25 @@ const Achievements = () => {
                           Featured Achievement
                         </span>
                       </div>
+                      {/* Action Buttons */}
+                      <div className="absolute bottom-6 right-6 flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditClick(achievements[0])}
+                          className="bg-white/90 backdrop-blur-sm border-white hover:bg-white"
+                        >
+                          {isAuthenticated ? <Edit className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteClick(achievements[0])}
+                          className="bg-red-500/90 backdrop-blur-sm border-red-500 text-white hover:bg-red-600"
+                        >
+                          {isAuthenticated ? <Trash2 className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
+                        </Button>
+                      </div>
                     </div>
                   )}
                   
@@ -416,6 +434,25 @@ const Achievements = () => {
                             <Trophy className="h-4 w-4 text-emerald-600" />
                           </div>
                         </div>
+                        {/* Action Buttons */}
+                        <div className="absolute bottom-4 right-4 flex space-x-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditClick(achievement)}
+                            className="bg-white/90 backdrop-blur-sm border-white hover:bg-white"
+                          >
+                            {isAuthenticated ? <Edit className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteClick(achievement)}
+                            className="bg-red-500/90 backdrop-blur-sm border-red-500 text-white hover:bg-red-600"
+                          >
+                            {isAuthenticated ? <Trash2 className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
+                          </Button>
+                        </div>
                       </div>
                     )}
                     
@@ -462,8 +499,23 @@ const Achievements = () => {
           <div className="text-center py-20">
             <Trophy className="h-16 w-16 text-gray-300 mx-auto mb-6" />
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No achievements found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria.</p>
-            <Button onClick={clearFilters}>Clear Search</Button>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or add a new achievement.</p>
+            <div className="flex justify-center space-x-4">
+              <Button onClick={clearFilters}>Clear Search</Button>
+              <Button onClick={handleAddClick} className="bg-emerald-600 hover:bg-emerald-700">
+                {isAuthenticated ? (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Achievement
+                  </>
+                ) : (
+                  <>
+                    <Shield className="h-4 w-4 mr-2" />
+                    Add Achievement
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -557,6 +609,36 @@ const Achievements = () => {
           Back to Top
         </Button>
       </div>
+
+      {/* Modals */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+        title="Authentication Required"
+      />
+
+      <AddAchievementModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddAchievement}
+        categories={categories}
+      />
+
+      <EditAchievementModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onUpdate={handleUpdateAchievement}
+        achievement={selectedAchievement}
+        categories={categories}
+      />
+
+      <DeleteAchievementModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onDelete={handleDeleteAchievement}
+        achievement={selectedAchievement}
+      />
     </div>
   );
 };
