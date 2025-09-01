@@ -359,6 +359,7 @@ const ContentManagement = () => {
         <Button 
           onClick={() => handleAdd(activeTab)}
           className="bg-emerald-600 hover:bg-emerald-700"
+          disabled={activeTab === 'calendar'}
         >
           <Plus className="h-4 w-4 mr-2" />
           Add New
