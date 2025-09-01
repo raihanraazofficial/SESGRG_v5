@@ -19,10 +19,30 @@ import { useProjects } from '../../contexts/ProjectsContext';
 import { useAchievements } from '../../contexts/AchievementsContext';
 import { useNewsEvents } from '../../contexts/NewsEventsContext';
 
-// Import modals
+// Import People modals
 import EditPersonModal from '../EditPersonModal';
 import AddPersonModal from '../AddPersonModal';
 import DeleteConfirmModal from '../DeleteConfirmModal';
+
+// Import Publications modals
+import AddPublicationModal from '../publications/AddPublicationModal';
+import EditPublicationModal from '../publications/EditPublicationModal';
+import DeletePublicationModal from '../publications/DeletePublicationModal';
+
+// Import Projects modals
+import AddProjectModal from '../projects/AddProjectModal';
+import EditProjectModal from '../projects/EditProjectModal';
+import DeleteProjectModal from '../projects/DeleteProjectModal';
+
+// Import Achievements modals
+import AddAchievementModal from '../achievements/AddAchievementModal';
+import EditAchievementModal from '../achievements/EditAchievementModal';
+import DeleteAchievementModal from '../achievements/DeleteAchievementModal';
+
+// Import NewsEvents modals
+import AddNewsEventModal from '../newsevents/AddNewsEventModal';
+import EditNewsEventModal from '../newsevents/EditNewsEventModal';
+import DeleteNewsEventModal from '../newsevents/DeleteNewsEventModal';
 
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('people');
@@ -40,10 +60,10 @@ const ContentManagement = () => {
 
   // Context data
   const { peopleData, deletePerson } = usePeople();
-  const { publications } = usePublications();
-  const { projects } = useProjects();
-  const { achievements } = useAchievements();
-  const { newsEvents } = useNewsEvents();
+  const { publications, addPublication, updatePublication, deletePublication, researchAreas: pubResearchAreas } = usePublications();
+  const { projects, addProject, updateProject, deleteProject, researchAreas: projResearchAreas, statuses } = useProjects();
+  const { achievements, addAchievement, updateAchievement, deleteAchievement } = useAchievements();
+  const { newsEvents, addNewsEvent, updateNewsEvent, deleteNewsEvent } = useNewsEvents();
 
   // Content tabs
   const contentTabs = [
@@ -116,16 +136,63 @@ const ContentManagement = () => {
           category = 'collaborators';
         }
         deletePerson(category, deletingItem.id);
+      } else if (editingCategory === 'publications') {
+        await deletePublication(deletingItem.id);
+      } else if (editingCategory === 'projects') {
+        await deleteProject(deletingItem.id);
+      } else if (editingCategory === 'achievements') {
+        await deleteAchievement(deletingItem.id);
+      } else if (editingCategory === 'news-events') {
+        await deleteNewsEvent(deletingItem.id);
       }
-      // Add other delete operations for publications, projects, etc.
       
       setIsDeleteModalOpen(false);
       setDeletingItem(null);
       setEditingCategory(null);
+      alert('Item deleted successfully!');
     } catch (error) {
       console.error('Error deleting item:', error);
+      alert('Error deleting item. Please try again.');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  // Handle Add operations
+  const handleAddItem = async (itemData) => {
+    try {
+      if (editingCategory === 'publications') {
+        await addPublication(itemData);
+      } else if (editingCategory === 'projects') {
+        await addProject(itemData);
+      } else if (editingCategory === 'achievements') {
+        await addAchievement(itemData);
+      } else if (editingCategory === 'news-events') {
+        await addNewsEvent(itemData);
+      }
+      alert('Item added successfully!');
+    } catch (error) {
+      console.error('Error adding item:', error);
+      throw error;
+    }
+  };
+
+  // Handle Edit operations
+  const handleEditItem = async (id, itemData) => {
+    try {
+      if (editingCategory === 'publications') {
+        await updatePublication(id, itemData);
+      } else if (editingCategory === 'projects') {
+        await updateProject(id, itemData);
+      } else if (editingCategory === 'achievements') {
+        await updateAchievement(id, itemData);
+      } else if (editingCategory === 'news-events') {
+        await updateNewsEvent(id, itemData);
+      }
+      alert('Item updated successfully!');
+    } catch (error) {
+      console.error('Error updating item:', error);
+      throw error;
     }
   };
 
@@ -156,7 +223,8 @@ const ContentManagement = () => {
     const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || 
-                           item.category?.toLowerCase() === selectedCategory.toLowerCase();
+                           item.category?.toLowerCase() === selectedCategory.toLowerCase() ||
+                           item.status?.toLowerCase() === selectedCategory.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
@@ -195,6 +263,15 @@ const ContentManagement = () => {
                       {item.category}
                     </span>
                   )}
+                  {item.status && (
+                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ml-2 ${
+                      item.status === 'Active' ? 'bg-green-100 text-green-700' :
+                      item.status === 'Completed' ? 'bg-blue-100 text-blue-700' :
+                      'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {item.status}
+                    </span>
+                  )}
                 </div>
                 <div className="flex space-x-2 ml-4">
                   <Button
@@ -225,7 +302,7 @@ const ContentManagement = () => {
                 )}
                 {activeTab === 'publications' && (
                   <>
-                    <p className="mb-1">{item.authors}</p>
+                    <p className="mb-1 line-clamp-1">{Array.isArray(item.authors) ? item.authors.join(', ') : item.authors}</p>
                     <p>{item.year} • {item.category}</p>
                   </>
                 )}
@@ -237,7 +314,7 @@ const ContentManagement = () => {
                 )}
                 {activeTab === 'achievements' && (
                   <>
-                    <p className="mb-1">{item.short_description}</p>
+                    <p className="mb-1 line-clamp-2">{item.short_description}</p>
                     <p>{new Date(item.date).toLocaleDateString()}</p>
                   </>
                 )}
@@ -326,15 +403,30 @@ const ContentManagement = () => {
             )}
             {activeTab === 'publications' && (
               <>
-                <option value="journal article">Journal Articles</option>
-                <option value="conference proceeding">Conference Papers</option>
-                <option value="book chapter">Book Chapters</option>
+                <option value="journal articles">Journal Articles</option>
+                <option value="conference proceedings">Conference Papers</option>
+                <option value="book chapters">Book Chapters</option>
               </>
             )}
             {activeTab === 'projects' && (
               <>
                 <option value="active">Active</option>
                 <option value="completed">Completed</option>
+                <option value="planning">Planning</option>
+              </>
+            )}
+            {activeTab === 'achievements' && (
+              <>
+                <option value="award">Awards</option>
+                <option value="grant">Grants</option>
+                <option value="recognition">Recognition</option>
+              </>
+            )}
+            {activeTab === 'news-events' && (
+              <>
+                <option value="news">News</option>
+                <option value="events">Events</option>
+                <option value="announcements">Announcements</option>
               </>
             )}
           </select>
@@ -344,7 +436,7 @@ const ContentManagement = () => {
       {/* Content Display */}
       {renderContent()}
 
-      {/* Modals */}
+      {/* Modals - People */}
       {activeTab === 'people' && (
         <>
           <EditPersonModal
@@ -377,6 +469,156 @@ const ContentManagement = () => {
             onConfirm={handleConfirmDelete}
             person={deletingItem}
             isLoading={isDeleting}
+          />
+        </>
+      )}
+
+      {/* Modals - Publications */}
+      {activeTab === 'publications' && (
+        <>
+          <AddPublicationModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setEditingCategory(null);
+            }}
+            onAdd={handleAddItem}
+            researchAreas={pubResearchAreas}
+          />
+          
+          <EditPublicationModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingItem(null);
+              setEditingCategory(null);
+            }}
+            onUpdate={handleEditItem}
+            publication={editingItem}
+            researchAreas={pubResearchAreas}
+          />
+          
+          <DeletePublicationModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setDeletingItem(null);
+              setEditingCategory(null);
+            }}
+            onDelete={() => handleConfirmDelete()}
+            publication={deletingItem}
+          />
+        </>
+      )}
+
+      {/* Modals - Projects */}
+      {activeTab === 'projects' && (
+        <>
+          <AddProjectModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setEditingCategory(null);
+            }}
+            onAdd={handleAddItem}
+            researchAreas={projResearchAreas}
+            statuses={statuses}
+          />
+          
+          <EditProjectModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingItem(null);
+              setEditingCategory(null);
+            }}
+            onUpdate={handleEditItem}
+            project={editingItem}
+            researchAreas={projResearchAreas}
+            statuses={statuses}
+          />
+          
+          <DeleteProjectModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setDeletingItem(null);
+              setEditingCategory(null);
+            }}
+            onDelete={() => handleConfirmDelete()}
+            project={deletingItem}
+          />
+        </>
+      )}
+
+      {/* Modals - Achievements */}
+      {activeTab === 'achievements' && (
+        <>
+          <AddAchievementModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setEditingCategory(null);
+            }}
+            onAdd={handleAddItem}
+          />
+          
+          <EditAchievementModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingItem(null);
+              setEditingCategory(null);
+            }}
+            onUpdate={handleEditItem}
+            achievement={editingItem}
+          />
+          
+          <DeleteAchievementModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setDeletingItem(null);
+              setEditingCategory(null);
+            }}
+            onDelete={() => handleConfirmDelete()}
+            achievement={deletingItem}
+          />
+        </>
+      )}
+
+      {/* Modals - News Events */}
+      {activeTab === 'news-events' && (
+        <>
+          <AddNewsEventModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setEditingCategory(null);
+            }}
+            onAdd={handleAddItem}
+          />
+          
+          <EditNewsEventModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingItem(null);
+              setEditingCategory(null);
+            }}
+            onUpdate={handleEditItem}
+            newsEvent={editingItem}
+          />
+          
+          <DeleteNewsEventModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setDeletingItem(null);
+              setEditingCategory(null);
+            }}
+            onDelete={() => handleConfirmDelete()}
+            newsEvent={deletingItem}
           />
         </>
       )}
