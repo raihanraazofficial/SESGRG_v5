@@ -44,6 +44,9 @@ import AddNewsEventModal from '../newsevents/AddNewsEventModal';
 import EditNewsEventModal from '../newsevents/EditNewsEventModal';
 import DeleteNewsEventModal from '../newsevents/DeleteNewsEventModal';
 
+// Import Calendar Management
+import CalendarManagement from './CalendarManagement';
+
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('people');
   const [searchTerm, setSearchTerm] = useState('');
