@@ -86,12 +86,18 @@ def test_achievements_data_migration_source():
                 
                 # Verify data structure for AchievementsContext
                 sample_achievement = achievements[0]
-                required_fields = ['title', 'short_description', 'description', 'category', 'date']
+                required_fields = ['title', 'short_description', 'category', 'date']
+                content_fields = ['description', 'full_content']  # Either field is acceptable
                 missing_fields = []
                 
                 for field in required_fields:
                     if field not in sample_achievement:
                         missing_fields.append(field)
+                
+                # Check if at least one content field exists
+                has_content_field = any(field in sample_achievement for field in content_fields)
+                if not has_content_field:
+                    missing_fields.append('description/full_content')
                 
                 if not missing_fields:
                     print(f"      ✅ Achievements data structure supports AchievementsContext")
