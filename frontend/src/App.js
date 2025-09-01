@@ -18,6 +18,9 @@ import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 
+// Import context
+import { PeopleProvider } from "./contexts/PeopleContext";
+
 function App() {
   return (
     <div className="App min-h-screen bg-gray-50">
