@@ -701,10 +701,41 @@ const NewsEvents = () => {
               Back to Home
             </Link>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Latest News & Events</h1>
-          <p className="text-xl text-gray-300 max-w-3xl">
-            Stay updated with our recent achievements, research milestones, upcoming events, and important announcements from our laboratory.
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">Latest News & Events</h1>
+              <p className="text-xl text-gray-300 max-w-3xl">
+                Stay updated with our recent achievements, research milestones, upcoming events, and important announcements from our laboratory.
+              </p>
+            </div>
+            
+            {/* Admin Controls */}
+            <div className="flex flex-col items-end space-y-4">
+              {isAuthenticated && (
+                <div className="flex items-center bg-emerald-600/20 backdrop-blur-sm rounded-full px-4 py-2 text-emerald-300 text-sm">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin Mode Active
+                </div>
+              )}
+              
+              <Button
+                onClick={handleAddNewsEvent}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New News/Event
+                  </>
+                ) : (
+                  <>
+                    <Shield className="h-4 w-4 mr-2" />
+                    Add New News/Event
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
