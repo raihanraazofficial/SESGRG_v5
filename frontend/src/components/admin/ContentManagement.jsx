@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import '../../styles/admin-responsive.css';
 import { usePeople } from '../../contexts/PeopleContext';
 import { usePublications } from '../../contexts/PublicationsContext';
 import { useProjects } from '../../contexts/ProjectsContext';
