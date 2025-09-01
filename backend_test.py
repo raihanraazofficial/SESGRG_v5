@@ -52,85 +52,85 @@ PROJECTS_API_URL = API_URLS['projects']
 ACHIEVEMENTS_API_URL = API_URLS['achievements']
 NEWS_EVENTS_API_URL = API_URLS['news_events']
 
-print(f"🚀 Testing Publications localStorage System - Backend Infrastructure")
+print(f"🚀 Testing Projects localStorage System - Backend Infrastructure")
 print(f"Publications API: {PUBLICATIONS_API_URL}")
 print(f"Projects API: {PROJECTS_API_URL}")
 print(f"Achievements API: {ACHIEVEMENTS_API_URL}")
 print(f"News Events API: {NEWS_EVENTS_API_URL}")
 print("=" * 80)
 
-def test_publications_data_migration_source():
-    """Test Google Sheets API as data migration source for localStorage Publications system"""
-    print("1. Testing Publications Data Migration Source...")
+def test_projects_data_migration_source():
+    """Test Google Sheets API as data migration source for localStorage Projects system"""
+    print("1. Testing Projects Data Migration Source...")
     
     all_tests_passed = True
     
     try:
-        # Test Publications API for localStorage migration
-        print("   📊 Testing Publications API for localStorage data migration...")
+        # Test Projects API for localStorage migration
+        print("   📊 Testing Projects API for localStorage data migration...")
         
         start_time = time.time()
-        response = requests.get(PUBLICATIONS_API_URL, timeout=6)
+        response = requests.get(PROJECTS_API_URL, timeout=6)
         end_time = time.time()
         response_time = end_time - start_time
         
         if response.status_code == 200:
-            print(f"      ✅ Publications API accessible for data migration")
+            print(f"      ✅ Projects API accessible for data migration")
             print(f"      ⏱️  Response time: {response_time:.2f}s")
             
             data = response.json()
-            publications = data.get('publications', []) if isinstance(data, dict) else data
+            projects = data.get('projects', []) if isinstance(data, dict) else data
             
-            if len(publications) > 0:
-                print(f"      ✅ Found {len(publications)} publications for localStorage migration")
+            if len(projects) > 0:
+                print(f"      ✅ Found {len(projects)} projects for localStorage migration")
                 
-                # Verify data structure for PublicationsContext
-                sample_pub = publications[0]
-                required_fields = ['title', 'authors', 'year', 'category', 'research_areas']
+                # Verify data structure for ProjectsContext
+                sample_project = projects[0]
+                required_fields = ['title', 'description', 'status', 'research_areas', 'principal_investigator']
                 missing_fields = []
                 
                 for field in required_fields:
-                    if field not in sample_pub:
+                    if field not in sample_project:
                         missing_fields.append(field)
                 
                 if not missing_fields:
-                    print(f"      ✅ Publications data structure supports PublicationsContext")
+                    print(f"      ✅ Projects data structure supports ProjectsContext")
                     
                     # Check specific fields for localStorage compatibility
-                    if 'research_areas' in sample_pub:
-                        research_areas = sample_pub.get('research_areas', [])
+                    if 'research_areas' in sample_project:
+                        research_areas = sample_project.get('research_areas', [])
                         if isinstance(research_areas, list):
                             print(f"      ✅ Research areas field is list-compatible for localStorage")
                         else:
                             print(f"      ⚠️  Research areas field needs conversion: {type(research_areas)}")
                     
-                    if 'authors' in sample_pub:
-                        authors = sample_pub.get('authors', [])
-                        if isinstance(authors, list) or isinstance(authors, str):
-                            print(f"      ✅ Authors field is compatible for localStorage conversion")
+                    if 'team_members' in sample_project:
+                        team_members = sample_project.get('team_members', [])
+                        if isinstance(team_members, list) or isinstance(team_members, str):
+                            print(f"      ✅ Team members field is compatible for localStorage conversion")
                         else:
-                            print(f"      ⚠️  Authors field needs conversion: {type(authors)}")
+                            print(f"      ⚠️  Team members field needs conversion: {type(team_members)}")
                             
                     # Check for CRUD-required fields
-                    crud_fields = ['id', 'doi_link', 'citations', 'journal_name', 'conference_name']
-                    available_crud_fields = [field for field in crud_fields if field in sample_pub]
+                    crud_fields = ['id', 'start_date', 'end_date', 'funding_agency', 'budget']
+                    available_crud_fields = [field for field in crud_fields if field in sample_project]
                     print(f"      ✅ CRUD-compatible fields available: {len(available_crud_fields)}/{len(crud_fields)}")
                     
                 else:
-                    print(f"      ❌ Missing required fields for PublicationsContext: {missing_fields}")
+                    print(f"      ❌ Missing required fields for ProjectsContext: {missing_fields}")
                     all_tests_passed = False
                     
             else:
-                print(f"      ⚠️  No publications found for localStorage migration")
+                print(f"      ⚠️  No projects found for localStorage migration")
                 
         else:
-            print(f"      ❌ Publications API returned status code: {response.status_code}")
+            print(f"      ❌ Projects API returned status code: {response.status_code}")
             all_tests_passed = False
             
         return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing publications data migration source: {e}")
+        print(f"   ❌ Error testing projects data migration source: {e}")
         return False
 
 def test_authentication_system_verification():
@@ -235,7 +235,7 @@ def test_frontend_service_status():
         
         if frontend_url:
             print(f"      ✅ Frontend configured for external access: {frontend_url}")
-            print(f"      ✅ Publications page should be accessible at: {frontend_url}/publications")
+            print(f"      ✅ Projects page should be accessible at: {frontend_url}/projects")
         else:
             print(f"      ⚠️  Frontend URL not found in configuration")
         
@@ -261,41 +261,41 @@ def test_frontend_service_status():
         return False
 
 def test_localstorage_data_structure_validation():
-    """Test data structure validation for localStorage Publications Context"""
+    """Test data structure validation for localStorage Projects Context"""
     print("4. Testing localStorage Data Structure Validation...")
     
     all_tests_passed = True
     
     try:
-        # Test Publications API data structure compatibility
-        print("   📋 Testing Publications data structure for localStorage compatibility...")
+        # Test Projects API data structure compatibility
+        print("   📋 Testing Projects data structure for localStorage compatibility...")
         
-        response = requests.get(PUBLICATIONS_API_URL, timeout=6)
+        response = requests.get(PROJECTS_API_URL, timeout=6)
         
         if response.status_code == 200:
             data = response.json()
-            publications = data.get('publications', []) if isinstance(data, dict) else data
+            projects = data.get('projects', []) if isinstance(data, dict) else data
             
-            if len(publications) > 0:
-                sample_pub = publications[0]
+            if len(projects) > 0:
+                sample_project = projects[0]
                 
-                # Test required fields for PublicationsContext
+                # Test required fields for ProjectsContext
                 required_context_fields = {
                     'id': 'Unique identifier',
-                    'title': 'Publication title',
-                    'authors': 'Author list',
-                    'year': 'Publication year',
-                    'category': 'Publication category',
+                    'title': 'Project title',
+                    'description': 'Project description',
+                    'status': 'Project status (Active/Completed/Planning)',
+                    'principal_investigator': 'Principal investigator name',
                     'research_areas': 'Research areas list',
-                    'citations': 'Citation count'
+                    'start_date': 'Project start date'
                 }
                 
-                print(f"      🔍 Validating required fields for PublicationsContext...")
+                print(f"      🔍 Validating required fields for ProjectsContext...")
                 missing_fields = []
                 present_fields = []
                 
                 for field, description in required_context_fields.items():
-                    if field in sample_pub:
+                    if field in sample_project:
                         present_fields.append(field)
                         print(f"         ✅ {field}: {description}")
                     else:
@@ -304,12 +304,15 @@ def test_localstorage_data_structure_validation():
                 
                 # Test optional CRUD fields
                 optional_crud_fields = {
-                    'journal_name': 'Journal name for articles',
-                    'conference_name': 'Conference name for proceedings',
-                    'book_title': 'Book title for chapters',
-                    'doi_link': 'DOI or paper link',
-                    'open_access': 'Open access flag',
-                    'abstract': 'Publication abstract',
+                    'end_date': 'Project end date',
+                    'team_members': 'Team members list',
+                    'funding_agency': 'Funding agency name',
+                    'budget': 'Project budget',
+                    'objectives': 'Project objectives',
+                    'expected_outcomes': 'Expected outcomes',
+                    'current_progress': 'Current progress',
+                    'website': 'Project website URL',
+                    'image': 'Project image URL',
                     'keywords': 'Keywords list'
                 }
                 
@@ -317,7 +320,7 @@ def test_localstorage_data_structure_validation():
                 optional_present = []
                 
                 for field, description in optional_crud_fields.items():
-                    if field in sample_pub:
+                    if field in sample_project:
                         optional_present.append(field)
                         print(f"         ✅ {field}: {description}")
                     else:
@@ -335,10 +338,10 @@ def test_localstorage_data_structure_validation():
                     all_tests_passed = False
                     
             else:
-                print(f"      ⚠️  No publications data available for validation")
+                print(f"      ⚠️  No projects data available for validation")
                 
         else:
-            print(f"      ❌ Publications API not accessible: {response.status_code}")
+            print(f"      ❌ Projects API not accessible: {response.status_code}")
             all_tests_passed = False
             
         return all_tests_passed
@@ -357,19 +360,19 @@ def test_real_time_synchronization_support():
         # Test 1: Verify ResearchAreas integration support
         print("   🔄 Testing ResearchAreas integration support...")
         
-        # Check if Publications API supports research area filtering
-        response = requests.get(PUBLICATIONS_API_URL, timeout=6)
+        # Check if Projects API supports research area filtering
+        response = requests.get(PROJECTS_API_URL, timeout=6)
         
         if response.status_code == 200:
             data = response.json()
-            publications = data.get('publications', []) if isinstance(data, dict) else data
+            projects = data.get('projects', []) if isinstance(data, dict) else data
             
-            if len(publications) > 0:
+            if len(projects) > 0:
                 # Check research areas consistency
                 all_research_areas = set()
-                for pub in publications:
-                    if 'research_areas' in pub and isinstance(pub['research_areas'], list):
-                        all_research_areas.update(pub['research_areas'])
+                for project in projects:
+                    if 'research_areas' in project and isinstance(project['research_areas'], list):
+                        all_research_areas.update(project['research_areas'])
                 
                 expected_research_areas = {
                     "Smart Grid Technologies",
@@ -391,28 +394,28 @@ def test_real_time_synchronization_support():
                     print(f"      ⚠️  Research areas may not match ResearchAreas page expectations")
                     
             else:
-                print(f"      ⚠️  No publications data for research areas validation")
+                print(f"      ⚠️  No projects data for research areas validation")
         
-        # Test 2: Verify Projects API integration support
-        print(f"\n   📊 Testing Projects API integration support...")
+        # Test 2: Verify Publications API integration support
+        print(f"\n   📊 Testing Publications API integration support...")
         
-        response = requests.get(PROJECTS_API_URL, timeout=6)
+        response = requests.get(PUBLICATIONS_API_URL, timeout=6)
         
         if response.status_code == 200:
             data = response.json()
-            projects = data.get('projects', []) if isinstance(data, dict) else data
+            publications = data.get('publications', []) if isinstance(data, dict) else data
             
-            print(f"      ✅ Projects API accessible: {len(projects)} projects")
+            print(f"      ✅ Publications API accessible: {len(publications)} publications")
             
-            if len(projects) > 0:
-                sample_project = projects[0]
-                if 'research_areas' in sample_project:
-                    print(f"      ✅ Projects have research_areas field for cross-page sync")
+            if len(publications) > 0:
+                sample_publication = publications[0]
+                if 'research_areas' in sample_publication:
+                    print(f"      ✅ Publications have research_areas field for cross-page sync")
                 else:
-                    print(f"      ⚠️  Projects missing research_areas field")
+                    print(f"      ⚠️  Publications missing research_areas field")
             
         else:
-            print(f"      ⚠️  Projects API not accessible: {response.status_code}")
+            print(f"      ⚠️  Publications API not accessible: {response.status_code}")
         
         # Test 3: Performance for real-time operations
         print(f"\n   ⚡ Testing performance for real-time operations...")
@@ -427,8 +430,8 @@ def test_real_time_synchronization_support():
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             futures = [
-                executor.submit(fetch_api, PUBLICATIONS_API_URL),
-                executor.submit(fetch_api, PROJECTS_API_URL)
+                executor.submit(fetch_api, PROJECTS_API_URL),
+                executor.submit(fetch_api, PUBLICATIONS_API_URL)
             ]
             
             results = []
@@ -456,17 +459,17 @@ def test_real_time_synchronization_support():
         return False
 
 def run_all_tests():
-    """Run comprehensive localStorage Publications system tests"""
-    print("🚀 Starting Publications localStorage System - Backend Infrastructure Tests")
+    """Run comprehensive localStorage Projects system tests"""
+    print("🚀 Starting Projects localStorage System - Backend Infrastructure Tests")
     print("=" * 80)
     
     all_tests_passed = True
     test_results = []
     
-    # Test 1: Publications Data Migration Source
+    # Test 1: Projects Data Migration Source
     try:
-        migration_working = test_publications_data_migration_source()
-        test_results.append(("Publications Data Migration Source", migration_working))
+        migration_working = test_projects_data_migration_source()
+        test_results.append(("Projects Data Migration Source", migration_working))
         all_tests_passed &= migration_working
     except Exception as e:
         print(f"❌ Test 1 failed with exception: {e}")
@@ -510,7 +513,7 @@ def run_all_tests():
     
     # Print summary
     print("\n" + "=" * 80)
-    print("📊 PUBLICATIONS LOCALSTORAGE SYSTEM - BACKEND INFRASTRUCTURE TEST RESULTS")
+    print("📊 PROJECTS LOCALSTORAGE SYSTEM - BACKEND INFRASTRUCTURE TEST RESULTS")
     print("=" * 80)
     
     for test_name, passed in test_results:
@@ -521,11 +524,11 @@ def run_all_tests():
     
     if all_tests_passed:
         print("🎉 ALL BACKEND INFRASTRUCTURE TESTS PASSED!")
-        print("✅ Publications localStorage system backend infrastructure is working correctly.")
+        print("✅ Projects localStorage system backend infrastructure is working correctly.")
         print("✅ Google Sheets API integration supports data migration and synchronization.")
         print("✅ Authentication system (admin/@dminsesg405) is properly configured.")
         print("✅ Frontend service is running and accessible.")
-        print("✅ Data structure supports PublicationsContext CRUD operations.")
+        print("✅ Data structure supports ProjectsContext CRUD operations.")
         print("")
         print("⚠️  IMPORTANT NOTE: This testing covers only the backend infrastructure.")
         print("    Frontend features like localStorage operations, React Context API,")
