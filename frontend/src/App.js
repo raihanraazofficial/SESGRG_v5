@@ -23,6 +23,7 @@ import { PeopleProvider } from "./contexts/PeopleContext";
 import { PublicationsProvider } from "./contexts/PublicationsContext";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 import { AchievementsProvider } from "./contexts/AchievementsContext";
+import { NewsEventsProvider } from "./contexts/NewsEventsContext";
 
 function App() {
   return (
