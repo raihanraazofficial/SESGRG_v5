@@ -211,6 +211,8 @@ const ContentManagement = () => {
         await updateAchievement(id, itemData);
       } else if (editingCategory === 'news-events') {
         await updateNewsEvent(id, itemData);
+      } else if (editingCategory === 'gallery') {
+        await updateGalleryItem(id, itemData);
       }
       alert('Item updated successfully!');
     } catch (error) {
