@@ -420,38 +420,26 @@ const Contacts = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Public Transportation</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{directions.publicTransportation.title}</h3>
                   <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      Take bus from Gulshan, Banani, or Mohakhali areas
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      CNG auto-rickshaw available from nearby locations
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      Uber and Pathao ride-sharing services available
-                    </li>
+                    {directions.publicTransportation.items.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">By Car</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{directions.byCar.title}</h3>
                   <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      Located on Mohakhali Road, easily accessible
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      Parking facilities available on campus
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
-                      Approximately 15 minutes from Gulshan Circle
-                    </li>
+                    {directions.byCar.items.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="inline-block w-2 h-2 bg-emerald-600 rounded-full mt-2 mr-3"></span>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
