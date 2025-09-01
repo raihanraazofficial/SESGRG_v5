@@ -519,7 +519,7 @@ Best regards,`;
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-64 overflow-y-auto">
                       <SelectItem value="year-desc">Year (Newest First)</SelectItem>
                       <SelectItem value="year-asc">Year (Oldest First)</SelectItem>
                       <SelectItem value="citations-desc">Citations (High to Low)</SelectItem>
