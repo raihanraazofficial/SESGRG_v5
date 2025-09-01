@@ -402,28 +402,28 @@ Best regards,`;
             <Button
               variant={filters.category_filter === '' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', '')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
+              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
             >
               All Publications
             </Button>
             <Button
               variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
+              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
             >
               Journals
             </Button>
             <Button
               variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
+              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
             >
               Conferences
             </Button>
             <Button
               variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
               onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base"
+              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
             >
               Book Chapters
             </Button>
