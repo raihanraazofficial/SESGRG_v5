@@ -260,6 +260,8 @@ const ContentManagement = () => {
         return 'Achievement';
       case 'news-events':
         return 'News/Event';
+      case 'gallery':
+        return 'Gallery Item';
       default:
         return 'Item';
     }
