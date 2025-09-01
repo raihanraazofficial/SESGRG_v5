@@ -7,7 +7,7 @@ import { useContact } from "../contexts/ContactContext";
 import emailjs from '@emailjs/browser';
 
 const Contacts = () => {
-  const { contactInfo, inquiryTypes, submitInquiry, mapConfig } = useContact();
+  const { contactInfo, inquiryTypes, submitInquiry, mapConfig, emailjsConfig, cards, directions } = useContact();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
