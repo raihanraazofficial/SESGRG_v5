@@ -371,6 +371,12 @@ const ContentManagement = () => {
                         <p>{new Date(item.date).toLocaleDateString()}</p>
                       </>
                     )}
+                    {activeTab === 'gallery' && (
+                      <>
+                        <p className="line-clamp-2">{item.description}</p>
+                        <p className="text-emerald-600">{item.category}</p>
+                      </>
+                    )}
                   </div>
                 </div>
                 
