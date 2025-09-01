@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import googleSheetsService from "../services/googleSheetsApi";
+import "../styles/smooth-filters.css";
 
 const Publications = () => {
   const [publications, setPublications] = useState([]);
