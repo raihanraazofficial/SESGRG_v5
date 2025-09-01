@@ -815,6 +815,7 @@ const ContactManagement = () => {
 
       {/* Content */}
       {activeSubTab === 'info' && renderContactInfoTab()}
+      {activeSubTab === 'emailjs' && renderEmailjsTab()}
       {activeSubTab === 'inquiries' && renderInquiriesTab()}
       {activeSubTab === 'types' && renderInquiryTypesTab()}
       {activeSubTab === 'map' && renderMapTab()}
