@@ -152,6 +152,12 @@ const People = () => {
     setIsAddModalOpen(false);
   };
 
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setDeletingPerson(null);
+    setDeletingCategory(null);
+  };
+
   const PersonCard = ({ person, category }) => (
     <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized h-full flex flex-col">
       <CardContent className="p-0 flex flex-col h-full">
