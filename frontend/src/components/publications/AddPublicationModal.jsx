@@ -124,7 +124,7 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
         city: '',
         country: '',
         doi_link: '',
-        full_paper_link: '',
+        paper_link: '',
         open_access: false,
         featured: false,
         abstract: '',
