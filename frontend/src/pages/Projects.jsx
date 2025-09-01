@@ -175,11 +175,12 @@ const Projects = () => {
       setPagination(response.pagination || {});
       setStatistics(response.statistics || {});
       
-      // Update available filters
+      // Update available filters with all options (independent of current selection)
       if (projectsData.length > 0) {
         const allAreas = projectsData.flatMap(project => project.research_areas || []);
         const uniqueAreas = [...new Set(allAreas)].sort();
         setAvailableAreas(uniqueAreas);
+        setAllAreas(uniqueAreas);
       }
       
       alert('Projects data refreshed successfully!');
