@@ -136,8 +136,10 @@ const People = () => {
               variant="secondary"
               className="bg-white/90 hover:bg-white text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
               onClick={() => handleEditPerson(person, activeSection === 'team-members' ? 'teamMembers' : activeSection)}
+              title={isAuthenticated ? "Edit Member" : "Authentication Required"}
             >
               <Edit3 className="h-4 w-4" />
+              {!isAuthenticated && <Shield className="h-3 w-3 ml-1" />}
             </Button>
           </div>
         </div>
