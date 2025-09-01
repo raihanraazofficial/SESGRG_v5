@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Copy, ExternalLink, Mail, ChevronLeft, ChevronRight, Loader2, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
+import { Search, Filter, Copy, ExternalLink, Mail, ChevronLeft, ChevronRight, Loader2, RefreshCw, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -7,22 +7,17 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import { usePublications } from "../contexts/PublicationsContext";
-import AuthModal from "../components/AuthModal";
-import AddPublicationModal from "../components/publications/AddPublicationModal";
-import EditPublicationModal from "../components/publications/EditPublicationModal";
-import DeletePublicationModal from "../components/publications/DeletePublicationModal";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/smooth-filters.css";
 
 const Publications = () => {
   const { 
     getPaginatedPublications, 
     getFilterOptions, 
-    addPublication, 
-    updatePublication, 
-    deletePublication, 
-    getPublicationById, 
     researchAreas 
   } = usePublications();
+  
+  const { isAuthenticated } = useAuth();
 
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,14 +40,6 @@ const Publications = () => {
   const [availableAreas, setAvailableAreas] = useState([]);
   const [allYears, setAllYears] = useState([]);
   const [allAreas, setAllAreas] = useState([]);
-
-  // Authentication and Modal states
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedPublication, setSelectedPublication] = useState(null);
 
   const categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"];
   const years = Array.from({length: 10}, (_, i) => (new Date().getFullYear() - i).toString());
@@ -243,71 +230,6 @@ Best regards,`;
     });
   };
 
-  // Authentication handlers
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-    setShowAuthModal(false);
-  };
-
-  const handleAddPublication = async (publicationData) => {
-    try {
-      await addPublication(publicationData);
-      fetchPublications(); // Refresh the list
-      alert('Publication added successfully!');
-    } catch (error) {
-      console.error('Error adding publication:', error);
-      throw error;
-    }
-  };
-
-  const handleEditPublication = async (id, publicationData) => {
-    try {
-      await updatePublication(id, publicationData);
-      fetchPublications(); // Refresh the list
-      alert('Publication updated successfully!');
-    } catch (error) {
-      console.error('Error updating publication:', error);
-      throw error;
-    }
-  };
-
-  const handleDeletePublication = async (id) => {
-    try {
-      await deletePublication(id);
-      fetchPublications(); // Refresh the list
-      alert('Publication deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting publication:', error);
-      throw error;
-    }
-  };
-
-  const openAddModal = () => {
-    if (!isAuthenticated) {
-      setShowAuthModal(true);
-      return;
-    }
-    setShowAddModal(true);
-  };
-
-  const openEditModal = (publication) => {
-    if (!isAuthenticated) {
-      setShowAuthModal(true);
-      return;
-    }
-    setSelectedPublication(publication);
-    setShowEditModal(true);
-  };
-
-  const openDeleteModal = (publication) => {
-    if (!isAuthenticated) {
-      setShowAuthModal(true);
-      return;
-    }
-    setSelectedPublication(publication);
-    setShowDeleteModal(true);
-  };
-
   return (
     <div className="min-h-screen pt-16 md:pt-20 bg-gray-50 performance-optimized">
       <style>{`
@@ -364,24 +286,19 @@ Best regards,`;
                 Discover cutting-edge research that's shaping the future of energy systems.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-              {isAuthenticated && (
-                <div className="flex items-center space-x-2 bg-emerald-600/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30 text-sm">
-                  <Shield className="h-4 w-4" />
-                  <span>Admin Mode</span>
-                </div>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={openAddModal}
-                className="flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900 w-full sm:w-auto"
-              >
-                {!isAuthenticated && <Shield className="h-4 w-4" />}
-                <Plus className="h-4 w-4" />
-                <span>Add Publication</span>
-              </Button>
-            </div>
+            
+            {/* Only show Admin Login button for non-authenticated users */}
+            {!isAuthenticated && (
+              <div className="flex flex-col items-start space-y-2">
+                <Link
+                  to="/admin/login"
+                  className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <Shield className="h-5 w-5 mr-2" />
+                  <span>Admin Login</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -599,7 +516,7 @@ Best regards,`;
           </div>
         )}
 
-        {/* Publications List */}
+        {/* Publications List - NO EDIT/DELETE BUTTONS */}
         {!loading && publications.length > 0 && (
           <div className="space-y-6">
             {publications.map((publication) => (
@@ -607,28 +524,10 @@ Best regards,`;
                 <CardContent className="p-8">
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 lg:mr-6">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 space-y-2 sm:space-y-0">
-                        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight flex-1 sm:mr-4">
+                      <div className="mb-3">
+                        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
                           {publication.title}
                         </h3>
-                        <div className="flex space-x-2 sm:flex-shrink-0">
-                          <button
-                            onClick={() => openEditModal(publication)}
-                            className="relative p-2 text-gray-500 hover:text-emerald-600 transition-colors rounded-lg hover:bg-emerald-50"
-                            title={isAuthenticated ? "Edit Publication" : "Login required to edit"}
-                          >
-                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-emerald-600" />}
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => openDeleteModal(publication)}
-                            className="relative p-2 text-gray-500 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
-                            title={isAuthenticated ? "Delete Publication" : "Login required to delete"}
-                          >
-                            {!isAuthenticated && <Shield className="h-3 w-3 absolute -top-1 -right-1 text-red-600" />}
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
                       </div>
                       
                       {/* IEEE Formatted Citation */}
@@ -730,13 +629,9 @@ Best regards,`;
         {!loading && publications.length === 0 && (
           <div className="text-center py-20">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No publications found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters, or add new publications.</p>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
             <div className="space-x-4">
               <Button onClick={clearFilters}>Clear All Filters</Button>
-              <Button onClick={openAddModal} className="bg-emerald-600 hover:bg-emerald-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Add First Publication
-              </Button>
             </div>
           </div>
         )}
@@ -835,41 +730,6 @@ Best regards,`;
           </Button>
         </div>
       </div>
-
-      {/* Modals */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-      />
-
-      <AddPublicationModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onAdd={handleAddPublication}
-        researchAreas={researchAreas}
-      />
-
-      <EditPublicationModal
-        isOpen={showEditModal}
-        onClose={() => {
-          setShowEditModal(false);
-          setSelectedPublication(null);
-        }}
-        onUpdate={handleEditPublication}
-        publication={selectedPublication}
-        researchAreas={researchAreas}
-      />
-
-      <DeletePublicationModal
-        isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setSelectedPublication(null);
-        }}
-        onDelete={handleDeletePublication}
-        publication={selectedPublication}
-      />
     </div>
   );
 };
