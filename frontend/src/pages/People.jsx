@@ -22,7 +22,9 @@ const People = () => {
   const [deletingCategory, setDeletingCategory] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Use Auth Context instead of local state
+  const { isAuthenticated } = useAuth();
 
   const { peopleData, researchAreas, deletePerson } = usePeople();
 
