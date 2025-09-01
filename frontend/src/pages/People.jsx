@@ -16,10 +16,14 @@ const People = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingPerson, setDeletingPerson] = useState(null);
+  const [deletingCategory, setDeletingCategory] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const { peopleData, researchAreas } = usePeople();
+  const { peopleData, researchAreas, deletePerson } = usePeople();
 
   const getResearchAreaColor = (index) => {
     const colors = [
