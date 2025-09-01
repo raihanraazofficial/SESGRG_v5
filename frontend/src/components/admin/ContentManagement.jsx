@@ -270,7 +270,8 @@ const ContentManagement = () => {
   // Filter data based on search and category
   const filteredData = getTabData().filter(item => {
     const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.title?.toLowerCase().includes(searchTerm.toLowerCase());
+                         item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.caption?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || 
                            item.category?.toLowerCase() === selectedCategory.toLowerCase() ||
                            item.status?.toLowerCase() === selectedCategory.toLowerCase();
