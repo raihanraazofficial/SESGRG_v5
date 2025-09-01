@@ -70,6 +70,7 @@ const ContentManagement = () => {
   const { projectsData, addProject, updateProject, deleteProject, researchAreas: projResearchAreas, statuses } = useProjects();
   const { achievementsData, addAchievement, updateAchievement, deleteAchievement, categories: achievementCategories } = useAchievements();
   const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent, categories: newsEventCategories } = useNewsEvents();
+  const { inquiries, getInquiryStats } = useContact();
 
   // Content tabs
   const contentTabs = [
