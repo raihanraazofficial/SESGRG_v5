@@ -437,7 +437,7 @@ const ContentManagement = () => {
         </div>
 
         {/* Search and Filters */}
-        {activeTab !== 'calendar' && (
+        {activeTab !== 'calendar' && activeTab !== 'contact' && (
           <div className="admin-search-filters flex flex-col sm:flex-row gap-3 lg:gap-4 mb-4 lg:mb-6 p-3 lg:p-4 bg-white rounded-lg border border-gray-200">
             <div className="flex-1">
               <div className="relative">
