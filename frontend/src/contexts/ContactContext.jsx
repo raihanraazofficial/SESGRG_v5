@@ -153,6 +153,14 @@ export const ContactProvider = ({ children }) => {
         localStorage.setItem('sesg_map_config', JSON.stringify(DEFAULT_MAP_CONFIG));
       }
 
+      // Load EmailJS config
+      const storedEmailjsConfig = localStorage.getItem('sesg_emailjs_config');
+      if (storedEmailjsConfig) {
+        setEmailjsConfig(JSON.parse(storedEmailjsConfig));
+      } else {
+        localStorage.setItem('sesg_emailjs_config', JSON.stringify(DEFAULT_EMAILJS_CONFIG));
+      }
+
       // Load inquiries
       const storedInquiries = localStorage.getItem('sesg_contact_inquiries');
       if (storedInquiries) {
