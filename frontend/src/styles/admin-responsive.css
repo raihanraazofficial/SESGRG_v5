@@ -1,0 +1,380 @@
+/* Admin Panel Content Management Responsive Design */
+/* Optimized for 1080px, 720px, 480px breakpoints */
+
+.admin-content-management {
+  /* Base styles for admin content management */
+  width: 100%;
+  padding: 1.5rem;
+}
+
+/* Large screens (1080px and above) */
+@media (min-width: 1080px) {
+  .admin-content-management {
+    padding: 2rem;
+  }
+  
+  .admin-content-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .admin-tabs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: flex-start;
+  }
+  
+  .admin-search-filters {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .admin-modal-overlay {
+    padding: 1rem;
+  }
+  
+  .admin-modal-content {
+    max-width: 95vw;
+    max-height: 95vh;
+    width: 1200px;
+  }
+}
+
+/* Medium screens (720px to 1079px) */
+@media (min-width: 720px) and (max-width: 1079px) {
+  .admin-content-management {
+    padding: 1.5rem;
+  }
+  
+  .admin-content-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .admin-tabs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .admin-tab-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-width: max-content;
+  }
+  
+  .admin-search-filters {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .admin-search-input {
+    width: 100%;
+  }
+  
+  .admin-filter-select {
+    width: 100%;
+  }
+  
+  .admin-modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .admin-modal-content {
+    max-width: 98vw;
+    max-height: 98vh;
+    width: 100%;
+  }
+}
+
+/* Small screens (480px to 719px) */
+@media (min-width: 480px) and (max-width: 719px) {
+  .admin-content-management {
+    padding: 1rem;
+  }
+  
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .admin-tabs-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+  }
+  
+  .admin-tab-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-width: max-content;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .admin-search-filters {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  
+  .admin-card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .admin-card-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-modal-overlay {
+    padding: 0.25rem;
+  }
+  
+  .admin-modal-content {
+    max-width: 99vw;
+    max-height: 99vh;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .admin-modal-header {
+    padding: 1rem;
+  }
+  
+  .admin-modal-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .admin-modal-form {
+    padding: 1rem;
+  }
+  
+  .admin-modal-footer {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .admin-modal-footer button {
+    flex: 1;
+  }
+}
+
+/* Extra small screens (below 480px) */
+@media (max-width: 479px) {
+  .admin-content-management {
+    padding: 0.75rem;
+  }
+  
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .admin-tabs-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.25rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+  }
+  
+  .admin-tab-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    min-width: max-content;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .admin-add-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-search-filters {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  
+  .admin-card {
+    padding: 1rem;
+  }
+  
+  .admin-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .admin-card-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  
+  .admin-card-actions button {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .admin-modal-overlay {
+    padding: 0;
+  }
+  
+  .admin-modal-content {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .admin-modal-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .admin-modal-header h2 {
+    font-size: 1.125rem;
+  }
+  
+  .admin-modal-form {
+    padding: 0.75rem;
+  }
+  
+  .admin-modal-footer {
+    padding: 0.75rem;
+    gap: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .admin-modal-footer button {
+    flex: 1;
+    font-size: 0.875rem;
+  }
+}
+
+/* Full-screen modal styles for all CRUD operations */
+.admin-modal-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .admin-modal-fullscreen {
+    padding: 0;
+  }
+  
+  .admin-modal-fullscreen .admin-modal-content {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+}
+
+/* Scrollable content area */
+.admin-modal-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Enhanced touch interactions for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .admin-tab-button {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+  
+  .admin-card-actions button {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+  
+  .admin-modal-footer button {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Loading states */
+.admin-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .admin-modal-content {
+    animation: none;
+  }
+  
+  .admin-tab-button {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .admin-modal-overlay {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .admin-card {
+    border: 2px solid #000;
+  }
+  
+  .admin-tab-button {
+    border: 1px solid #000;
+  }
+}
+
+/* Print styles (hide modals in print) */
+@media print {
+  .admin-modal-overlay {
+    display: none;
+  }
+}
