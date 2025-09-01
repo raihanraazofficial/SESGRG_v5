@@ -466,36 +466,6 @@ const Achievements = () => {
           Back to Top
         </Button>
       </div>
-
-      {/* Modals */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={handleAuthSuccess}
-        title="Authentication Required"
-      />
-
-      <AddAchievementModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onAdd={handleAddAchievement}
-        categories={categories}
-      />
-
-      <EditAchievementModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        onUpdate={handleUpdateAchievement}
-        achievement={selectedAchievement}
-        categories={categories}
-      />
-
-      <DeleteAchievementModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onDelete={handleDeleteAchievement}
-        achievement={selectedAchievement}
-      />
     </div>
   );
 };
