@@ -383,50 +383,33 @@ const Contacts = () => {
 
         {/* Additional Information Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {/* Research Collaboration */}
-          <Card className="hover:shadow-lg transition-shadow performance-optimized">
-            <CardContent className="p-6 text-center">
-              <div className="p-3 bg-emerald-100 rounded-full w-fit mx-auto mb-4">
-                <svg className="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Research Collaboration</h3>
-              <p className="text-gray-600 text-sm">
-                Interested in collaborative research? We welcome partnerships with academic institutions and industry leaders.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Student Opportunities */}
-          <Card className="hover:shadow-lg transition-shadow performance-optimized">
-            <CardContent className="p-6 text-center">
-              <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-4">
-                <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Student Opportunities</h3>
-              <p className="text-gray-600 text-sm">
-                Looking for research opportunities? We offer positions for undergraduate and graduate students.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Industry Partnerships */}
-          <Card className="hover:shadow-lg transition-shadow performance-optimized">
-            <CardContent className="p-6 text-center">
-              <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-4">
-                <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Industry Partnerships</h3>
-              <p className="text-gray-600 text-sm">
-                Connect with our lab for technology transfer, consultancy, and industrial research projects.
-              </p>
-            </CardContent>
-          </Card>
+          {cards.map((card) => (
+            <Card key={card.id} className="hover:shadow-lg transition-shadow performance-optimized">
+              <CardContent className="p-6 text-center">
+                <div className="p-3 bg-emerald-100 rounded-full w-fit mx-auto mb-4">
+                  {card.icon === 'collaboration' && (
+                    <svg className="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                  )}
+                  {card.icon === 'education' && (
+                    <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                  )}
+                  {card.icon === 'industry' && (
+                    <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  )}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{card.title}</h3>
+                <p className="text-gray-600 text-sm">
+                  {card.content}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Directions */}
