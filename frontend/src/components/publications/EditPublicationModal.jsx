@@ -396,25 +396,15 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
             )}
 
             {/* Links and Additional Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  DOI Link
+                  Paper Link (DOI or Direct Link)
                 </label>
                 <Input
-                  value={formData.doi_link}
-                  onChange={(e) => handleInputChange('doi_link', e.target.value)}
-                  placeholder="https://doi.org/..."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Paper Link
-                </label>
-                <Input
-                  value={formData.full_paper_link}
-                  onChange={(e) => handleInputChange('full_paper_link', e.target.value)}
-                  placeholder="https://..."
+                  value={formData.paper_link}
+                  onChange={(e) => handleInputChange('paper_link', e.target.value)}
+                  placeholder="https://doi.org/... or https://..."
                 />
               </div>
               <div>
