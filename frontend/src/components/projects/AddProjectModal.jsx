@@ -136,7 +136,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-5xl my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+      <div className="bg-white rounded-xl w-full max-w-[1080px] my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
         
         {/* Fixed Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
@@ -167,7 +167,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
             {/* Basic Information */}
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Folder className="h-5 w-5 mr-2 text-emerald-600" />
                   Basic Information
                 </h3>
@@ -236,7 +236,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
             {/* Timeline & Budget */}
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Calendar className="h-5 w-5 mr-2 text-blue-600" />
                   Timeline & Budget
                 </h3>
@@ -301,7 +301,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Research Areas * (Select at least one)
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {researchAreas.map((area, index) => (
                     <label key={area} className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all">
                       <input
@@ -321,7 +321,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
             {/* Team Members */}
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Users className="h-5 w-5 mr-2 text-green-600" />
                   Team Members
                 </h3>
