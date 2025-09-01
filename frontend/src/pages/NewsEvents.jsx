@@ -69,6 +69,22 @@ const NewsEvents = () => {
     }
   }, [newsEventsData, filters, getPaginatedNewsEvents, loading]);
 
+  // Load calendar settings from localStorage
+  useEffect(() => {
+    try {
+      const savedSettings = localStorage.getItem('sesg_calendar_settings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        setCalendarSettings(prev => ({
+          ...prev,
+          ...settings
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading calendar settings:', error);
+    }
+  }, []);
+
   const fetchNewsEvents = async (forceRefresh = false) => {
     try {
       if (forceRefresh) {
