@@ -138,391 +138,428 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
   if (!isOpen || !project) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[95vh] flex flex-col shadow-2xl">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl">
-          <h2 className="text-2xl font-bold text-gray-900">Edit Project</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
+      <div className="bg-white rounded-xl w-full max-w-5xl my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+        
+        {/* Fixed Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
+          <div className="flex items-center space-x-3">
+            <div className="bg-emerald-100 p-2 rounded-full">
+              <Folder className="h-6 w-6 text-emerald-600" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Edit Project</h2>
+              <p className="text-sm text-gray-600 mt-1">Update project information and details</p>
+            </div>
+          </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2"
+            disabled={isLoading}
           >
-            <X className="h-5 w-5" />
+            <X className="h-6 w-6" />
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-              <Folder className="h-5 w-5 mr-2 text-emerald-600" />
-              Basic Information
-            </h3>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="p-6 space-y-8">
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Title *
-                </label>
-                <Input
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  placeholder="Enter project title"
-                  className={errors.title ? 'border-red-500' : ''}
-                />
-                {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
-              </div>
+            {/* Basic Information */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                  <Folder className="h-5 w-5 mr-2 text-emerald-600" />
+                  Basic Information
+                </h3>
+                
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Project Title *
+                    </label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                      placeholder="Enter project title"
+                      className={`text-base ${errors.title ? 'border-red-500' : ''}`}
+                    />
+                    {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+                  </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description *
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Enter project description"
-                  rows={4}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.description ? 'border-red-500' : ''}`}
-                />
-                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description *
+                    </label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Enter project description"
+                      rows={4}
+                      className={`w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.description ? 'border-red-500' : ''}`}
+                    />
+                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => handleInputChange('status', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                >
-                  {statuses.map(status => (
-                    <option key={status} value={status}>{status}</option>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Status
+                      </label>
+                      <select
+                        value={formData.status}
+                        onChange={(e) => handleInputChange('status', e.target.value)}
+                        className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      >
+                        {statuses.map(status => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Principal Investigator *
+                      </label>
+                      <Input
+                        value={formData.principal_investigator}
+                        onChange={(e) => handleInputChange('principal_investigator', e.target.value)}
+                        placeholder="Enter principal investigator name"
+                        className={`text-base ${errors.principal_investigator ? 'border-red-500' : ''}`}
+                      />
+                      {errors.principal_investigator && <p className="text-red-500 text-sm mt-1">{errors.principal_investigator}</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Timeline & Budget */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                  <Calendar className="h-5 w-5 mr-2 text-blue-600" />
+                  Timeline & Budget
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date *
+                    </label>
+                    <Input
+                      type="date"
+                      value={formData.start_date}
+                      onChange={(e) => handleInputChange('start_date', e.target.value)}
+                      className={`text-base ${errors.start_date ? 'border-red-500' : ''}`}
+                    />
+                    {errors.start_date && <p className="text-red-500 text-sm mt-1">{errors.start_date}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Date
+                    </label>
+                    <Input
+                      type="date"
+                      value={formData.end_date}
+                      onChange={(e) => handleInputChange('end_date', e.target.value)}
+                      className={`text-base ${errors.end_date ? 'border-red-500' : ''}`}
+                    />
+                    {errors.end_date && <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Funding Agency
+                    </label>
+                    <Input
+                      value={formData.funding_agency}
+                      onChange={(e) => handleInputChange('funding_agency', e.target.value)}
+                      placeholder="Enter funding agency"
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Budget
+                    </label>
+                    <Input
+                      value={formData.budget}
+                      onChange={(e) => handleInputChange('budget', e.target.value)}
+                      placeholder="e.g., $50,000 or BDT 5,00,000"
+                      className="text-base"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Research Areas */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Research Areas * (Select at least one)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {researchAreas.map((area, index) => (
+                    <label key={area} className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all">
+                      <input
+                        type="checkbox"
+                        checked={formData.research_areas.includes(area)}
+                        onChange={() => toggleResearchArea(area)}
+                        className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                      />
+                      <span className="text-sm text-gray-700 font-medium">{area}</span>
+                    </label>
                   ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Principal Investigator *
-                </label>
-                <Input
-                  value={formData.principal_investigator}
-                  onChange={(e) => handleInputChange('principal_investigator', e.target.value)}
-                  placeholder="Enter principal investigator name"
-                  className={errors.principal_investigator ? 'border-red-500' : ''}
-                />
-                {errors.principal_investigator && <p className="text-red-500 text-sm mt-1">{errors.principal_investigator}</p>}
-              </div>
-            </div>
-          </div>
-
-          {/* Timeline & Budget */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-emerald-600" />
-              Timeline & Budget
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Start Date *
-                </label>
-                <Input
-                  type="date"
-                  value={formData.start_date}
-                  onChange={(e) => handleInputChange('start_date', e.target.value)}
-                  className={errors.start_date ? 'border-red-500' : ''}
-                />
-                {errors.start_date && <p className="text-red-500 text-sm mt-1">{errors.start_date}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  End Date
-                </label>
-                <Input
-                  type="date"
-                  value={formData.end_date}
-                  onChange={(e) => handleInputChange('end_date', e.target.value)}
-                  className={errors.end_date ? 'border-red-500' : ''}
-                />
-                {errors.end_date && <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Funding Agency
-                </label>
-                <Input
-                  value={formData.funding_agency}
-                  onChange={(e) => handleInputChange('funding_agency', e.target.value)}
-                  placeholder="Enter funding agency"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Budget
-                </label>
-                <Input
-                  value={formData.budget}
-                  onChange={(e) => handleInputChange('budget', e.target.value)}
-                  placeholder="e.g., $50,000 or BDT 5,00,000"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Research Areas */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Research Areas * (Select at least one)
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {researchAreas.map((area, index) => (
-                <label key={area} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.research_areas.includes(area)}
-                    onChange={() => toggleResearchArea(area)}
-                    className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
-                  />
-                  <span className="text-sm text-gray-700">{area}</span>
-                </label>
-              ))}
-            </div>
-            {errors.research_areas && <p className="text-red-500 text-sm mt-1">{errors.research_areas}</p>}
-          </div>
-
-          {/* Team Members */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-              <Users className="h-5 w-5 mr-2 text-emerald-600" />
-              Team Members
-            </h3>
-            {formData.team_members.map((member, index) => (
-              <div key={index} className="flex space-x-2">
-                <Input
-                  value={member}
-                  onChange={(e) => handleArrayChange('team_members', index, e.target.value)}
-                  placeholder={index === 0 ? "Enter team member name" : "Enter another team member name"}
-                  className="flex-1"
-                />
-                {formData.team_members.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeArrayItem('team_members', index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addArrayItem('team_members')}
-              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Team Member
-            </Button>
-          </div>
-
-          {/* Objectives */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Project Objectives</h3>
-            {formData.objectives.map((objective, index) => (
-              <div key={index} className="flex space-x-2">
-                <textarea
-                  value={objective}
-                  onChange={(e) => handleArrayChange('objectives', index, e.target.value)}
-                  placeholder={index === 0 ? "Enter main objective" : "Enter additional objective"}
-                  rows={2}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                />
-                {formData.objectives.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeArrayItem('objectives', index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addArrayItem('objectives')}
-              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Objective
-            </Button>
-          </div>
-
-          {/* Expected Outcomes */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Expected Outcomes</h3>
-            {formData.expected_outcomes.map((outcome, index) => (
-              <div key={index} className="flex space-x-2">
-                <textarea
-                  value={outcome}
-                  onChange={(e) => handleArrayChange('expected_outcomes', index, e.target.value)}
-                  placeholder={index === 0 ? "Enter expected outcome" : "Enter additional expected outcome"}
-                  rows={2}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                />
-                {formData.expected_outcomes.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeArrayItem('expected_outcomes', index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addArrayItem('expected_outcomes')}
-              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Expected Outcome
-            </Button>
-          </div>
-
-          {/* Additional Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Additional Information</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Progress
-              </label>
-              <textarea
-                value={formData.current_progress}
-                onChange={(e) => handleInputChange('current_progress', e.target.value)}
-                placeholder="Describe current progress..."
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Website
-                </label>
-                <Input
-                  value={formData.website}
-                  onChange={(e) => handleInputChange('website', e.target.value)}
-                  placeholder="https://project-website.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Image URL
-                </label>
-                <Input
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  placeholder="https://image-url.com/image.jpg"
-                />
+                </div>
+                {errors.research_areas && <p className="text-red-500 text-sm mt-2">{errors.research_areas}</p>}
               </div>
             </div>
 
-            {/* Keywords */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-gray-700">Keywords</h4>
-              {formData.keywords.map((keyword, index) => (
-                <div key={index} className="flex space-x-2">
-                  <Input
-                    value={keyword}
-                    onChange={(e) => handleArrayChange('keywords', index, e.target.value)}
-                    placeholder={index === 0 ? "Enter keyword" : "Enter another keyword"}
-                    className="flex-1"
-                  />
-                  {formData.keywords.length > 1 && (
+            {/* Team Members */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                  <Users className="h-5 w-5 mr-2 text-green-600" />
+                  Team Members
+                </h3>
+                {formData.team_members.map((member, index) => (
+                  <div key={index} className="flex space-x-3 mb-3">
+                    <Input
+                      value={member}
+                      onChange={(e) => handleArrayChange('team_members', index, e.target.value)}
+                      placeholder={index === 0 ? "Enter team member name" : "Enter another team member name"}
+                      className="flex-1 text-base"
+                    />
+                    {formData.team_members.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeArrayItem('team_members', index)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addArrayItem('team_members')}
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Team Member
+                </Button>
+              </div>
+            </div>
+
+            {/* Objectives */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Objectives</h3>
+                {formData.objectives.map((objective, index) => (
+                  <div key={index} className="flex space-x-3 mb-3">
+                    <textarea
+                      value={objective}
+                      onChange={(e) => handleArrayChange('objectives', index, e.target.value)}
+                      placeholder={index === 0 ? "Enter main objective" : "Enter additional objective"}
+                      rows={3}
+                      className="flex-1 px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    />
+                    {formData.objectives.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeArrayItem('objectives', index)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addArrayItem('objectives')}
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Objective
+                </Button>
+              </div>
+            </div>
+
+            {/* Expected Outcomes */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Expected Outcomes</h3>
+                {formData.expected_outcomes.map((outcome, index) => (
+                  <div key={index} className="flex space-x-3 mb-3">
+                    <textarea
+                      value={outcome}
+                      onChange={(e) => handleArrayChange('expected_outcomes', index, e.target.value)}
+                      placeholder={index === 0 ? "Enter expected outcome" : "Enter additional expected outcome"}
+                      rows={3}
+                      className="flex-1 px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    />
+                    {formData.expected_outcomes.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeArrayItem('expected_outcomes', index)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start mt-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addArrayItem('expected_outcomes')}
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Expected Outcome
+                </Button>
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Current Progress
+                    </label>
+                    <textarea
+                      value={formData.current_progress}
+                      onChange={(e) => handleInputChange('current_progress', e.target.value)}
+                      placeholder="Describe current progress..."
+                      rows={4}
+                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Project Website
+                      </label>
+                      <Input
+                        value={formData.website}
+                        onChange={(e) => handleInputChange('website', e.target.value)}
+                        placeholder="https://project-website.com"
+                        className="text-base"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Project Image URL
+                      </label>
+                      <Input
+                        value={formData.image}
+                        onChange={(e) => handleInputChange('image', e.target.value)}
+                        placeholder="https://image-url.com/image.jpg"
+                        className="text-base"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Keywords */}
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-semibold text-gray-700">Keywords</h4>
+                    {formData.keywords.map((keyword, index) => (
+                      <div key={index} className="flex space-x-3">
+                        <Input
+                          value={keyword}
+                          onChange={(e) => handleArrayChange('keywords', index, e.target.value)}
+                          placeholder={index === 0 ? "Enter keyword" : "Enter another keyword"}
+                          className="flex-1 text-base"
+                        />
+                        {formData.keywords.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeArrayItem('keywords', index)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => removeArrayItem('keywords', index)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => addArrayItem('keywords')}
+                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Keyword
                     </Button>
-                  )}
+                  </div>
+
+                  {/* Featured checkbox */}
+                  <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={formData.featured}
+                      onChange={(e) => handleInputChange('featured', e.target.checked)}
+                      className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    />
+                    <label htmlFor="featured" className="text-sm text-gray-700 font-medium">
+                      Featured Project (will appear prominently on homepage)
+                    </label>
+                  </div>
                 </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem('keywords')}
-                className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Keyword
-              </Button>
+              </div>
             </div>
+          </form>
+        </div>
 
-            {/* Featured checkbox */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="featured"
-                checked={formData.featured}
-                onChange={(e) => handleInputChange('featured', e.target.checked)}
-                className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
-              />
-              <label htmlFor="featured" className="text-sm text-gray-700">
-                Featured Project (will appear prominently on homepage)
-              </label>
-            </div>
-          </div>
-
-          {/* Form Actions */}
-          </div>
-          <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-white">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="bg-emerald-600 hover:bg-emerald-700"
-            >
-              {isLoading ? 'Updating...' : 'Update Project'}
-            </Button>
-          </div>
-        </form>
+        {/* Fixed Footer with Actions */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 flex justify-end space-x-4 rounded-b-xl">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+            className="px-6 py-2"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            onClick={handleSubmit}
+            className="bg-emerald-600 hover:bg-emerald-700 px-6 py-2"
+          >
+            {isLoading ? 'Updating...' : 'Update Project'}
+          </Button>
+        </div>
       </div>
     </div>
   );
