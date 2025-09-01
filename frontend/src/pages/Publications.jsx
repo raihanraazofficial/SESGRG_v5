@@ -485,10 +485,10 @@ Best regards,`;
                   value={filters.category_filter || "all"}
                   onValueChange={(value) => handleFilterChange('category_filter', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="dropdown-container">
                     <SelectValue placeholder="Filter by Category" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-64 overflow-y-auto">
+                  <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                     <SelectItem value="all">All Categories</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category} value={category}>{category}</SelectItem>
