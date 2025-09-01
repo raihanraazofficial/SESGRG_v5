@@ -223,6 +223,8 @@ const ContentManagement = () => {
         return achievementsData || [];
       case 'news-events':
         return newsEventsData || [];
+      case 'calendar':
+        return []; // Calendar settings don't have list data
       default:
         return [];
     }
