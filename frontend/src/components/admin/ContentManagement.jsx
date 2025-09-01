@@ -719,6 +719,44 @@ const ContentManagement = () => {
         </>
       )}
 
+      {/* Modals - Gallery */}
+      {activeTab === 'gallery' && (
+        <>
+          <AddGalleryModal
+            isOpen={isAddModalOpen}
+            onClose={() => {
+              setIsAddModalOpen(false);
+              setEditingCategory(null);
+            }}
+            onAdd={handleAddItem}
+            categories={galleryCategories || []}
+          />
+          
+          <EditGalleryModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingItem(null);
+              setEditingCategory(null);
+            }}
+            onUpdate={handleEditItem}
+            item={editingItem}
+            categories={galleryCategories || []}
+          />
+          
+          <DeleteGalleryModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setDeletingItem(null);
+              setEditingCategory(null);
+            }}
+            onConfirm={handleConfirmDelete}
+            item={deletingItem}
+          />
+        </>
+      )}
+
     </div>
   );
 };
