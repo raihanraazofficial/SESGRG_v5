@@ -87,6 +87,15 @@ const DEFAULT_MAP_CONFIG = {
   title: "BRAC University Location"
 };
 
+// Default EmailJS configuration
+const DEFAULT_EMAILJS_CONFIG = {
+  serviceId: "service_t24jk5y",
+  templateId: "template_4463jfm", 
+  publicKey: "SO-7N8WkgVst2B5lq",
+  toEmail: "raihanraaz.official@gmail.com",
+  enabled: true
+};
+
 export const ContactProvider = ({ children }) => {
   const [contactInfo, setContactInfo] = useState(DEFAULT_CONTACT_INFO);
   const [inquiryTypes, setInquiryTypes] = useState(DEFAULT_INQUIRY_TYPES);
