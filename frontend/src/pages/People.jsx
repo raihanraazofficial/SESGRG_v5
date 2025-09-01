@@ -358,38 +358,6 @@ const People = () => {
           Back to Top
         </Button>
       </div>
-
-      {/* Edit Modal */}
-      <EditPersonModal
-        person={editingPerson}
-        category={editingCategory}
-        isOpen={isEditModalOpen}
-        onClose={handleCloseEditModal}
-      />
-
-      {/* Authentication Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={handleCloseAuthModal}
-        onSuccess={handleAuthSuccess}
-        title="Authentication Required"
-      />
-
-      {/* Add Person Modal */}
-      <AddPersonModal
-        isOpen={isAddModalOpen}
-        onClose={handleCloseAddModal}
-        category={activeSection === 'team-members' ? 'teamMembers' : activeSection}
-      />
-
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        person={deletingPerson}
-        isLoading={isDeleting}
-      />
     </div>
   );
 };
