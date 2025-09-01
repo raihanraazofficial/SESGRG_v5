@@ -504,7 +504,8 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          </div>
+          <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-white">
             <Button
               type="button"
               variant="outline"
