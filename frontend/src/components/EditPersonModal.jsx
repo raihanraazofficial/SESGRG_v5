@@ -90,7 +90,7 @@ const EditPersonModal = ({ person, category, isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-5xl my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+      <div className="bg-white rounded-xl w-full max-w-[1080px] my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
         
         {/* Fixed Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
@@ -281,7 +281,7 @@ const EditPersonModal = ({ person, category, isOpen, onClose }) => {
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Research Interest (Max 4)</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {availableAreas.map((area) => (
                     <div
                       key={area.index}
