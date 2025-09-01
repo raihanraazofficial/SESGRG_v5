@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
+import { Search, Filter, Calendar, DollarSign, Users, ChevronLeft, ChevronRight, Loader2, ExternalLink, RefreshCw, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -7,10 +7,7 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import { useProjects } from "../contexts/ProjectsContext";
-import AuthModal from "../components/AuthModal";
-import AddProjectModal from "../components/projects/AddProjectModal";
-import EditProjectModal from "../components/projects/EditProjectModal";
-import DeleteProjectModal from "../components/projects/DeleteProjectModal";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/smooth-filters.css";
 
 const Projects = () => {
