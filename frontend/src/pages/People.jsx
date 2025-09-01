@@ -429,6 +429,21 @@ const People = () => {
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
       />
+
+      {/* Authentication Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={handleCloseAuthModal}
+        onSuccess={handleAuthSuccess}
+        title="Authentication Required"
+      />
+
+      {/* Add Person Modal */}
+      <AddPersonModal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseAddModal}
+        category={activeSection === 'team-members' ? 'teamMembers' : activeSection}
+      />
     </div>
   );
 };
