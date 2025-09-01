@@ -21,6 +21,7 @@ import { useProjects } from '../../contexts/ProjectsContext';
 import { useAchievements } from '../../contexts/AchievementsContext';
 import { useNewsEvents } from '../../contexts/NewsEventsContext';
 import { useContact } from '../../contexts/ContactContext';
+import { useGallery } from '../../contexts/GalleryContext';
 
 // Import People modals
 import EditPersonModal from '../EditPersonModal';
