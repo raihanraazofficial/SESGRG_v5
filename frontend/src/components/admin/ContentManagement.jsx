@@ -400,63 +400,65 @@ const ContentManagement = () => {
       </div>
 
       {/* Search and Filter */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search content..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-          />
+      {activeTab !== 'calendar' && (
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search content..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-gray-400" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            >
+              <option value="all">All Categories</option>
+              {activeTab === 'people' && (
+                <>
+                  <option value="advisor">Advisors</option>
+                  <option value="team member">Team Members</option>
+                  <option value="collaborator">Collaborators</option>
+                </>
+              )}
+              {activeTab === 'publications' && (
+                <>
+                  <option value="journal articles">Journal Articles</option>
+                  <option value="conference proceedings">Conference Papers</option>
+                  <option value="book chapters">Book Chapters</option>
+                </>
+              )}
+              {activeTab === 'projects' && (
+                <>
+                  <option value="active">Active</option>
+                  <option value="completed">Completed</option>
+                  <option value="planning">Planning</option>
+                </>
+              )}
+              {activeTab === 'achievements' && (
+                <>
+                  <option value="award">Awards</option>
+                  <option value="grant">Grants</option>
+                  <option value="recognition">Recognition</option>
+                </>
+              )}
+              {activeTab === 'news-events' && (
+                <>
+                  <option value="news">News</option>
+                  <option value="events">Events</option>
+                  <option value="announcements">Announcements</option>
+                </>
+              )}
+            </select>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Filter className="h-4 w-4 text-gray-400" />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-          >
-            <option value="all">All Categories</option>
-            {activeTab === 'people' && (
-              <>
-                <option value="advisor">Advisors</option>
-                <option value="team member">Team Members</option>
-                <option value="collaborator">Collaborators</option>
-              </>
-            )}
-            {activeTab === 'publications' && (
-              <>
-                <option value="journal articles">Journal Articles</option>
-                <option value="conference proceedings">Conference Papers</option>
-                <option value="book chapters">Book Chapters</option>
-              </>
-            )}
-            {activeTab === 'projects' && (
-              <>
-                <option value="active">Active</option>
-                <option value="completed">Completed</option>
-                <option value="planning">Planning</option>
-              </>
-            )}
-            {activeTab === 'achievements' && (
-              <>
-                <option value="award">Awards</option>
-                <option value="grant">Grants</option>
-                <option value="recognition">Recognition</option>
-              </>
-            )}
-            {activeTab === 'news-events' && (
-              <>
-                <option value="news">News</option>
-                <option value="events">Events</option>
-                <option value="announcements">Announcements</option>
-              </>
-            )}
-          </select>
-        </div>
-      </div>
+      )}
 
       {/* Content Display */}
       {renderContent()}
