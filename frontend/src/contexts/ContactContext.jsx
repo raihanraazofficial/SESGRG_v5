@@ -102,6 +102,7 @@ export const ContactProvider = ({ children }) => {
   const [cards, setCards] = useState(DEFAULT_CARDS);
   const [directions, setDirections] = useState(DEFAULT_DIRECTIONS);
   const [mapConfig, setMapConfig] = useState(DEFAULT_MAP_CONFIG);
+  const [emailjsConfig, setEmailjsConfig] = useState(DEFAULT_EMAILJS_CONFIG);
   const [inquiries, setInquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
