@@ -561,8 +561,8 @@ const ContentManagement = () => {
             }}
             onUpdate={handleEditItem}
             project={editingItem}
-            researchAreas={projResearchAreas}
-            statuses={statuses}
+            researchAreas={projResearchAreas || []}
+            statuses={statuses || []}
           />
           
           <DeleteProjectModal
