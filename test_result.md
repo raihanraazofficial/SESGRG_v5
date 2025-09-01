@@ -112,6 +112,11 @@ user_problem_statement: |
   ✅ 6. Added "Back to Top" buttons to all updated pages
   ✅ 7. Optimized advisor photos for better face visibility
   
+  NEW FIXES - January 2025:
+  ✅ 8. Fixed ResearchAreas.jsx "Learn More" popup "Back to Research Areas" button - now works properly with window.close() and improved navigation
+  ✅ 9. Updated hero sections to match People.jsx style - converted all pages (ResearchAreas.jsx, Publications.jsx, NewsEvents.jsx, TermsConditions.jsx, PrivacyPolicy.jsx) from contained/rectangular style to full-page gradient hero sections like People.jsx and Achievements.jsx
+  ✅ 10. Added missing route /terms-conditions and /privacy-policy in App.js for proper navigation
+  
   NEW UPDATES - People Page Modifications:
   ✅ 8. Updated Advisor 3 (Amirul Islam) with new image from GitHub repository and corrected department affiliation
   ✅ 9. Removed call/phone icons from all person cards while keeping other research profile icons
