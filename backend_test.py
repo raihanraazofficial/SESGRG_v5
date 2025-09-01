@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Projects localStorage System - Backend Infrastructure Testing Suite
-Tests the Google Sheets API infrastructure supporting the localStorage-based Projects system:
-1. Projects Data Migration Source: Verify Google Sheets API for initial data migration
-2. Authentication System Verification: Test credentials and access control
+Achievements localStorage System - Backend Infrastructure Testing Suite
+Tests the Google Sheets API infrastructure supporting the localStorage-based Achievements system:
+1. Achievements Data Migration Source: Verify Google Sheets API for initial data migration
+2. Authentication System Verification: Test credentials (admin/@dminsesg405) and access control
 3. Frontend Service Status: Verify frontend is running and accessible
-4. localStorage Data Structure Validation: Ensure APIs support ProjectsContext integration
-5. Real-time Synchronization Support: Test data consistency for localStorage operations
+4. localStorage Data Structure Validation: Ensure APIs support AchievementsContext integration
+5. Rich Text Editor Integration: Test blog content generation and markdown processing support
 
-FOCUS: Testing the backend infrastructure that supports the localStorage-based Projects system
-including authentication credentials, data migration source, and service availability.
+FOCUS: Testing the backend infrastructure that supports the localStorage-based Achievements system
+including authentication credentials, data migration source, rich text processing, and service availability.
 """
 
 import requests
