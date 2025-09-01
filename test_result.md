@@ -425,11 +425,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Google Sheets API Integration Testing - COMPLETED"
-    - "Frontend Data Fetching Verification - COMPLETED"
-    - "IEEE Citation Formatting Testing - COMPLETED"
-    - "Performance Optimizations and Statistics Filtering - COMPLETED"
-    - "Research Areas Page Google Sheets API Integration - COMPLETED"
+    - "Complete Publications Architecture Overhaul Testing - NEW"
+    - "localStorage-based Publications CRUD Operations Testing - NEW"
+    - "Authentication-Protected Publications Management Testing - NEW"
+    - "Real-time Data Synchronization Across Pages Testing - NEW"
+    - "Publications Context Integration Testing - NEW"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
