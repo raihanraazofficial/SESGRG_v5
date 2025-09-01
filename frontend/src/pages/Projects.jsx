@@ -351,7 +351,7 @@ const Projects = () => {
                   </SelectTrigger>
                   <SelectContent className="max-h-64 overflow-y-auto">
                     <SelectItem value="all">All Areas</SelectItem>
-                    {availableAreas.length > 0 ? availableAreas.map(area => (
+                    {allAreas.length > 0 ? allAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
                     )) : researchAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
