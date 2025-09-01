@@ -600,6 +600,7 @@ const ContentManagement = () => {
             }}
             onUpdate={handleEditItem}
             achievement={editingItem}
+            categories={achievementCategories}
           />
           
           <DeleteAchievementModal
