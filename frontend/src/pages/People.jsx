@@ -510,6 +510,15 @@ const People = () => {
         onClose={handleCloseAddModal}
         category={activeSection === 'team-members' ? 'teamMembers' : activeSection}
       />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        person={deletingPerson}
+        isLoading={isDeleting}
+      />
     </div>
   );
 };
