@@ -65,8 +65,8 @@ const ContentManagement = () => {
   const { peopleData, deletePerson } = usePeople();
   const { publicationsData, addPublication, updatePublication, deletePublication, researchAreas: pubResearchAreas } = usePublications();
   const { projectsData, addProject, updateProject, deleteProject, researchAreas: projResearchAreas, statuses } = useProjects();
-  const { achievementsData, addAchievement, updateAchievement, deleteAchievement } = useAchievements();
-  const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent } = useNewsEvents();
+  const { achievementsData, addAchievement, updateAchievement, deleteAchievement, categories: achievementCategories } = useAchievements();
+  const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent, categories: newsEventCategories } = useNewsEvents();
 
   // Content tabs
   const contentTabs = [
