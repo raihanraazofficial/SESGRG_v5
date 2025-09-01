@@ -112,6 +112,12 @@ const ContentManagement = () => {
       count: newsEventsData?.length || 0
     },
     {
+      id: 'gallery',
+      label: 'Gallery',
+      icon: FileText,
+      count: galleryItems?.length || 0
+    },
+    {
       id: 'contact',
       label: 'Contact',
       icon: Phone,
