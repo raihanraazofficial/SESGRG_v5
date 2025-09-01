@@ -33,17 +33,6 @@ const Achievements = () => {
     per_page: 12
   });
 
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
-
-  // Modal states
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedAchievement, setSelectedAchievement] = useState(null);
-
   // Load achievements whenever achievementsData or filters change
   useEffect(() => {
     if (achievementsData.length > 0 || !loading) {
