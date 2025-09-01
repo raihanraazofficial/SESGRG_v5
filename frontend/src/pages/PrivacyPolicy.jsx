@@ -93,7 +93,7 @@ const PrivacyPolicy = () => {
           <CardContent className="p-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Introduction</h2>
             <p className="text-gray-700 leading-relaxed">
-              The Sustainable Energy and Smart Grid Research lab at BRAC University is committed to protecting your privacy and handling your personal information responsibly. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or interact with our research programs.
+              The Sustainable Energy and Smart Grid Research at BRAC University is committed to protecting your privacy and handling your personal information responsibly. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or interact with our research programs.
             </p>
           </CardContent>
         </Card>

@@ -93,7 +93,7 @@ const TermsConditions = () => {
           <CardContent className="p-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Agreement to Terms</h2>
             <p className="text-gray-700 leading-relaxed">
-              By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service. These terms apply to all visitors, users, and others who access or use the Sustainable Energy and Smart Grid Research lab website.
+              By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service. These terms apply to all visitors, users, and others who access or use the Sustainable Energy and Smart Grid Research website.
             </p>
           </CardContent>
         </Card>
@@ -141,7 +141,7 @@ const TermsConditions = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>Acknowledge the Sustainable Energy and Smart Grid Research lab and BRAC University</span>
+                <span>Acknowledge the Sustainable Energy and Smart Grid Research and BRAC University</span>
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -159,7 +159,7 @@ const TermsConditions = () => {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Terms Modifications</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  BRAC University and the Sustainable Energy and Smart Grid Research lab reserve the right to revise these terms at any time without notice. By using this website, you agree to be bound by the current version of these terms and conditions. Changes will be posted on this page with an updated revision date.
+                  BRAC University and the Sustainable Energy and Smart Grid Research reserve the right to revise these terms at any time without notice. By using this website, you agree to be bound by the current version of these terms and conditions. Changes will be posted on this page with an updated revision date.
                 </p>
               </div>
             </div>
@@ -186,7 +186,7 @@ const TermsConditions = () => {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Mailing Address</h3>
                 <p className="text-gray-700">
-                  Sustainable Energy and Smart Grid Research Lab<br />
+                  Sustainable Energy and Smart Grid Research<br />
                   BRAC University<br />
                   66 Mohakhali, Dhaka 1212<br />
                   Bangladesh

@@ -454,7 +454,7 @@ const NewsEvents = () => {
           
           <div class="mt-12 p-8 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl">
             <h3 class="text-xl font-bold text-gray-900 mb-4">About This ${item.category || 'News & Events'}</h3>
-            <p class="text-gray-700 leading-relaxed">This represents an important update from our research journey at the Sustainable Energy and Smart Grid Research lab. It demonstrates our commitment to advancing the field through innovative solutions and collaborative efforts.</p>
+            <p class="text-gray-700 leading-relaxed">This represents an important update from our research journey at the Sustainable Energy and Smart Grid Research. It demonstrates our commitment to advancing the field through innovative solutions and collaborative efforts.</p>
           </div>
         </div>
         
