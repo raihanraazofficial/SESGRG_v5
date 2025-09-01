@@ -995,10 +995,36 @@ const NewsEvents = () => {
                     
                     <CardContent className="p-6">
                       <div className="space-y-4">
-                        {/* Title */}
-                        <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
-                          {item.title}
-                        </h3>
+                        {/* Edit/Delete Controls */}
+                        <div className="flex justify-between items-start">
+                          <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors flex-1 mr-2">
+                            {item.title}
+                          </h3>
+                          {isAuthenticated ? (
+                            <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleEditNewsEvent(item)}
+                                className="h-8 w-8 p-0 hover:bg-emerald-50 text-emerald-600"
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleDeleteNewsEvent(item)}
+                                className="h-8 w-8 p-0 hover:bg-red-50 text-red-600"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Shield className="h-4 w-4 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
 
                         {/* Date and Location */}
                         <div className="space-y-2">
