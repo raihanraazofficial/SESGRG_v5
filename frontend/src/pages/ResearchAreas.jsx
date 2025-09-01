@@ -207,54 +207,22 @@ const ResearchAreas = () => {
     // Show loading state with minimal update
     setRealTimeData(prev => ({ ...prev, loading: true }));
     
+    // Optimized data loading from localStorage context
     try {
-      // Use cached data if available to speed up loading
-      let projectsResponse, publicationsResponse;
+      console.log('🚀 Opening Learn More for:', area.title);
+      console.log('🔄 Loading data from localStorage...');
       
-      // Check if we have recent data in areaStats
-      if (areaStats[area.id]) {
-        console.log('🎯 Using optimized data loading for:', area.title);
-        // Still fetch fresh data but don't wait for it to show page
-        [projectsResponse, publicationsResponse] = await Promise.all([
-          googleSheetsService.getProjects({}),
-          googleSheetsService.getPublications({})
-        ]);
-      } else {
-        // Fetch both projects and publications concurrently
-        [projectsResponse, publicationsResponse] = await Promise.all([
-          googleSheetsService.getProjects({}),
-          googleSheetsService.getPublications({})
-        ]);
-      }
-
-      console.log('📊 Raw API responses:', {
-        projects: projectsResponse.projects?.length,
-        publications: publicationsResponse.publications?.length
-      });
-
-      // Enhanced filtering logic with exact matching
       const exactAreaName = getExactAreaName(area.title);
-      console.log('🎯 Area exact name for matching:', exactAreaName);
+      console.log('🎯 Using exact area name for filtering:', exactAreaName);
 
-      // Filter projects with exact matching
-      const areaProjects = projectsResponse.projects.filter(project => {
-        if (project.research_areas && Array.isArray(project.research_areas)) {
-          return project.research_areas.includes(exactAreaName);
-        }
-        return false;
-      });
-
+      // Get publications from localStorage context
+      const areaPublications = getPublicationsByArea(exactAreaName);
+      
+      // TODO: Projects integration needed when Projects context is created
+      const areaProjects = []; // Empty for now
+      
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
-
-      // Filter publications with exact matching
-      const areaPublications = publicationsResponse.publications.filter(pub => {
-        if (pub.research_areas && Array.isArray(pub.research_areas)) {
-          return pub.research_areas.includes(exactAreaName);
-        }
-        return false;
-      });
-
       const journalArticles = areaPublications.filter(p => p.category === 'Journal Articles');
       const conferenceProceedings = areaPublications.filter(p => p.category === 'Conference Proceedings'); 
       const bookChapters = areaPublications.filter(p => p.category === 'Book Chapters');
@@ -276,7 +244,7 @@ const ResearchAreas = () => {
         lastUpdated: new Date().toLocaleTimeString()
       };
 
-      console.log('✅ Fresh real-time data prepared:', {
+      console.log('✅ Fresh real-time data prepared from localStorage:', {
         totalProjects: freshRealTimeData.projects.total,
         activeProjects: freshRealTimeData.projects.active.length,
         completedProjects: freshRealTimeData.projects.completed.length,
@@ -293,10 +261,10 @@ const ResearchAreas = () => {
       lastUpdated = freshRealTimeData.lastUpdated;
       
     } catch (error) {
-      console.error('Error fetching real-time data:', error);
+      console.error('Error loading data from localStorage:', error);
       setRealTimeData(prev => ({ ...prev, loading: false }));
       
-      // Show 0 when API fails instead of mock data
+      // Show 0 when loading fails instead of mock data
       projects = { active: [], completed: [], total: 0 };
       publications = { journal: [], conference: [], bookChapter: [], total: 0 };
       lastUpdated = 'Failed to load real-time data - showing 0 counts';
