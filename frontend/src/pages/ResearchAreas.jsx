@@ -622,7 +622,8 @@ const ResearchAreas = () => {
       </div>
     `;
     
-    const newWindow = window.open('', '_blank');
+    // Update the window content with the actual data
+    newWindow.document.open();
     newWindow.document.write(`
       <!DOCTYPE html>
       <html>
