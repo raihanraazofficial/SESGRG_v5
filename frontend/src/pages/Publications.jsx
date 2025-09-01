@@ -273,9 +273,7 @@ Best regards,`;
       page: 1,
       per_page: 20
     });
-    // Reset available options
-    setAvailableYears([]);
-    setAvailableAreas([]);
+    // Don't reset available options - keep them independent
   };
 
   const handleRefreshData = async () => {
