@@ -269,7 +269,7 @@ const ContentManagement = () => {
             className="bg-emerald-600 hover:bg-emerald-700 text-sm lg:text-base px-4 lg:px-6 py-2 lg:py-3"
           >
             <Plus className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-            Add {contentTabs.find(t => t.id === activeTab)?.label.slice(0, -1)}
+            Add {getAddButtonText()}
           </Button>
         </div>
       );
