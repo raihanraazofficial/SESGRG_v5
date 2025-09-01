@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Achievements localStorage System - Backend Infrastructure Testing Suite
-Tests the Google Sheets API infrastructure supporting the localStorage-based Achievements system:
-1. Achievements Data Migration Source: Verify Google Sheets API for initial data migration
+NewsEvents localStorage System - Backend Infrastructure Testing Suite
+Tests the Google Sheets API infrastructure supporting the localStorage-based NewsEvents system:
+1. NewsEvents Data Migration Source: Verify Google Sheets API for initial data migration
 2. Authentication System Verification: Test credentials (admin/@dminsesg405) and access control
 3. Frontend Service Status: Verify frontend is running and accessible
-4. localStorage Data Structure Validation: Ensure APIs support AchievementsContext integration
-5. Rich Text Editor Integration: Test blog content generation and markdown processing support
+4. localStorage Data Structure Validation: Ensure APIs support NewsEventsContext integration
+5. Real-time Sync Testing: Test Home page integration and context synchronization
 
-FOCUS: Testing the backend infrastructure that supports the localStorage-based Achievements system
-including authentication credentials, data migration source, rich text processing, and service availability.
+FOCUS: Testing the backend infrastructure that supports the localStorage-based NewsEvents system
+including authentication credentials, data migration source, CRUD operations, and real-time sync.
 """
 
 import requests
