@@ -1,21 +1,18 @@
 import React, { useState } from "react";
-import { Mail, ExternalLink, Linkedin, Github, ArrowLeft } from "lucide-react";
+import { Mail, ExternalLink, Linkedin, Github, ArrowLeft, Edit3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { usePeople } from "../contexts/PeopleContext";
+import EditPersonModal from "../components/EditPersonModal";
 
 const People = () => {
   const [activeSection, setActiveSection] = useState("advisors");
+  const [editingPerson, setEditingPerson] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const researchAreas = [
-    "Smart Grid Technologies",
-    "Microgrids & Distributed Energy Systems", 
-    "Renewable Energy Integration",
-    "Grid Optimization & Stability",
-    "Energy Storage Systems",
-    "Power System Automation",
-    "Cybersecurity and AI for Power Infrastructure"
-  ];
+  const { peopleData, researchAreas } = usePeople();
 
   const getResearchAreaColor = (index) => {
     const colors = [
@@ -30,188 +27,16 @@ const People = () => {
     return colors[index % colors.length];
   };
 
-  // Updated advisor data as per user specifications
-  const advisors = [
-    {
-      id: 1,
-      name: "A. S. Nazmul Huda, PhD",
-      designation: "Associate Professor",
-      affiliation: "Department of EEE, BRAC University",
-      description: "Expert in power systems reliability, renewable energy, and smart grid optimization with strong focus on modeling, simulation, and condition monitoring.",
-      expertise: [0, 2, 4], // Max 4 areas: Smart Grid Technologies, Renewable Energy Integration, Grid Optimization & Stability
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Nazmul%20Huda.jpg",
-      email: "nazmul.huda@bracu.ac.bd",
-      phone: "+880-2-9844051",
-      googleScholar: "https://scholar.google.com/citations?user=nazmul-huda",
-      researchGate: "https://www.researchgate.net/profile/nazmul-huda",
-      orcid: "https://orcid.org/0000-0000-0000-0001",
-      linkedin: "https://linkedin.com/in/nazmul-huda",
-      github: "https://github.com/nazmul-huda",
-      ieee: "https://ieeexplore.ieee.org/author/nazmul-huda",
-      website: "https://engineering.bracu.ac.bd/profile/as-nazmul-huda-phd"
-    },
-    {
-      id: 2,
-      name: "Shameem Ahmad, PhD",
-      designation: "Associate Professor",
-      affiliation: "Department of EEE, BRAC University",
-      description: "Specialist in smart grids, microgrids, and AI-driven power system control with expertise in renewable energy and advanced power converters.",
-      expertise: [1, 3, 0], // Max 4 areas: Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Smart Grid Technologies
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Shameem%20Ahmad.jpg",
-      email: "shameem.ahmad@bracu.ac.bd",
-      phone: "+880-2-9844052",
-      googleScholar: "https://scholar.google.com/citations?user=shameem-ahmad",
-      researchGate: "https://www.researchgate.net/profile/shameem-ahmad",
-      orcid: "https://orcid.org/0000-0000-0000-0002",
-      linkedin: "https://linkedin.com/in/shameem-ahmad",
-      github: "https://github.com/shameem-ahmad",
-      ieee: "https://ieeexplore.ieee.org/author/shameem-ahmad",
-      website: "https://engineering.bracu.ac.bd/profile/shameem-ahmad-phd"
-    },
-    {
-      id: 3,
-      name: "Amirul Islam, PhD",
-      designation: "Assistant Professor",
-      affiliation: "Department of EEE, BRAC University",
-      description: "Researcher in artificial intelligence and power systems with expertise in multimodal signal processing, smart grid automation, and interdisciplinary applications of AI.",
-      expertise: [5, 6], // Max 4 areas: Power System Automation, Cybersecurity and AI for Power Infrastructure
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Amirul%20Islam.jpg",
-      email: "amirul.islam@bracu.ac.bd",
-      phone: "+880-2-9844053",
-      googleScholar: "https://scholar.google.com/citations?user=amirul-islam",
-      researchGate: "https://www.researchgate.net/profile/amirul-islam",
-      orcid: "https://orcid.org/0000-0000-0000-0003",
-      linkedin: "https://linkedin.com/in/amirul-islam",
-      github: "https://github.com/amirul-islam",
-      ieee: "https://ieeexplore.ieee.org/author/amirul-islam",
-      website: "https://engineering.bracu.ac.bd/profile/amirul-islam-phd"
-    }
-  ];
-
-  const teamMembers = [
-    {
-      id: 4,
-      name: "Raihan Uddin",
-      designation: "Research Assistant",
-      affiliation: "Department of EEE, BRAC University",
-      description: "Early-career researcher in power system optimization, microgrids, and applying deep learning and machine learning techniques for sustainable energy systems.",
-      expertise: [1, 3, 2, 6], // Microgrids & Distributed Energy Systems, Grid Optimization & Stability, Renewable Energy Integration, Cybersecurity and AI for Power Infrastructure
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Raihan%20Uddin.jpg",
-      email: "uddin.raihan@bracu.ac.bd",
-      phone: "+880-1XXXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=raihan-uddin",
-      researchGate: "https://www.researchgate.net/profile/raihan-uddin",
-      orcid: "https://orcid.org/0000-0000-0000-0004",
-      linkedin: "https://linkedin.com/in/raihan-uddin",
-      github: "https://github.com/raihan-uddin",
-      ieee: "https://ieeexplore.ieee.org/author/raihan-uddin",
-      website: "https://raihanuddin.dev"
-    },
-    {
-      id: 5,
-      name: "Mumtahina Arika",
-      designation: "Research Assistant",
-      affiliation: "Department of EEE, BRAC University",
-      description: "Early-career researcher in renewable energy systems and AI-driven condition monitoring of electrical equipment and wind turbines.",
-      expertise: [2, 3], // Renewable Energy Integration, Grid Optimization & Stability
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/Mumtahina%20Akira.jpg",
-      email: "mumtahina.arika@bracu.ac.bd",
-      phone: "+880-1XXXXXXXXX",
-      googleScholar: "https://scholar.google.com/citations?user=mumtahina-arika",
-      researchGate: "https://www.researchgate.net/profile/mumtahina-arika",
-      orcid: "https://orcid.org/0000-0000-0000-0005",
-      linkedin: "https://linkedin.com/in/mumtahina-arika",
-      github: "https://github.com/mumtahina-arika",
-      ieee: "https://ieeexplore.ieee.org/author/mumtahina-arika",
-      website: "https://mumtahinaarika.research.com"
-    },
-    {
-      id: 6,
-      name: "No Name",
-      designation: "Research Assistant",
-      affiliation: "No Affiliation",
-      description: "Research assistant position available. We are looking for enthusiastic candidates to join our research team.",
-      expertise: [0, 1], // Smart Grid Technologies, Microgrids & Distributed Energy Systems
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
-      email: "contact@bracu.ac.bd",
-      phone: "+880-2-9844051",
-      googleScholar: "#",
-      researchGate: "#",
-      orcid: "#",
-      linkedin: "#",
-      github: "#",
-      ieee: "#",
-      website: "#"
-    }
-  ];
-
-  const collaborators = [
-    {
-      id: 7,
-      name: "No Name",
-      designation: "Collaborator",
-      affiliation: "No Affiliation",
-      description: "Collaborative research opportunities available. We welcome partnerships with international researchers and institutions.",
-      expertise: [0, 1, 2, 3], // Max 4 areas
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
-      email: "contact@bracu.ac.bd",
-      phone: "+880-2-9844051",
-      googleScholar: "#",
-      researchGate: "#",
-      orcid: "#",
-      linkedin: "#",
-      github: "#",
-      ieee: "#",
-      website: "#"
-    },
-    {
-      id: 8,
-      name: "No Name",
-      designation: "Collaborator",
-      affiliation: "No Affiliation", 
-      description: "Open collaboration position for researchers interested in sustainable energy and smart grid technologies.",
-      expertise: [4, 5, 6], // Max 4 areas
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
-      email: "contact@bracu.ac.bd",
-      phone: "+880-2-9844051",
-      googleScholar: "#",
-      researchGate: "#",
-      orcid: "#",
-      linkedin: "#",
-      github: "#",
-      ieee: "#",
-      website: "#"
-    },
-    {
-      id: 9,
-      name: "No Name",
-      designation: "Collaborator",
-      affiliation: "No Affiliation",
-      description: "Seeking collaborative partnerships for joint research projects in energy systems and grid modernization.",
-      expertise: [0, 2, 5], // Max 4 areas
-      photo: "https://raw.githubusercontent.com/raihanraazofficial/SESGRG_v2/refs/heads/main/imgdirectory/noimg.jpg",
-      email: "contact@bracu.ac.bd", 
-      phone: "+880-2-9844051",
-      googleScholar: "#",
-      researchGate: "#",
-      orcid: "#",
-      linkedin: "#",
-      github: "#",
-      ieee: "#",
-      website: "#"
-    }
-  ];
-
   const getSectionData = (section) => {
     switch (section) {
       case "advisors":
-        return advisors;
+        return peopleData.advisors;
       case "team-members":
-        return teamMembers;
+        return peopleData.teamMembers;
       case "collaborators":
-        return collaborators;
+        return peopleData.collaborators;
       default:
-        return advisors;
+        return peopleData.advisors;
     }
   };
 
@@ -228,7 +53,19 @@ const People = () => {
     }
   };
 
-  const PersonCard = ({ person }) => (
+  const handleEditPerson = (person, category) => {
+    setEditingPerson(person);
+    setEditingCategory(category);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingPerson(null);
+    setEditingCategory(null);
+    setIsEditModalOpen(false);
+  };
+
+  const PersonCard = ({ person, category }) => (
     <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized h-full flex flex-col">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Photo */}
@@ -244,6 +81,18 @@ const People = () => {
           <div className="absolute bottom-4 left-4 text-white">
             <h3 className="text-lg font-bold">{person.name}</h3>
             <p className="text-sm opacity-90">{person.designation}</p>
+          </div>
+          
+          {/* Edit Button */}
+          <div className="absolute top-4 right-4">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="bg-white/90 hover:bg-white text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => handleEditPerson(person, activeSection === 'team-members' ? 'teamMembers' : activeSection)}
+            >
+              <Edit3 className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -405,6 +254,26 @@ const People = () => {
     </Card>
   );
 
+  const EmptySection = ({ sectionName }) => (
+    <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+      <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+        <Mail className="h-12 w-12 text-gray-400" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        No Members Found in this Category
+      </h3>
+      <p className="text-gray-600 mb-6 max-w-md">
+        We are seeking members for our {sectionName.toLowerCase()} team. 
+        Join us to contribute to cutting-edge research in sustainable energy and smart grid technologies.
+      </p>
+      <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+        <a href="mailto:sesg@bracu.ac.bd" className="flex items-center">
+          Express Interest <Mail className="ml-2 h-5 w-5" />
+        </a>
+      </Button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen pt-20 bg-gray-50 performance-optimized">
       {/* Header - Gallery Style */}
@@ -454,9 +323,13 @@ const People = () => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {getSectionData(activeSection).map((person) => (
-              <PersonCard key={person.id} person={person} />
-            ))}
+            {getSectionData(activeSection).length > 0 ? (
+              getSectionData(activeSection).map((person) => (
+                <PersonCard key={person.id} person={person} category={activeSection} />
+              ))
+            ) : (
+              <EmptySection sectionName={getSectionTitle(activeSection)} />
+            )}
           </div>
         </div>
 
@@ -487,6 +360,14 @@ const People = () => {
           Back to Top
         </Button>
       </div>
+
+      {/* Edit Modal */}
+      <EditPersonModal
+        person={editingPerson}
+        category={editingCategory}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+      />
     </div>
   );
 };
