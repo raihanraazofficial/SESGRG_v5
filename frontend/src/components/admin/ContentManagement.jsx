@@ -107,6 +107,12 @@ const ContentManagement = () => {
       count: newsEventsData?.length || 0
     },
     {
+      id: 'contact',
+      label: 'Contact',
+      icon: Phone,
+      count: inquiries?.length || 0
+    },
+    {
       id: 'calendar',
       label: 'Calendar',
       icon: Calendar,
