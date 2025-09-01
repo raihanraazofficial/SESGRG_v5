@@ -136,6 +136,71 @@ const ContactManagement = () => {
     setIsEditingMap(true);
   };
 
+  // EmailJS Config handlers
+  const handleSaveEmailjsConfig = () => {
+    if (editingEmailjsConfig) {
+      updateEmailjsConfig(editingEmailjsConfig);
+      setIsEditingEmailjs(false);
+      setEditingEmailjsConfig(null);
+    }
+  };
+
+  const handleEditEmailjs = () => {
+    setEditingEmailjsConfig(emailjsConfig);
+    setIsEditingEmailjs(true);
+  };
+
+  // Cards handlers
+  const handleSaveCards = () => {
+    editingCards.forEach(card => {
+      if (card.id && card.id > 0) {
+        updateCard(card.id, card);
+      } else {
+        addCard(card);
+      }
+    });
+    setIsEditingCards(false);
+    setEditingCards([]);
+  };
+
+  const handleEditCards = () => {
+    setEditingCards([...cards]);
+    setIsEditingCards(true);
+  };
+
+  const handleAddCard = () => {
+    const newCard = {
+      id: Date.now() * -1,
+      title: '',
+      content: '',
+      icon: 'collaboration'
+    };
+    setEditingCards([...editingCards, newCard]);
+  };
+
+  const handleRemoveCard = (index) => {
+    const card = editingCards[index];
+    if (card.id > 0) {
+      deleteCard(card.id);
+    }
+    const updated = editingCards.filter((_, i) => i !== index);
+    setEditingCards(updated);
+  };
+
+  // Directions handlers
+  const handleSaveDirections = () => {
+    if (editingDirections) {
+      updateDirections(editingDirections);
+      setIsEditingDirections(false);
+      setEditingDirections(null);
+    }
+  };
+
+  const handleEditDirections = () => {
+    setEditingDirections(directions);
+    setIsEditingDirections(true);
+  };
+
   const handleInquiryStatusChange = (inquiryId, newStatus) => {
     updateInquiryStatus(inquiryId, newStatus);
   };
