@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Mail, ExternalLink, Linkedin, Github, ArrowLeft, Edit3 } from "lucide-react";
+import { Mail, ExternalLink, Linkedin, Github, ArrowLeft, Edit3, UserPlus, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { usePeople } from "../contexts/PeopleContext";
 import EditPersonModal from "../components/EditPersonModal";
+import AuthModal from "../components/AuthModal";
+import AddPersonModal from "../components/AddPersonModal";
 
 const People = () => {
   const [activeSection, setActiveSection] = useState("advisors");
