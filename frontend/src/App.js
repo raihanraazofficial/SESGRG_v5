@@ -21,37 +21,40 @@ import TermsConditions from "./pages/TermsConditions";
 // Import context
 import { PeopleProvider } from "./contexts/PeopleContext";
 import { PublicationsProvider } from "./contexts/PublicationsContext";
+import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
   return (
     <PeopleProvider>
       <PublicationsProvider>
-      <div className="App min-h-screen bg-gray-50">
-        <BrowserRouter>
-          <Navbar />
-          <main className="pt-16">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/people" element={<People />} />
-              <Route path="/research" element={<ResearchAreas />} />
-              <Route path="/research-areas" element={<ResearchAreas />} />
-              <Route path="/publications" element={<Publications />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/achievements" element={<Achievements />} />
-              <Route path="/news" element={<NewsEvents />} />
-              <Route path="/news-events" element={<NewsEvents />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/contact" element={<Contacts />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsConditions />} />
-              <Route path="/terms-conditions" element={<TermsConditions />} />
-            </Routes>
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </div>
+        <ProjectsProvider>
+          <div className="App min-h-screen bg-gray-50">
+            <BrowserRouter>
+              <Navbar />
+              <main className="pt-16">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/people" element={<People />} />
+                  <Route path="/research" element={<ResearchAreas />} />
+                  <Route path="/research-areas" element={<ResearchAreas />} />
+                  <Route path="/publications" element={<Publications />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/achievements" element={<Achievements />} />
+                  <Route path="/news" element={<NewsEvents />} />
+                  <Route path="/news-events" element={<NewsEvents />} />
+                  <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/contact" element={<Contacts />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms" element={<TermsConditions />} />
+                  <Route path="/terms-conditions" element={<TermsConditions />} />
+                </Routes>
+              </main>
+              <Footer />
+            </BrowserRouter>
+          </div>
+        </ProjectsProvider>
       </PublicationsProvider>
     </PeopleProvider>
   );

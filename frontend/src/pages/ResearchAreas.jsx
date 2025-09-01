@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { researchAreas } from "../mock/data";
 import { usePeople } from "../contexts/PeopleContext";
 import { usePublications } from "../contexts/PublicationsContext";
+import { useProjects } from "../contexts/ProjectsContext";
 
 const ResearchAreas = () => {
   const [selectedArea, setSelectedArea] = useState(null);
@@ -19,6 +20,7 @@ const ResearchAreas = () => {
 
   const { getPeopleByResearchArea, researchAreas: researchAreaNames } = usePeople();
   const { getPublicationsByArea, publicationsData, getFilteredPublications } = usePublications();
+  const { getProjectsByArea, projectsData } = useProjects();
 
   // Load real-time stats for all areas on component mount
   useEffect(() => {
@@ -35,10 +37,11 @@ const ResearchAreas = () => {
         // Get publications using localStorage context
         const areaPublications = getPublicationsByArea(exactAreaName);
         
-        // Note: Projects still need to be handled separately or integrated
-        // For now, we'll set projects to 0 since we're focusing on publications
+        // Get projects using localStorage context
+        const areaProjects = getProjectsByArea(exactAreaName);
+        
         stats[area.id] = {
-          projects: 0, // TODO: Integrate projects when needed
+          projects: areaProjects.length,
           publications: areaPublications.length
         };
       });
@@ -83,9 +86,9 @@ const ResearchAreas = () => {
     return imageMap[areaId] || imageMap[1];
   };
 
-  // Direct research area matching - use exact names from Google Sheets
+  // Direct research area matching - use exact names from localStorage data
   const getExactAreaName = (areaTitle) => {
-    // Map from UI display names to exact Google Sheets research_areas values
+    // Map from UI display names to exact localStorage research_areas values
     const areaNameMap = {
       "Smart Grid Technologies": "Smart Grid Technologies",
       "Microgrids & Distributed Energy Systems": "Microgrids & Distributed Energy Systems", 
@@ -99,7 +102,7 @@ const ResearchAreas = () => {
     return areaNameMap[areaTitle] || areaTitle;
   };
 
-  // Real-time data fetching using same method as main page (loadAllAreaStats)
+  // Real-time data fetching using localStorage contexts
   const fetchRealTimeData = async (areaTitle) => {
     try {
       setRealTimeData(prev => ({ ...prev, loading: true })); 
@@ -111,8 +114,8 @@ const ResearchAreas = () => {
       // Get publications from localStorage context
       const areaPublications = getPublicationsByArea(exactAreaName);
       
-      // TODO: Projects integration needed when Projects context is created
-      const areaProjects = []; // Empty for now
+      // Get projects from localStorage context
+      const areaProjects = getProjectsByArea(exactAreaName);
       
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
@@ -218,8 +221,8 @@ const ResearchAreas = () => {
       // Get publications from localStorage context
       const areaPublications = getPublicationsByArea(exactAreaName);
       
-      // TODO: Projects integration needed when Projects context is created
-      const areaProjects = []; // Empty for now
+      // Get projects from localStorage context
+      const areaProjects = getProjectsByArea(exactAreaName);
       
       const activeProjects = areaProjects.filter(p => p.status === 'Active');
       const completedProjects = areaProjects.filter(p => p.status === 'Completed');
