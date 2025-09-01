@@ -26,6 +26,7 @@ const Projects = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [availableAreas, setAvailableAreas] = useState([]);
+  const [allAreas, setAllAreas] = useState([]); // Store all areas independently for dropdown options
   const [loadingSource, setLoadingSource] = useState('');
 
   const researchAreas = [
