@@ -468,10 +468,10 @@ Best regards,`;
                   value={filters.year_filter || "all"}
                   onValueChange={(value) => handleFilterChange('year_filter', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="dropdown-container">
                     <SelectValue placeholder="Filter by Year" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-64 overflow-y-auto">
+                  <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                     <SelectItem value="all">All Years</SelectItem>
                     {allYears.length > 0 ? allYears.map(year => (
                       <SelectItem key={year} value={year}>{year}</SelectItem>
