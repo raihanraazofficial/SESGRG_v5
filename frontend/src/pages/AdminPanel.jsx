@@ -354,8 +354,12 @@ const AdminPanel = () => {
           <div className="p-6 border-b">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                  <Shield className="h-5 w-5 text-white" />
+                <div className="w-8 h-8 rounded-lg overflow-hidden">
+                  <img 
+                    src="/Logo.jpg" 
+                    alt="SESG Logo" 
+                    className="w-8 h-8 object-cover"
+                  />
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-gray-900">SESG Admin</h2>
