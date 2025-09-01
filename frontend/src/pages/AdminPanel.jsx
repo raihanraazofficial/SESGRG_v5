@@ -280,39 +280,11 @@ const AdminPanel = () => {
       case 'dashboard':
         return <DashboardContent />;
       case 'users':
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-            <p className="text-gray-600">Manage admin and moderator accounts</p>
-            <Card>
-              <CardContent className="p-8">
-                <div className="text-center text-gray-500">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>User Management System</p>
-                  <p className="text-sm">Coming in next phase...</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return <UserManagement />;
       case 'content':
         return <ContentManagement />;
       case 'pages':
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">Page Management</h1>
-            <p className="text-gray-600">Create and manage website pages</p>
-            <Card>
-              <CardContent className="p-8">
-                <div className="text-center text-gray-500">
-                  <Edit3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>WordPress-style Page Management</p>
-                  <p className="text-sm">Coming in next phase...</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return <PageManagement />;
       case 'settings':
         return (
           <div className="space-y-6">
