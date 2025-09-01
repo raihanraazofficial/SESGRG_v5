@@ -187,6 +187,16 @@ const NewsEvents = () => {
     deleteNewsEvent(id);
   };
 
+  // Calendar settings functions
+  const handleEditCalendar = () => {
+    requireAuth(() => setShowCalendarModal(true));
+  };
+
+  const handleSubmitCalendarSettings = async (formData) => {
+    setCalendarSettings(formData);
+    console.log('✅ Calendar settings updated:', formData);
+  };
+
   const getCategoryColor = (category) => {
     switch (category) {
       case 'News':
