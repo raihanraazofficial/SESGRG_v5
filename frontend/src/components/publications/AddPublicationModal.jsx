@@ -183,10 +183,7 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
       footer={modalFooter}
       className="max-w-[95vw] max-h-[95vh] lg:max-w-[1200px]"
     >
-            
-            {/* Basic Information */}
-            <div className="space-y-6">
-              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-lg">
+      <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <BookOpen className="h-5 w-5 mr-2 text-emerald-600" />
                   Basic Information
