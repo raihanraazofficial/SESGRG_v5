@@ -176,8 +176,8 @@ const People = () => {
             <p className="text-sm opacity-90">{person.designation}</p>
           </div>
           
-          {/* Edit Button */}
-          <div className="absolute top-4 right-4">
+          {/* Edit and Delete Buttons */}
+          <div className="absolute top-4 right-4 flex space-x-2">
             <Button
               size="sm"
               variant="secondary"
@@ -186,6 +186,17 @@ const People = () => {
               title={isAuthenticated ? "Edit Member" : "Authentication Required"}
             >
               <Edit3 className="h-4 w-4" />
+              {!isAuthenticated && <Shield className="h-3 w-3 ml-1" />}
+            </Button>
+            
+            <Button
+              size="sm"
+              variant="secondary"
+              className="bg-red-50/90 hover:bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => handleDeletePerson(person, activeSection === 'team-members' ? 'teamMembers' : activeSection)}
+              title={isAuthenticated ? "Delete Member" : "Authentication Required"}
+            >
+              <Trash2 className="h-4 w-4" />
               {!isAuthenticated && <Shield className="h-3 w-3 ml-1" />}
             </Button>
           </div>
