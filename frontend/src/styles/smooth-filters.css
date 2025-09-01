@@ -1,0 +1,106 @@
+/* Smooth Filter Dropdown Styles */
+[data-radix-select-trigger] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, border-color, box-shadow;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-radix-select-trigger]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+[data-radix-select-trigger][data-state="open"] {
+  transform: translateY(0);
+  border-color: rgb(16 185 129); /* emerald-500 */
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+[data-radix-select-content] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-radix-select-content][data-state="open"] {
+  animation-name: selectContentSlideIn;
+}
+
+[data-radix-select-content][data-state="closed"] {
+  animation-name: selectContentSlideOut;
+}
+
+@keyframes selectContentSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes selectContentSlideOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98) translateY(-4px);
+  }
+}
+
+[data-radix-select-item] {
+  transform: translateZ(0);
+  will-change: background-color, color;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-radix-select-item]:hover {
+  background-color: rgb(236 253 245); /* emerald-50 */
+  color: rgb(6 78 59); /* emerald-900 */
+  transform: translateX(2px);
+}
+
+[data-radix-select-item][data-highlighted] {
+  background-color: rgb(236 253 245); /* emerald-50 */
+  color: rgb(6 78 59); /* emerald-900 */
+  transform: translateX(2px);
+}
+
+/* Button smooth transitions */
+.filter-button {
+  transform: translateZ(0);
+  will-change: transform, background-color, border-color;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-button:active {
+  transform: translateY(0);
+}
+
+/* Performance optimizations */
+.performance-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: auto;
+}
+
+/* Prevent layout shift during animations */
+[data-radix-select-trigger] {
+  contain: layout style paint;
+}
+
+[data-radix-select-content] {
+  contain: layout style paint;
+}
