@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, user } = useAuth();
 
   const navItems = [
     { name: "Home", path: "/" },
