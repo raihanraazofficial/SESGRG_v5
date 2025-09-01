@@ -276,10 +276,10 @@ const Achievements = () => {
                 value={filters.category_filter}
                 onValueChange={(value) => handleFilterChange('category_filter', value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="dropdown-container">
                   <SelectValue placeholder="Filter by Category" />
                 </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-y-auto">
+                <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                   <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="Award">Awards</SelectItem>
                   <SelectItem value="Partnership">Partnerships</SelectItem>
