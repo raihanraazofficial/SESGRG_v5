@@ -669,14 +669,15 @@ Best regards,`;
                   {/* Actions */}
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-3 border-t border-gray-200 space-y-2 md:space-y-0">
                     <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
-                      {/* DOI Button - Always show */}
+                      {/* Paper Link Button - Always show */}
                       <Button
                         variant="default"
-                        className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base"
-                        onClick={() => window.open(publication.doi_link || publication.full_paper_link || '#', '_blank')}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base w-full sm:w-auto"
+                        onClick={() => window.open(publication.paper_link || '#', '_blank')}
+                        disabled={!publication.paper_link}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
-                        DOI
+                        View Paper
                       </Button>
                       
                       {/* Request Paper Button - Only show if NOT open access */}
