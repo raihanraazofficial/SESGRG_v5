@@ -290,7 +290,7 @@ Best regards,`;
       setPagination(response.pagination || {});
       setStatistics(response.statistics || {});
       
-      // Update available filters
+      // Update available filters with all options (independent of current selection)
       if (pubs.length > 0) {
         const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
         const allAreas = pubs.flatMap(pub => pub.research_areas || []);
@@ -298,6 +298,8 @@ Best regards,`;
         
         setAvailableYears(uniqueYears);
         setAvailableAreas(uniqueAreas);
+        setAllYears(uniqueYears);
+        setAllAreas(uniqueAreas);
       }
       
       alert('Publications data refreshed successfully!');
