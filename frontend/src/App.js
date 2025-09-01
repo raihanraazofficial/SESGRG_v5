@@ -25,6 +25,7 @@ import { PublicationsProvider } from "./contexts/PublicationsContext";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 import { AchievementsProvider } from "./contexts/AchievementsContext";
 import { NewsEventsProvider } from "./contexts/NewsEventsContext";
+import { ContactProvider } from "./contexts/ContactContext";
 
 // Import admin components
 import AdminLogin from "./pages/AdminLogin";
