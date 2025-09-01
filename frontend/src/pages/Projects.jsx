@@ -332,10 +332,10 @@ const Projects = () => {
                   value={filters.status_filter || "all"}
                   onValueChange={(value) => handleFilterChange('status_filter', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="dropdown-container">
                     <SelectValue placeholder="Filter by Status" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-64 overflow-y-auto">
+                  <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                     <SelectItem value="all">All Status</SelectItem>
                     {statuses.map(status => (
                       <SelectItem key={status} value={status}>{status}</SelectItem>
