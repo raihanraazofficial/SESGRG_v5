@@ -368,7 +368,7 @@ const Projects = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-64 overflow-y-auto">
                       <SelectItem value="start_date-desc">Start Date (Newest)</SelectItem>
                       <SelectItem value="start_date-asc">Start Date (Oldest)</SelectItem>
                       <SelectItem value="title-asc">Title (A-Z)</SelectItem>
