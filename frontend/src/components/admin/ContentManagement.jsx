@@ -624,7 +624,8 @@ const ContentManagement = () => {
               setIsAddModalOpen(false);
               setEditingCategory(null);
             }}
-            onAdd={handleAddItem}
+            onSubmit={handleAddItem}
+            categories={newsEventCategories}
           />
           
           <EditNewsEventModal
