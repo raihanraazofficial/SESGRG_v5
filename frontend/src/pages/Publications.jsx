@@ -28,6 +28,8 @@ const Publications = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [availableYears, setAvailableYears] = useState([]);
   const [availableAreas, setAvailableAreas] = useState([]);
+  const [allYears, setAllYears] = useState([]); // Store all years independently 
+  const [allAreas, setAllAreas] = useState([]); // Store all areas independently
   const [refreshing, setRefreshing] = useState(false);
   const [loadingSource, setLoadingSource] = useState(''); // Track if loading from cache or fresh
 
