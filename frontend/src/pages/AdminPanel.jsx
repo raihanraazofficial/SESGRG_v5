@@ -25,6 +25,7 @@ import { usePublications } from '../contexts/PublicationsContext';
 import { useProjects } from '../contexts/ProjectsContext';
 import { useAchievements } from '../contexts/AchievementsContext';
 import { useNewsEvents } from '../contexts/NewsEventsContext';
+import ContentManagement from '../components/admin/ContentManagement';
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
