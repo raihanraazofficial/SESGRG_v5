@@ -223,17 +223,17 @@ const ContentManagement = () => {
   const getAddButtonText = () => {
     switch (activeTab) {
       case 'people':
-        return 'Add Person';
+        return 'Person';
       case 'publications':
-        return 'Add Publication';
+        return 'Publication';
       case 'projects':
-        return 'Add Project';
+        return 'Project';
       case 'achievements':
-        return 'Add Achievement';
+        return 'Achievement';
       case 'news-events':
-        return 'Add News/Event';
+        return 'News/Event';
       default:
-        return 'Add Item';
+        return 'Item';
     }
   };
 
