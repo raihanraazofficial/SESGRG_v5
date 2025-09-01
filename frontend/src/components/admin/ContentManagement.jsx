@@ -395,7 +395,7 @@ const ContentManagement = () => {
             <h1 className="text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">Content Management</h1>
             <p className="text-sm lg:text-base text-gray-600 mt-1">Manage all your website content from one place</p>
           </div>
-          {activeTab !== 'calendar' && (
+          {activeTab !== 'calendar' && activeTab !== 'contact' && (
             <Button
               onClick={() => handleAdd(activeTab)}
               className="admin-add-button bg-emerald-600 hover:bg-emerald-700 text-sm lg:text-base px-3 lg:px-4 py-2 lg:py-3 w-full sm:w-auto"
