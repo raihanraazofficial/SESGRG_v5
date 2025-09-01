@@ -120,7 +120,7 @@ const ContentManagement = () => {
     {
       id: 'gallery',
       label: 'Gallery',
-      icon: FileText,
+      icon: Image,
       count: galleryItems?.length || 0
     },
     {
