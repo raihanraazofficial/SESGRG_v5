@@ -267,28 +267,28 @@ const Projects = () => {
           <Button
             variant={filters.status_filter === '' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('status_filter', '')}
-            className="px-3 py-2 md:px-6 text-sm md:text-base"
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
           >
             All Projects
           </Button>
           <Button
             variant={filters.status_filter === 'Active' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('status_filter', 'Active')}
-            className="px-3 py-2 md:px-6 text-sm md:text-base"
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
           >
             Active
           </Button>
           <Button
             variant={filters.status_filter === 'Completed' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('status_filter', 'Completed')}
-            className="px-3 py-2 md:px-6 text-sm md:text-base"
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
           >
             Completed
           </Button>
           <Button
             variant={filters.status_filter === 'Planning' ? 'default' : 'outline'}
             onClick={() => handleFilterChange('status_filter', 'Planning')}
-            className="px-3 py-2 md:px-6 text-sm md:text-base"
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
           >
             Planning
           </Button>
