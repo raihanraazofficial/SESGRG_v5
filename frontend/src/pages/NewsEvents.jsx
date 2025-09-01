@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, Clock, ChevronLeft, ChevronRight, Loader2, ArrowRight, MapPin, RefreshCw, ArrowLeft } from "lucide-react";
+import { Search, Filter, Calendar, Clock, ChevronLeft, ChevronRight, Loader2, ArrowRight, MapPin, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -7,6 +7,11 @@ import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
 import LaTeXRenderer, { parseLatexContent } from "../components/LaTeXRenderer";
+import AuthModal from "../components/AuthModal";
+import AddNewsEventModal from "../components/newsevents/AddNewsEventModal";
+import EditNewsEventModal from "../components/newsevents/EditNewsEventModal";
+import DeleteNewsEventModal from "../components/newsevents/DeleteNewsEventModal";
+import { useNewsEvents } from "../contexts/NewsEventsContext";
 import googleSheetsService from "../services/googleSheetsApi";
 import "../styles/smooth-filters.css";
 
