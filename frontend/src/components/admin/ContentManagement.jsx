@@ -548,8 +548,8 @@ const ContentManagement = () => {
               setEditingCategory(null);
             }}
             onAdd={handleAddItem}
-            researchAreas={projResearchAreas}
-            statuses={statuses}
+            researchAreas={projResearchAreas || []}
+            statuses={statuses || []}
           />
           
           <EditProjectModal
