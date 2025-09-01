@@ -75,6 +75,7 @@ const ContentManagement = () => {
   const { achievementsData, addAchievement, updateAchievement, deleteAchievement, categories: achievementCategories } = useAchievements();
   const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent, categories: newsEventCategories } = useNewsEvents();
   const { inquiries, getInquiryStats } = useContact();
+  const { galleryItems, addGalleryItem, updateGalleryItem, deleteGalleryItem, categories: galleryCategories } = useGallery();
 
   // Content tabs
   const contentTabs = [
