@@ -626,7 +626,7 @@ const ContentManagement = () => {
               setEditingCategory(null);
             }}
             onSubmit={handleAddItem}
-            categories={newsEventCategories}
+            categories={newsEventCategories || []}
           />
           
           <EditNewsEventModal
