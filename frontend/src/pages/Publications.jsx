@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Copy, ExternalLink, Mail, ChevronLeft, ChevronRight, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
+import { Search, Filter, Copy, ExternalLink, Mail, ChevronLeft, ChevronRight, Loader2, RefreshCw, ArrowLeft, Plus, Edit, Trash2, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import SkeletonCard from "../components/SkeletonCard";
-import googleSheetsService from "../services/googleSheetsApi";
+import { usePublications } from "../contexts/PublicationsContext";
+import AuthModal from "../components/people/AuthModal";
+import AddPublicationModal from "../components/publications/AddPublicationModal";
+import EditPublicationModal from "../components/publications/EditPublicationModal";
+import DeletePublicationModal from "../components/publications/DeletePublicationModal";
 import "../styles/smooth-filters.css";
 
 const Publications = () => {
+  const { 
+    getPaginatedPublications, 
+    getFilterOptions, 
+    addPublication, 
+    updatePublication, 
+    deletePublication, 
+    getPublicationById, 
+    researchAreas 
+  } = usePublications();
+
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
@@ -29,20 +43,16 @@ const Publications = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [availableYears, setAvailableYears] = useState([]);
   const [availableAreas, setAvailableAreas] = useState([]);
-  const [allYears, setAllYears] = useState([]); // Store all years independently 
-  const [allAreas, setAllAreas] = useState([]); // Store all areas independently
-  const [refreshing, setRefreshing] = useState(false);
-  const [loadingSource, setLoadingSource] = useState(''); // Track if loading from cache or fresh
+  const [allYears, setAllYears] = useState([]);
+  const [allAreas, setAllAreas] = useState([]);
 
-  const researchAreas = [
-    "Smart Grid Technologies",
-    "Microgrids & Distributed Energy Systems", 
-    "Renewable Energy Integration",
-    "Grid Optimization & Stability",
-    "Energy Storage Systems",
-    "Power System Automation",
-    "Cybersecurity and AI for Power Infrastructure"
-  ];
+  // Authentication and Modal states
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState(null);
 
   const categories = ["Journal Articles", "Conference Proceedings", "Book Chapters"];
   const years = Array.from({length: 10}, (_, i) => (new Date().getFullYear() - i).toString());
@@ -51,85 +61,45 @@ const Publications = () => {
     fetchPublications();
   }, [filters]);
 
-  const fetchPublications = async (retryCount = 0) => {
+  const fetchPublications = async () => {
     try {
       setLoading(true);
-      setLoadingSource('⚡ Loading...');
-      console.log('Fetching publications with filters:', filters);
       
-      const response = await googleSheetsService.getPublications(filters);
-      console.log('Publications response:', response);
-      
+      const response = getPaginatedPublications(filters);
       const pubs = response.publications || [];
-      console.log('Publications data:', pubs.length, 'items');
       
-      // Only update state if we have valid response
-      if (response && (pubs.length > 0 || response.statistics)) {
-        setPublications(pubs);
-        setPagination(response.pagination || {});
-        setStatistics(response.statistics || {});
-        
-        // Extract unique years and research areas from all publications for independent dropdown options
-        if (pubs.length > 0) {
-          const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
-          const allAreas = pubs.flatMap(pub => pub.research_areas || []);
-          const uniqueAreas = [...new Set(allAreas)].sort();
-          
-          // Set both current and all options for independent filtering
-          setAvailableYears(uniqueYears);
-          setAvailableAreas(uniqueAreas);
-          setAllYears(uniqueYears);
-          setAllAreas(uniqueAreas);
-        }
-        
-        console.log('✅ Publications loaded successfully:', pubs.length, 'items');
-      } else {
-        console.log('⚠️ Empty response received, keeping existing data');
-        // Keep existing data, just set default statistics if none exist
-        if (!statistics.total_publications) {
-          setStatistics({
-            total_publications: 0,
-            total_citations: 0,
-            latest_year: new Date().getFullYear(),
-            total_areas: 7
-          });
-        }
-      }
+      setPublications(pubs);
+      setPagination(response.pagination || {});
+      setStatistics(response.statistics || {});
+      
+      // Get filter options
+      const filterOptions = getFilterOptions();
+      setAvailableYears(filterOptions.years);
+      setAvailableAreas(filterOptions.areas);
+      setAllYears(filterOptions.years);
+      setAllAreas(filterOptions.areas);
+      
+      console.log('✅ Publications loaded successfully:', pubs.length, 'items');
     } catch (error) {
       console.error('Error fetching publications:', error);
-      
-      // Retry once on first failure
-      if (retryCount === 0) {
-        console.log('🔄 Retrying publications fetch after error...');
-        setTimeout(() => fetchPublications(1), 2000);
-        return;
-      }
-      
-      // On final failure, set empty defaults
-      console.error('❌ Final failure fetching publications');
       setStatistics({
         total_publications: 0,
         total_citations: 0,
         latest_year: new Date().getFullYear(),
         total_areas: 7
       });
-      
-      // Don't show alert immediately - user can use refresh button
-      console.log('💡 User can use Refresh Data button to retry');
     } finally {
       setLoading(false);
-      setLoadingSource('');
     }
   };
 
   const handleFilterChange = (key, value) => {
-    // Convert "all" to empty string for backend compatibility
     const processedValue = value === "all" ? "" : value;
     
     setFilters(prev => ({
       ...prev,
       [key]: processedValue,
-      page: 1 // Reset to first page when filtering
+      page: 1
     }));
   };
 
@@ -144,11 +114,11 @@ const Publications = () => {
   };
 
   const copyPaperCitation = async (publication) => {
-    const citation = googleSheetsService.generateIEEECitation(publication);
-    const success = await googleSheetsService.copyToClipboard(citation);
-    if (success) {
+    const citation = generateIEEECitation(publication);
+    try {
+      await navigator.clipboard.writeText(citation.replace(/<[^>]*>/g, ''));
       alert('Citation copied to clipboard!');
-    } else {
+    } catch (error) {
       alert('Failed to copy citation. Please try again.');
     }
   };
@@ -161,7 +131,8 @@ I would like to request access to the following paper:
 
 Title: ${publication.title}
 Authors: ${publication.authors.join(', ')}
-Publication: ${publication.publication_info}
+Year: ${publication.year}
+Category: ${publication.category}
 
 Thank you for your time.
 
@@ -170,9 +141,8 @@ Best regards,`;
     window.location.href = `mailto:sesg@bracu.ac.bd?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
-  const renderIEEEFormat = (publication) => {
+  const generateIEEECitation = (publication) => {
     try {
-      // Generate proper IEEE citation based on category
       const authors = Array.isArray(publication.authors) ? publication.authors.join(', ') : (publication.authors || '');
       const title = `"${publication.title}"`;
       const category = publication.category || 'Journal Articles';
@@ -206,7 +176,6 @@ Best regards,`;
           citation += `, <em>${publication.conference_name}</em>`;
         }
         
-        // Location (city, country)
         const location = [];
         if (publication.city) location.push(publication.city);
         if (publication.country) location.push(publication.country);
@@ -236,7 +205,6 @@ Best regards,`;
           citation += ` ${publication.publisher}`;
         }
         
-        // Location for book chapters
         const location = [];
         if (publication.city) location.push(publication.city);
         if (publication.country) location.push(publication.country);
@@ -252,7 +220,6 @@ Best regards,`;
         return citation;
       }
       
-      // Generic fallback
       return `<strong>${authors}</strong>, ${title}, ${publication.year}.`;
       
     } catch (error) {
@@ -274,42 +241,71 @@ Best regards,`;
       page: 1,
       per_page: 20
     });
-    // Don't reset available options - keep them independent
   };
 
-  const handleRefreshData = async () => {
+  // Authentication handlers
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+  };
+
+  const handleAddPublication = async (publicationData) => {
     try {
-      setRefreshing(true);
-      console.log('Refreshing publications data...');
-      
-      // Force refresh data (bypass cache)
-      const response = await googleSheetsService.forceRefreshPublications(filters);
-      console.log('Publications refreshed:', response);
-      
-      const pubs = response.publications || [];
-      setPublications(pubs);
-      setPagination(response.pagination || {});
-      setStatistics(response.statistics || {});
-      
-      // Update available filters with all options (independent of current selection)
-      if (pubs.length > 0) {
-        const uniqueYears = [...new Set(pubs.map(pub => pub.year))].sort((a, b) => b - a);
-        const allAreas = pubs.flatMap(pub => pub.research_areas || []);
-        const uniqueAreas = [...new Set(allAreas)].sort();
-        
-        setAvailableYears(uniqueYears);
-        setAvailableAreas(uniqueAreas);
-        setAllYears(uniqueYears);
-        setAllAreas(uniqueAreas);
-      }
-      
-      alert('Publications data refreshed successfully!');
+      await addPublication(publicationData);
+      fetchPublications(); // Refresh the list
+      alert('Publication added successfully!');
     } catch (error) {
-      console.error('Error refreshing publications:', error);
-      alert('Failed to refresh publications. Please try again.');
-    } finally {
-      setRefreshing(false);
+      console.error('Error adding publication:', error);
+      throw error;
     }
+  };
+
+  const handleEditPublication = async (id, publicationData) => {
+    try {
+      await updatePublication(id, publicationData);
+      fetchPublications(); // Refresh the list
+      alert('Publication updated successfully!');
+    } catch (error) {
+      console.error('Error updating publication:', error);
+      throw error;
+    }
+  };
+
+  const handleDeletePublication = async (id) => {
+    try {
+      await deletePublication(id);
+      fetchPublications(); // Refresh the list
+      alert('Publication deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting publication:', error);
+      throw error;
+    }
+  };
+
+  const openAddModal = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setShowAddModal(true);
+  };
+
+  const openEditModal = (publication) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedPublication(publication);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (publication) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setSelectedPublication(publication);
+    setShowDeleteModal(true);
   };
 
   return (
@@ -332,7 +328,8 @@ Best regards,`;
           }
         }
       `}</style>
-      {/* Header - People Style */}
+      
+      {/* Header */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-6">
@@ -349,85 +346,87 @@ Best regards,`;
                 Discover cutting-edge research that's shaping the future of energy systems.
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefreshData}
-              disabled={refreshing}
-              className="ml-4 flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              <span className="hidden md:inline">{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
-            </Button>
+            <div className="flex items-center space-x-2">
+              {isAuthenticated && (
+                <div className="flex items-center space-x-2 bg-emerald-600 px-3 py-1 rounded-full text-sm">
+                  <Shield className="h-4 w-4" />
+                  <span>Admin Mode Active</span>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={openAddModal}
+                className="ml-4 flex items-center space-x-2 border-white text-white hover:bg-white hover:text-gray-900"
+              >
+                {!isAuthenticated && <Shield className="h-4 w-4" />}
+                <Plus className="h-4 w-4" />
+                <span className="hidden md:inline">Add Publication</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_publications || 0}</p>
+              <p className="text-gray-600 font-medium">Total Publications</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.total_citations || 0}</p>
+              <p className="text-gray-600 font-medium">Total Citations</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.latest_year || new Date().getFullYear()}</p>
+              <p className="text-gray-600 font-medium">Latest Year</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center p-6 border-l-4 border-l-orange-600 hover:shadow-lg transition-shadow">
+            <CardContent className="p-0">
+              <p className="text-3xl font-bold text-orange-600 mb-2">{statistics.total_areas || 7}</p>
+              <p className="text-gray-600 font-medium">Total Research Areas</p>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Header - Original Content */}
-        <div className="text-center mb-12">
-          <div style={{display: 'none'}}>{/* Hidden original header */}</div>
-          
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="text-center p-6 border-l-4 border-l-emerald-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-emerald-600 mb-2">{statistics.total_publications || 0}</p>
-                <p className="text-gray-600 font-medium">Total Publications</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-blue-600 mb-2">{statistics.total_citations || 0}</p>
-                <p className="text-gray-600 font-medium">Total Citations</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-l-4 border-l-purple-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-purple-600 mb-2">{statistics.latest_year || new Date().getFullYear()}</p>
-                <p className="text-gray-600 font-medium">Latest Year</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-l-4 border-l-orange-600 hover:shadow-lg transition-shadow">
-              <CardContent className="p-0">
-                <p className="text-3xl font-bold text-orange-600 mb-2">{statistics.total_areas || 7}</p>
-                <p className="text-gray-600 font-medium">Total Research Areas</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Category Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
-            <Button
-              variant={filters.category_filter === '' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', '')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
-            >
-              All Publications
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
-            >
-              Journals
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
-            >
-              Conferences
-            </Button>
-            <Button
-              variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
-              onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
-              className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
-            >
-              Book Chapters
-            </Button>
-          </div>
+        {/* Category Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+          <Button
+            variant={filters.category_filter === '' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', '')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
+          >
+            All Publications
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Journal Articles' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Journal Articles')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
+          >
+            Journals
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Conference Proceedings' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Conference Proceedings')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
+          >
+            Conferences
+          </Button>
+          <Button
+            variant={filters.category_filter === 'Book Chapters' ? 'default' : 'outline'}
+            onClick={() => handleFilterChange('category_filter', 'Book Chapters')}
+            className="px-3 py-2 md:px-6 text-sm md:text-base filter-button"
+          >
+            Book Chapters
+          </Button>
         </div>
 
         {/* Filters */}
@@ -552,7 +551,6 @@ Best regards,`;
         {/* Loading State */}
         {loading && (
           <div className="space-y-8">
-            {/* Statistics Cards Skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {Array.from({ length: 4 }, (_, i) => (
                 <div key={i} className="animate-pulse">
@@ -564,7 +562,6 @@ Best regards,`;
               ))}
             </div>
             
-            {/* Publications Skeleton */}
             <div className="space-y-6">
               {Array.from({ length: 5 }, (_, i) => (
                 <div key={i} className="animate-pulse">
@@ -592,9 +589,29 @@ Best regards,`;
                 <CardContent className="p-8">
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 lg:mr-6">
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight">
-                        {publication.title}
-                      </h3>
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight flex-1">
+                          {publication.title}
+                        </h3>
+                        <div className="flex space-x-2 ml-4">
+                          <button
+                            onClick={() => openEditModal(publication)}
+                            className="p-2 text-gray-500 hover:text-emerald-600 transition-colors"
+                            title={isAuthenticated ? "Edit Publication" : "Login required to edit"}
+                          >
+                            {!isAuthenticated && <Shield className="h-4 w-4 absolute -ml-1 -mt-1" />}
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(publication)}
+                            className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+                            title={isAuthenticated ? "Delete Publication" : "Login required to delete"}
+                          >
+                            {!isAuthenticated && <Shield className="h-4 w-4 absolute -ml-1 -mt-1" />}
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
                       
                       {/* IEEE Formatted Citation */}
                       <div className="mb-4 p-4 bg-gray-50 rounded-lg">
@@ -602,13 +619,13 @@ Best regards,`;
                           <span 
                             className="ieee-citation"
                             dangerouslySetInnerHTML={{
-                              __html: renderIEEEFormat(publication)
+                              __html: generateIEEECitation(publication)
                             }}
                           />
                         </p>
                       </div>
 
-                      {/* Research Areas - 7 colors for 7 research areas */}
+                      {/* Research Areas */}
                       <div className="flex flex-wrap gap-2">
                         {publication.research_areas.map((area, index) => (
                           <span
@@ -656,7 +673,7 @@ Best regards,`;
                       <Button
                         variant="default"
                         className="bg-emerald-600 hover:bg-emerald-700 text-sm md:text-base"
-                        onClick={() => window.open(publication.full_paper_link || publication.doi_link || '#', '_blank')}
+                        onClick={() => window.open(publication.doi_link || publication.full_paper_link || '#', '_blank')}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         DOI
@@ -694,8 +711,14 @@ Best regards,`;
         {!loading && publications.length === 0 && (
           <div className="text-center py-20">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">No publications found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters.</p>
-            <Button onClick={clearFilters}>Clear All Filters</Button>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters, or add new publications.</p>
+            <div className="space-x-4">
+              <Button onClick={clearFilters}>Clear All Filters</Button>
+              <Button onClick={openAddModal} className="bg-emerald-600 hover:bg-emerald-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Publication
+              </Button>
+            </div>
           </div>
         )}
 
@@ -709,7 +732,6 @@ Best regards,`;
             </div>
             
             <div className="flex flex-col items-center justify-center space-y-4">
-              {/* Main Pagination Controls - Centered */}
               <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"
@@ -722,7 +744,6 @@ Best regards,`;
                   Previous
                 </Button>
                 
-                {/* Page Numbers */}
                 <div className="flex space-x-1">
                   {Array.from({ length: Math.min(3, pagination.total_pages) }, (_, i) => {
                     let pageNum;
@@ -762,7 +783,6 @@ Best regards,`;
                 </Button>
               </div>
               
-              {/* Go to Page - Below main pagination */}
               <div className="flex items-center space-x-2">
                 <span className="text-xs md:text-sm text-gray-600">Go to page:</span>
                 <Input
@@ -785,7 +805,7 @@ Best regards,`;
           </div>
         )}
 
-        {/* Back to Top - Performance Optimized - Moved after pagination */}
+        {/* Back to Top */}
         <div className="text-center pt-8 pb-16">
           <Button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -796,6 +816,41 @@ Best regards,`;
           </Button>
         </div>
       </div>
+
+      {/* Modals */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
+      <AddPublicationModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddPublication}
+        researchAreas={researchAreas}
+      />
+
+      <EditPublicationModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedPublication(null);
+        }}
+        onUpdate={handleEditPublication}
+        publication={selectedPublication}
+        researchAreas={researchAreas}
+      />
+
+      <DeletePublicationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedPublication(null);
+        }}
+        onDelete={handleDeletePublication}
+        publication={selectedPublication}
+      />
     </div>
   );
 };
