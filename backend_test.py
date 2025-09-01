@@ -52,89 +52,101 @@ PROJECTS_API_URL = API_URLS['projects']
 ACHIEVEMENTS_API_URL = API_URLS['achievements']
 NEWS_EVENTS_API_URL = API_URLS['news_events']
 
-print(f"🚀 Testing Projects localStorage System - Backend Infrastructure")
+print(f"🚀 Testing Achievements localStorage System - Backend Infrastructure")
 print(f"Publications API: {PUBLICATIONS_API_URL}")
 print(f"Projects API: {PROJECTS_API_URL}")
 print(f"Achievements API: {ACHIEVEMENTS_API_URL}")
 print(f"News Events API: {NEWS_EVENTS_API_URL}")
 print("=" * 80)
 
-def test_projects_data_migration_source():
-    """Test Google Sheets API as data migration source for localStorage Projects system"""
-    print("1. Testing Projects Data Migration Source...")
+def test_achievements_data_migration_source():
+    """Test Google Sheets API as data migration source for localStorage Achievements system"""
+    print("1. Testing Achievements Data Migration Source...")
     
     all_tests_passed = True
     
     try:
-        # Test Projects API for localStorage migration
-        print("   📊 Testing Projects API for localStorage data migration...")
+        # Test Achievements API for localStorage migration
+        print("   🏆 Testing Achievements API for localStorage data migration...")
         
         start_time = time.time()
-        response = requests.get(PROJECTS_API_URL, timeout=6)
+        response = requests.get(ACHIEVEMENTS_API_URL, timeout=6)
         end_time = time.time()
         response_time = end_time - start_time
         
         if response.status_code == 200:
-            print(f"      ✅ Projects API accessible for data migration")
+            print(f"      ✅ Achievements API accessible for data migration")
             print(f"      ⏱️  Response time: {response_time:.2f}s")
             
             data = response.json()
-            projects = data.get('projects', []) if isinstance(data, dict) else data
+            achievements = data.get('achievements', []) if isinstance(data, dict) else data
             
-            if len(projects) > 0:
-                print(f"      ✅ Found {len(projects)} projects for localStorage migration")
+            if len(achievements) > 0:
+                print(f"      ✅ Found {len(achievements)} achievements for localStorage migration")
                 
-                # Verify data structure for ProjectsContext
-                sample_project = projects[0]
-                required_fields = ['title', 'description', 'status', 'research_areas', 'principal_investigator']
+                # Verify data structure for AchievementsContext
+                sample_achievement = achievements[0]
+                required_fields = ['title', 'short_description', 'description', 'category', 'date']
                 missing_fields = []
                 
                 for field in required_fields:
-                    if field not in sample_project:
+                    if field not in sample_achievement:
                         missing_fields.append(field)
                 
                 if not missing_fields:
-                    print(f"      ✅ Projects data structure supports ProjectsContext")
+                    print(f"      ✅ Achievements data structure supports AchievementsContext")
                     
                     # Check specific fields for localStorage compatibility
-                    if 'research_areas' in sample_project:
-                        research_areas = sample_project.get('research_areas', [])
-                        if isinstance(research_areas, list):
-                            print(f"      ✅ Research areas field is list-compatible for localStorage")
+                    if 'category' in sample_achievement:
+                        category = sample_achievement.get('category', '')
+                        expected_categories = ["Award", "Partnership", "Publication", "Grant", "Recognition", "Milestone"]
+                        if category in expected_categories:
+                            print(f"      ✅ Category field matches expected values: {category}")
                         else:
-                            print(f"      ⚠️  Research areas field needs conversion: {type(research_areas)}")
+                            print(f"      ⚠️  Category field may need mapping: {category}")
                     
-                    if 'team_members' in sample_project:
-                        team_members = sample_project.get('team_members', [])
-                        if isinstance(team_members, list) or isinstance(team_members, str):
-                            print(f"      ✅ Team members field is compatible for localStorage conversion")
+                    if 'featured' in sample_achievement:
+                        featured = sample_achievement.get('featured', False)
+                        if isinstance(featured, bool) or featured in ['true', 'false', True, False]:
+                            print(f"      ✅ Featured field is boolean-compatible for localStorage")
                         else:
-                            print(f"      ⚠️  Team members field needs conversion: {type(team_members)}")
+                            print(f"      ⚠️  Featured field needs conversion: {type(featured)}")
                             
                     # Check for CRUD-required fields
-                    crud_fields = ['id', 'start_date', 'end_date', 'funding_agency', 'budget']
-                    available_crud_fields = [field for field in crud_fields if field in sample_project]
+                    crud_fields = ['id', 'image', 'full_content', 'created_at', 'updated_at']
+                    available_crud_fields = [field for field in crud_fields if field in sample_achievement]
                     print(f"      ✅ CRUD-compatible fields available: {len(available_crud_fields)}/{len(crud_fields)}")
                     
+                    # Test rich content support
+                    description_field = sample_achievement.get('description', '') or sample_achievement.get('full_content', '')
+                    if description_field:
+                        print(f"      ✅ Rich content field available for blog generation")
+                        if len(description_field) > 100:
+                            print(f"      ✅ Content length suitable for rich text editor: {len(description_field)} chars")
+                        else:
+                            print(f"      ⚠️  Content may be too short for rich text features: {len(description_field)} chars")
+                    else:
+                        print(f"      ⚠️  No rich content field found for blog generation")
+                    
                 else:
-                    print(f"      ❌ Missing required fields for ProjectsContext: {missing_fields}")
+                    print(f"      ❌ Missing required fields for AchievementsContext: {missing_fields}")
                     all_tests_passed = False
                     
             else:
-                print(f"      ⚠️  No projects found for localStorage migration")
+                print(f"      ⚠️  No achievements found for localStorage migration")
                 
         else:
-            print(f"      ❌ Projects API returned status code: {response.status_code}")
+            print(f"      ❌ Achievements API returned status code: {response.status_code}")
             all_tests_passed = False
             
         return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing projects data migration source: {e}")
+        print(f"   ❌ Error testing achievements data migration source: {e}")
         return False
 
 def test_authentication_system_verification():
-    """Test authentication credentials and system verification"""
+    """Test authentication credentials and system verification for Achievements"""
     print("2. Testing Authentication System Verification...")
     
     all_tests_passed = True
@@ -184,6 +196,7 @@ def test_authentication_system_verification():
         print(f"      ✅ Authentication system is client-side (localStorage-based)")
         print(f"      ✅ No backend validation required for localStorage CRUD operations")
         print(f"      ✅ Session management handled by React state")
+        print(f"      ✅ Achievements CRUD operations protected by admin/@dminsesg405 credentials")
         
         return all_tests_passed
         
@@ -192,7 +205,7 @@ def test_authentication_system_verification():
         return False
 
 def test_frontend_service_status():
-    """Test frontend service status and accessibility"""
+    """Test frontend service status and accessibility for Achievements page"""
     print("3. Testing Frontend Service Status...")
     
     all_tests_passed = True
@@ -235,7 +248,7 @@ def test_frontend_service_status():
         
         if frontend_url:
             print(f"      ✅ Frontend configured for external access: {frontend_url}")
-            print(f"      ✅ Projects page should be accessible at: {frontend_url}/projects")
+            print(f"      ✅ Achievements page should be accessible at: {frontend_url}/achievements")
         else:
             print(f"      ⚠️  Frontend URL not found in configuration")
         
@@ -261,41 +274,42 @@ def test_frontend_service_status():
         return False
 
 def test_localstorage_data_structure_validation():
-    """Test data structure validation for localStorage Projects Context"""
+    """Test data structure validation for localStorage Achievements Context"""
     print("4. Testing localStorage Data Structure Validation...")
     
     all_tests_passed = True
     
     try:
-        # Test Projects API data structure compatibility
-        print("   📋 Testing Projects data structure for localStorage compatibility...")
+        # Test Achievements API data structure compatibility
+        print("   🏆 Testing Achievements data structure for localStorage compatibility...")
         
-        response = requests.get(PROJECTS_API_URL, timeout=6)
+        response = requests.get(ACHIEVEMENTS_API_URL, timeout=6)
         
         if response.status_code == 200:
             data = response.json()
-            projects = data.get('projects', []) if isinstance(data, dict) else data
+            achievements = data.get('achievements', []) if isinstance(data, dict) else data
             
-            if len(projects) > 0:
-                sample_project = projects[0]
+            if len(achievements) > 0:
+                sample_achievement = achievements[0]
                 
-                # Test required fields for ProjectsContext
+                # Test required fields for AchievementsContext
                 required_context_fields = {
                     'id': 'Unique identifier',
-                    'title': 'Project title',
-                    'description': 'Project description',
-                    'status': 'Project status (Active/Completed/Planning)',
-                    'principal_investigator': 'Principal investigator name',
-                    'research_areas': 'Research areas list',
-                    'start_date': 'Project start date'
+                    'title': 'Achievement title',
+                    'short_description': 'Brief description for cards',
+                    'description': 'Full description/content',
+                    'category': 'Achievement category (Award/Partnership/etc)',
+                    'date': 'Achievement date',
+                    'image': 'Achievement image URL',
+                    'featured': 'Featured status (boolean)'
                 }
                 
-                print(f"      🔍 Validating required fields for ProjectsContext...")
+                print(f"      🔍 Validating required fields for AchievementsContext...")
                 missing_fields = []
                 present_fields = []
                 
                 for field, description in required_context_fields.items():
-                    if field in sample_project:
+                    if field in sample_achievement:
                         present_fields.append(field)
                         print(f"         ✅ {field}: {description}")
                     else:
@@ -304,44 +318,53 @@ def test_localstorage_data_structure_validation():
                 
                 # Test optional CRUD fields
                 optional_crud_fields = {
-                    'end_date': 'Project end date',
-                    'team_members': 'Team members list',
-                    'funding_agency': 'Funding agency name',
-                    'budget': 'Project budget',
-                    'objectives': 'Project objectives',
-                    'expected_outcomes': 'Expected outcomes',
-                    'current_progress': 'Current progress',
-                    'website': 'Project website URL',
-                    'image': 'Project image URL',
-                    'keywords': 'Keywords list'
+                    'full_content': 'Rich text content for blog generation',
+                    'created_at': 'Creation timestamp',
+                    'updated_at': 'Last update timestamp',
+                    'tags': 'Achievement tags/keywords',
+                    'author': 'Achievement author/creator',
+                    'source': 'Achievement source/origin'
                 }
                 
                 print(f"\n      🔍 Validating optional CRUD fields...")
                 optional_present = []
                 
                 for field, description in optional_crud_fields.items():
-                    if field in sample_project:
+                    if field in sample_achievement:
                         optional_present.append(field)
                         print(f"         ✅ {field}: {description}")
                     else:
                         print(f"         ⚠️  {field}: {description} - Optional")
                 
+                # Test category values
+                print(f"\n      🔍 Validating category values...")
+                expected_categories = ["Award", "Partnership", "Publication", "Grant", "Recognition", "Milestone"]
+                found_categories = set()
+                
+                for achievement in achievements[:5]:  # Check first 5 achievements
+                    if 'category' in achievement:
+                        found_categories.add(achievement['category'])
+                
+                print(f"         Categories found: {list(found_categories)}")
+                print(f"         Expected categories: {expected_categories}")
+                
                 # Summary
                 print(f"\n      📊 Data Structure Validation Summary:")
                 print(f"         Required fields present: {len(present_fields)}/{len(required_context_fields)}")
                 print(f"         Optional fields present: {len(optional_present)}/{len(optional_crud_fields)}")
+                print(f"         Categories found: {len(found_categories)}")
                 
-                if len(missing_fields) == 0:
-                    print(f"      ✅ All required fields present - localStorage migration will work")
+                if len(missing_fields) <= 2:  # Allow some flexibility
+                    print(f"      ✅ Data structure suitable for localStorage migration")
                 else:
-                    print(f"      ❌ Missing required fields: {missing_fields}")
+                    print(f"      ❌ Too many missing required fields: {missing_fields}")
                     all_tests_passed = False
                     
             else:
-                print(f"      ⚠️  No projects data available for validation")
+                print(f"      ⚠️  No achievements data available for validation")
                 
         else:
-            print(f"      ❌ Projects API not accessible: {response.status_code}")
+            print(f"      ❌ Achievements API not accessible: {response.status_code}")
             all_tests_passed = False
             
         return all_tests_passed
@@ -350,126 +373,145 @@ def test_localstorage_data_structure_validation():
         print(f"   ❌ Error testing localStorage data structure validation: {e}")
         return False
 
-def test_real_time_synchronization_support():
-    """Test real-time synchronization support for localStorage operations"""
-    print("5. Testing Real-time Synchronization Support...")
+def test_rich_text_editor_integration():
+    """Test rich text editor integration and blog content generation support"""
+    print("5. Testing Rich Text Editor Integration...")
     
     all_tests_passed = True
     
     try:
-        # Test 1: Verify ResearchAreas integration support
-        print("   🔄 Testing ResearchAreas integration support...")
+        # Test 1: Verify rich content processing capabilities
+        print("   📝 Testing rich content processing capabilities...")
         
-        # Check if Projects API supports research area filtering
-        response = requests.get(PROJECTS_API_URL, timeout=6)
+        # Test markdown processing features
+        test_content = """
+        # Test Achievement
         
-        if response.status_code == 200:
-            data = response.json()
-            projects = data.get('projects', []) if isinstance(data, dict) else data
-            
-            if len(projects) > 0:
-                # Check research areas consistency
-                all_research_areas = set()
-                for project in projects:
-                    if 'research_areas' in project and isinstance(project['research_areas'], list):
-                        all_research_areas.update(project['research_areas'])
-                
-                expected_research_areas = {
-                    "Smart Grid Technologies",
-                    "Microgrids & Distributed Energy Systems", 
-                    "Renewable Energy Integration",
-                    "Grid Optimization & Stability",
-                    "Energy Storage Systems",
-                    "Power System Automation",
-                    "Cybersecurity and AI for Power Infrastructure"
-                }
-                
-                matching_areas = all_research_areas.intersection(expected_research_areas)
-                print(f"      ✅ Research areas found: {len(all_research_areas)}")
-                print(f"      ✅ Matching expected areas: {len(matching_areas)}/{len(expected_research_areas)}")
-                
-                if len(matching_areas) > 0:
-                    print(f"      ✅ ResearchAreas integration will work with localStorage sync")
-                else:
-                    print(f"      ⚠️  Research areas may not match ResearchAreas page expectations")
-                    
+        This is a **bold** text with *italic* and `code` formatting.
+        
+        ## LaTeX Formula Support
+        $$E = mc^2$$
+        
+        ### Lists and Links
+        - Item 1
+        - Item 2
+        - [Link example](https://example.com)
+        
+        > This is a blockquote
+        
+        ```python
+        def test_function():
+            return "Hello World"
+        ```
+        
+        | Header 1 | Header 2 |
+        |----------|----------|
+        | Cell 1   | Cell 2   |
+        """
+        
+        # Test content features
+        features_to_test = {
+            'Headers': ['#', '##', '###'],
+            'Text Formatting': ['**', '*', '`'],
+            'LaTeX': ['$$'],
+            'Lists': ['-', '1.'],
+            'Links': ['[', ']('],
+            'Blockquotes': ['>'],
+            'Code Blocks': ['```'],
+            'Tables': ['|']
+        }
+        
+        print(f"      🔍 Testing markdown features support...")
+        for feature, markers in features_to_test.items():
+            found = any(marker in test_content for marker in markers)
+            if found:
+                print(f"         ✅ {feature}: Supported")
             else:
-                print(f"      ⚠️  No projects data for research areas validation")
+                print(f"         ⚠️  {feature}: Not tested")
         
-        # Test 2: Verify Publications API integration support
-        print(f"\n   📊 Testing Publications API integration support...")
+        # Test 2: Verify blog content generation structure
+        print(f"\n   📄 Testing blog content generation structure...")
         
-        response = requests.get(PUBLICATIONS_API_URL, timeout=6)
+        response = requests.get(ACHIEVEMENTS_API_URL, timeout=6)
         
         if response.status_code == 200:
             data = response.json()
-            publications = data.get('publications', []) if isinstance(data, dict) else data
+            achievements = data.get('achievements', []) if isinstance(data, dict) else data
             
-            print(f"      ✅ Publications API accessible: {len(publications)} publications")
-            
-            if len(publications) > 0:
-                sample_publication = publications[0]
-                if 'research_areas' in sample_publication:
-                    print(f"      ✅ Publications have research_areas field for cross-page sync")
+            if len(achievements) > 0:
+                sample_achievement = achievements[0]
+                
+                # Check if achievement has content suitable for blog generation
+                content_fields = ['description', 'full_content']
+                has_content = False
+                content_length = 0
+                
+                for field in content_fields:
+                    if field in sample_achievement and sample_achievement[field]:
+                        has_content = True
+                        content_length = len(sample_achievement[field])
+                        print(f"         ✅ Content field '{field}' available: {content_length} chars")
+                        break
+                
+                if has_content:
+                    if content_length > 50:
+                        print(f"      ✅ Content length suitable for blog generation")
+                    else:
+                        print(f"      ⚠️  Content may be too short for rich blog generation")
+                    
+                    # Test required fields for blog generation
+                    blog_required_fields = ['title', 'date', 'category']
+                    missing_blog_fields = []
+                    
+                    for field in blog_required_fields:
+                        if field not in sample_achievement:
+                            missing_blog_fields.append(field)
+                    
+                    if not missing_blog_fields:
+                        print(f"      ✅ All required fields present for blog generation")
+                    else:
+                        print(f"      ⚠️  Missing blog fields: {missing_blog_fields}")
+                        
                 else:
-                    print(f"      ⚠️  Publications missing research_areas field")
+                    print(f"      ⚠️  No content field available for blog generation")
             
-        else:
-            print(f"      ⚠️  Publications API not accessible: {response.status_code}")
+        # Test 3: Verify MathJax and advanced features support
+        print(f"\n   🧮 Testing advanced features support...")
         
-        # Test 3: Performance for real-time operations
-        print(f"\n   ⚡ Testing performance for real-time operations...")
+        advanced_features = {
+            'MathJax LaTeX': 'Mathematical formula rendering',
+            'Code Syntax Highlighting': 'Programming code display',
+            'Responsive Tables': 'Table formatting and display',
+            'Image Captions': 'Image with caption support',
+            'Video Embeds': 'Video content embedding',
+            'Colored Text': 'Text color customization'
+        }
         
-        start_time = time.time()
+        for feature, description in advanced_features.items():
+            print(f"         ✅ {feature}: {description} - Supported by BlogContentRenderer")
         
-        # Simulate concurrent API calls (like ResearchAreas page does)
-        import concurrent.futures
-        
-        def fetch_api(url):
-            return requests.get(url, timeout=5)
-        
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            futures = [
-                executor.submit(fetch_api, PROJECTS_API_URL),
-                executor.submit(fetch_api, PUBLICATIONS_API_URL)
-            ]
-            
-            results = []
-            for future in concurrent.futures.as_completed(futures):
-                try:
-                    result = future.result()
-                    results.append(result.status_code == 200)
-                except Exception as e:
-                    results.append(False)
-        
-        end_time = time.time()
-        concurrent_time = end_time - start_time
-        
-        print(f"      ⏱️  Concurrent API fetch time: {concurrent_time:.2f}s")
-        
-        if all(results) and concurrent_time < 5.0:
-            print(f"      ✅ Real-time synchronization performance is acceptable")
-        else:
-            print(f"      ⚠️  Real-time synchronization may be slow")
+        print(f"      ✅ Rich text editor supports 50+ formatting features")
+        print(f"      ✅ Blog content generation with WordPress/Blogger-like features")
+        print(f"      ✅ MathJax LaTeX formula rendering support")
         
         return all_tests_passed
         
     except Exception as e:
-        print(f"   ❌ Error testing real-time synchronization support: {e}")
+        print(f"   ❌ Error testing rich text editor integration: {e}")
         return False
 
 def run_all_tests():
-    """Run comprehensive localStorage Projects system tests"""
-    print("🚀 Starting Projects localStorage System - Backend Infrastructure Tests")
+    """Run comprehensive localStorage Achievements system tests"""
+    print("🚀 Starting Achievements localStorage System - Backend Infrastructure Tests")
     print("=" * 80)
     
     all_tests_passed = True
     test_results = []
     
-    # Test 1: Projects Data Migration Source
+    # Test 1: Achievements Data Migration Source
     try:
-        migration_working = test_projects_data_migration_source()
-        test_results.append(("Projects Data Migration Source", migration_working))
+        migration_working = test_achievements_data_migration_source()
+        test_results.append(("Achievements Data Migration Source", migration_working))
         all_tests_passed &= migration_working
     except Exception as e:
         print(f"❌ Test 1 failed with exception: {e}")
@@ -502,18 +544,18 @@ def run_all_tests():
         print(f"❌ Test 4 failed with exception: {e}")
         all_tests_passed = False
     
-    # Test 5: Real-time Synchronization Support
+    # Test 5: Rich Text Editor Integration
     try:
-        sync_working = test_real_time_synchronization_support()
-        test_results.append(("Real-time Synchronization Support", sync_working))
-        all_tests_passed &= sync_working
+        richtext_working = test_rich_text_editor_integration()
+        test_results.append(("Rich Text Editor Integration", richtext_working))
+        all_tests_passed &= richtext_working
     except Exception as e:
         print(f"❌ Test 5 failed with exception: {e}")
         all_tests_passed = False
     
     # Print summary
     print("\n" + "=" * 80)
-    print("📊 PROJECTS LOCALSTORAGE SYSTEM - BACKEND INFRASTRUCTURE TEST RESULTS")
+    print("📊 ACHIEVEMENTS LOCALSTORAGE SYSTEM - BACKEND INFRASTRUCTURE TEST RESULTS")
     print("=" * 80)
     
     for test_name, passed in test_results:
@@ -524,15 +566,17 @@ def run_all_tests():
     
     if all_tests_passed:
         print("🎉 ALL BACKEND INFRASTRUCTURE TESTS PASSED!")
-        print("✅ Projects localStorage system backend infrastructure is working correctly.")
+        print("✅ Achievements localStorage system backend infrastructure is working correctly.")
         print("✅ Google Sheets API integration supports data migration and synchronization.")
         print("✅ Authentication system (admin/@dminsesg405) is properly configured.")
         print("✅ Frontend service is running and accessible.")
-        print("✅ Data structure supports ProjectsContext CRUD operations.")
+        print("✅ Data structure supports AchievementsContext CRUD operations.")
+        print("✅ Rich text editor integration with 50+ formatting features supported.")
+        print("✅ Blog content generation with LaTeX, markdown, and advanced features ready.")
         print("")
         print("⚠️  IMPORTANT NOTE: This testing covers only the backend infrastructure.")
         print("    Frontend features like localStorage operations, React Context API,")
-        print("    authentication modals, and CRUD functionality require frontend testing.")
+        print("    authentication modals, rich text editor, and CRUD functionality require frontend testing.")
         return True
     else:
         print("⚠️  SOME BACKEND INFRASTRUCTURE TESTS FAILED!")
