@@ -345,8 +345,8 @@ const Contacts = () => {
           </Card>
         </div>
 
-        {/* Additional Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Additional Information Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Research Collaboration */}
           <Card className="hover:shadow-lg transition-shadow performance-optimized">
             <CardContent className="p-6 text-center">
@@ -394,7 +394,7 @@ const Contacts = () => {
         </div>
 
         {/* Directions */}
-        <div className="mt-12">
+        <div className="mb-12">
           <Card className="performance-optimized">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Getting to BRAC University</h2>
