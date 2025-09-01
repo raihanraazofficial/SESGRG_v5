@@ -347,10 +347,10 @@ const Projects = () => {
                   value={filters.area_filter || "all"}
                   onValueChange={(value) => handleFilterChange('area_filter', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="dropdown-container">
                     <SelectValue placeholder="Filter by Research Area" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-64 overflow-y-auto">
+                  <SelectContent className="max-h-64 overflow-y-auto" side="bottom" align="start" sideOffset={4}>
                     <SelectItem value="all">All Areas</SelectItem>
                     {allAreas.length > 0 ? allAreas.map(area => (
                       <SelectItem key={area} value={area}>{area}</SelectItem>
