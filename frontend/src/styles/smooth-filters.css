@@ -17,12 +17,25 @@
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
+/* Force dropdown to always appear below trigger */
 [data-radix-select-content] {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform, opacity;
   animation-duration: 300ms;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Force positioning below */
+  --radix-select-content-transform-origin: top !important;
+  transform-origin: top !important;
+}
+
+/* Override Radix positioning to always show below */
+[data-radix-select-content][data-side="top"] {
+  transform: translateY(4px) !important;
+}
+
+[data-radix-select-content][data-side="bottom"] {
+  transform: translateY(4px) !important;
 }
 
 [data-radix-select-content][data-state="open"] {
@@ -40,14 +53,14 @@
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1) translateY(4px);
   }
 }
 
 @keyframes selectContentSlideOut {
   from {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1) translateY(4px);
   }
   to {
     opacity: 0;
@@ -103,4 +116,28 @@
 
 [data-radix-select-content] {
   contain: layout style paint;
+  /* Additional positioning fixes */
+  position: absolute !important;
+  top: 100% !important;
+  margin-top: 4px !important;
+}
+
+/* Ensure dropdown portal is properly positioned */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+/* Fix for containers with overflow hidden */
+.dropdown-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Override any conflicting styles from parent containers */
+.grid.grid-cols-1.md\:grid-cols-4 {
+  overflow: visible !important;
+}
+
+.bg-gray-50.rounded-lg {
+  overflow: visible !important;
 }
