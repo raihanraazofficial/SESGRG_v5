@@ -338,6 +338,14 @@ const People = () => {
             Meet the dedicated researchers, advisors, and collaborators who are advancing sustainable energy 
             and smart grid technologies at our research lab.
           </p>
+          
+          {/* Authentication Status */}
+          {isAuthenticated && (
+            <div className="mt-6 inline-flex items-center space-x-2 bg-emerald-600/20 text-emerald-300 px-4 py-2 rounded-full border border-emerald-500/30">
+              <Shield className="h-4 w-4" />
+              <span className="text-sm font-medium">Admin Mode Active</span>
+            </div>
+          )}
         </div>
       </div>
 
