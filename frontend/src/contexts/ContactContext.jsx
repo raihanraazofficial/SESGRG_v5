@@ -284,7 +284,17 @@ export const ContactProvider = ({ children }) => {
     }
   };
 
-  // Map Configuration Management
+  // EmailJS Configuration Management
+  const updateEmailjsConfig = (newConfig) => {
+    try {
+      setEmailjsConfig(newConfig);
+      localStorage.setItem('sesg_emailjs_config', JSON.stringify(newConfig));
+      return { success: true };
+    } catch (error) {
+      console.error('Error updating EmailJS config:', error);
+      return { success: false, error: 'Failed to update EmailJS configuration' };
+    }
+  };
   const updateMapConfig = (newMapConfig) => {
     try {
       setMapConfig(newMapConfig);
