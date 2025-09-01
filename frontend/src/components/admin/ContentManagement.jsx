@@ -242,6 +242,11 @@ const ContentManagement = () => {
 
   // Render content based on active tab
   const renderContent = () => {
+    // Special handling for calendar settings
+    if (activeTab === 'calendar') {
+      return <CalendarManagement />;
+    }
+
     if (filteredData.length === 0) {
       return (
         <div className="text-center py-16">
