@@ -33,42 +33,62 @@ import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
-    <PeopleProvider>
-      <PublicationsProvider>
-        <ProjectsProvider>
-          <AchievementsProvider>
-            <NewsEventsProvider>
-              <div className="App min-h-screen bg-gray-50">
-                <BrowserRouter>
-                  <Navbar />
-                  <main className="pt-16">
+    <AuthProvider>
+      <PeopleProvider>
+        <PublicationsProvider>
+          <ProjectsProvider>
+            <AchievementsProvider>
+              <NewsEventsProvider>
+                <div className="App min-h-screen bg-gray-50">
+                  <BrowserRouter>
                     <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/people" element={<People />} />
-                      <Route path="/research" element={<ResearchAreas />} />
-                      <Route path="/research-areas" element={<ResearchAreas />} />
-                      <Route path="/publications" element={<Publications />} />
-                      <Route path="/projects" element={<Projects />} />
-                      <Route path="/achievements" element={<Achievements />} />
-                      <Route path="/news" element={<NewsEvents />} />
-                      <Route path="/news-events" element={<NewsEvents />} />
-                      <Route path="/gallery" element={<Gallery />} />
-                      <Route path="/contact" element={<Contacts />} />
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/privacy" element={<PrivacyPolicy />} />
-                      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                      <Route path="/terms" element={<TermsConditions />} />
-                      <Route path="/terms-conditions" element={<TermsConditions />} />
+                      {/* Admin Routes */}
+                      <Route path="/admin/login" element={<AdminLogin />} />
+                      <Route 
+                        path="/admin" 
+                        element={
+                          <AdminRoute>
+                            <AdminPanel />
+                          </AdminRoute>
+                        } 
+                      />
+                      
+                      {/* Public Routes */}
+                      <Route path="/*" element={
+                        <>
+                          <Navbar />
+                          <main className="pt-16">
+                            <Routes>
+                              <Route path="/" element={<Home />} />
+                              <Route path="/people" element={<People />} />
+                              <Route path="/research" element={<ResearchAreas />} />
+                              <Route path="/research-areas" element={<ResearchAreas />} />
+                              <Route path="/publications" element={<Publications />} />
+                              <Route path="/projects" element={<Projects />} />
+                              <Route path="/achievements" element={<Achievements />} />
+                              <Route path="/news" element={<NewsEvents />} />
+                              <Route path="/news-events" element={<NewsEvents />} />
+                              <Route path="/gallery" element={<Gallery />} />
+                              <Route path="/contact" element={<Contacts />} />
+                              <Route path="/faq" element={<FAQ />} />
+                              <Route path="/privacy" element={<PrivacyPolicy />} />
+                              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                              <Route path="/terms" element={<TermsConditions />} />
+                              <Route path="/terms-conditions" element={<TermsConditions />} />
+                            </Routes>
+                          </main>
+                          <Footer />
+                        </>
+                      } />
                     </Routes>
-                  </main>
-                  <Footer />
-                </BrowserRouter>
-              </div>
-            </NewsEventsProvider>
-          </AchievementsProvider>
-        </ProjectsProvider>
-      </PublicationsProvider>
-    </PeopleProvider>
+                  </BrowserRouter>
+                </div>
+              </NewsEventsProvider>
+            </AchievementsProvider>
+          </ProjectsProvider>
+        </PublicationsProvider>
+      </PeopleProvider>
+    </AuthProvider>
   );
 }
 
