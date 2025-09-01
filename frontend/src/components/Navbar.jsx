@@ -103,6 +103,29 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Mobile Admin Button */}
+              <div className="pt-2 border-t border-gray-200">
+                {isAuthenticated ? (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-base font-medium rounded-md transition-colors"
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Admin Panel
+                  </Link>
+                ) : (
+                  <Link
+                    to="/admin/login"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center px-3 py-2 border border-gray-300 hover:border-emerald-300 text-gray-700 hover:text-emerald-700 text-base font-medium rounded-md transition-colors"
+                  >
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Admin Login
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         )}
