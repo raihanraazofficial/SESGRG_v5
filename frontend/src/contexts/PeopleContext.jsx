@@ -134,29 +134,6 @@ export const PeopleProvider = ({ children }) => {
     "Cybersecurity and AI for Power Infrastructure"
   ];
 
-  // Load data from localStorage on component mount
-  useEffect(() => {
-    const loadDataFromStorage = () => {
-      try {
-        const storedData = localStorage.getItem('sesgrg_people_data');
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          setPeopleData(parsedData);
-          console.log('✅ Loaded people data from localStorage:', parsedData);
-        } else {
-          // Initialize with default data if no stored data exists
-          initializeDefaultData();
-        }
-      } catch (error) {
-        console.error('Error loading data from localStorage:', error);
-        initializeDefaultData();
-      }
-    };
-
-    // Execute immediately instead of waiting for effect
-    loadDataFromStorage();
-  }, []);
-
   // Save data to localStorage whenever peopleData changes
   useEffect(() => {
     try {
