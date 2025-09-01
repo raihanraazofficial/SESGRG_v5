@@ -139,7 +139,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-5xl my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
+      <div className="bg-white rounded-xl w-full max-w-[1080px] my-4 mx-4 shadow-2xl flex flex-col max-h-[calc(100vh-2rem)]">
         
         {/* Fixed Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-xl z-10">
@@ -169,13 +169,13 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
             
             {/* Basic Information */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+              <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Folder className="h-5 w-5 mr-2 text-emerald-600" />
                   Basic Information
                 </h3>
                 
-                <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Project Title *
@@ -238,8 +238,8 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Timeline & Budget */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Calendar className="h-5 w-5 mr-2 text-blue-600" />
                   Timeline & Budget
                 </h3>
@@ -300,11 +300,11 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Research Areas */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Research Areas * (Select at least one)
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {researchAreas.map((area, index) => (
                     <label key={area} className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all">
                       <input
@@ -323,8 +323,8 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Team Members */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-6">
                   <Users className="h-5 w-5 mr-2 text-green-600" />
                   Team Members
                 </h3>
@@ -364,7 +364,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Objectives */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Objectives</h3>
                 {formData.objectives.map((objective, index) => (
                   <div key={index} className="flex space-x-3 mb-3">
@@ -403,7 +403,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Expected Outcomes */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Expected Outcomes</h3>
                 {formData.expected_outcomes.map((outcome, index) => (
                   <div key={index} className="flex space-x-3 mb-3">
@@ -442,7 +442,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
             {/* Additional Information */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
                 
                 <div className="space-y-6">
