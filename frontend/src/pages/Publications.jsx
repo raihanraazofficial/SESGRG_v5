@@ -472,7 +472,7 @@ Best regards,`;
                   </SelectTrigger>
                   <SelectContent className="max-h-64 overflow-y-auto">
                     <SelectItem value="all">All Years</SelectItem>
-                    {availableYears.length > 0 ? availableYears.map(year => (
+                    {allYears.length > 0 ? allYears.map(year => (
                       <SelectItem key={year} value={year}>{year}</SelectItem>
                     )) : years.map(year => (
                       <SelectItem key={year} value={year}>{year}</SelectItem>
