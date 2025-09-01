@@ -230,6 +230,22 @@ export const ContactProvider = ({ children }) => {
   };
 
   // Cards Management
+  const addCard = (cardData) => {
+    try {
+      const newCard = {
+        id: Date.now(),
+        ...cardData
+      };
+      const updatedCards = [...cards, newCard];
+      setCards(updatedCards);
+      localStorage.setItem('sesg_contact_cards', JSON.stringify(updatedCards));
+      return { success: true, card: newCard };
+    } catch (error) {
+      console.error('Error adding card:', error);
+      return { success: false, error: 'Failed to add card' };
+    }
+  };
+
   const updateCard = (id, updatedData) => {
     try {
       const updatedCards = cards.map(card =>
@@ -241,6 +257,18 @@ export const ContactProvider = ({ children }) => {
     } catch (error) {
       console.error('Error updating card:', error);
       return { success: false, error: 'Failed to update card' };
+    }
+  };
+
+  const deleteCard = (id) => {
+    try {
+      const updatedCards = cards.filter(card => card.id !== id);
+      setCards(updatedCards);
+      localStorage.setItem('sesg_contact_cards', JSON.stringify(updatedCards));
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      return { success: false, error: 'Failed to delete card' };
     }
   };
 
