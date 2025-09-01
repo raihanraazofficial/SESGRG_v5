@@ -42,6 +42,7 @@ const AdminPanel = () => {
   const { projectsData } = useProjects();
   const { achievementsData } = useAchievements();
   const { newsEventsData } = useNewsEvents();
+  const { getInquiryStats } = useContact();
 
   // Calculate statistics
   const stats = {
