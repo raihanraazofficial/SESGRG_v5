@@ -588,6 +588,7 @@ const ContentManagement = () => {
               setEditingCategory(null);
             }}
             onAdd={handleAddItem}
+            categories={achievementCategories}
           />
           
           <EditAchievementModal
