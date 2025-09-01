@@ -383,9 +383,16 @@ const ContentManagement = () => {
               >
                 <Icon className="h-4 w-4" />
                 <span>{tab.label}</span>
-                <span className="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
-                  {tab.count}
-                </span>
+                {tab.count !== null && (
+                  <span className="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+                    {tab.count}
+                  </span>
+                )}
+                {tab.isSettings && (
+                  <span className="bg-blue-100 text-blue-600 py-0.5 px-2 rounded-full text-xs">
+                    Settings
+                  </span>
+                )}
               </button>
             );
           })}
