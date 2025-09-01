@@ -465,7 +465,7 @@ Best regards,`;
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by Year" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-64 overflow-y-auto">
                     <SelectItem value="all">All Years</SelectItem>
                     {availableYears.length > 0 ? availableYears.map(year => (
                       <SelectItem key={year} value={year}>{year}</SelectItem>
