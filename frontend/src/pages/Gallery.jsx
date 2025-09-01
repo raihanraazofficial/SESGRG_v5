@@ -6,63 +6,7 @@ import { Button } from "../components/ui/button";
 import { useGallery } from "../contexts/GalleryContext";
 
 const Gallery = () => {
-  const photos = [
-    {
-      url: "https://images.unsplash.com/photo-1655300256620-680cb0f1cec3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
-      caption: "Solar Panel Installation Research",
-      category: "Renewable Energy"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1639313521811-fdfb1c040ddb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHw0fHxzdXN0YWluYWJsZSUyMGVuZXJneSUyMHJlc2VhcmNoJTIwbGFib3JhdG9yeXxlbnwwfHx8fDE3NTY2NTQxNDl8MA&ixlib=rb-4.1.0&q=85",
-      caption: "Control Room Monitoring",
-      category: "Smart Grid"
-    },
-    {
-      url: "https://images.pexels.com/photos/3861435/pexels-photo-3861435.jpeg",
-      caption: "Laboratory Research Work",
-      category: "Research Activities"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1606206873764-fd15e242df52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
-      caption: "Laboratory Equipment Analysis",
-      category: "Research Activities"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1608037222011-cbf484177126?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZXNlYXJjaCUyMGxhYm9yYXRvcnl8ZW58MHx8fHwxNzU2NjU0MTU2fDA&ixlib=rb-4.1.0&q=85",
-      caption: "University Laboratory Environment",
-      category: "Research Activities"
-    },
-    {
-      url: "https://images.pexels.com/photos/8539753/pexels-photo-8539753.jpeg",
-      caption: "Professional Research Activities",
-      category: "Research Activities"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
-      caption: "Wind Turbine Research",
-      category: "Renewable Energy"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85",
-      caption: "Wind Farm Installation",
-      category: "Renewable Energy"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
-      caption: "Solar Panel Farm",
-      category: "Renewable Energy"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1467533003447-e295ff1b0435?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85",
-      caption: "Modern Wind Turbines",
-      category: "Renewable Energy"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGdyaWR8ZW58MHx8fHwxNzU2NTM1MTU3fDA&ixlib=rb-4.1.0&q=85",
-      caption: "Power Transmission Infrastructure",
-      category: "Smart Grid"
-    }
-  ];
+  const { galleryItems, categories } = useGallery();
 
   const getCategoryColor = (category) => {
     switch (category) {
