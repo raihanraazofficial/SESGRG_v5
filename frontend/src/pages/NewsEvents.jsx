@@ -11,6 +11,7 @@ import AuthModal from "../components/AuthModal";
 import AddNewsEventModal from "../components/newsevents/AddNewsEventModal";
 import EditNewsEventModal from "../components/newsevents/EditNewsEventModal";
 import DeleteNewsEventModal from "../components/newsevents/DeleteNewsEventModal";
+import CalendarSettingsModal from "../components/newsevents/CalendarSettingsModal";
 import { useNewsEvents } from "../contexts/NewsEventsContext";
 import googleSheetsService from "../services/googleSheetsApi";
 import "../styles/smooth-filters.css";
