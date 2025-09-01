@@ -364,6 +364,19 @@ const People = () => {
           </div>
         </div>
 
+        {/* Add New Member Button */}
+        <div className="flex justify-center mb-8">
+          <Button
+            onClick={handleAddPerson}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300"
+            title={isAuthenticated ? "Add New Member" : "Authentication Required"}
+          >
+            <UserPlus className="h-5 w-5" />
+            <span>Add New {getSectionTitle(activeSection).slice(0, -1)}</span>
+            {!isAuthenticated && <Shield className="h-4 w-4 ml-1" />}
+          </Button>
+        </div>
+
         {/* Section Content */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
