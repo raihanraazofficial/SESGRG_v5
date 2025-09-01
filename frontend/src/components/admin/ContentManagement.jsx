@@ -648,7 +648,7 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onDelete={() => handleConfirmDelete()}
+            onConfirm={() => handleConfirmDelete()}
             newsEvent={deletingItem}
           />
         </>
