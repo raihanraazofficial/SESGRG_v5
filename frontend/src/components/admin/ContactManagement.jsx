@@ -48,8 +48,10 @@ const ContactManagement = () => {
 
   const subTabs = [
     { id: 'info', label: 'Contact Info', icon: Settings },
-    { id: 'inquiries', label: 'Inquiries', icon: MessageSquare },
+    { id: 'emailjs', label: 'EmailJS Settings', icon: Mail },
     { id: 'types', label: 'Inquiry Types', icon: Edit3 },
+    { id: 'cards', label: 'Content Cards', icon: MessageSquare },
+    { id: 'directions', label: 'Directions', icon: MapPin },
     { id: 'map', label: 'Map Settings', icon: MapPin }
   ];
 
