@@ -322,6 +322,24 @@ Best regards,`;
           line-height: 1.6;
           font-size: 14px;
         }
+        @media (min-width: 475px) {
+          .xs\\:flex-row {
+            flex-direction: row;
+          }
+          .xs\\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-y-reverse: 0;
+            margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+            margin-bottom: calc(0px * var(--tw-space-y-reverse));
+          }
+          .xs\\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 0;
+            margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+            margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+          }
+          .xs\\:w-auto {
+            width: auto;
+          }
+        }
         @media (min-width: 768px) {
           .ieee-citation {
             font-size: 16px;
