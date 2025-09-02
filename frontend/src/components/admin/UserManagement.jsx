@@ -658,20 +658,28 @@ const UserManagement = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Permissions
+                    <span className="text-xs text-gray-500 ml-2">(Auto-selected based on role)</span>
                   </label>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {Object.values(PERMISSIONS).map((permission) => (
-                      <label key={permission} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={formData.permissions.includes(permission)}
-                          onChange={(e) => handlePermissionChange(permission, e.target.checked)}
-                          className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">{permission.replace('_', ' ')}</span>
-                      </label>
-                    ))}
+                  <div className="bg-gray-50 rounded-lg p-3 max-h-40 overflow-y-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {Object.values(PERMISSIONS).map((permission) => (
+                        <label key={permission} className="flex items-center text-sm">
+                          <input
+                            type="checkbox"
+                            checked={formData.permissions.includes(permission)}
+                            onChange={(e) => handlePermissionChange(permission, e.target.checked)}
+                            className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 mr-2"
+                          />
+                          <span className="text-gray-700 capitalize">
+                            {permission.replace(/_/g, ' ').toLowerCase()}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Permissions are automatically set based on the selected role. You can customize them as needed.
+                  </p>
                 </div>
               </div>
 
