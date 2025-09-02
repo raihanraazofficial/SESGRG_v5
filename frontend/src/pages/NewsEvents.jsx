@@ -87,11 +87,18 @@ const NewsEvents = () => {
       const result = getPaginatedNewsEvents(filters);
       setNewsEvents(result.news_events || []);
       setPagination(result.pagination || {});
+      
+      // Load featured news events
+      const featured = getFeaturedNewsEvents(1);
+      setFeaturedNewsEvents(featured || []);
+      
       console.log('✅ News events loaded:', result.news_events?.length || 0, 'items');
+      console.log('✅ Featured news events loaded:', featured?.length || 0, 'items');
     } catch (error) {
       console.error('❌ Error loading news events:', error);
       alert('Failed to load news & events. Please try again.');
       setNewsEvents([]);
+      setFeaturedNewsEvents([]);
       setPagination({});
     } finally {
       setRefreshing(false);
