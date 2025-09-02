@@ -819,11 +819,11 @@ const UserManagement = () => {
                         onChange={(e) => handleFormChange('role', e.target.value)}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       >
-                        <option value={USER_ROLES.ADMIN}>Admin</option>
                         <option value={USER_ROLES.ADVISOR}>Advisor</option>
                         <option value={USER_ROLES.TEAM_MEMBER}>Team Member</option>
                         <option value={USER_ROLES.COLLABORATOR}>Collaborator</option>
                       </select>
+                      <p className="text-xs text-gray-500 mt-1">System admin accounts cannot be created through this interface</p>
                     </div>
                   )}
 
