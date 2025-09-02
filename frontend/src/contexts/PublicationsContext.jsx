@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import googleSheetsService from '../services/googleSheetsApi';
+import firebaseService from '../services/firebaseService';
 
 const PublicationsContext = createContext();
 
