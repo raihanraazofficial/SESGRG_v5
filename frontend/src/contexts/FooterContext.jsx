@@ -178,16 +178,16 @@ export const FooterProvider = ({ children }) => {
   };
 
   // Update lab info
-  const updateLabInfo = (newLabInfo) => {
+  const updateLabInfo = async (newLabInfo) => {
     const updatedData = {
       ...footerData,
       labInfo: { ...footerData.labInfo, ...newLabInfo }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
   // Quick Links management
-  const addQuickLink = (newLink) => {
+  const addQuickLink = async (newLink) => {
     const linkWithId = {
       ...newLink,
       id: `link-${Date.now()}`
@@ -196,38 +196,38 @@ export const FooterProvider = ({ children }) => {
       ...footerData,
       quickLinks: [...footerData.quickLinks, linkWithId]
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const updateQuickLink = (linkId, updatedLink) => {
+  const updateQuickLink = async (linkId, updatedLink) => {
     const updatedData = {
       ...footerData,
       quickLinks: footerData.quickLinks.map(link =>
         link.id === linkId ? { ...link, ...updatedLink } : link
       )
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const deleteQuickLink = (linkId) => {
+  const deleteQuickLink = async (linkId) => {
     const updatedData = {
       ...footerData,
       quickLinks: footerData.quickLinks.filter(link => link.id !== linkId)
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
   // Contact info management
-  const updateContactInfo = (newContactInfo) => {
+  const updateContactInfo = async (newContactInfo) => {
     const updatedData = {
       ...footerData,
       contactInfo: { ...footerData.contactInfo, ...newContactInfo }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
   // Social Media management
-  const addSocialMedia = (newSocialMedia) => {
+  const addSocialMedia = async (newSocialMedia) => {
     const socialWithId = {
       ...newSocialMedia,
       id: `social-${Date.now()}`
@@ -236,45 +236,45 @@ export const FooterProvider = ({ children }) => {
       ...footerData,
       socialMedia: [...footerData.socialMedia, socialWithId]
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const updateSocialMedia = (socialId, updatedSocial) => {
+  const updateSocialMedia = async (socialId, updatedSocial) => {
     const updatedData = {
       ...footerData,
       socialMedia: footerData.socialMedia.map(social =>
         social.id === socialId ? { ...social, ...updatedSocial } : social
       )
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const deleteSocialMedia = (socialId) => {
+  const deleteSocialMedia = async (socialId) => {
     const updatedData = {
       ...footerData,
       socialMedia: footerData.socialMedia.filter(social => social.id !== socialId)
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const updateSocialDescription = (newDescription) => {
+  const updateSocialDescription = async (newDescription) => {
     const updatedData = {
       ...footerData,
       socialDescription: newDescription
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
   // Bottom Bar management
-  const updateBottomBar = (newBottomBar) => {
+  const updateBottomBar = async (newBottomBar) => {
     const updatedData = {
       ...footerData,
       bottomBar: { ...footerData.bottomBar, ...newBottomBar }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const addBottomBarLink = (newLink) => {
+  const addBottomBarLink = async (newLink) => {
     const linkWithId = {
       ...newLink,
       id: `bottom-link-${Date.now()}`
@@ -286,10 +286,10 @@ export const FooterProvider = ({ children }) => {
         links: [...footerData.bottomBar.links, linkWithId]
       }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const updateBottomBarLink = (linkId, updatedLink) => {
+  const updateBottomBarLink = async (linkId, updatedLink) => {
     const updatedData = {
       ...footerData,
       bottomBar: {
@@ -299,10 +299,10 @@ export const FooterProvider = ({ children }) => {
         )
       }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
-  const deleteBottomBarLink = (linkId) => {
+  const deleteBottomBarLink = async (linkId) => {
     const updatedData = {
       ...footerData,
       bottomBar: {
@@ -310,12 +310,12 @@ export const FooterProvider = ({ children }) => {
         links: footerData.bottomBar.links.filter(link => link.id !== linkId)
       }
     };
-    saveFooterData(updatedData);
+    await saveFooterData(updatedData);
   };
 
   // Reset to defaults
-  const resetFooterData = () => {
-    saveFooterData(defaultFooterData);
+  const resetFooterData = async () => {
+    await saveFooterData(defaultFooterData);
   };
 
   const value = {
