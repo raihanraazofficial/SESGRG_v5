@@ -340,45 +340,9 @@ const Home = () => {
 
   // Use HomeContext data
   const { aboutUs, carouselImages, objectives } = useHome();
-
-  // Research Areas (keep static as they're linked to research page)
-  const researchAreas = [
-    {
-      title: "Smart Grid Technologies",
-      description: "Next-generation intelligent grid systems for improved reliability and efficiency.",
-      image: carouselImages[0]?.url || "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Microgrids & Distributed Energy Systems", 
-      description: "Localized energy grids that can operate independently or with traditional grids.",
-      image: carouselImages[1]?.url || "https://images.unsplash.com/photo-1466611653911-95081537e5b7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Renewable Energy Integration",
-      description: "Seamless integration of solar, wind, and other renewable sources.",
-      image: carouselImages[2]?.url || "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Grid Optimization & Stability",
-      description: "Advanced algorithms for power system optimization and stability analysis.",
-      image: carouselImages[3]?.url || "https://images.unsplash.com/photo-1467533003447-e295ff1b0435?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHxyZW5ld2FibGV8ZW58MHx8fHwxNzU2NTM1MTY0fDA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Energy Storage Systems",
-      description: "Battery management and energy storage solutions for grid applications.",
-      image: carouselImages[4]?.url || "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGdyaWR8ZW58MHx8fHwxNzU2NTM1MTU3fDA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Power System Automation",
-      description: "Automated control systems for modern power grid operations.",
-      image: carouselImages[0]?.url || "https://images.unsplash.com/photo-1632103996718-4a47cf68b75e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      title: "Cybersecurity and AI for Power Infrastructure",
-      description: "Advanced AI-driven cybersecurity solutions protecting critical power infrastructure from emerging threats.",
-      image: carouselImages[1]?.url || "https://images.unsplash.com/photo-1466611653911-95081537e5b7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxzdXN0YWluYWJsZSUyMGVuZXJneXxlbnwwfHx8fDE3NTY1MzUxNTJ8MA&ixlib=rb-4.1.0&q=85"
-    }
-  ];
+  
+  // Use ResearchAreasContext data
+  const { researchAreas } = useResearchAreas();
 
   // Auto-rotate carousel
   useEffect(() => {
