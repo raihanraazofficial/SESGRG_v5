@@ -271,6 +271,7 @@ const UserManagement = () => {
 
   // Reset form
   const resetForm = () => {
+    const defaultRole = USER_ROLES.COLLABORATOR;
     setFormData({
       username: '',
       email: '',
@@ -279,8 +280,8 @@ const UserManagement = () => {
       lastName: '',
       profilePicture: '',
       position: 'Team Member',
-      role: USER_ROLES.COLLABORATOR,
-      permissions: []
+      role: defaultRole,
+      permissions: getDefaultPermissionsForRole(defaultRole)
     });
     setShowPassword(false);
   };
