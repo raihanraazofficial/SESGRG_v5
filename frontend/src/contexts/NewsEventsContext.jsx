@@ -195,6 +195,14 @@ export const NewsEventsProvider = ({ children }) => {
     };
   };
 
+  // Get featured news events
+  const getFeaturedNewsEvents = (limit = 3) => {
+    return newsEventsData
+      .filter(item => item.featured)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, limit);
+  };
+
   const value = {
     newsEventsData,
     loading,
@@ -204,7 +212,8 @@ export const NewsEventsProvider = ({ children }) => {
     deleteNewsEvent,
     getNewsEventById,
     getPaginatedNewsEvents,
-    getStatistics
+    getStatistics,
+    getFeaturedNewsEvents
   };
 
   return (
