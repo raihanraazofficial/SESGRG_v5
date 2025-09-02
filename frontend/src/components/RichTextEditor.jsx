@@ -339,8 +339,8 @@ const RichTextEditor = ({ value, onChange, placeholder = "Write your content..."
               autoFocus
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowLatexModal(false)}>Cancel</Button>
-              <Button onClick={insertLatex} className="bg-emerald-600 hover:bg-emerald-700">Insert</Button>
+              <Button variant="outline" type="button" onClick={() => setShowLatexModal(false)}>Cancel</Button>
+              <Button type="button" onClick={insertLatex} className="bg-emerald-600 hover:bg-emerald-700">Insert</Button>
             </div>
           </div>
         </div>
