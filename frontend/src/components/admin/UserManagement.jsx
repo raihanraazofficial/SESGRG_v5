@@ -57,6 +57,14 @@ const UserManagement = () => {
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
     return matchesSearch && matchesRole;
   });
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('👥 UserManagement - users:', users);
+    console.log('👥 UserManagement - filteredUsers:', filteredUsers);
+    console.log('👥 UserManagement - authLoading:', authLoading);
+    console.log('👥 UserManagement - componentLoading:', componentLoading);
+  }, [users, filteredUsers, authLoading, componentLoading]);
 
   // Handle form changes
   const handleFormChange = (field, value) => {
