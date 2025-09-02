@@ -526,10 +526,12 @@ const UserManagement = () => {
 
       {/* Add User Modal - Full Screen Responsive */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-full p-4">
-            <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl">
-              <div className="p-4 sm:p-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center overflow-y-auto">
+          <div className="w-full max-w-6xl bg-white rounded-lg shadow-2xl m-4 max-h-[95vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b px-6 py-4 rounded-t-lg">
+              <h2 className="text-2xl font-bold text-gray-900">Add New User</h2>
+            </div>
+            <div className="p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Add New User</h2>
               
               <div className="space-y-4">
