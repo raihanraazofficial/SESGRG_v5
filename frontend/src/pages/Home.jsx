@@ -360,10 +360,6 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToResearch = () => {
-    const researchSection = document.getElementById('research-areas');
-    researchSection?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <div className="min-h-screen">
