@@ -266,18 +266,7 @@ const People = () => {
             and smart grid technologies at our research lab.
           </p>
           
-          {/* Authentication Status - Only show login button for non-authenticated users */}
-          {!isAuthenticated && (
-            <div className="mt-6">
-              <Link
-                to="/admin/login"
-                className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
-              >
-                <Shield className="h-5 w-5 mr-2" />
-                <span>Admin Login</span>
-              </Link>
-            </div>
-          )}
+
         </div>
       </div>
 
