@@ -10,14 +10,16 @@ import googleSheetsService from "../services/googleSheetsApi";
 
 // Latest News Section Component
 const LatestNewsSection = () => {
-  const { newsEventsData, loading, getPaginatedNewsEvents } = useNewsEvents();
+  const { newsEventsData, loading, getPaginatedNewsEvents, getFeaturedNewsEvents } = useNewsEvents();
   const [latestNews, setLatestNews] = useState([]);
+  const [featuredNews, setFeaturedNews] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Load latest news from localStorage context
+    // Load latest news and featured news from localStorage context
     if (newsEventsData.length > 0 || !loading) {
+      // Get latest news
       const result = getPaginatedNewsEvents({
         page: 1,
         per_page: 8,
@@ -25,9 +27,15 @@ const LatestNewsSection = () => {
         sort_order: 'desc'
       });
       setLatestNews(result.news_events || []);
+      
+      // Get featured news
+      const featured = getFeaturedNewsEvents(1);
+      setFeaturedNews(featured || []);
+      
       console.log('✅ Homepage: Latest news loaded from localStorage:', result.news_events?.length || 0, 'items');
+      console.log('✅ Homepage: Featured news loaded:', featured?.length || 0, 'items');
     }
-  }, [newsEventsData, loading, getPaginatedNewsEvents]);
+  }, [newsEventsData, loading, getPaginatedNewsEvents, getFeaturedNewsEvents]);
 
   const fetchLatestNews = async (forceRefresh = false) => {
     try {
