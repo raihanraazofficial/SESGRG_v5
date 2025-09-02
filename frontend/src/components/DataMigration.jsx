@@ -42,34 +42,58 @@ const DataMigration = () => {
   };
 
   const checkLocalStorageData = () => {
-    const keys = [
-      'sesg_users',
-      'sesgrg_people_data',
-      'sesg_publications_data',
-      'sesg_projects_data',
-      'sesg_achievements_data',
-      'sesg_newsevents_data',
-      'sesg_research_areas',
-      'sesg_gallery_data',
-      'sesg_contact_data',
-      'sesg_footer_data',
-      'sesg_home_data'
-    ];
+    try {
+      console.log('🔍 checkLocalStorageData function called');
+      alert('🔍 Checking localStorage data... Check browser console for details.');
+      
+      const keys = [
+        'sesg_users',
+        'sesgrg_people_data',
+        'sesg_publications_data',
+        'sesg_projects_data',
+        'sesg_achievements_data',
+        'sesg_newsevents_data',
+        'sesg_research_areas',
+        'sesg_gallery_data',
+        'sesg_contact_data',
+        'sesg_footer_data',
+        'sesg_home_data'
+      ];
 
-    console.log('📊 Checking localStorage data:');
-    keys.forEach(key => {
-      const data = localStorage.getItem(key);
-      if (data) {
-        try {
-          const parsed = JSON.parse(data);
-          console.log(`${key}:`, Array.isArray(parsed) ? `${parsed.length} items` : 'Object data');
-        } catch (e) {
-          console.log(`${key}:`, 'String data');
+      console.log('📊 Checking localStorage data:');
+      let dataFound = false;
+      let dataReport = [];
+      
+      keys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data) {
+          dataFound = true;
+          try {
+            const parsed = JSON.parse(data);
+            const info = Array.isArray(parsed) ? `${parsed.length} items` : 'Object data';
+            console.log(`${key}:`, info);
+            dataReport.push(`${key}: ${info}`);
+          } catch (e) {
+            console.log(`${key}:`, 'String data');
+            dataReport.push(`${key}: String data`);
+          }
+        } else {
+          console.log(`${key}:`, 'No data');
+          dataReport.push(`${key}: No data`);
         }
+      });
+      
+      // Show summary alert
+      if (dataFound) {
+        alert(`✅ LocalStorage data found!\n\n${dataReport.join('\n')}`);
       } else {
-        console.log(`${key}:`, 'No data');
+        alert('❌ No localStorage data found. All keys are empty.');
       }
-    });
+      
+    } catch (error) {
+      console.error('❌ Error checking localStorage:', error);
+      alert(`❌ Error checking localStorage: ${error.message}`);
+    }
   };
 
   return (
