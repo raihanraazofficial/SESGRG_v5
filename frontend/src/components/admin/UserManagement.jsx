@@ -860,7 +860,7 @@ const UserManagement = () => {
                     <span className="text-xs text-gray-500 ml-2">(Auto-selected based on role)</span>
                   </label>
                   <div className="bg-gray-50 rounded-lg p-3 max-h-40 overflow-y-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
                       {Object.values(PERMISSIONS).map((permission) => (
                         <label key={permission} className="flex items-center text-sm">
                           <input
