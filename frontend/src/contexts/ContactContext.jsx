@@ -111,14 +111,19 @@ export const ContactProvider = ({ children }) => {
         } else {
           // Initialize with default data if no data in Firebase
           console.log('📋 No contact data in Firebase, initializing with defaults...');
-          await firebaseService.updateContactData(DEFAULT_CONTACT_DATA);
+          try {
+            await firebaseService.updateContactData(DEFAULT_CONTACT_DATA);
+            console.log('✅ Default contact data initialized in Firebase');
+          } catch (initError) {
+            console.warn('⚠️ Could not initialize Firebase data, using defaults locally:', initError);
+          }
           setContactData(DEFAULT_CONTACT_DATA);
-          console.log('✅ Default contact data initialized in Firebase');
         }
         
       } catch (error) {
         console.error('❌ Error loading contact data from Firebase:', error);
-        // Fallback to default data
+        // Fallback to default data - ensure we always have data
+        console.log('🔄 Falling back to default contact data');
         setContactData(DEFAULT_CONTACT_DATA);
       } finally {
         setIsLoading(false);
