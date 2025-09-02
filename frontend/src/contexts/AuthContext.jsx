@@ -212,23 +212,20 @@ export const AuthProvider = ({ children }) => {
   // Check if user is admin
   const isAdmin = () => hasRole(USER_ROLES.ADMIN);
 
-  // Create new user (admin only)
-  const createUser = (userData) => {
+  // Create new user (admin only) with Firebase
+  const createUser = async (userData) => {
     if (!isAdmin()) {
       throw new Error('Only admins can create users');
     }
 
     try {
-      const newUser = {
-        id: `user-${Date.now()}`,
+      const newUser = await firebaseService.addUser({
         ...userData,
         isActive: true,
-        createdAt: new Date().toISOString(),
         lastLogin: null
-      };
+      });
 
       const updatedUsers = [...users, newUser];
-      localStorage.setItem('sesg_users', JSON.stringify(updatedUsers));
       setUsers(updatedUsers);
       
       return { success: true, user: newUser };
@@ -238,18 +235,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update user (admin only)
-  const updateUser = (userId, updateData) => {
+  // Update user (admin only) with Firebase
+  const updateUser = async (userId, updateData) => {
     if (!isAdmin()) {
       throw new Error('Only admins can update users');
     }
 
     try {
+      await firebaseService.updateUser(userId, updateData);
+      
       const updatedUsers = users.map(u => 
         u.id === userId ? { ...u, ...updateData } : u
       );
-      
-      localStorage.setItem('sesg_users', JSON.stringify(updatedUsers));
       setUsers(updatedUsers);
       
       return { success: true };
@@ -259,8 +256,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Delete user (admin only)  
-  const deleteUser = (userId) => {
+  // Delete user (admin only) with Firebase
+  const deleteUser = async (userId) => {
     if (!isAdmin()) {
       throw new Error('Only admins can delete users');
     }
@@ -270,8 +267,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
+      await firebaseService.deleteUser(userId);
+      
       const updatedUsers = users.filter(u => u.id !== userId);
-      localStorage.setItem('sesg_users', JSON.stringify(updatedUsers));
       setUsers(updatedUsers);
       
       return { success: true };
@@ -281,12 +279,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Get all users (admin only)
-  const getAllUsers = () => {
+  // Get all users (admin only) with Firebase
+  const getAllUsers = async () => {
     if (!isAdmin()) {
       throw new Error('Only admins can view all users');
     }
-    return users;
+    
+    try {
+      const allUsers = await firebaseService.getUsers();
+      setUsers(allUsers);
+      return allUsers;
+    } catch (error) {
+      console.error('Error getting all users:', error);
+      return users; // Return cached users if Firebase call fails
+    }
   };
 
   // Context value
