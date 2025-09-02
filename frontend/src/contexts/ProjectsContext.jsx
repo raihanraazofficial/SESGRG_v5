@@ -136,7 +136,32 @@ export const ProjectsProvider = ({ children }) => {
 
   // Delete project
   const deleteProject = (id) => {
-    setProjectsData(prev => prev.filter(project => project.id !== id));
+    try {
+      console.log('🔍 ProjectsContext: Deleting project with ID:', id);
+      console.log('🔍 Current projects data:', projectsData);
+      
+      if (!id) {
+        throw new Error('Project ID is required for deletion');
+      }
+      
+      const existingProject = projectsData.find(project => project.id === id);
+      if (!existingProject) {
+        throw new Error(`Project with ID ${id} not found`);
+      }
+      
+      console.log('🔍 Found project to delete:', existingProject);
+      
+      setProjectsData(prev => {
+        const filtered = prev.filter(project => project.id !== id);
+        console.log('✅ Project deleted. New data length:', filtered.length);
+        return filtered;
+      });
+      
+      console.log('✅ Project delete operation completed');
+    } catch (error) {
+      console.error('❌ Error in deleteProject:', error);
+      throw error; // Re-throw to let calling component handle it
+    }
   };
 
   // Get project by ID
