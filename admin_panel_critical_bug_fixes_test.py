@@ -20,7 +20,7 @@ from datetime import datetime
 class AdminPanelBugFixTester:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://people-tab-fix.preview.emergentagent.com"
+        self.frontend_url = "https://admin-panel-repair.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
