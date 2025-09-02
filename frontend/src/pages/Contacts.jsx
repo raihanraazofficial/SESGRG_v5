@@ -95,7 +95,7 @@ const Contacts = () => {
     }
   };
 
-  // Show loading spinner while contact data is being loaded
+  // Show loading spinner only for the first few seconds while contact data is being loaded
   if (isLoading) {
     return (
       <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
