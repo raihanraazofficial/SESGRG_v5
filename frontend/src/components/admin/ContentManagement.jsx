@@ -195,13 +195,13 @@ const ContentManagement = () => {
         }
         deletePerson(storageCategory, deletingItem.id);
       } else if (editingCategory === 'publications') {
-        await deletePublication(deletingItem.id);
+        deletePublication(deletingItem.id);
       } else if (editingCategory === 'projects') {
-        await deleteProject(deletingItem.id);
+        deleteProject(deletingItem.id);
       } else if (editingCategory === 'achievements') {
-        await deleteAchievement(deletingItem.id);
+        deleteAchievement(deletingItem.id);
       } else if (editingCategory === 'news-events') {
-        await deleteNewsEvent(deletingItem.id);
+        deleteNewsEvent(deletingItem.id);
       } else if (editingCategory === 'gallery') {
         await deleteGalleryItem(deletingItem.id);
       }
