@@ -768,8 +768,73 @@ const NewsEvents = () => {
         {/* News & Events Grid */}
         {!loading && newsEvents.length > 0 && (
           <div className="space-y-8">
-            {/* First News/Event - Featured/Large Card */}
-            {newsEvents[0] && (
+            {/* Featured News/Event - Large Card */}
+            {featuredNewsEvents.length > 0 ? (
+              <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-blue-50 border-2 border-blue-200">
+                <div className="md:flex">
+                  {/* Featured Image */}
+                  {featuredNewsEvents[0].image && (
+                    <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+                      <img 
+                        src={featuredNewsEvents[0].image}
+                        alt={featuredNewsEvents[0].title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                      <div className="absolute top-6 left-6">
+                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${getCategoryColor(featuredNewsEvents[0].category)}`}>
+                          {featuredNewsEvents[0].category}
+                        </span>
+                      </div>
+                      <div className="absolute top-6 right-6">
+                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-blue-700">
+                          Featured Story
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <CardContent className="md:w-1/2 p-8 md:p-12">
+                    <div className="space-y-6">
+                      {/* Date and Location */}
+                      <div className="space-y-2">
+                        <div className="flex items-center text-blue-600">
+                          <Calendar className="h-5 w-5 mr-3" />
+                          <span className="text-lg font-medium">{formatDate(featuredNewsEvents[0].date)}</span>
+                        </div>
+                        {featuredNewsEvents[0].location && (
+                          <div className="flex items-center text-gray-600">
+                            <MapPin className="h-5 w-5 mr-3" />
+                            <span className="text-lg">{featuredNewsEvents[0].location}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
+                        {featuredNewsEvents[0].title}
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-gray-700 text-lg leading-relaxed line-clamp-4">
+                        {featuredNewsEvents[0].short_description || featuredNewsEvents[0].description}
+                      </p>
+
+                      {/* Read More Button */}
+                      <div className="pt-4">
+                        <Button 
+                          size="lg"
+                          className="group-hover:bg-blue-700 bg-blue-600 text-white px-8 py-3"
+                          onClick={() => openBlogModal(featuredNewsEvents[0])}
+                        >
+                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+            ) : newsEvents.length > 0 && (
               <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-blue-50 border-2 border-blue-200">
                 <div className="md:flex">
                   {/* Featured Image */}
@@ -787,8 +852,8 @@ const NewsEvents = () => {
                         </span>
                       </div>
                       <div className="absolute top-6 right-6">
-                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-blue-700">
-                          Featured Story
+                        <span className="bg-gray-600/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-white">
+                          Latest News
                         </span>
                       </div>
                     </div>
@@ -818,6 +883,23 @@ const NewsEvents = () => {
                       {/* Description */}
                       <p className="text-gray-700 text-lg leading-relaxed line-clamp-4">
                         {newsEvents[0].short_description || newsEvents[0].description}
+                      </p>
+
+                      {/* Read More Button */}
+                      <div className="pt-4">
+                        <Button 
+                          size="lg"
+                          className="group-hover:bg-blue-700 bg-blue-600 text-white px-8 py-3"
+                          onClick={() => openBlogModal(newsEvents[0])}
+                        >
+                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+            )}
                       </p>
 
                       {/* Read More Button */}
