@@ -596,8 +596,10 @@ const ContentManagement = () => {
             onClose={() => {
               setIsEditModalOpen(false);
               setEditingItem(null);
+              setEditingCategory(null);
             }}
             person={editingItem}
+            category={editingCategory}
           />
           
           <DeleteConfirmModal
