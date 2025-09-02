@@ -859,10 +859,20 @@ class SESGAdminAuthTester:
 def main():
     """Main test execution"""
     tester = SESGAdminAuthTester()
-    results = tester.run_all_tests()
+    tester.run_all_tests()
     
-    # Exit with appropriate code
-    if results["critical_passed"] == results["critical_total"]:
+    # Exit with appropriate code based on critical tests
+    critical_tests = [
+        "admin_login_page_access",
+        "admin_dashboard_access", 
+        "user_management_page_access",
+        "firebase_connection_verification"
+    ]
+    
+    critical_passed = sum(1 for test in critical_tests if tester.test_results.get(test, False))
+    critical_total = len(critical_tests)
+    
+    if critical_passed == critical_total:
         sys.exit(0)  # Success
     else:
         sys.exit(1)  # Some critical tests failed
