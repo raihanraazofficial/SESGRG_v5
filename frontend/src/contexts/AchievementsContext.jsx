@@ -113,7 +113,32 @@ export const AchievementsProvider = ({ children }) => {
 
   // Delete achievement
   const deleteAchievement = (id) => {
-    setAchievementsData(prev => prev.filter(achievement => achievement.id !== id));
+    try {
+      console.log('🔍 AchievementsContext: Deleting achievement with ID:', id);
+      console.log('🔍 Current achievements data:', achievementsData);
+      
+      if (!id) {
+        throw new Error('Achievement ID is required for deletion');
+      }
+      
+      const existingAchievement = achievementsData.find(achievement => achievement.id === id);
+      if (!existingAchievement) {
+        throw new Error(`Achievement with ID ${id} not found`);
+      }
+      
+      console.log('🔍 Found achievement to delete:', existingAchievement);
+      
+      setAchievementsData(prev => {
+        const filtered = prev.filter(achievement => achievement.id !== id);
+        console.log('✅ Achievement deleted. New data length:', filtered.length);
+        return filtered;
+      });
+      
+      console.log('✅ Achievement delete operation completed');
+    } catch (error) {
+      console.error('❌ Error in deleteAchievement:', error);
+      throw error; // Re-throw to let calling component handle it
+    }
   };
 
   // Get achievement by ID
