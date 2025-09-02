@@ -171,6 +171,7 @@ export const PeopleProvider = ({ children }) => {
 
   const value = {
     peopleData,
+    loading,
     researchAreas,
     getPeopleByResearchArea,
     updatePerson,
