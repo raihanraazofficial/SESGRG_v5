@@ -99,13 +99,26 @@ export const ContactProvider = ({ children }) => {
     const loadContactData = async () => {
       if (initialized) return;
       
+      console.log('🔄 Initializing contact data...');
+      setIsLoading(true);
+      
+      // Set a timeout to ensure loading doesn't hang indefinitely
+      const timeoutId = setTimeout(() => {
+        console.warn('⏰ Firebase loading timeout, using default data');
+        setContactData(DEFAULT_CONTACT_DATA);
+        setIsLoading(false);
+        setInitialized(true);
+      }, 5000); // 5 second timeout
+      
       try {
-        setIsLoading(true);
         console.log('🔄 Loading contact data from Firebase...');
         
         const firebaseContactData = await firebaseService.getContactData();
         
-        if (firebaseContactData) {
+        // Clear timeout if we got data successfully
+        clearTimeout(timeoutId);
+        
+        if (firebaseContactData && Object.keys(firebaseContactData).length > 0) {
           setContactData(firebaseContactData);
           console.log('✅ Contact data loaded from Firebase');
         } else {
@@ -121,6 +134,8 @@ export const ContactProvider = ({ children }) => {
         }
         
       } catch (error) {
+        // Clear timeout on error
+        clearTimeout(timeoutId);
         console.error('❌ Error loading contact data from Firebase:', error);
         // Fallback to default data - ensure we always have data
         console.log('🔄 Falling back to default contact data');
