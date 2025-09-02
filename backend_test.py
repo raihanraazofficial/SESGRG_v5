@@ -21,7 +21,7 @@ from datetime import datetime
 class FirebaseIntegrationTester:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://local-to-cloud.preview.emergentagent.com"
+        self.frontend_url = "https://cloud-storage-shift.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
