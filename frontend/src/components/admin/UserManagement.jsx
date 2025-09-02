@@ -532,8 +532,6 @@ const UserManagement = () => {
               <h2 className="text-2xl font-bold text-gray-900">Add New User</h2>
             </div>
             <div className="p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Add New User</h2>
-              
               <div className="space-y-4">
                 {/* Username and Email Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
