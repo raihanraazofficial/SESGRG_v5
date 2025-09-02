@@ -617,18 +617,7 @@ const NewsEvents = () => {
               </p>
             </div>
             
-            {/* Only show Admin Login button for non-authenticated users */}
-            {!isAuthenticated && (
-              <div className="flex flex-col items-end space-y-4">
-                <Link
-                  to="/admin/login"
-                  className="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                >
-                  <Shield className="h-5 w-5 mr-2" />
-                  <span>Admin Login</span>
-                </Link>
-              </div>
-            )}
+
           </div>
         </div>
       </div>
