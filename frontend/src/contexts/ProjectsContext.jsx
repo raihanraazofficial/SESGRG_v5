@@ -137,23 +137,35 @@ export const ProjectsProvider = ({ children }) => {
   // Delete project
   const deleteProject = (id) => {
     try {
-      console.log('🔍 ProjectsContext: Deleting project with ID:', id);
+      console.log('🔍 ProjectsContext: Deleting project with ID:', id, 'Type:', typeof id);
       console.log('🔍 Current projects data:', projectsData);
       
-      if (!id) {
+      if (!id && id !== 0) {
         throw new Error('Project ID is required for deletion');
       }
       
-      const existingProject = projectsData.find(project => project.id === id);
+      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
+      const idStr = String(id);
+      const idNum = Number(id);
+      
+      console.log('🔍 Searching for project with ID (string):', idStr, 'or (number):', idNum);
+      
+      const existingProject = projectsData.find(project => 
+        String(project.id) === idStr || project.id === idNum
+      );
+      
       if (!existingProject) {
+        console.log('❌ Project not found. Available IDs:', projectsData.map(p => ({ id: p.id, type: typeof p.id })));
         throw new Error(`Project with ID ${id} not found`);
       }
       
       console.log('🔍 Found project to delete:', existingProject);
       
       setProjectsData(prev => {
-        const filtered = prev.filter(project => project.id !== id);
-        console.log('✅ Project deleted. New data length:', filtered.length);
+        const filtered = prev.filter(project => 
+          String(project.id) !== idStr && project.id !== idNum
+        );
+        console.log('✅ Project deleted. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
