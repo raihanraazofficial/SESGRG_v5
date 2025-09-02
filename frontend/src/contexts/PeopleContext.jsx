@@ -82,36 +82,56 @@ export const PeopleProvider = ({ children }) => {
     );
   };
 
-  // Update person data
-  const updatePerson = (category, personId, updatedData) => {
-    setPeopleData(prevData => ({
-      ...prevData,
-      [category]: prevData[category].map(person =>
-        person.id === personId ? { ...person, ...updatedData } : person
-      )
-    }));
-    console.log(`✅ Updated ${category} person with ID ${personId}`);
+  // Update person data with Firebase
+  const updatePerson = async (category, personId, updatedData) => {
+    try {
+      // Find person in Firebase and update
+      const firebasePeople = await firebaseService.getPeople();
+      const person = firebasePeople.find(p => p.id === personId && p.category === category);
+      
+      if (!person) {
+        throw new Error(`Person with ID ${personId} not found in ${category}`);
+      }
+      
+      await firebaseService.updatePerson(person.id, { ...updatedData, category });
+      
+      // Update local state
+      setPeopleData(prevData => ({
+        ...prevData,
+        [category]: prevData[category].map(person =>
+          person.id === personId ? { ...person, ...updatedData } : person
+        )
+      }));
+      
+      console.log(`✅ Updated ${category} person with ID ${personId} in Firebase`);
+    } catch (error) {
+      console.error('Error updating person:', error);
+      throw error;
+    }
   };
 
-  // Add new person
-  const addPerson = (category, personData) => {
-    const newId = Math.max(
-      ...peopleData.advisors.map(p => p.id),
-      ...peopleData.teamMembers.map(p => p.id),
-      ...peopleData.collaborators.map(p => p.id)
-    ) + 1;
-    
-    const newPerson = { ...personData, id: newId };
-    
-    setPeopleData(prevData => ({
-      ...prevData,
-      [category]: [...prevData[category], newPerson]
-    }));
-    console.log(`✅ Added new ${category}:`, newPerson);
+  // Add new person with Firebase
+  const addPerson = async (category, personData) => {
+    try {
+      const newPersonData = { ...personData, category };
+      const newPerson = await firebaseService.addPerson(newPersonData);
+      
+      // Update local state
+      setPeopleData(prevData => ({
+        ...prevData,
+        [category]: [...prevData[category], newPerson]
+      }));
+      
+      console.log(`✅ Added new ${category} to Firebase:`, newPerson);
+      return newPerson;
+    } catch (error) {
+      console.error('Error adding person:', error);
+      throw error;
+    }
   };
 
-  // Delete person
-  const deletePerson = (category, personId) => {
+  // Delete person with Firebase
+  const deletePerson = async (category, personId) => {
     try {
       // Validate inputs
       if (!category || !personId) {
@@ -122,33 +142,24 @@ export const PeopleProvider = ({ children }) => {
         throw new Error(`Invalid category: ${category}. Must be advisors, teamMembers, or collaborators`);
       }
       
-      setPeopleData(prevData => {
-        // Check if category exists and person exists
-        if (!prevData[category]) {
-          throw new Error(`Category ${category} not found in people data`);
-        }
-        
-        const personExists = prevData[category].some(person => person.id === personId);
-        if (!personExists) {
-          throw new Error(`Person with ID ${personId} not found in ${category}`);
-        }
-        
-        const updatedData = {
-          ...prevData,
-          [category]: prevData[category].filter(person => person.id !== personId)
-        };
-        
-        // Save updated data to localStorage
-        try {
-          localStorage.setItem('sesgrg_people_data', JSON.stringify(updatedData));
-          console.log(`✅ Deleted ${category} person with ID ${personId} and updated localStorage`);
-        } catch (error) {
-          console.error('Error saving to localStorage after delete:', error);
-          throw new Error('Failed to save changes to localStorage');
-        }
-        
-        return updatedData;
-      });
+      // Find person in Firebase
+      const firebasePeople = await firebaseService.getPeople();
+      const person = firebasePeople.find(p => p.id === personId && p.category === category);
+      
+      if (!person) {
+        throw new Error(`Person with ID ${personId} not found in ${category}`);
+      }
+      
+      // Delete from Firebase
+      await firebaseService.deletePerson(person.id);
+      
+      // Update local state
+      setPeopleData(prevData => ({
+        ...prevData,
+        [category]: prevData[category].filter(person => person.id !== personId)
+      }));
+      
+      console.log(`✅ Deleted ${category} person with ID ${personId} from Firebase`);
     } catch (error) {
       console.error('Error in deletePerson:', error);
       throw error; // Re-throw to let calling component handle it
