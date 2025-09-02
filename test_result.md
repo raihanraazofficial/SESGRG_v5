@@ -57,8 +57,8 @@
 ##   test_priority: "high_first"  # or "sequential" or "stuck_first"
 ##
 ## agent_communication:
-##     -agent: "main"  # or "testing" or "user"
-##     -message: "Communication message between agents"
+##   - agent: "main"
+##     message: "🚀 HOMEPAGE HERO BUTTON REMOVAL & FEATURED CONTENT BUG FIX COMPLETED: 1) Successfully removed both 'Explore Research' and 'Meet Our Team' buttons from homepage hero section with clean code optimization. 2) Fixed critical bug where admin panel featured content settings were not reflecting on frontend - added getFeaturedNewsEvents function to NewsEventsContext and updated Home page to properly display featured news instead of just first item. 3) Fixed same issue in Achievements page to display actual featured achievements. 4) Enhanced visual indicators with featured badges and proper styling. READY FOR TESTING: Please verify featured content functionality works correctly from admin panel to frontend display, test homepage hero section layout, and confirm achievements page featured display."
 
   - task: "Admin Panel Content Management Modal Improvements and Responsive Design"
     implemented: true
