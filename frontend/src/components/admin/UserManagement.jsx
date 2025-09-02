@@ -72,6 +72,38 @@ const UserManagement = () => {
     console.log('👥 UserManagement - componentLoading:', componentLoading);
   }, [users, filteredUsers, authLoading, componentLoading]);
 
+  // Map SESGRG position to People context category
+  const mapPositionToCategory = (position) => {
+    const mapping = {
+      'Advisor': 'advisors',
+      'Team Member': 'teamMembers', 
+      'Collaborator': 'collaborators'
+    };
+    return mapping[position] || 'collaborators';
+  };
+
+  // Create People page entry from user data
+  const createPeopleEntry = (userData) => {
+    return {
+      name: `${userData.firstName} ${userData.lastName}`,
+      designation: userData.position || 'Team Member',
+      affiliation: 'BRAC University',
+      description: `${userData.position} at Sustainable Energy and Smart Grid Research Lab. Contact: ${userData.email}`,
+      expertise: [], // Can be updated later via People management
+      photo: userData.profilePicture || 'https://via.placeholder.com/300x400?text=Profile+Photo',
+      email: userData.email,
+      phone: '+880-000-000-0000', // Default phone
+      // Research profile links - defaults
+      website: '#',
+      googleScholar: '#',
+      researchGate: '#',
+      orcid: '#',
+      linkedin: '#',
+      github: '#',
+      ieee: '#'
+    };
+  };
+
   // Get default permissions for role
   const getDefaultPermissionsForRole = (role) => {
     const rolePermissions = {
