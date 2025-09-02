@@ -67,7 +67,7 @@ import DeleteGalleryModal from '../gallery/DeleteGalleryModal';
 import HomeManagement from './HomeManagement';
 
 const ContentManagement = () => {
-  const [activeTab, setActiveTab] = useState('people');
+  const [activeTab, setActiveTab] = useState('home');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   
