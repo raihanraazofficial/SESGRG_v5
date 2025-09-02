@@ -21,7 +21,7 @@ from datetime import datetime
 class ContactDirectionsBackendTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://footer-manager.preview.emergentagent.com"
+        self.backend_url = "https://site-revamp-11.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test data for directions
