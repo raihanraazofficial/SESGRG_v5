@@ -106,11 +106,17 @@ const DEFAULT_ADMIN_CREDENTIALS = {
 const DEFAULT_ADMIN = {
   username: 'admin',
   email: 'admin@sesg.bracu.ac.bd',
+  firstName: 'System',
+  lastName: 'Administrator',
+  profilePicture: '',
+  position: 'System Admin',
   role: USER_ROLES.ADMIN,
   permissions: DEFAULT_PERMISSIONS[USER_ROLES.ADMIN],
   isActive: true,
+  isSystemAdmin: true, // Protected system admin
   createdAt: new Date().toISOString(),
-  lastLogin: null
+  lastLogin: null,
+  lastActivity: new Date().toISOString()
 };
 
 // Auth Provider Component
