@@ -497,6 +497,7 @@ const UserManagement = () => {
                   </div>
                 </div>
 
+                {/* Profile Picture URL - Full Width */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Profile Picture URL
@@ -506,38 +507,42 @@ const UserManagement = () => {
                     value={formData.profilePicture}
                     onChange={(e) => handleFormChange('profilePicture', e.target.value)}
                     placeholder="https://example.com/profile-picture.jpg"
+                    className="w-full"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Position in SESGRG
-                  </label>
-                  <select
-                    value={formData.position}
-                    onChange={(e) => handleFormChange('position', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  >
-                    <option value="Advisor">Advisor</option>
-                    <option value="Team Member">Team Member</option>
-                    <option value="Collaborator">Collaborator</option>
-                  </select>
-                </div>
+                {/* Position and Role Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Position in SESGRG
+                    </label>
+                    <select
+                      value={formData.position}
+                      onChange={(e) => handleFormChange('position', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                      <option value="Advisor">Advisor</option>
+                      <option value="Team Member">Team Member</option>
+                      <option value="Collaborator">Collaborator</option>
+                    </select>
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Role
-                  </label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) => handleFormChange('role', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  >
-                    <option value={USER_ROLES.ADMIN}>Admin</option>
-                    <option value={USER_ROLES.ADVISOR}>Advisor</option>
-                    <option value={USER_ROLES.TEAM_MEMBER}>Team Member</option>
-                    <option value={USER_ROLES.COLLABORATOR}>Collaborator</option>
-                  </select>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Role
+                    </label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) => handleFormChange('role', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                      <option value={USER_ROLES.ADMIN}>Admin</option>
+                      <option value={USER_ROLES.ADVISOR}>Advisor</option>
+                      <option value={USER_ROLES.TEAM_MEMBER}>Team Member</option>
+                      <option value={USER_ROLES.COLLABORATOR}>Collaborator</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div>
