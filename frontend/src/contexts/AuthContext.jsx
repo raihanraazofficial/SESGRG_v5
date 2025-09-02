@@ -352,6 +352,16 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: 'Cannot delete your own account' };
     }
 
+    // Find the user to check if they're system admin or advisor
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.isSystemAdmin) {
+      return { success: false, error: 'System admin account cannot be deleted' };
+    }
+
+    if (targetUser?.role === USER_ROLES.ADVISOR && user?.isSystemAdmin !== true) {
+      return { success: false, error: 'Only system admin can delete advisor accounts' };
+    }
+
     try {
       await firebaseService.deleteUser(userId);
       
