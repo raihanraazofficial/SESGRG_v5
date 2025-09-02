@@ -307,12 +307,35 @@ const UserManagement = () => {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                      <Users className="h-5 w-5 text-gray-600" />
+                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                      {user.profilePicture ? (
+                        <img 
+                          src={user.profilePicture} 
+                          alt={`${user.firstName || user.username}'s profile`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextElementSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <Users className={`h-5 w-5 text-gray-600 ${user.profilePicture ? 'hidden' : ''}`} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{user.username}</h3>
+                      <h3 className="font-semibold text-gray-900">
+                        {user.firstName && user.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user.username}
+                        {user.isSystemAdmin && (
+                          <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                            System Admin
+                          </span>
+                        )}
+                      </h3>
                       <p className="text-sm text-gray-600">{user.email}</p>
+                      {user.position && (
+                        <p className="text-xs text-gray-500">{user.position}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex space-x-1">
