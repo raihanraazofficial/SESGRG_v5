@@ -109,7 +109,7 @@ const UserManagement = () => {
         delete updateData.password; // Don't update password if empty
       }
       
-      const result = updateUser(editingUser.id, updateData);
+      const result = await updateUser(editingUser.id, updateData);
       if (result.success) {
         alert('User updated successfully!');
         setIsEditModalOpen(false);
