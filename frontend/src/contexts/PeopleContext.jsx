@@ -188,11 +188,22 @@ export const PeopleProvider = ({ children }) => {
 
   // Delete person
   const deletePerson = (category, personId) => {
-    setPeopleData(prevData => ({
-      ...prevData,
-      [category]: prevData[category].filter(person => person.id !== personId)
-    }));
-    console.log(`✅ Deleted ${category} person with ID ${personId}`);
+    setPeopleData(prevData => {
+      const updatedData = {
+        ...prevData,
+        [category]: prevData[category].filter(person => person.id !== personId)
+      };
+      
+      // Save updated data to localStorage
+      try {
+        localStorage.setItem('sesgrg_people_data', JSON.stringify(updatedData));
+        console.log(`✅ Deleted ${category} person with ID ${personId} and updated localStorage`);
+      } catch (error) {
+        console.error('Error saving to localStorage after delete:', error);
+      }
+      
+      return updatedData;
+    });
   };
 
   // Get all people data
