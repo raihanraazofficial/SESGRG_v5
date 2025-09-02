@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { 
   signInWithEmailAndPassword, 
   signOut, 
@@ -7,6 +7,10 @@ import {
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import firebaseService from '../services/firebaseService';
+
+// Session configuration
+const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
+const ACTIVITY_CHECK_INTERVAL = 60 * 1000; // Check every minute
 
 // Create Auth Context
 const AuthContext = createContext();
