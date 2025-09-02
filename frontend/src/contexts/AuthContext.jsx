@@ -256,6 +256,17 @@ export const AuthProvider = ({ children }) => {
             try {
               await createUserWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, DEFAULT_ADMIN_CREDENTIALS.password);
               console.log('✅ Admin user created in Firebase Authentication');
+              
+              // Update last login time for new user
+              const currentTime = new Date().toISOString();
+              const userData = await firebaseService.getUserByUsername(username);
+              if (userData) {
+                await firebaseService.updateUser(userData.id, { 
+                  lastLogin: currentTime,
+                  lastActivity: currentTime 
+                });
+              }
+              
               return { success: true };
             } catch (createError) {
               console.error('❌ Error creating admin user in Firebase Auth:', createError);
