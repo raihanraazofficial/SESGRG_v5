@@ -900,23 +900,6 @@ const NewsEvents = () => {
                 </div>
               </Card>
             )}
-                      </p>
-
-                      {/* Read More Button */}
-                      <div className="pt-6">
-                        <Button 
-                          size="lg"
-                          className="group-hover:bg-blue-700 bg-blue-600 text-white px-8 py-3"
-                          onClick={() => generateBlogContent(newsEvents[0])}
-                        >
-                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
-            )}
 
             {/* Rest of News & Events - Regular Grid */}
             {newsEvents.length > 1 && (
