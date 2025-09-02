@@ -46,6 +46,7 @@ function App() {
                 <ContactProvider>
                   <GalleryProvider>
                     <HomeProvider>
+                      <ResearchAreasProvider>
                   <div className="App min-h-screen bg-gray-50">
                     <BrowserRouter>
                       <Routes>
