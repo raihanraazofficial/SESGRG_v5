@@ -300,6 +300,11 @@ const ContentManagement = () => {
 
   // Render content based on active tab
   const renderContent = () => {
+    // Special handling for home management
+    if (activeTab === 'home') {
+      return <HomeManagement />;
+    }
+
     // Special handling for calendar settings
     if (activeTab === 'calendar') {
       return <CalendarManagement />;
