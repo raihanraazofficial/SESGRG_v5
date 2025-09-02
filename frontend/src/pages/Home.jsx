@@ -426,12 +426,9 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">About Us</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">{aboutUs.title}</h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
-              The Sustainable Energy and Smart Grid Research at BRAC University is dedicated to advancing 
-              cutting-edge research in renewable energy systems, smart grid technologies, and sustainable power 
-              infrastructure. Our interdisciplinary team works to address the global energy challenges through 
-              innovative solutions and collaborative research.
+              {aboutUs.content}
             </p>
           </div>
 
