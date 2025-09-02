@@ -41,10 +41,17 @@ const UserManagement = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  // Use effect to handle loading state
+  React.useEffect(() => {
+    if (!authLoading && users !== undefined) {
+      setComponentLoading(false);
+    }
+  }, [authLoading, users]);
+
   // Filter users
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredUsers = (users || []).filter(user => {
+    const matchesSearch = user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
     return matchesSearch && matchesRole;
   });
