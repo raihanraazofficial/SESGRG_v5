@@ -41,8 +41,15 @@ const Achievements = () => {
       const result = getPaginatedAchievements(filters);
       setAchievements(result.achievements || []);
       setPagination(result.pagination || {});
+      
+      // Load featured achievements
+      const featured = getFeaturedAchievements(1);
+      setFeaturedAchievements(featured || []);
+      
+      console.log('✅ Achievements: Regular achievements loaded:', result.achievements?.length || 0);
+      console.log('✅ Achievements: Featured achievements loaded:', featured?.length || 0);
     }
-  }, [achievementsData, filters, getPaginatedAchievements, loading]);
+  }, [achievementsData, filters, getPaginatedAchievements, getFeaturedAchievements, loading]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
