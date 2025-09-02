@@ -87,44 +87,68 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
 
-  // Initialize authentication state
+  // Initialize authentication state with Firebase
   useEffect(() => {
-    initializeAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (firebaseUser) {
+          // User is signed in, get additional user data from Firestore
+          const userData = await firebaseService.getUserByUsername('admin');
+          if (userData) {
+            setUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              username: userData.username,
+              role: userData.role,
+              permissions: userData.permissions
+            });
+            setIsAuthenticated(true);
+            
+            // Update last login
+            await firebaseService.updateUser(userData.id, {
+              ...userData,
+              lastLogin: new Date().toISOString()
+            });
+          } else {
+            // If no user data in Firestore, sign out
+            await signOut(auth);
+          }
+        } else {
+          // User is signed out
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Error in auth state change:', error);
+        setUser(null);
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    });
+
+    // Initialize users in Firebase if not exists
+    initializeUsersInFirebase();
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
-  const initializeAuth = () => {
+  const initializeUsersInFirebase = async () => {
     try {
-      // Initialize users in localStorage if not exists
-      const storedUsers = localStorage.getItem('sesg_users');
-      if (!storedUsers) {
-        const initialUsers = [DEFAULT_ADMIN];
-        localStorage.setItem('sesg_users', JSON.stringify(initialUsers));
-        setUsers(initialUsers);
-      } else {
-        setUsers(JSON.parse(storedUsers));
+      // Check if admin user exists in Firebase
+      const existingAdmin = await firebaseService.getUserByUsername('admin');
+      if (!existingAdmin) {
+        console.log('🔄 Creating default admin user in Firebase...');
+        await firebaseService.addUser(DEFAULT_ADMIN);
+        console.log('✅ Default admin user created in Firebase');
       }
-
-      // Check for existing session
-      const sessionUser = localStorage.getItem('sesg_auth_user'); 
-      const sessionExpiry = localStorage.getItem('sesg_auth_expiry');
       
-      if (sessionUser && sessionExpiry) {
-        const expiryTime = new Date(sessionExpiry);
-        const currentTime = new Date();
-        
-        if (currentTime < expiryTime) {
-          const userData = JSON.parse(sessionUser);
-          setUser(userData);
-          setIsAuthenticated(true);
-        } else {
-          clearSession();
-        }
-      }
+      // Load all users for admin panel
+      const allUsers = await firebaseService.getUsers();
+      setUsers(allUsers);
     } catch (error) {
-      console.error('Error initializing auth:', error);
-      clearSession();
-    } finally {
-      setIsLoading(false);
+      console.error('Error initializing users in Firebase:', error);
     }
   };
 
