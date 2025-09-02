@@ -674,7 +674,7 @@ const ContentManagement = () => {
               setDeletingItem(null);
               setEditingCategory(null);
             }}
-            onConfirm={handleConfirmDelete}
+            onDelete={handleConfirmDelete}
             publication={deletingItem}
             isDeleting={isDeleting}
           />
