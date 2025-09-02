@@ -90,8 +90,8 @@ const UserManagement = () => {
 
   // Handle add user
   const handleAddUser = async () => {
-    if (!formData.username || !formData.email || !formData.password) {
-      alert('Please fill in all required fields');
+    if (!formData.username || !formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+      alert('Please fill in all required fields (Username, Email, Password, First Name, Last Name)');
       return;
     }
 
