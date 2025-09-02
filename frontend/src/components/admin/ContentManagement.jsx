@@ -94,6 +94,12 @@ const ContentManagement = () => {
   // Content tabs
   const contentTabs = [
     {
+      id: 'home',
+      label: 'Homepage',
+      icon: Home,
+      count: (carouselImages?.length || 0) + (objectives?.length || 0) + (researchAreas?.length || 0) + 1 // +1 for about us
+    },
+    {
       id: 'people',
       label: 'People',
       icon: Users,
