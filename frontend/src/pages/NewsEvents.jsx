@@ -17,12 +17,14 @@ const NewsEvents = () => {
     newsEventsData,
     loading,
     categories,
-    getPaginatedNewsEvents
+    getPaginatedNewsEvents,
+    getFeaturedNewsEvents
   } = useNewsEvents();
 
   const { isAuthenticated } = useAuth();
 
   const [newsEvents, setNewsEvents] = useState([]);
+  const [featuredNewsEvents, setFeaturedNewsEvents] = useState([]);
   const [pagination, setPagination] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [filters, setFilters] = useState({
