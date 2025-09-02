@@ -249,8 +249,67 @@ const Achievements = () => {
         {/* Achievements Grid */}
         {!loading && achievements.length > 0 && (
           <div className="space-y-8">
-            {/* First Achievement - Featured/Large Card */}
-            {achievements[0] && (
+            {/* Featured Achievement - Large Card */}
+            {featuredAchievements.length > 0 ? (
+              <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-emerald-50 border-2 border-emerald-200 performance-optimized">
+                <div className="md:flex">
+                  {/* Featured Image */}
+                  {featuredAchievements[0].image && (
+                    <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+                      <img 
+                        src={featuredAchievements[0].image}
+                        alt={featuredAchievements[0].title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 lazy-image performance-optimized"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                      <div className="absolute top-6 left-6">
+                        <div className="bg-emerald-600/90 backdrop-blur-sm rounded-full p-3">
+                          <Trophy className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute top-6 right-6">
+                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-emerald-700">
+                          Featured Achievement
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <CardContent className="md:w-1/2 p-8 md:p-12">
+                    <div className="space-y-6">
+                      {/* Date */}
+                      <div className="flex items-center text-emerald-600">
+                        <Calendar className="h-5 w-5 mr-3" />
+                        <span className="text-lg font-medium">{formatDate(featuredAchievements[0].date)}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
+                        {featuredAchievements[0].title}
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-gray-700 text-lg leading-relaxed">
+                        {featuredAchievements[0].short_description}
+                      </p>
+
+                      {/* Read More Button */}
+                      <div className="pt-6">
+                        <Button 
+                          size="lg"
+                          className="group-hover:bg-emerald-700 bg-emerald-600 text-white px-8 py-3"
+                          onClick={() => generateBlogContent(featuredAchievements[0])}
+                        >
+                          Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+            ) : achievements.length > 0 && (
               <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden group bg-gradient-to-r from-white to-emerald-50 border-2 border-emerald-200 performance-optimized">
                 <div className="md:flex">
                   {/* Featured Image */}
@@ -270,8 +329,8 @@ const Achievements = () => {
                         </div>
                       </div>
                       <div className="absolute top-6 right-6">
-                        <span className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-emerald-700">
-                          Featured Achievement
+                        <span className="bg-gray-600/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-white">
+                          Latest Achievement
                         </span>
                       </div>
                     </div>
