@@ -287,6 +287,11 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: 'Only admins can create users' };
     }
 
+    // Prevent creation of new system admins (only allow regular admins, advisors, team members, collaborators)
+    if (userData.role === USER_ROLES.ADMIN && user?.isSystemAdmin !== true) {
+      return { success: false, error: 'Only system admin can create admin users' };
+    }
+
     try {
       console.log('🔄 Creating new user:', userData.username);
       
@@ -295,8 +300,10 @@ export const AuthProvider = ({ children }) => {
         ...userData,
         id: userData.username + '_' + Date.now(), // Generate unique ID
         isActive: true,
+        isSystemAdmin: false, // New users are never system admins
         createdAt: new Date().toISOString(),
         lastLogin: null,
+        lastActivity: new Date().toISOString(),
         permissions: userData.permissions || DEFAULT_PERMISSIONS[userData.role] || []
       };
 
