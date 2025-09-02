@@ -43,20 +43,22 @@ class FirebaseIntegrationTester:
         
         self.detailed_results = []
         
-    def log_test(self, test_name, status, details=""):
-        """Log test results"""
-        result = {
+    def log_result(self, test_name, success, details):
+        """Log test result with details"""
+        self.detailed_results.append({
             "test": test_name,
-            "status": status,
+            "success": success,
             "details": details,
             "timestamp": datetime.now().isoformat()
-        }
-        self.test_results.append(result)
+        })
         
-        status_symbol = "✅" if status == "PASS" else "❌" if status == "FAIL" else "⚠️"
-        print(f"{status_symbol} {test_name}: {details}")
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status}: {test_name}")
+        if details:
+            print(f"   Details: {details}")
+        print()
         
-    def test_frontend_service_status(self):
+    def test_firebase_connectivity(self):
         """Test 1: Verify frontend service is running and accessible"""
         try:
             response = requests.get(self.backend_url, timeout=10)
