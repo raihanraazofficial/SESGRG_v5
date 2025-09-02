@@ -278,79 +278,80 @@ const UserManagement = () => {
           </div>
         ) : (
           filteredUsers.map((user) => (
-          <Card key={user.id} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <Users className="h-5 w-5 text-gray-600" />
+            <Card key={user.id} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{user.username}</h3>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{user.username}</h3>
-                    <p className="text-sm text-gray-600">{user.email}</p>
-                  </div>
-                </div>
-                <div className="flex space-x-1">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => openEditModal(user)}
-                  >
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-                  {user.role !== USER_ROLES.ADMIN && (
+                  <div className="flex space-x-1">
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => openDeleteModal(user)}
-                      className="text-red-600 hover:text-red-700"
+                      onClick={() => openEditModal(user)}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Edit3 className="h-3 w-3" />
                     </Button>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Role:</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(user.role)}`}>
-                    {user.role}
-                  </span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Status:</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    user.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                  }`}>
-                    {user.isActive ? 'Active' : 'Inactive'}
-                  </span>
+                    {user.role !== USER_ROLES.ADMIN && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openDeleteModal(user)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Created:</span>
-                  <span className="text-sm text-gray-900">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                {user.lastLogin && (
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Last Login:</span>
-                    <span className="text-sm text-gray-900">
-                      {new Date(user.lastLogin).toLocaleDateString()}
+                    <span className="text-sm text-gray-600">Role:</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(user.role)}`}>
+                      {user.role}
                     </span>
                   </div>
-                )}
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Status:</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      user.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {user.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
 
-                <div className="pt-2 border-t border-gray-200">
-                  <span className="text-sm text-gray-600">Permissions: {user.permissions?.length || 0}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Created:</span>
+                    <span className="text-sm text-gray-900">
+                      {new Date(user.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {user.lastLogin && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Last Login:</span>
+                      <span className="text-sm text-gray-900">
+                        {new Date(user.lastLogin).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="pt-2 border-t border-gray-200">
+                    <span className="text-sm text-gray-600">Permissions: {user.permissions?.length || 0}</span>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
           ))
+        )}
         )}
       </div>
 
