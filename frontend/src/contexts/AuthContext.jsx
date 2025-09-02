@@ -186,17 +186,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
-  const logout = () => {
-    clearSession();
-    setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  // Clear session data
-  const clearSession = () => {
-    localStorage.removeItem('sesg_auth_user');
-    localStorage.removeItem('sesg_auth_expiry');
+  // Logout function with Firebase
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   // Check if user has specific permission
