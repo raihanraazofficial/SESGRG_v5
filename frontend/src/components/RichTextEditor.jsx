@@ -395,8 +395,8 @@ const RichTextEditor = ({ value, onChange, placeholder = "Write your content..."
               className="w-full p-2 border border-gray-300 rounded mb-4"
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowImageModal(false)}>Cancel</Button>
-              <Button onClick={insertImage} className="bg-emerald-600 hover:bg-emerald-700">Insert</Button>
+              <Button variant="outline" type="button" onClick={() => setShowImageModal(false)}>Cancel</Button>
+              <Button type="button" onClick={insertImage} className="bg-emerald-600 hover:bg-emerald-700">Insert</Button>
             </div>
           </div>
         </div>
