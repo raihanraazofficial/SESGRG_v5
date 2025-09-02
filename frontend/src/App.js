@@ -91,6 +91,7 @@ function App() {
                       </Routes>
                     </BrowserRouter>
                   </div>
+                      </ResearchAreasProvider>
                     </HomeProvider>
                   </GalleryProvider>
                 </ContactProvider>
