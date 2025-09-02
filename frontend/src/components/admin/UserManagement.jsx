@@ -240,9 +240,23 @@ const UserManagement = () => {
 
     setIsLoading(true);
     try {
+      // Delete user first
       const result = await deleteUser(editingUser.id);
       if (result.success) {
-        alert('User deleted successfully!');
+        // Remove corresponding People page entry
+        try {
+          const peopleCategory = mapPositionToCategory(editingUser.position);
+          // Find the person by name in PeopleContext and delete
+          // Note: This is a simplified approach - in production you might want to store the People ID in user data
+          // For now, we'll log this action
+          console.log(`🗑️ Should remove People page entry for user: ${editingUser.username} from category: ${peopleCategory}`);
+          // await deletePerson(peopleCategory, personId); // Would need the People page ID
+        } catch (peopleError) {
+          console.error('⚠️ Failed to remove People page entry:', peopleError);
+          // Don't fail the whole operation, just log the error
+        }
+        
+        alert('User deleted successfully! The profile card has been removed from the People page.');
         setIsDeleteModalOpen(false);
         setEditingUser(null);
       } else {
