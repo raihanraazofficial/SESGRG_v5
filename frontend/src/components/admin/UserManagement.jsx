@@ -589,28 +589,33 @@ const UserManagement = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-4">Edit User</h2>
               
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Username *
-                  </label>
-                  <Input
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => handleFormChange('username', e.target.value)}
-                    placeholder="Enter username"
-                  />
-                </div>
+                {/* Username and Email Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Username *
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => handleFormChange('username', e.target.value)}
+                      placeholder="Enter username"
+                      className="w-full"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
-                  </label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleFormChange('email', e.target.value)}
-                    placeholder="Enter email address"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email *
+                    </label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleFormChange('email', e.target.value)}
+                      placeholder="Enter email address"
+                      className="w-full"
+                    />
+                  </div>
                 </div>
 
                 <div>
