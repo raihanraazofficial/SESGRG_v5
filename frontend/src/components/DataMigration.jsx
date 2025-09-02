@@ -149,22 +149,91 @@ const DataMigration = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">
-          🔄 Data Migration Tool
+          🔄 Firebase Migration & Setup Tool
         </h2>
         <p className="text-gray-600">
-          localStorage থেকে Firebase এ data migrate করুন
+          Firebase connection testing, data migration, এবং fresh setup
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Firebase Connection Status */}
+      <div className="mb-8 p-4 rounded-lg border-2 border-dashed border-gray-300">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">🔥 Firebase Connection Status</h3>
+          <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+            firebaseStatus === 'connected' ? 'bg-green-100 text-green-700' :
+            firebaseStatus === 'error' ? 'bg-red-100 text-red-700' :
+            firebaseStatus === 'testing' ? 'bg-blue-100 text-blue-700' :
+            'bg-gray-100 text-gray-700'
+          }`}>
+            {firebaseStatus === 'connected' && '✅ Connected'}
+            {firebaseStatus === 'error' && '❌ Error'}
+            {firebaseStatus === 'testing' && '⏳ Testing...'}
+            {firebaseStatus === 'unknown' && '❓ Unknown'}
+          </div>
+        </div>
+        
+        <button
+          onClick={testFirebaseConnection}
+          disabled={firebaseStatus === 'testing'}
+          className={`w-full px-6 py-3 rounded-lg font-medium transition-colors ${
+            firebaseStatus === 'testing'
+              ? 'bg-gray-400 cursor-not-allowed text-gray-200'
+              : 'bg-blue-500 hover:bg-blue-600 text-white'
+          }`}
+        >
+          {firebaseStatus === 'testing' ? '⏳ Testing Connection...' : '🔍 Test Firebase Connection'}
+        </button>
+      </div>
+
+      {/* Existing Firebase Data Display */}
+      {existingData && (
+        <div className="mb-8 bg-blue-50 p-6 rounded-lg border border-blue-200">
+          <h3 className="text-xl font-semibold mb-4 text-blue-800">
+            📊 Current Firebase Data
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Object.entries(existingData).map(([collection, count]) => (
+              <div key={collection} className="bg-white p-3 rounded-lg shadow-sm border">
+                <div className="text-sm text-gray-600 capitalize">
+                  {collection.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                </div>
+                <div className={`text-2xl font-bold ${count > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                  {count}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 p-3 bg-blue-100 rounded-lg">
+            <p className="text-blue-800 text-sm">
+              <strong>Total Items in Firebase:</strong> {' '}
+              {Object.values(existingData).reduce((sum, count) => sum + count, 0)} items
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <button
           onClick={checkLocalStorageData}
           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
           📊 Check LocalStorage Data
+        </button>
+
+        <button
+          onClick={setupFirebaseWithSampleData}
+          disabled={migrationStatus === 'running'}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            migrationStatus === 'running'
+              ? 'bg-gray-400 cursor-not-allowed text-gray-200'
+              : 'bg-purple-500 hover:bg-purple-600 text-white'
+          }`}
+        >
+          {migrationStatus === 'running' ? '⏳ Setting up...' : '🚀 Fresh Firebase Setup'}
         </button>
 
         <button
@@ -176,7 +245,7 @@ const DataMigration = () => {
               : 'bg-green-500 hover:bg-green-600 text-white'
           }`}
         >
-          {migrationStatus === 'running' ? '⏳ Migrating...' : '🚀 Start Migration'}
+          {migrationStatus === 'running' ? '⏳ Migrating...' : '🔄 Migrate LocalStorage'}
         </button>
 
         <button
