@@ -136,23 +136,35 @@ export const PublicationsProvider = ({ children }) => {
   // Delete publication
   const deletePublication = (id) => {
     try {
-      console.log('🔍 PublicationsContext: Deleting publication with ID:', id);
+      console.log('🔍 PublicationsContext: Deleting publication with ID:', id, 'Type:', typeof id);
       console.log('🔍 Current publications data:', publicationsData);
       
-      if (!id) {
+      if (!id && id !== 0) {
         throw new Error('Publication ID is required for deletion');
       }
       
-      const existingPublication = publicationsData.find(pub => pub.id === id);
+      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
+      const idStr = String(id);
+      const idNum = Number(id);
+      
+      console.log('🔍 Searching for publication with ID (string):', idStr, 'or (number):', idNum);
+      
+      const existingPublication = publicationsData.find(pub => 
+        String(pub.id) === idStr || pub.id === idNum
+      );
+      
       if (!existingPublication) {
+        console.log('❌ Publication not found. Available IDs:', publicationsData.map(p => ({ id: p.id, type: typeof p.id })));
         throw new Error(`Publication with ID ${id} not found`);      
       }
       
       console.log('🔍 Found publication to delete:', existingPublication);
       
       setPublicationsData(prev => {
-        const filtered = prev.filter(pub => pub.id !== id);
-        console.log('✅ Publication deleted. New data length:', filtered.length);
+        const filtered = prev.filter(pub => 
+          String(pub.id) !== idStr && pub.id !== idNum
+        );
+        console.log('✅ Publication deleted. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
