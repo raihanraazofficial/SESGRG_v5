@@ -67,6 +67,9 @@ import DeleteGalleryModal from '../gallery/DeleteGalleryModal';
 // Import Home Management
 import HomeManagement from './HomeManagement';
 
+// Import Data Migration
+import DataMigration from '../DataMigration';
+
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [searchTerm, setSearchTerm] = useState('');
