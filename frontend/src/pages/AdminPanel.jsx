@@ -75,6 +75,13 @@ const AdminPanel = () => {
       description: 'Overview and statistics'
     },
     {
+      id: 'migration',
+      label: 'Data Migration',
+      icon: BarChart3,
+      description: 'Migrate data to Firebase',
+      adminOnly: true
+    },
+    {
       id: 'users',
       label: 'User Management',
       icon: Users,
