@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import googleSheetsService from '../services/googleSheetsApi';
+import firebaseService from '../services/firebaseService';
 
 const ProjectsContext = createContext();
 
@@ -12,22 +12,8 @@ export const useProjects = () => {
 };
 
 export const ProjectsProvider = ({ children }) => {
-  const [projectsData, setProjectsData] = useState(() => {
-    // Try to load from localStorage first
-    try {
-      const storedData = localStorage.getItem('sesg_projects_data');
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-    } catch (error) {
-      console.error('Error loading projects from localStorage:', error);
-    }
-    
-    // Return empty array if localStorage fails
-    return [];
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [projectsData, setProjectsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
 
   // Research areas mapping
@@ -43,136 +29,80 @@ export const ProjectsProvider = ({ children }) => {
 
   const statuses = ["Active", "Completed", "Planning"];
 
-  // Save to localStorage whenever data changes
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      localStorage.setItem('sesg_projects_data', JSON.stringify(projectsData));
-    } catch (error) {
-      console.error('Error saving projects to localStorage:', error);
-    }
-  }, [projectsData]);
-
-  // Initialize data from Google Sheets on first load (migration)
-  useEffect(() => {
-    const initializeData = async () => {
-      if (initialized || projectsData.length > 0) return;
+    const loadProjectsData = async () => {
+      if (initialized) return;
       
       try {
         setLoading(true);
-        console.log('🔄 Migrating projects data from Google Sheets to localStorage...');
+        console.log('🔄 Loading projects data from Firebase...');
         
-        const response = await googleSheetsService.getProjects({
-          page: 1,
-          per_page: 100 // Get all projects
-        });
+        const firebaseProjects = await firebaseService.getProjects();
+        setProjectsData(firebaseProjects);
         
-        if (response && response.projects && response.projects.length > 0) {
-          const migratedData = response.projects.map((project, index) => ({
-            id: project.id || Date.now() + index,
-            title: project.title || '',
-            description: project.description || '',
-            status: project.status || 'Planning',
-            start_date: project.start_date || '',
-            end_date: project.end_date || '',
-            principal_investigator: project.principal_investigator || '',
-            team_members: Array.isArray(project.team_members) ? project.team_members : 
-                        typeof project.team_members === 'string' ? project.team_members.split(',').map(m => m.trim()) : [],
-            funding_agency: project.funding_agency || '',
-            budget: project.budget || '',
-            research_areas: Array.isArray(project.research_areas) ? project.research_areas : [],
-            objectives: Array.isArray(project.objectives) ? project.objectives : 
-                       typeof project.objectives === 'string' ? project.objectives.split('\n').filter(o => o.trim()) : [],
-            expected_outcomes: Array.isArray(project.expected_outcomes) ? project.expected_outcomes : 
-                              typeof project.expected_outcomes === 'string' ? project.expected_outcomes.split('\n').filter(o => o.trim()) : [],
-            current_progress: project.current_progress || '',
-            publications: Array.isArray(project.publications) ? project.publications : [],
-            website: project.website || '',
-            image: project.image || '',
-            featured: project.featured || false,
-            keywords: Array.isArray(project.keywords) ? project.keywords : 
-                     typeof project.keywords === 'string' ? project.keywords.split(',').map(k => k.trim()) : []
-          }));
-          
-          setProjectsData(migratedData);
-          console.log(`✅ Successfully migrated ${migratedData.length} projects to localStorage`);
-        }
+        console.log(`✅ Projects data loaded from Firebase: ${firebaseProjects.length} projects`);
       } catch (error) {
-        console.error('❌ Error migrating projects data:', error);
+        console.error('❌ Error loading projects data from Firebase:', error);
+        setProjectsData([]);
       } finally {
         setLoading(false);
         setInitialized(true);
       }
     };
 
-    initializeData();
-  }, [initialized, projectsData.length]);
+    loadProjectsData();
+  }, [initialized]);
 
   // Add new project
-  const addProject = (newProject) => {
-    const project = {
-      ...newProject,
-      id: Date.now(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    setProjectsData(prev => [...prev, project]);
-    return project;
+  const addProject = async (newProject) => {
+    try {
+      const project = await firebaseService.addProject(newProject);
+      setProjectsData(prev => [...prev, project]);
+      console.log('✅ Project added to Firebase:', project);
+      return project;
+    } catch (error) {
+      console.error('❌ Error adding project:', error);
+      throw error;
+    }
   };
 
   // Update project
-  const updateProject = (id, updatedData) => {
-    const updatedProject = {
-      ...updatedData,
-      id: id,
-      updated_at: new Date().toISOString()
-    };
-    
-    setProjectsData(prev => 
-      prev.map(project => project.id === id ? updatedProject : project)
-    );
-    return updatedProject;
+  const updateProject = async (id, updatedData) => {
+    try {
+      const updatedProject = await firebaseService.updateProject(id, updatedData);
+      setProjectsData(prev => 
+        prev.map(project => project.id === id ? updatedProject : project)
+      );
+      console.log('✅ Project updated in Firebase:', updatedProject);
+      return updatedProject;
+    } catch (error) {
+      console.error('❌ Error updating project:', error);
+      throw error;
+    }
   };
 
   // Delete project
-  const deleteProject = (id) => {
+  const deleteProject = async (id) => {
     try {
-      console.log('🔍 ProjectsContext: Deleting project with ID:', id, 'Type:', typeof id);
-      console.log('🔍 Current projects data:', projectsData);
+      console.log('🔍 ProjectsContext: Deleting project with ID:', id);
       
       if (!id && id !== 0) {
         throw new Error('Project ID is required for deletion');
       }
       
-      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
-      const idStr = String(id);
-      const idNum = Number(id);
-      
-      console.log('🔍 Searching for project with ID (string):', idStr, 'or (number):', idNum);
-      
-      const existingProject = projectsData.find(project => 
-        String(project.id) === idStr || project.id === idNum
-      );
-      
-      if (!existingProject) {
-        console.log('❌ Project not found. Available IDs:', projectsData.map(p => ({ id: p.id, type: typeof p.id })));
-        throw new Error(`Project with ID ${id} not found`);
-      }
-      
-      console.log('🔍 Found project to delete:', existingProject);
+      await firebaseService.deleteProject(id);
       
       setProjectsData(prev => {
-        const filtered = prev.filter(project => 
-          String(project.id) !== idStr && project.id !== idNum
-        );
-        console.log('✅ Project deleted. Old length:', prev.length, 'New length:', filtered.length);
+        const filtered = prev.filter(project => project.id !== id);
+        console.log('✅ Project deleted from Firebase. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
       console.log('✅ Project delete operation completed');
     } catch (error) {
       console.error('❌ Error in deleteProject:', error);
-      throw error; // Re-throw to let calling component handle it
+      throw error;
     }
   };
 
@@ -300,11 +230,16 @@ export const ProjectsProvider = ({ children }) => {
   };
 
   // Get featured projects
-  const getFeaturedProjects = (limit = 5) => {
-    return projectsData
-      .filter(project => project.featured)
-      .sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
-      .slice(0, limit);
+  const getFeaturedProjects = async (limit = 5) => {
+    try {
+      return await firebaseService.getFeaturedProjects(limit);
+    } catch (error) {
+      console.error('Error getting featured projects:', error);
+      return projectsData
+        .filter(project => project.featured)
+        .sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
+        .slice(0, limit);
+    }
   };
 
   // Get latest projects

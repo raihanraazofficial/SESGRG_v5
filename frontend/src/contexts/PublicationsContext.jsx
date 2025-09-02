@@ -12,22 +12,8 @@ export const usePublications = () => {
 };
 
 export const PublicationsProvider = ({ children }) => {
-  const [publicationsData, setPublicationsData] = useState(() => {
-    // Try to load from localStorage first
-    try {
-      const storedData = localStorage.getItem('sesg_publications_data');
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-    } catch (error) {
-      console.error('Error loading publications from localStorage:', error);
-    }
-    
-    // Return empty array if localStorage fails
-    return [];
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [publicationsData, setPublicationsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
 
   // Research areas mapping
@@ -41,137 +27,80 @@ export const PublicationsProvider = ({ children }) => {
     "Cybersecurity and AI for Power Infrastructure"
   ];
 
-  // Save to localStorage whenever data changes
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      localStorage.setItem('sesg_publications_data', JSON.stringify(publicationsData));
-    } catch (error) {
-      console.error('Error saving publications to localStorage:', error);
-    }
-  }, [publicationsData]);
-
-  // Initialize data from Google Sheets on first load (migration)
-  useEffect(() => {
-    const initializeData = async () => {
-      if (initialized || publicationsData.length > 0) return;
+    const loadPublicationsData = async () => {
+      if (initialized) return;
       
       try {
         setLoading(true);
-        console.log('🔄 Migrating publications data from Google Sheets to localStorage...');
+        console.log('🔄 Loading publications data from Firebase...');
         
-        const response = await googleSheetsService.getPublications({
-          page: 1,
-          per_page: 100 // Get all publications
-        });
+        const firebasePublications = await firebaseService.getPublications();
+        setPublicationsData(firebasePublications);
         
-        if (response && response.publications && response.publications.length > 0) {
-          const migratedData = response.publications.map((pub, index) => ({
-            id: pub.id || Date.now() + index,
-            title: pub.title || '',
-            authors: Array.isArray(pub.authors) ? pub.authors : 
-                    typeof pub.authors === 'string' ? pub.authors.split(',').map(a => a.trim()) : [],
-            year: pub.year || new Date().getFullYear(),
-            category: pub.category || 'Journal Articles',
-            research_areas: Array.isArray(pub.research_areas) ? pub.research_areas : [],
-            citations: pub.citations || 0,
-            journal_name: pub.journal_name || '',
-            conference_name: pub.conference_name || '',
-            book_title: pub.book_title || '',
-            volume: pub.volume || '',
-            issue: pub.issue || '',
-            pages: pub.pages || '',
-            publisher: pub.publisher || '',
-            editor: pub.editor || '',
-            city: pub.city || '',
-            country: pub.country || '',
-            paper_link: pub.doi_link || pub.full_paper_link || pub.paper_link || '',
-            open_access: pub.open_access || false,
-            featured: pub.featured || false,
-            abstract: pub.abstract || '',
-            keywords: Array.isArray(pub.keywords) ? pub.keywords : 
-                     typeof pub.keywords === 'string' ? pub.keywords.split(',').map(k => k.trim()) : []
-          }));
-          
-          setPublicationsData(migratedData);
-          console.log(`✅ Successfully migrated ${migratedData.length} publications to localStorage`);
-        }
+        console.log(`✅ Publications data loaded from Firebase: ${firebasePublications.length} publications`);
       } catch (error) {
-        console.error('❌ Error migrating publications data:', error);
+        console.error('❌ Error loading publications data from Firebase:', error);
+        setPublicationsData([]);
       } finally {
         setLoading(false);
         setInitialized(true);
       }
     };
 
-    initializeData();
-  }, [initialized, publicationsData.length]);
+    loadPublicationsData();
+  }, [initialized]);
 
   // Add new publication
-  const addPublication = (newPublication) => {
-    const publication = {
-      ...newPublication,
-      id: Date.now(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    setPublicationsData(prev => [...prev, publication]);
-    return publication;
+  const addPublication = async (newPublication) => {
+    try {
+      const publication = await firebaseService.addPublication(newPublication);
+      setPublicationsData(prev => [...prev, publication]);
+      console.log('✅ Publication added to Firebase:', publication);
+      return publication;
+    } catch (error) {
+      console.error('❌ Error adding publication:', error);
+      throw error;
+    }
   };
 
   // Update publication
-  const updatePublication = (id, updatedData) => {
-    const updatedPublication = {
-      ...updatedData,
-      id: id,
-      updated_at: new Date().toISOString()
-    };
-    
-    setPublicationsData(prev => 
-      prev.map(pub => pub.id === id ? updatedPublication : pub)
-    );
-    return updatedPublication;
+  const updatePublication = async (id, updatedData) => {
+    try {
+      const updatedPublication = await firebaseService.updatePublication(id, updatedData);
+      setPublicationsData(prev => 
+        prev.map(pub => pub.id === id ? updatedPublication : pub)
+      );
+      console.log('✅ Publication updated in Firebase:', updatedPublication);
+      return updatedPublication;
+    } catch (error) {
+      console.error('❌ Error updating publication:', error);
+      throw error;
+    }
   };
 
   // Delete publication
-  const deletePublication = (id) => {
+  const deletePublication = async (id) => {
     try {
-      console.log('🔍 PublicationsContext: Deleting publication with ID:', id, 'Type:', typeof id);
-      console.log('🔍 Current publications data:', publicationsData);
+      console.log('🔍 PublicationsContext: Deleting publication with ID:', id);
       
       if (!id && id !== 0) {
         throw new Error('Publication ID is required for deletion');
       }
       
-      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
-      const idStr = String(id);
-      const idNum = Number(id);
-      
-      console.log('🔍 Searching for publication with ID (string):', idStr, 'or (number):', idNum);
-      
-      const existingPublication = publicationsData.find(pub => 
-        String(pub.id) === idStr || pub.id === idNum
-      );
-      
-      if (!existingPublication) {
-        console.log('❌ Publication not found. Available IDs:', publicationsData.map(p => ({ id: p.id, type: typeof p.id })));
-        throw new Error(`Publication with ID ${id} not found`);      
-      }
-      
-      console.log('🔍 Found publication to delete:', existingPublication);
+      await firebaseService.deletePublication(id);
       
       setPublicationsData(prev => {
-        const filtered = prev.filter(pub => 
-          String(pub.id) !== idStr && pub.id !== idNum
-        );
-        console.log('✅ Publication deleted. Old length:', prev.length, 'New length:', filtered.length);
+        const filtered = prev.filter(pub => pub.id !== id);
+        console.log('✅ Publication deleted from Firebase. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
       console.log('✅ Publication delete operation completed');
     } catch (error) {
       console.error('❌ Error in deletePublication:', error);
-      throw error; // Re-throw to let calling component handle it
+      throw error;
     }
   };
 
@@ -313,11 +242,16 @@ export const PublicationsProvider = ({ children }) => {
   };
 
   // Get featured publications
-  const getFeaturedPublications = (limit = 5) => {
-    return publicationsData
-      .filter(pub => pub.featured)
-      .sort((a, b) => b.year - a.year)
-      .slice(0, limit);
+  const getFeaturedPublications = async (limit = 5) => {
+    try {
+      return await firebaseService.getFeaturedPublications(limit);
+    } catch (error) {
+      console.error('Error getting featured publications:', error);
+      return publicationsData
+        .filter(pub => pub.featured)
+        .sort((a, b) => b.year - a.year)
+        .slice(0, limit);
+    }
   };
 
   // Get latest publications
