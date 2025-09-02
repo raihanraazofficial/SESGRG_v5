@@ -174,7 +174,7 @@ const ContentManagement = () => {
       setIsDeleting(true);
       
       if (editingCategory === 'people') {
-        await deletePerson(deletingItem.category, deletingItem.id);
+        deletePerson(deletingItem.category, deletingItem.id);
       } else if (editingCategory === 'publications') {
         await deletePublication(deletingItem.id);
       } else if (editingCategory === 'projects') {
