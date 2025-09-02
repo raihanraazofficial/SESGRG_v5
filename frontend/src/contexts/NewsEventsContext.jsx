@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import googleSheetsService from '../services/googleSheetsApi';
+import firebaseService from '../services/firebaseService';
 
 const NewsEventsContext = createContext();
 
@@ -12,105 +12,87 @@ export const useNewsEvents = () => {
 };
 
 export const NewsEventsProvider = ({ children }) => {
-  const [newsEventsData, setNewsEventsData] = useState(() => {
-    // Try to load from localStorage first
-    try {
-      const storedData = localStorage.getItem('sesg_newsevents_data');
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-    } catch (error) {
-      console.error('Error loading news events from localStorage:', error);
-    }
-    
-    // Return empty array if localStorage fails
-    return [];
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [newsEventsData, setNewsEventsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
 
   // News Events categories
   const categories = ["News", "Events", "Upcoming Events", "Announcement", "Press Release"];
 
-  // Save to localStorage whenever data changes
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      localStorage.setItem('sesg_newsevents_data', JSON.stringify(newsEventsData));
-    } catch (error) {
-      console.error('Error saving news events to localStorage:', error);
-    }
-  }, [newsEventsData]);
-
-  // Initialize data from Google Sheets on first load (migration)
-  useEffect(() => {
-    const initializeData = async () => {
-      if (initialized || newsEventsData.length > 0) return;
+    const loadNewsEventsData = async () => {
+      if (initialized) return;
       
       try {
         setLoading(true);
-        console.log('🔄 Migrating news events data from Google Sheets to localStorage...');
+        console.log('🔄 Loading news events data from Firebase...');
         
-        const response = await googleSheetsService.getNewsEvents({
-          page: 1,
-          per_page: 100 // Get all news events
-        });
+        const firebaseNewsEvents = await firebaseService.getNewsEvents();
+        setNewsEventsData(firebaseNewsEvents);
         
-        if (response && response.news_events && response.news_events.length > 0) {
-          const migratedData = response.news_events.map((item, index) => ({
-            id: item.id || Date.now() + index,
-            title: item.title || '',
-            short_description: item.short_description || '',
-            description: item.description || '',
-            full_content: item.full_content || item.description || '',
-            category: item.category || 'News',
-            date: item.date || new Date().toISOString().split('T')[0],
-            location: item.location || '',
-            image: item.image || '',
-            featured: item.featured || false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }));
-          
-          setNewsEventsData(migratedData);
-          console.log(`✅ Successfully migrated ${migratedData.length} news events to localStorage`);
-        }
+        console.log(`✅ News events data loaded from Firebase: ${firebaseNewsEvents.length} news events`);
       } catch (error) {
-        console.error('❌ Error migrating news events data:', error);
+        console.error('❌ Error loading news events data from Firebase:', error);
+        setNewsEventsData([]);
       } finally {
         setLoading(false);
         setInitialized(true);
       }
     };
 
-    initializeData();
-  }, [initialized, newsEventsData.length]);
+    loadNewsEventsData();
+  }, [initialized]);
 
   // Add new news event
-  const addNewsEvent = (newNewsEvent) => {
-    const newsEvent = {
-      ...newNewsEvent,
-      id: Date.now(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    setNewsEventsData(prev => [...prev, newsEvent]);
-    return newsEvent;
+  const addNewsEvent = async (newNewsEvent) => {
+    try {
+      const newsEvent = await firebaseService.addNewsEvent(newNewsEvent);
+      setNewsEventsData(prev => [...prev, newsEvent]);
+      console.log('✅ News event added to Firebase:', newsEvent);
+      return newsEvent;
+    } catch (error) {
+      console.error('❌ Error adding news event:', error);
+      throw error;
+    }
   };
 
   // Update news event
-  const updateNewsEvent = (id, updatedData) => {
-    setNewsEventsData(prev => prev.map(item => 
-      item.id === id 
-        ? { ...item, ...updatedData, updated_at: new Date().toISOString() }
-        : item
-    ));
+  const updateNewsEvent = async (id, updatedData) => {
+    try {
+      const updatedNewsEvent = await firebaseService.updateNewsEvent(id, updatedData);
+      setNewsEventsData(prev => prev.map(item => 
+        item.id === id ? updatedNewsEvent : item
+      ));
+      console.log('✅ News event updated in Firebase:', updatedNewsEvent);
+    } catch (error) {
+      console.error('❌ Error updating news event:', error);
+      throw error;
+    }
   };
 
   // Delete news event
-  const deleteNewsEvent = (id) => {
-    setNewsEventsData(prev => prev.filter(item => item.id !== id));
+  const deleteNewsEvent = async (id) => {
+    try {
+      console.log('🔍 NewsEventsContext: Deleting news event with ID:', id);
+      
+      if (!id && id !== 0) {
+        throw new Error('News event ID is required for deletion');
+      }
+      
+      await firebaseService.deleteNewsEvent(id);
+      
+      setNewsEventsData(prev => {
+        const filtered = prev.filter(item => item.id !== id);
+        console.log('✅ News event deleted from Firebase. Old length:', prev.length, 'New length:', filtered.length);
+        return filtered;
+      });
+      
+      console.log('✅ News event delete operation completed');
+    } catch (error) {
+      console.error('❌ Error in deleteNewsEvent:', error);
+      throw error;
+    }
   };
 
   // Get news event by ID
@@ -196,11 +178,16 @@ export const NewsEventsProvider = ({ children }) => {
   };
 
   // Get featured news events
-  const getFeaturedNewsEvents = (limit = 3) => {
-    return newsEventsData
-      .filter(item => item.featured)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, limit);
+  const getFeaturedNewsEvents = async (limit = 3) => {
+    try {
+      return await firebaseService.getFeaturedNewsEvents(limit);
+    } catch (error) {
+      console.error('Error getting featured news events:', error);
+      return newsEventsData
+        .filter(item => item.featured)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, limit);
+    }
   };
 
   const value = {

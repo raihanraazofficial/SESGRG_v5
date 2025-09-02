@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import googleSheetsService from '../services/googleSheetsApi';
+import firebaseService from '../services/firebaseService';
 
 const AchievementsContext = createContext();
 
@@ -12,144 +12,87 @@ export const useAchievements = () => {
 };
 
 export const AchievementsProvider = ({ children }) => {
-  const [achievementsData, setAchievementsData] = useState(() => {
-    // Try to load from localStorage first
-    try {
-      const storedData = localStorage.getItem('sesg_achievements_data');
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-    } catch (error) {
-      console.error('Error loading achievements from localStorage:', error);
-    }
-    
-    // Return empty array if localStorage fails
-    return [];
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [achievementsData, setAchievementsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
 
   // Achievement categories
   const categories = ["Award", "Partnership", "Publication", "Grant", "Recognition", "Milestone"];
 
-  // Save to localStorage whenever data changes
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      localStorage.setItem('sesg_achievements_data', JSON.stringify(achievementsData));
-    } catch (error) {
-      console.error('Error saving achievements to localStorage:', error);
-    }
-  }, [achievementsData]);
-
-  // Initialize data from Google Sheets on first load (migration)
-  useEffect(() => {
-    const initializeData = async () => {
-      if (initialized || achievementsData.length > 0) return;
+    const loadAchievementsData = async () => {
+      if (initialized) return;
       
       try {
         setLoading(true);
-        console.log('🔄 Migrating achievements data from Google Sheets to localStorage...');
+        console.log('🔄 Loading achievements data from Firebase...');
         
-        const response = await googleSheetsService.getAchievements({
-          page: 1,
-          per_page: 100 // Get all achievements
-        });
+        const firebaseAchievements = await firebaseService.getAchievements();
+        setAchievementsData(firebaseAchievements);
         
-        if (response && response.achievements && response.achievements.length > 0) {
-          const migratedData = response.achievements.map((achievement, index) => ({
-            id: achievement.id || Date.now() + index,
-            title: achievement.title || '',
-            short_description: achievement.short_description || '',
-            description: achievement.description || achievement.full_content || '',
-            category: achievement.category || 'Award',
-            date: achievement.date || new Date().toISOString().split('T')[0],
-            image: achievement.image || '',
-            featured: achievement.featured || false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }));
-          
-          setAchievementsData(migratedData);
-          console.log(`✅ Successfully migrated ${migratedData.length} achievements to localStorage`);
-        }
+        console.log(`✅ Achievements data loaded from Firebase: ${firebaseAchievements.length} achievements`);
       } catch (error) {
-        console.error('❌ Error migrating achievements data:', error);
+        console.error('❌ Error loading achievements data from Firebase:', error);
+        setAchievementsData([]);
       } finally {
         setLoading(false);
         setInitialized(true);
       }
     };
 
-    initializeData();
-  }, [initialized, achievementsData.length]);
+    loadAchievementsData();
+  }, [initialized]);
 
   // Add new achievement
-  const addAchievement = (newAchievement) => {
-    const achievement = {
-      ...newAchievement,
-      id: Date.now(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    setAchievementsData(prev => [...prev, achievement]);
-    return achievement;
+  const addAchievement = async (newAchievement) => {
+    try {
+      const achievement = await firebaseService.addAchievement(newAchievement);
+      setAchievementsData(prev => [...prev, achievement]);
+      console.log('✅ Achievement added to Firebase:', achievement);
+      return achievement;
+    } catch (error) {
+      console.error('❌ Error adding achievement:', error);
+      throw error;
+    }
   };
 
   // Update achievement
-  const updateAchievement = (id, updatedData) => {
-    const updatedAchievement = {
-      ...updatedData,
-      id: id,
-      updated_at: new Date().toISOString()
-    };
-    
-    setAchievementsData(prev => 
-      prev.map(achievement => achievement.id === id ? updatedAchievement : achievement)
-    );
-    return updatedAchievement;
+  const updateAchievement = async (id, updatedData) => {
+    try {
+      const updatedAchievement = await firebaseService.updateAchievement(id, updatedData);
+      setAchievementsData(prev => 
+        prev.map(achievement => achievement.id === id ? updatedAchievement : achievement)
+      );
+      console.log('✅ Achievement updated in Firebase:', updatedAchievement);
+      return updatedAchievement;
+    } catch (error) {
+      console.error('❌ Error updating achievement:', error);
+      throw error;
+    }
   };
 
   // Delete achievement
-  const deleteAchievement = (id) => {
+  const deleteAchievement = async (id) => {
     try {
-      console.log('🔍 AchievementsContext: Deleting achievement with ID:', id, 'Type:', typeof id);
-      console.log('🔍 Current achievements data:', achievementsData);
+      console.log('🔍 AchievementsContext: Deleting achievement with ID:', id);
       
       if (!id && id !== 0) {
         throw new Error('Achievement ID is required for deletion');
       }
       
-      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
-      const idStr = String(id);
-      const idNum = Number(id);
-      
-      console.log('🔍 Searching for achievement with ID (string):', idStr, 'or (number):', idNum);
-      
-      const existingAchievement = achievementsData.find(achievement => 
-        String(achievement.id) === idStr || achievement.id === idNum
-      );
-      
-      if (!existingAchievement) {
-        console.log('❌ Achievement not found. Available IDs:', achievementsData.map(a => ({ id: a.id, type: typeof a.id })));
-        throw new Error(`Achievement with ID ${id} not found`);
-      }
-      
-      console.log('🔍 Found achievement to delete:', existingAchievement);
+      await firebaseService.deleteAchievement(id);
       
       setAchievementsData(prev => {
-        const filtered = prev.filter(achievement => 
-          String(achievement.id) !== idStr && achievement.id !== idNum
-        );
-        console.log('✅ Achievement deleted. Old length:', prev.length, 'New length:', filtered.length);
+        const filtered = prev.filter(achievement => achievement.id !== id);
+        console.log('✅ Achievement deleted from Firebase. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
       console.log('✅ Achievement delete operation completed');
     } catch (error) {
       console.error('❌ Error in deleteAchievement:', error);
-      throw error; // Re-throw to let calling component handle it
+      throw error;
     }
   };
 
@@ -244,11 +187,16 @@ export const AchievementsProvider = ({ children }) => {
   };
 
   // Get featured achievements
-  const getFeaturedAchievements = (limit = 3) => {
-    return achievementsData
-      .filter(achievement => achievement.featured)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, limit);
+  const getFeaturedAchievements = async (limit = 3) => {
+    try {
+      return await firebaseService.getFeaturedAchievements(limit);
+    } catch (error) {
+      console.error('Error getting featured achievements:', error);
+      return achievementsData
+        .filter(achievement => achievement.featured)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, limit);
+    }
   };
 
   // Get latest achievements
