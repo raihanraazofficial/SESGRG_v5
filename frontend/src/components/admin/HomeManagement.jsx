@@ -40,6 +40,13 @@ const HomeManagement = () => {
   const [isObjectiveModalOpen, setIsObjectiveModalOpen] = useState(false);
   const [isResearchAreaModalOpen, setIsResearchAreaModalOpen] = useState(false);
   
+  // Footer modal states
+  const [isFooterLabInfoModalOpen, setIsFooterLabInfoModalOpen] = useState(false);
+  const [isFooterQuickLinksModalOpen, setIsFooterQuickLinksModalOpen] = useState(false);
+  const [isFooterContactModalOpen, setIsFooterContactModalOpen] = useState(false);
+  const [isFooterSocialModalOpen, setIsFooterSocialModalOpen] = useState(false);
+  const [isFooterBottomBarModalOpen, setIsFooterBottomBarModalOpen] = useState(false);
+  
   // Edit states
   const [editingItem, setEditingItem] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
