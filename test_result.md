@@ -391,11 +391,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Homepage Hero Button Removal and Featured Content Functionality Fix"
-    - "Featured Content Admin Panel Integration Testing"
-    - "HomePage Featured News Display Testing"
-    - "Achievements Page Featured Display Testing"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
