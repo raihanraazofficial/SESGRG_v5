@@ -102,6 +102,12 @@ const HomeManagement = () => {
       label: 'Research Areas',
       icon: Layers,
       count: researchAreas?.length || 0
+    },
+    {
+      id: 'footer',
+      label: 'Footer Settings',
+      icon: Settings,
+      count: (footerData?.quickLinks?.length || 0) + (footerData?.socialMedia?.length || 0) + (footerData?.bottomBar?.links?.length || 0)
     }
   ];
 
