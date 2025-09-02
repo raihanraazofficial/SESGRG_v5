@@ -208,12 +208,38 @@ const UserManagement = () => {
     switch (role) {
       case USER_ROLES.ADMIN:
         return 'bg-red-100 text-red-700';
-      case USER_ROLES.MODERATOR:
+      case USER_ROLES.ADVISOR:
+        return 'bg-purple-100 text-purple-700';
+      case USER_ROLES.TEAM_MEMBER:
         return 'bg-blue-100 text-blue-700';
-      case USER_ROLES.VIEWER:
-        return 'bg-gray-100 text-gray-700';
+      case USER_ROLES.COLLABORATOR:
+        return 'bg-green-100 text-green-700';
       default:
         return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  // Handle add user
+  const handleAddUser = async () => {
+    if (!formData.username || !formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+      alert('Please fill in all required fields (Username, Email, Password, First Name, Last Name)');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await createUser(formData);
+      if (result.success) {
+        alert('User created successfully!');
+        setIsAddModalOpen(false);
+        resetForm();
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      alert('Error creating user: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
