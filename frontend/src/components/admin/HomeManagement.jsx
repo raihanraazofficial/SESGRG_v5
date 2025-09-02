@@ -24,6 +24,13 @@ import CarouselImageModal from '../home/CarouselImageModal';
 import ObjectiveModal from '../home/ObjectiveModal';
 import ResearchAreaModal from '../home/ResearchAreaModal';
 
+// Import Footer modals
+import FooterLabInfoModal from '../footer/FooterLabInfoModal';
+import FooterQuickLinksModal from '../footer/FooterQuickLinksModal';
+import FooterContactModal from '../footer/FooterContactModal';
+import FooterSocialModal from '../footer/FooterSocialModal';
+import FooterBottomBarModal from '../footer/FooterBottomBarModal';
+
 const HomeManagement = () => {
   const [activeSection, setActiveSection] = useState('about-us');
   
