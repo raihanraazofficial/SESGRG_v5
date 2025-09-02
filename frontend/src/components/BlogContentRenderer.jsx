@@ -261,15 +261,16 @@ const BlogContentRenderer = ({ achievement, onClose }) => {
 export const generateBlogContent = (achievement) => {
   const blogHtml = BlogContentRenderer({ achievement });
   
-  const newWindow = window.open('', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-  if (newWindow) {
-    newWindow.document.write(blogHtml);
-    newWindow.document.close();
+  // Open in new tab instead of new window (remove window specifications)
+  const newTab = window.open('', '_blank');
+  if (newTab) {
+    newTab.document.write(blogHtml);
+    newTab.document.close();
     
     // Add MathJax processing after content is loaded
-    newWindow.addEventListener('load', () => {
-      if (newWindow.MathJax) {
-        newWindow.MathJax.typesetPromise();
+    newTab.addEventListener('load', () => {
+      if (newTab.MathJax) {
+        newTab.MathJax.typesetPromise();
       }
     });
   } else {
