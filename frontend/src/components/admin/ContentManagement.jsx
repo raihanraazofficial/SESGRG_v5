@@ -63,6 +63,9 @@ import AddGalleryModal from '../gallery/AddGalleryModal';
 import EditGalleryModal from '../gallery/EditGalleryModal';
 import DeleteGalleryModal from '../gallery/DeleteGalleryModal';
 
+// Import Home Management
+import HomeManagement from './HomeManagement';
+
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('people');
   const [searchTerm, setSearchTerm] = useState('');
