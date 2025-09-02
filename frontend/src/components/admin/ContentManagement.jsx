@@ -24,6 +24,8 @@ import { useAchievements } from '../../contexts/AchievementsContext';
 import { useNewsEvents } from '../../contexts/NewsEventsContext';
 import { useContact } from '../../contexts/ContactContext';
 import { useGallery } from '../../contexts/GalleryContext';
+import { useHome } from '../../contexts/HomeContext';
+import { useResearchAreas } from '../../contexts/ResearchAreasContext';
 
 // Import People modals
 import EditPersonModal from '../EditPersonModal';
