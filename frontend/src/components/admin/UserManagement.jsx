@@ -219,30 +219,6 @@ const UserManagement = () => {
     }
   };
 
-  // Handle add user
-  const handleAddUser = async () => {
-    if (!formData.username || !formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-      alert('Please fill in all required fields (Username, Email, Password, First Name, Last Name)');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const result = await createUser(formData);
-      if (result.success) {
-        alert('User created successfully!');
-        setIsAddModalOpen(false);
-        resetForm();
-      } else {
-        alert(result.error);
-      }
-    } catch (error) {
-      alert('Error creating user: ' + error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Show loading state
   if (authLoading || componentLoading) {
     return (
