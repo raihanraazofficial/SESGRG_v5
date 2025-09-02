@@ -20,59 +20,28 @@ from datetime import datetime
 
 class FirebaseIntegrationTester:
     def __init__(self):
-        # Get backend URL from environment
-        self.backend_url = "https://persist-data.preview.emergentagent.com"
-        self.api_base = f"{self.backend_url}/api"
-        
-        # Test data for directions
-        self.test_directions = {
-            "publicTransportation": {
-                "title": "Public Transportation",
-                "items": [
-                    "Take bus from Gulshan, Banani, or Mohakhali areas",
-                    "CNG auto-rickshaw available from nearby locations", 
-                    "Uber and Pathao ride-sharing services available"
-                ]
-            },
-            "byCar": {
-                "title": "By Car",
-                "items": [
-                    "Located on Mohakhali Road, easily accessible",
-                    "Parking facilities available on campus",
-                    "Approximately 15 minutes from Gulshan Circle"
-                ]
-            }
-        }
-        
-        # Updated test directions for CRUD testing
-        self.updated_directions = {
-            "publicTransportation": {
-                "title": "Public Transportation Options",
-                "items": [
-                    "Take bus from Gulshan, Banani, or Mohakhali areas",
-                    "CNG auto-rickshaw available from nearby locations", 
-                    "Uber and Pathao ride-sharing services available",
-                    "Metro rail connection available from nearby stations"
-                ]
-            },
-            "byCar": {
-                "title": "By Private Car",
-                "items": [
-                    "Located on Mohakhali Road, easily accessible",
-                    "Parking facilities available on campus",
-                    "Approximately 15 minutes from Gulshan Circle",
-                    "GPS coordinates: 23.7732, 90.4222"
-                ]
-            }
-        }
-        
-        # Admin credentials for authentication testing
+        # Get frontend URL from environment
+        self.frontend_url = "https://persist-data.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
         }
         
-        self.test_results = []
+        # Test results tracking
+        self.test_results = {
+            "firebase_connectivity": False,
+            "admin_authentication": False,
+            "people_context_integration": False,
+            "publications_context_integration": False,
+            "projects_context_integration": False,
+            "achievements_context_integration": False,
+            "news_events_context_integration": False,
+            "crud_operations": False,
+            "data_migration_functionality": False,
+            "google_sheets_removal": False
+        }
+        
+        self.detailed_results = []
         
     def log_test(self, test_name, status, details=""):
         """Log test results"""
