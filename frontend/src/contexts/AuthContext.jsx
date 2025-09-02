@@ -143,15 +143,28 @@ export const AuthProvider = ({ children }) => {
       const existingAdmin = await firebaseService.getUserByUsername('admin');
       if (!existingAdmin) {
         console.log('🔄 Creating default admin user in Firebase...');
-        await firebaseService.addUser(DEFAULT_ADMIN);
+        const newAdminUser = {
+          ...DEFAULT_ADMIN,
+          createdAt: new Date().toISOString(),
+          id: 'admin_' + Date.now() // Ensure unique ID
+        };
+        await firebaseService.addUser(newAdminUser);
         console.log('✅ Default admin user created in Firebase');
       }
       
       // Load all users for admin panel
       const allUsers = await firebaseService.getUsers();
+      console.log('📊 Loaded users from Firebase:', allUsers.length);
       setUsers(allUsers);
     } catch (error) {
-      console.error('Error initializing users in Firebase:', error);
+      console.error('❌ Error initializing users in Firebase:', error);
+      // Initialize with default admin if Firebase fails
+      console.log('🔄 Initializing with default admin user...');
+      setUsers([{
+        ...DEFAULT_ADMIN,
+        id: 'admin_default',
+        createdAt: new Date().toISOString()
+      }]);
     }
   };
 
