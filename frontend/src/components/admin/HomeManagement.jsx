@@ -436,6 +436,191 @@ const HomeManagement = () => {
           </div>
         );
 
+      case 'footer':
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Footer Settings</h3>
+            </div>
+            
+            {/* Footer Lab Info */}
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 bg-gradient-to-r from-emerald-50 to-green-50">
+                <CardTitle className="flex items-center justify-between text-lg font-semibold text-gray-800">
+                  <div className="flex items-center">
+                    <Home className="h-5 w-5 mr-2 text-emerald-600" />
+                    Lab Information
+                  </div>
+                  <Button
+                    onClick={() => setIsFooterLabInfoModalOpen(true)}
+                    className="bg-emerald-600 hover:bg-emerald-700"
+                    size="sm"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-3">
+                    <img 
+                      src={footerData.labInfo.logo} 
+                      alt="Lab Logo" 
+                      className="h-12 w-12 rounded-lg object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-800">{footerData.labInfo.name}</p>
+                      <p className="text-sm text-gray-600">{footerData.labInfo.subtitle}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-700 line-clamp-3">{footerData.labInfo.description}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Footer Quick Links */}
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <CardTitle className="flex items-center justify-between text-lg font-semibold text-gray-800">
+                  <div className="flex items-center">
+                    <FileText className="h-5 w-5 mr-2 text-blue-600" />
+                    Quick Links ({footerData.quickLinks.length})
+                  </div>
+                  <Button
+                    onClick={() => setIsFooterQuickLinksModalOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Manage
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {footerData.quickLinks.map((link) => (
+                    <div key={link.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-sm">{link.title}</span>
+                      <span className="text-xs text-gray-500">
+                        {link.isExternal ? '🔗 External' : '📄 Internal'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Footer Contact Info */}
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 to-pink-50">
+                <CardTitle className="flex items-center justify-between text-lg font-semibold text-gray-800">
+                  <div className="flex items-center">
+                    <Settings className="h-5 w-5 mr-2 text-purple-600" />
+                    Contact Information
+                  </div>
+                  <Button
+                    onClick={() => setIsFooterContactModalOpen(true)}
+                    className="bg-purple-600 hover:bg-purple-700"
+                    size="sm"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-sm"><strong>Email:</strong> {footerData.contactInfo.email}</p>
+                    <p className="text-sm"><strong>Phone:</strong> {footerData.contactInfo.phone}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm"><strong>Address:</strong></p>
+                    <p className="text-xs text-gray-600">
+                      {footerData.contactInfo.address.line1}<br/>
+                      {footerData.contactInfo.address.line2}<br/>
+                      {footerData.contactInfo.address.line3}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Footer Social Media */}
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 bg-gradient-to-r from-orange-50 to-red-50">
+                <CardTitle className="flex items-center justify-between text-lg font-semibold text-gray-800">
+                  <div className="flex items-center">
+                    <Image className="h-5 w-5 mr-2 text-orange-600" />
+                    Social Media ({footerData.socialMedia.length})
+                  </div>
+                  <Button
+                    onClick={() => setIsFooterSocialModalOpen(true)}
+                    className="bg-orange-600 hover:bg-orange-700"
+                    size="sm"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Manage
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    {footerData.socialMedia.map((social) => (
+                      <div key={social.id} className={`px-3 py-1 rounded-full text-white text-sm ${social.bgColor}`}>
+                        {social.name}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600">{footerData.socialDescription}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Footer Bottom Bar */}
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-slate-50">
+                <CardTitle className="flex items-center justify-between text-lg font-semibold text-gray-800">
+                  <div className="flex items-center">
+                    <Target className="h-5 w-5 mr-2 text-gray-600" />
+                    Bottom Bar & Links ({footerData.bottomBar.links.length})
+                  </div>
+                  <Button
+                    onClick={() => setIsFooterBottomBarModalOpen(true)}
+                    className="bg-gray-600 hover:bg-gray-700"
+                    size="sm"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Manage
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm font-medium">Copyright Text:</p>
+                    <p className="text-sm text-gray-600">{footerData.bottomBar.copyright}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Footer Links:</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {footerData.bottomBar.links.map((link) => (
+                        <span key={link.id} className="px-2 py-1 bg-gray-100 rounded text-sm">
+                          {link.title}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
       default:
         return null;
     }
