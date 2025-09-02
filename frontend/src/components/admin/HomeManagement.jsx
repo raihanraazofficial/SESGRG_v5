@@ -184,13 +184,18 @@ const HomeManagement = () => {
     setIsResearchAreaModalOpen(true);
   };
 
-  const handleDeleteResearchArea = (areaId) => {
+  const handleDeleteResearchArea = async (areaId) => {
     if (confirm('Are you sure you want to delete this research area?')) {
-      const result = deleteResearchArea(areaId);
-      if (result.success) {
-        alert('Research area deleted successfully!');
-      } else {
-        alert(result.error || 'Failed to delete research area');
+      try {
+        const result = await deleteResearchArea(areaId);
+        if (result.success) {
+          alert('Research area deleted successfully!');
+        } else {
+          alert(result.error || 'Failed to delete research area');
+        }
+      } catch (error) {
+        console.error('Error deleting research area:', error);
+        alert('Failed to delete research area');
       }
     }
   };
