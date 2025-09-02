@@ -13,6 +13,46 @@ const DataMigration = () => {
   const [firebaseStatus, setFirebaseStatus] = useState('unknown'); // unknown, connected, error
   const [existingData, setExistingData] = useState(null);
 
+  const testFirebaseConnection = async () => {
+    try {
+      setFirebaseStatus('testing');
+      console.log('🔄 Testing Firebase connection...');
+      
+      await firebaseSetup.testConnection();
+      const data = await firebaseSetup.checkExistingData();
+      
+      setExistingData(data);
+      setFirebaseStatus('connected');
+      console.log('✅ Firebase connection successful');
+      
+    } catch (err) {
+      console.error('❌ Firebase connection failed:', err);
+      setFirebaseStatus('error');
+      setError(`Firebase connection failed: ${err.message}`);
+    }
+  };
+
+  const setupFirebaseWithSampleData = async () => {
+    try {
+      setMigrationStatus('running');
+      setError(null);
+      console.log('🚀 Setting up Firebase with sample data...');
+
+      const results = await firebaseSetup.setupFirebase(false);
+      const data = await firebaseSetup.checkExistingData();
+      
+      setExistingData(data);
+      setMigrationResults(data);
+      setMigrationStatus('completed');
+      console.log('✅ Firebase setup completed successfully');
+      
+    } catch (err) {
+      console.error('❌ Firebase setup failed:', err);
+      setError(err.message);
+      setMigrationStatus('error');
+    }
+  };
+
   const startMigration = async () => {
     try {
       setMigrationStatus('running');
