@@ -48,6 +48,7 @@ function App() {
                   <GalleryProvider>
                     <HomeProvider>
                       <ResearchAreasProvider>
+                        <FooterProvider>
                   <div className="App min-h-screen bg-gray-50">
                     <BrowserRouter>
                       <Routes>
