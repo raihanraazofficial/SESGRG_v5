@@ -93,6 +93,7 @@ function App() {
                       </Routes>
                     </BrowserRouter>
                   </div>
+                        </FooterProvider>
                       </ResearchAreasProvider>
                     </HomeProvider>
                   </GalleryProvider>
