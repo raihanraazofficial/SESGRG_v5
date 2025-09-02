@@ -126,31 +126,53 @@ const defaultFooterData = {
 };
 
 export const FooterProvider = ({ children }) => {
-  const [footerData, setFooterData] = useState(defaultFooterData);
+  const [footerData, setFooterData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
-  // Load data from localStorage on mount
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      const savedFooterData = localStorage.getItem('sesg_footer_data');
-      if (savedFooterData) {
-        const parsedData = JSON.parse(savedFooterData);
-        setFooterData(parsedData);
+    const loadFooterData = async () => {
+      if (initialized) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('🔄 Loading footer data from Firebase...');
+        
+        const firebaseFooterData = await firebaseService.getFooterData();
+        
+        if (firebaseFooterData) {
+          setFooterData(firebaseFooterData);
+          console.log('✅ Footer data loaded from Firebase');
+        } else {
+          // Initialize with default data if no data in Firebase
+          console.log('📋 No footer data in Firebase, initializing with defaults...');
+          await firebaseService.updateFooterData(defaultFooterData);
+          setFooterData(defaultFooterData);
+          console.log('✅ Default footer data initialized in Firebase');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error loading footer data from Firebase:', error);
+        // Fallback to default data
+        setFooterData(defaultFooterData);
+      } finally {
+        setIsLoading(false);
+        setInitialized(true);
       }
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading footer data from localStorage:', error);
-      setIsLoading(false);
-    }
-  }, []);
+    };
 
-  // Save to localStorage whenever data changes
-  const saveFooterData = (newData) => {
+    loadFooterData();
+  }, [initialized]);
+
+  // Save to Firebase whenever data changes
+  const saveFooterData = async (newData) => {
     try {
-      localStorage.setItem('sesg_footer_data', JSON.stringify(newData));
+      await firebaseService.updateFooterData(newData);
       setFooterData(newData);
+      console.log('✅ Footer data saved to Firebase');
     } catch (error) {
-      console.error('Error saving footer data to localStorage:', error);
+      console.error('❌ Error saving footer data to Firebase:', error);
       throw error;
     }
   };
