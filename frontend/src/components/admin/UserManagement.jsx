@@ -350,7 +350,8 @@ const UserManagement = () => {
               </div>
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Add User Modal */}
