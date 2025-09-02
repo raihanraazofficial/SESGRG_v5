@@ -188,22 +188,47 @@ export const PeopleProvider = ({ children }) => {
 
   // Delete person
   const deletePerson = (category, personId) => {
-    setPeopleData(prevData => {
-      const updatedData = {
-        ...prevData,
-        [category]: prevData[category].filter(person => person.id !== personId)
-      };
-      
-      // Save updated data to localStorage
-      try {
-        localStorage.setItem('sesgrg_people_data', JSON.stringify(updatedData));
-        console.log(`✅ Deleted ${category} person with ID ${personId} and updated localStorage`);
-      } catch (error) {
-        console.error('Error saving to localStorage after delete:', error);
+    try {
+      // Validate inputs
+      if (!category || !personId) {
+        throw new Error('Category and person ID are required for deletion');
       }
       
-      return updatedData;
-    });
+      if (!['advisors', 'teamMembers', 'collaborators'].includes(category)) {
+        throw new Error(`Invalid category: ${category}. Must be advisors, teamMembers, or collaborators`);
+      }
+      
+      setPeopleData(prevData => {
+        // Check if category exists and person exists
+        if (!prevData[category]) {
+          throw new Error(`Category ${category} not found in people data`);
+        }
+        
+        const personExists = prevData[category].some(person => person.id === personId);
+        if (!personExists) {
+          throw new Error(`Person with ID ${personId} not found in ${category}`);
+        }
+        
+        const updatedData = {
+          ...prevData,
+          [category]: prevData[category].filter(person => person.id !== personId)
+        };
+        
+        // Save updated data to localStorage
+        try {
+          localStorage.setItem('sesgrg_people_data', JSON.stringify(updatedData));
+          console.log(`✅ Deleted ${category} person with ID ${personId} and updated localStorage`);
+        } catch (error) {
+          console.error('Error saving to localStorage after delete:', error);
+          throw new Error('Failed to save changes to localStorage');
+        }
+        
+        return updatedData;
+      });
+    } catch (error) {
+      console.error('Error in deletePerson:', error);
+      throw error; // Re-throw to let calling component handle it
+    }
   };
 
   // Get all people data
