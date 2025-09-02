@@ -11,7 +11,8 @@ import {
   Search,
   Filter,
   Phone,
-  Image
+  Image,
+  Home
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
