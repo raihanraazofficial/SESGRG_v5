@@ -318,6 +318,8 @@ const ContentManagement = () => {
         return galleryItems || [];
       case 'calendar':
         return []; // Calendar settings don't have list data
+      case 'migration':
+        return []; // Migration doesn't have list data
       default:
         return [];
     }
