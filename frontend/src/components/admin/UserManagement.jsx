@@ -36,7 +36,11 @@ const UserManagement = () => {
     username: '',
     email: '',
     password: '',
-    role: USER_ROLES.MODERATOR,
+    firstName: '',
+    lastName: '',
+    profilePicture: '',
+    position: 'Team Member',
+    role: USER_ROLES.COLLABORATOR,
     permissions: []
   });
   const [showPassword, setShowPassword] = useState(false);
