@@ -292,6 +292,16 @@ const AdminPanel = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardContent />;
+      case 'migration':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Data Migration</h1>
+              <p className="text-gray-600 mt-2">Migrate data from localStorage to Firebase</p>
+            </div>
+            <DataMigration />
+          </div>
+        );
       case 'users':
         return <UserManagement />;
       case 'content':
