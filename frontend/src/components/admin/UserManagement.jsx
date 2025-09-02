@@ -180,9 +180,21 @@ const UserManagement = () => {
 
     setIsLoading(true);
     try {
+      // Create user first
       const result = await createUser(formData);
       if (result.success) {
-        alert('User created successfully!');
+        // Create corresponding People page entry
+        try {
+          const peopleCategory = mapPositionToCategory(formData.position);
+          const peopleData = createPeopleEntry(formData);
+          await addPerson(peopleCategory, peopleData);
+          console.log(`✅ Created People page entry for user: ${formData.username}`);
+        } catch (peopleError) {
+          console.error('⚠️ Failed to create People page entry:', peopleError);
+          // Don't fail the whole operation, just log the error
+        }
+        
+        alert('User created successfully! A profile card has been added to the People page.');
         setIsAddModalOpen(false);
         resetForm();
       } else {
