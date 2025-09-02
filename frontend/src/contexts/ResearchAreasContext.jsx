@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import firebaseService from '../services/firebaseService';
 
 const ResearchAreasContext = createContext();
 
@@ -64,93 +65,127 @@ const DEFAULT_RESEARCH_AREAS = [
 ];
 
 export const ResearchAreasProvider = ({ children }) => {
-  const [researchAreas, setResearchAreas] = useState(DEFAULT_RESEARCH_AREAS);
+  const [researchAreas, setResearchAreas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
-  // Initialize data from localStorage
+  // Load data from Firebase on initialization
   useEffect(() => {
-    initializeResearchAreas();
-  }, []);
-
-  const initializeResearchAreas = () => {
-    try {
-      const storedAreas = localStorage.getItem('sesg_research_areas');
-      if (storedAreas) {
-        setResearchAreas(JSON.parse(storedAreas));
-      } else {
-        localStorage.setItem('sesg_research_areas', JSON.stringify(DEFAULT_RESEARCH_AREAS));
+    const loadResearchAreasData = async () => {
+      if (initialized) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('🔄 Loading research areas data from Firebase...');
+        
+        const firebaseAreas = await firebaseService.getResearchAreas();
+        
+        if (firebaseAreas.length > 0) {
+          setResearchAreas(firebaseAreas);
+          console.log(`✅ Research areas data loaded from Firebase: ${firebaseAreas.length} areas`);
+        } else {
+          // Initialize with default data if no data in Firebase
+          console.log('📋 No research areas in Firebase, initializing with defaults...');
+          for (const area of DEFAULT_RESEARCH_AREAS) {
+            await firebaseService.addResearchArea(area);
+          }
+          setResearchAreas(DEFAULT_RESEARCH_AREAS);
+          console.log('✅ Default research areas initialized in Firebase');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error loading research areas data from Firebase:', error);
+        // Fallback to default data
+        setResearchAreas(DEFAULT_RESEARCH_AREAS);
+      } finally {
+        setIsLoading(false);
+        setInitialized(true);
       }
-    } catch (error) {
-      console.error('Error initializing research areas:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+
+    loadResearchAreasData();
+  }, [initialized]);
 
   // Add new research area
-  const addResearchArea = (areaData) => {
+  const addResearchArea = async (areaData) => {
     try {
-      const newArea = {
-        id: Date.now(),
-        areaNumber: researchAreas.length + 1,
-        ...areaData
+      const newAreaData = {
+        ...areaData,
+        areaNumber: researchAreas.length + 1
       };
-      const updatedAreas = [...researchAreas, newArea];
-      setResearchAreas(updatedAreas);
-      localStorage.setItem('sesg_research_areas', JSON.stringify(updatedAreas));
+      
+      const newArea = await firebaseService.addResearchArea(newAreaData);
+      setResearchAreas(prev => [...prev, newArea]);
+      
+      console.log('✅ Research area added to Firebase:', newArea);
       return { success: true, area: newArea };
     } catch (error) {
-      console.error('Error adding research area:', error);
+      console.error('❌ Error adding research area:', error);
       return { success: false, error: 'Failed to add research area' };
     }
   };
 
   // Update research area
-  const updateResearchArea = (id, updatedData) => {
+  const updateResearchArea = async (id, updatedData) => {
     try {
-      const updatedAreas = researchAreas.map(area =>
-        area.id === id ? { ...area, ...updatedData } : area
+      const updatedArea = await firebaseService.updateResearchArea(id, updatedData);
+      setResearchAreas(prev => 
+        prev.map(area => area.id === id ? updatedArea : area)
       );
-      setResearchAreas(updatedAreas);
-      localStorage.setItem('sesg_research_areas', JSON.stringify(updatedAreas));
+      
+      console.log('✅ Research area updated in Firebase:', updatedArea);
       return { success: true };
     } catch (error) {
-      console.error('Error updating research area:', error);
+      console.error('❌ Error updating research area:', error);
       return { success: false, error: 'Failed to update research area' };
     }
   };
 
   // Delete research area
-  const deleteResearchArea = (id) => {
+  const deleteResearchArea = async (id) => {
     try {
+      await firebaseService.deleteResearchArea(id);
+      
       const updatedAreas = researchAreas.filter(area => area.id !== id);
       // Re-number the areas
       const renumberedAreas = updatedAreas.map((area, index) => ({
         ...area,
         areaNumber: index + 1
       }));
+      
+      // Update area numbers in Firebase
+      for (const area of renumberedAreas) {
+        await firebaseService.updateResearchArea(area.id, { areaNumber: area.areaNumber });
+      }
+      
       setResearchAreas(renumberedAreas);
-      localStorage.setItem('sesg_research_areas', JSON.stringify(renumberedAreas));
+      console.log('✅ Research area deleted from Firebase and areas renumbered');
       return { success: true };
     } catch (error) {
-      console.error('Error deleting research area:', error);
+      console.error('❌ Error deleting research area:', error);
       return { success: false, error: 'Failed to delete research area' };
     }
   };
 
   // Reorder research areas
-  const reorderResearchAreas = (newOrder) => {
+  const reorderResearchAreas = async (newOrder) => {
     try {
       // Re-number based on new order
       const renumberedAreas = newOrder.map((area, index) => ({
         ...area,
         areaNumber: index + 1
       }));
+      
+      // Update in Firebase
+      for (const area of renumberedAreas) {
+        await firebaseService.updateResearchArea(area.id, { areaNumber: area.areaNumber });
+      }
+      
       setResearchAreas(renumberedAreas);
-      localStorage.setItem('sesg_research_areas', JSON.stringify(renumberedAreas));
+      console.log('✅ Research areas reordered in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error reordering research areas:', error);
+      console.error('❌ Error reordering research areas:', error);
       return { success: false, error: 'Failed to reorder research areas' };
     }
   };
