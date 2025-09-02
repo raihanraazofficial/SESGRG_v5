@@ -383,12 +383,24 @@ const UserManagement = () => {
                     </span>
                   </div>
 
-                  {user.lastLogin && (
+                  {user.lastLogin ? (
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Last Login:</span>
                       <span className="text-sm text-gray-900">
-                        {new Date(user.lastLogin).toLocaleDateString()}
+                        {new Date(user.lastLogin).toLocaleString('en-GB', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })}
                       </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Last Login:</span>
+                      <span className="text-sm text-gray-500">Never logged in</span>
                     </div>
                   )}
 
