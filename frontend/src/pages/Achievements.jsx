@@ -16,12 +16,14 @@ const Achievements = () => {
     achievementsData,
     loading,
     categories,
-    getPaginatedAchievements
+    getPaginatedAchievements,
+    getFeaturedAchievements
   } = useAchievements();
 
   const { isAuthenticated } = useAuth();
 
   const [achievements, setAchievements] = useState([]);
+  const [featuredAchievements, setFeaturedAchievements] = useState([]);
   const [pagination, setPagination] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [filters, setFilters] = useState({
