@@ -510,7 +510,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Critical Admin Panel Delete Functionality Prop Mismatch Bug Fix"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
