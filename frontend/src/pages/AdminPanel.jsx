@@ -29,6 +29,7 @@ import { useContact } from '../contexts/ContactContext';
 import ContentManagement from '../components/admin/ContentManagement';
 import UserManagement from '../components/admin/UserManagement';
 import PageManagement from '../components/admin/PageManagement';
+import DataMigration from '../components/DataMigration';
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
