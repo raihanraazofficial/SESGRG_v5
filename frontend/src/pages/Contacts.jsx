@@ -107,40 +107,28 @@ const Contacts = () => {
     );
   }
 
+  // For debugging - let's see what data we actually have
+  console.log('Contact Debug - contactInfo:', contactInfo);
+  console.log('Contact Debug - inquiryTypes:', inquiryTypes);
+  console.log('Contact Debug - isLoading:', isLoading);
+
   // Ensure contact data is available before rendering
   if (!contactInfo || !contactInfo.address || !inquiryTypes || inquiryTypes.length === 0) {
-    const [showError, setShowError] = React.useState(false);
-    
-    // Show error message after 5 seconds
-    React.useEffect(() => {
-      const errorTimeout = setTimeout(() => {
-        setShowError(true);
-      }, 5000);
-      
-      return () => clearTimeout(errorTimeout);
-    }, []);
-
-    if (showError) {
-      return (
-        <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
-          <div className="text-center max-w-md">
-            <p className="text-gray-600 mb-4">Unable to load contact information. Please try refreshing the page.</p>
-            <Button 
-              onClick={() => window.location.reload()}
-              className="bg-emerald-600 hover:bg-emerald-700"
-            >
-              Refresh Page
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-md">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading contact information...</p>
+          <p className="text-gray-600 mb-2">Loading contact information...</p>
+          <p className="text-sm text-gray-500">
+            Debug: contactInfo exists: {contactInfo ? 'Yes' : 'No'}, 
+            inquiryTypes count: {inquiryTypes ? inquiryTypes.length : 0}
+          </p>
+          <Button 
+            onClick={() => window.location.reload()}
+            className="bg-emerald-600 hover:bg-emerald-700 mt-4"
+          >
+            Refresh Page
+          </Button>
         </div>
       </div>
     );
