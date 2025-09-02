@@ -140,27 +140,37 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
-          // User is signed in, get additional user data from Firestore
-          const userData = await firebaseService.getUserByUsername('admin');
+          // User is signed in, get user data from Firestore by email
+          console.log('🔄 Firebase user authenticated:', firebaseUser.email);
+          
+          // Get user data by email instead of hardcoded username
+          const allUsers = await firebaseService.getUsers();
+          const userData = allUsers.find(user => user.email === firebaseUser.email);
+          
           if (userData) {
+            console.log('✅ User data found in Firestore:', userData.username);
             setUser({
               id: userData.id, // Use Firestore document ID instead of Firebase Auth UID
               uid: firebaseUser.uid, // Keep auth UID for reference
               email: firebaseUser.email,
               username: userData.username,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
               role: userData.role,
-              permissions: userData.permissions
+              permissions: userData.permissions,
+              isSystemAdmin: userData.isSystemAdmin
             });
             setIsAuthenticated(true);
             
             // Update last login
             await firebaseService.updateUser(userData.id, {
               ...userData,
-              lastLogin: new Date().toISOString()
+              lastLogin: new Date().toISOString(),
+              lastActivity: new Date().toISOString()
             });
           } else {
             // If no user data in Firestore, sign out
-            console.warn('No user data found in Firestore for authenticated user');
+            console.warn('No user data found in Firestore for authenticated user:', firebaseUser.email);
             await signOut(auth);
           }
         } else {
