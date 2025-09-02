@@ -88,6 +88,8 @@ const ContentManagement = () => {
   const { newsEventsData, addNewsEvent, updateNewsEvent, deleteNewsEvent, categories: newsEventCategories } = useNewsEvents();
   const { inquiries, getInquiryStats } = useContact();
   const { galleryItems, addGalleryItem, updateGalleryItem, deleteGalleryItem, categories: galleryCategories } = useGallery();
+  const { aboutUs, carouselImages, objectives } = useHome();
+  const { researchAreas } = useResearchAreas();
 
   // Content tabs
   const contentTabs = [
