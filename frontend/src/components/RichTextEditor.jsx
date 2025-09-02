@@ -275,6 +275,7 @@ const RichTextEditor = ({ value, onChange, placeholder = "Write your content..."
         
         <div className="ml-auto flex gap-1">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setShowPreview(!showPreview)}
