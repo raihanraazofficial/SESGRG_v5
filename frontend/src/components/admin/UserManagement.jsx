@@ -83,7 +83,7 @@ const UserManagement = () => {
 
     setIsLoading(true);
     try {
-      const result = createUser(formData);
+      const result = await createUser(formData);
       if (result.success) {
         alert('User created successfully!');
         setIsAddModalOpen(false);
