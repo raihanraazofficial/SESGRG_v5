@@ -152,40 +152,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login function
+  // Login function with Firebase Authentication
   const login = async (username, password) => {
     try {
-      const storedUsers = JSON.parse(localStorage.getItem('sesg_users') || '[]');
-      const foundUser = storedUsers.find(u => 
-        u.username === username && u.password === password && u.isActive
-      );
-
-      if (foundUser) {
-        // Update last login
-        foundUser.lastLogin = new Date().toISOString();
-        const updatedUsers = storedUsers.map(u => 
-          u.id === foundUser.id ? foundUser : u
-        );
-        localStorage.setItem('sesg_users', JSON.stringify(updatedUsers));
-        setUsers(updatedUsers);
-
-        // Create session (expires in 24 hours)
-        const expiryTime = new Date();
-        expiryTime.setHours(expiryTime.getHours() + 24);
+      // Check if credentials match default admin
+      if (username === DEFAULT_ADMIN_CREDENTIALS.username && 
+          password === DEFAULT_ADMIN_CREDENTIALS.password) {
         
-        const sessionData = {
-          id: foundUser.id,
-          username: foundUser.username,
-          email: foundUser.email,
-          role: foundUser.role,
-          permissions: foundUser.permissions
-        };
-
-        localStorage.setItem('sesg_auth_user', JSON.stringify(sessionData));
-        localStorage.setItem('sesg_auth_expiry', expiryTime.toISOString());
-        
-        setUser(sessionData);
-        setIsAuthenticated(true);
+        // Sign in with Firebase Authentication
+        await signInWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, password);
         
         return { success: true };
       } else {
@@ -193,6 +168,20 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
+      
+      // If user doesn't exist in Firebase Auth, create it
+      if (error.code === 'auth/user-not-found') {
+        try {
+          console.log('🔄 Creating admin user in Firebase Authentication...');
+          await createUserWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, DEFAULT_ADMIN_CREDENTIALS.password);
+          console.log('✅ Admin user created in Firebase Authentication');
+          return { success: true };
+        } catch (createError) {
+          console.error('Error creating admin user:', createError);
+          return { success: false, error: 'Failed to create admin user' };
+        }
+      }
+      
       return { success: false, error: 'Login failed. Please try again.' };
     }
   };
