@@ -222,7 +222,43 @@ const LatestNewsSection = () => {
         ) : (
           <div className="space-y-8">
             {/* Featured Story Card */}
-            {latestNews.length > 0 && (
+            {featuredNews.length > 0 ? (
+              <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                  <div 
+                    className="h-64 lg:h-80 bg-cover bg-center relative"
+                    style={{
+                      backgroundImage: featuredNews[0].image 
+                        ? `url('${featuredNews[0].image}')` 
+                        : `url('https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxuZXdzJTIwZXZlbnR8ZW58MHx8fHwxNzU2NjU0MjE4fDA&ixlib=rb-4.1.0&q=85')`
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+                    <div className="absolute top-4 left-4">
+                      <span className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-full">
+                        Featured Story
+                      </span>
+                    </div>
+                  </div>
+                  <CardContent className="p-8 flex flex-col justify-center">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className={`px-3 py-1 text-sm font-medium rounded-full ${getCategoryColor(featuredNews[0].category)}`}>
+                        {featuredNews[0].category}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {formatDate(featuredNews[0].date)}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 hover:text-emerald-600 transition-colors">
+                      {featuredNews[0].title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {featuredNews[0].short_description || featuredNews[0].description}
+                    </p>
+                  </CardContent>
+                </div>
+              </Card>
+            ) : latestNews.length > 0 && (
               <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                   <div 
@@ -233,8 +269,8 @@ const LatestNewsSection = () => {
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
                     <div className="absolute top-4 left-4">
-                      <span className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-full">
-                        Featured Story
+                      <span className="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-full">
+                        Latest News
                       </span>
                     </div>
                   </div>
