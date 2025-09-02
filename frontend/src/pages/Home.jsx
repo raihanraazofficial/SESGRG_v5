@@ -454,7 +454,7 @@ const Home = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         <div className="absolute bottom-6 left-6 text-white">
-                          <p className="text-lg font-semibold">{image.alt}</p>
+                          <p className="text-lg font-semibold">{image.caption || image.alt}</p>
                         </div>
                       </div>
                     ))}
