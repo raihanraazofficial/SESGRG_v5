@@ -709,8 +709,8 @@ const UserManagement = () => {
 
       {/* Edit User Modal - Full Screen Responsive */}
       {isEditModalOpen && editingUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center overflow-y-auto">
-          <div className="w-full max-w-6xl bg-white rounded-lg shadow-2xl m-4 max-h-[95vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center overflow-y-auto p-4">
+          <div className="w-full max-w-5xl bg-white rounded-lg shadow-2xl max-h-[95vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 rounded-t-lg">
               <h2 className="text-2xl font-bold text-gray-900">Edit User</h2>
             </div>
