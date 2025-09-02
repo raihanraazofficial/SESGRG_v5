@@ -195,12 +195,29 @@ const UserManagement = () => {
     }
   };
 
+  // Show loading state
+  if (authLoading || componentLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+            <p className="text-gray-600 mt-2">Loading users...</p>
+          </div>
+        </div>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-2">Manage admin and moderator accounts</p>
+          <p className="text-gray-600 mt-2">Manage admin and moderator accounts ({filteredUsers.length} users)</p>
         </div>
         <Button 
           onClick={openAddModal}
