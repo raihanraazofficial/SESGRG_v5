@@ -373,6 +373,11 @@ const ContentManagement = () => {
       return <ContactManagement />;
     }
 
+    // Special handling for data migration
+    if (activeTab === 'migration') {
+      return <DataMigration />;
+    }
+
     if (filteredData.length === 0) {
       return (
         <div className="text-center py-8 lg:py-16">
