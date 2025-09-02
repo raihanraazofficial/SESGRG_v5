@@ -165,13 +165,18 @@ const HomeManagement = () => {
     setIsObjectiveModalOpen(true);
   };
 
-  const handleDeleteObjective = (index) => {
+  const handleDeleteObjective = async (index) => {
     if (confirm('Are you sure you want to delete this objective?')) {
-      const result = deleteObjective(index);
-      if (result.success) {
-        alert('Objective deleted successfully!');
-      } else {
-        alert(result.error || 'Failed to delete objective');
+      try {
+        const result = await deleteObjective(index);
+        if (result.success) {
+          alert('Objective deleted successfully!');
+        } else {
+          alert(result.error || 'Failed to delete objective');
+        }
+      } catch (error) {
+        console.error('Error deleting objective:', error);
+        alert('Failed to delete objective');
       }
     }
   };
