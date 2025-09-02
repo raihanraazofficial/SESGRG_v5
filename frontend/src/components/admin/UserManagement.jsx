@@ -257,7 +257,27 @@ const UserManagement = () => {
 
       {/* Users Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredUsers.map((user) => (
+        {filteredUsers.length === 0 ? (
+          <div className="col-span-full">
+            <Card className="text-center py-12">
+              <CardContent>
+                <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No users found</h3>
+                <p className="text-gray-600 mb-4">
+                  {searchTerm || selectedRole !== 'all' 
+                    ? 'No users match your current filters' 
+                    : 'Get started by creating your first user'
+                  }
+                </p>
+                <Button onClick={openAddModal} className="bg-emerald-600 hover:bg-emerald-700">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Add New User
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          filteredUsers.map((user) => (
           <Card key={user.id} className="hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-start justify-between mb-4">
