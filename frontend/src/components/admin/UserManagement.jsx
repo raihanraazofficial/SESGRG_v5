@@ -346,7 +346,7 @@ const UserManagement = () => {
                     >
                       <Edit3 className="h-3 w-3" />
                     </Button>
-                    {user.role !== USER_ROLES.ADMIN && (
+                    {!user.isSystemAdmin && user.role !== USER_ROLES.ADVISOR && (
                       <Button
                         size="sm"
                         variant="outline"
