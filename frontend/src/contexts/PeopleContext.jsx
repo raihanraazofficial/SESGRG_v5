@@ -31,15 +31,42 @@ export const PeopleProvider = ({ children }) => {
     "Cybersecurity and AI for Power Infrastructure"
   ];
 
-  // Save data to localStorage whenever peopleData changes
+  // Load data from Firebase on initialization
   useEffect(() => {
-    try {
-      localStorage.setItem('sesgrg_people_data', JSON.stringify(peopleData));
-      console.log('💾 Saved people data to localStorage');
-    } catch (error) {
-      console.error('Error saving data to localStorage:', error);
-    }
-  }, [peopleData]);
+    const loadPeopleData = async () => {
+      if (initialized) return;
+      
+      try {
+        setLoading(true);
+        console.log('🔄 Loading people data from Firebase...');
+        
+        const firebasePeople = await firebaseService.getPeople();
+        
+        // Group people by category
+        const groupedData = {
+          advisors: firebasePeople.filter(person => person.category === 'advisors'),
+          teamMembers: firebasePeople.filter(person => person.category === 'teamMembers'),
+          collaborators: firebasePeople.filter(person => person.category === 'collaborators')
+        };
+        
+        setPeopleData(groupedData);
+        console.log('✅ People data loaded from Firebase:', {
+          advisors: groupedData.advisors.length,
+          teamMembers: groupedData.teamMembers.length,
+          collaborators: groupedData.collaborators.length
+        });
+        
+      } catch (error) {
+        console.error('❌ Error loading people data from Firebase:', error);
+        // Keep default empty structure if Firebase fails
+      } finally {
+        setLoading(false);
+        setInitialized(true);
+      }
+    };
+
+    loadPeopleData();
+  }, [initialized]);
 
   // Get people by research area (for ResearchAreas.jsx)
   const getPeopleByResearchArea = (areaId) => {
