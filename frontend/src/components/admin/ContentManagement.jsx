@@ -173,10 +173,23 @@ const ContentManagement = () => {
     try {
       setIsDeleting(true);
       
+      console.log('🔍 Delete operation started:', {
+        deletingItem,
+        editingCategory,
+        itemId: deletingItem?.id
+      });
+      
       // Validate required data before delete
       if (!deletingItem || !deletingItem.id || !editingCategory) {
+        console.error('❌ Missing required data:', {
+          deletingItem: !!deletingItem,
+          itemId: deletingItem?.id,
+          editingCategory
+        });
         throw new Error('Missing required data for deletion');
       }
+      
+      console.log('✅ Validation passed, proceeding with delete...');
       
       if (editingCategory === 'people') {
         // Validate people-specific data
@@ -193,25 +206,39 @@ const ContentManagement = () => {
         if (!storageCategory) {
           throw new Error(`Invalid person category: ${deletingItem.category}`);
         }
+        console.log('🔍 Deleting person:', { storageCategory, id: deletingItem.id });
         deletePerson(storageCategory, deletingItem.id);
       } else if (editingCategory === 'publications') {
+        console.log('🔍 Deleting publication:', { id: deletingItem.id });
         deletePublication(deletingItem.id);
       } else if (editingCategory === 'projects') {
+        console.log('🔍 Deleting project:', { id: deletingItem.id });
         deleteProject(deletingItem.id);
       } else if (editingCategory === 'achievements') {
+        console.log('🔍 Deleting achievement:', { id: deletingItem.id });
         deleteAchievement(deletingItem.id);
       } else if (editingCategory === 'news-events') {
+        console.log('🔍 Deleting news event:', { id: deletingItem.id });
         deleteNewsEvent(deletingItem.id);
       } else if (editingCategory === 'gallery') {
+        console.log('🔍 Deleting gallery item:', { id: deletingItem.id });
         await deleteGalleryItem(deletingItem.id);
       }
+      
+      console.log('✅ Delete operation completed successfully');
       
       setIsDeleteModalOpen(false);
       setDeletingItem(null);
       setEditingCategory(null);
       alert('Item deleted successfully!');
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error('❌ Error deleting item:', error);
+      console.error('❌ Error stack:', error.stack);
+      console.error('❌ Delete context:', {
+        deletingItem,
+        editingCategory,
+        itemId: deletingItem?.id
+      });
       alert(`Error deleting item: ${error.message}. Please try again.`);
     } finally {
       setIsDeleting(false);
