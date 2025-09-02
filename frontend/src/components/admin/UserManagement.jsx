@@ -17,6 +17,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePeople } from '../../contexts/PeopleContext';
 
 const UserManagement = () => {
   const { users, createUser, updateUser, deleteUser, USER_ROLES, PERMISSIONS, isLoading: authLoading } = useAuth();
