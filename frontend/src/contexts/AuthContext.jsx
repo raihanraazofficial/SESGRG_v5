@@ -62,11 +62,16 @@ const DEFAULT_PERMISSIONS = {
   [USER_ROLES.VIEWER]: []
 };
 
-// Default admin user
-const DEFAULT_ADMIN = {
-  id: 'admin-001',
+// Default admin user credentials
+const DEFAULT_ADMIN_CREDENTIALS = {
   username: 'admin',
   password: '@dminsesg405',
+  email: 'admin@sesg.bracu.ac.bd'
+};
+
+// Default admin user data for Firebase
+const DEFAULT_ADMIN = {
+  username: 'admin',
   email: 'admin@sesg.bracu.ac.bd',
   role: USER_ROLES.ADMIN,
   permissions: DEFAULT_PERMISSIONS[USER_ROLES.ADMIN],
