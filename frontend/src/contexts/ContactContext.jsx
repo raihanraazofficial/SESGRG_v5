@@ -91,7 +91,7 @@ const DEFAULT_CONTACT_DATA = {
 export const ContactProvider = ({ children }) => {
   const [contactData, setContactData] = useState(DEFAULT_CONTACT_DATA);
   const [inquiries, setInquiries] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start with false since we have default data
   const [initialized, setInitialized] = useState(false);
 
   // Load data from Firebase on initialization
