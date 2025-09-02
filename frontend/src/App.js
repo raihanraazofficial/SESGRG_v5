@@ -29,6 +29,7 @@ import { ContactProvider } from "./contexts/ContactContext";
 import { GalleryProvider } from "./contexts/GalleryContext";
 import { HomeProvider } from "./contexts/HomeContext";
 import { ResearchAreasProvider } from "./contexts/ResearchAreasContext";
+import { FooterProvider } from "./contexts/FooterContext";
 
 // Import admin components
 import AdminLogin from "./pages/AdminLogin";
