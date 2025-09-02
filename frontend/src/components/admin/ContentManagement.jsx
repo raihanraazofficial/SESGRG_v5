@@ -183,7 +183,17 @@ const ContentManagement = () => {
         if (!deletingItem.category) {
           throw new Error('Person category is required for deletion');
         }
-        deletePerson(deletingItem.category, deletingItem.id);
+        // Map display category to storage category
+        const categoryMap = {
+          'Advisor': 'advisors',
+          'Team Member': 'teamMembers', 
+          'Collaborator': 'collaborators'
+        };
+        const storageCategory = categoryMap[deletingItem.category];
+        if (!storageCategory) {
+          throw new Error(`Invalid person category: ${deletingItem.category}`);
+        }
+        deletePerson(storageCategory, deletingItem.id);
       } else if (editingCategory === 'publications') {
         await deletePublication(deletingItem.id);
       } else if (editingCategory === 'projects') {
