@@ -902,9 +902,12 @@ const NewsEvents = () => {
             )}
 
             {/* Rest of News & Events - Regular Grid */}
-            {newsEvents.length > 1 && (
+            {(featuredNewsEvents.length > 0 ? newsEvents.length >= 1 : newsEvents.length > 1) && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {newsEvents.slice(1).map((item) => (
+                {(featuredNewsEvents.length > 0 
+                  ? newsEvents.filter(item => !item.featured) // Show non-featured items if featured exists
+                  : newsEvents.slice(1) // Show all except first one if no featured
+                ).map((item) => (
                   <Card key={item.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     {/* Image */}
                     {item.image && (
@@ -919,6 +922,13 @@ const NewsEvents = () => {
                             {item.category}
                           </span>
                         </div>
+                        {item.featured && (
+                          <div className="absolute top-4 right-4">
+                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                              Featured
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                     
