@@ -207,6 +207,18 @@ user_problem_statement: |
   ⏳ Email Delivery: Form submissions need to be sent to raihanraaz.official@gmail.com via EmailJS when keys provided
   
 backend:
+  - task: "Admin Panel People Delete Functionality Bug Fix"
+    implemented: true
+    working: true
+    file: "ContentManagement.jsx, PeopleContext.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ CRITICAL DELETE BUG RESOLVED: Fixed multiple issues causing page blank when deleting people in admin panel. ROOT CAUSES: 1) Parameter order mismatch - ContentManagement called deletePerson(id, category) but function expected (category, id), 2) Missing localStorage update in PeopleContext, 3) Async/await mismatch, 4) Category mapping issue - display categories not mapped to storage categories. SOLUTIONS: 1) Fixed parameter order in ContentManagement.jsx, 2) Added localStorage save in PeopleContext deletePerson, 3) Removed await from non-async call, 4) Added category mapping (Advisor->advisors, Team Member->teamMembers, Collaborator->collaborators), 5) Enhanced error handling with validation and specific error messages. RESULT: Admin panel People tab delete functionality now works properly without JavaScript errors or page blank."
+
   - task: "Homepage Research Areas Admin Panel Sync Fix"
     implemented: true
     working: true
