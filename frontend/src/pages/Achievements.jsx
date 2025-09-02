@@ -371,9 +371,12 @@ const Achievements = () => {
             )}
 
             {/* Rest of Achievements - Regular Grid */}
-            {achievements.length > 1 && (
+            {(featuredAchievements.length > 0 ? achievements.length >= 1 : achievements.length > 1) && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {achievements.slice(1).map((achievement) => (
+                {(featuredAchievements.length > 0 
+                  ? achievements.filter(a => !a.featured) // Show non-featured items if featured exists
+                  : achievements.slice(1) // Show all except first one if no featured
+                ).map((achievement) => (
                   <Card key={achievement.id} className="hover:shadow-xl transition-all duration-300 overflow-hidden group performance-optimized">
                     {/* Achievement Image */}
                     {achievement.image && (
