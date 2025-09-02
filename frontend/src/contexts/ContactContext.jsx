@@ -89,7 +89,7 @@ const DEFAULT_CONTACT_DATA = {
 };
 
 export const ContactProvider = ({ children }) => {
-  const [contactData, setContactData] = useState(null);
+  const [contactData, setContactData] = useState(DEFAULT_CONTACT_DATA);
   const [inquiries, setInquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
