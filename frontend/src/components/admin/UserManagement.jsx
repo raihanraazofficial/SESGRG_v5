@@ -43,7 +43,9 @@ const UserManagement = () => {
 
   // Use effect to handle loading state
   React.useEffect(() => {
+    console.log('👥 UserManagement useEffect - authLoading:', authLoading, 'users:', users);
     if (!authLoading && users !== undefined) {
+      console.log('👥 UserManagement - Setting component loading to false');
       setComponentLoading(false);
     }
   }, [authLoading, users]);
