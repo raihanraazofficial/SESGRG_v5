@@ -231,23 +231,33 @@ export const AuthProvider = ({ children }) => {
   // Create new user (admin only) with Firebase
   const createUser = async (userData) => {
     if (!isAdmin()) {
-      throw new Error('Only admins can create users');
+      return { success: false, error: 'Only admins can create users' };
     }
 
     try {
-      const newUser = await firebaseService.addUser({
+      console.log('🔄 Creating new user:', userData.username);
+      
+      // Create user in Firestore
+      const newUser = {
         ...userData,
+        id: userData.username + '_' + Date.now(), // Generate unique ID
         isActive: true,
-        lastLogin: null
-      });
+        createdAt: new Date().toISOString(),
+        lastLogin: null,
+        permissions: userData.permissions || DEFAULT_PERMISSIONS[userData.role] || []
+      };
 
-      const updatedUsers = [...users, newUser];
+      const createdUser = await firebaseService.addUser(newUser);
+      console.log('✅ User created in Firebase:', createdUser);
+
+      // Update local users state
+      const updatedUsers = [...users, createdUser];
       setUsers(updatedUsers);
       
-      return { success: true, user: newUser };
+      return { success: true, user: createdUser };
     } catch (error) {
-      console.error('Error creating user:', error);
-      return { success: false, error: 'Failed to create user' };
+      console.error('❌ Error creating user:', error);
+      return { success: false, error: error.message || 'Failed to create user' };
     }
   };
 
