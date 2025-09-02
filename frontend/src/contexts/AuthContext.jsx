@@ -267,13 +267,84 @@ export const AuthProvider = ({ children }) => {
   // Logout function with Firebase
   const logout = async () => {
     try {
+      // Clear session timers
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current);
+      }
+      if (activityCheckIntervalRef.current) {
+        clearInterval(activityCheckIntervalRef.current);
+      }
+      
       await signOut(auth);
       setUser(null);
       setIsAuthenticated(false);
+      setLastActivity(0);
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
+
+  // Update last activity
+  const updateActivity = () => {
+    const now = Date.now();
+    setLastActivity(now);
+    
+    // Reset inactivity timeout
+    if (activityTimeoutRef.current) {
+      clearTimeout(activityTimeoutRef.current);
+    }
+    
+    if (isAuthenticated) {
+      activityTimeoutRef.current = setTimeout(() => {
+        console.log('🕐 Session timeout due to inactivity');
+        logout();
+      }, SESSION_TIMEOUT);
+    }
+  };
+
+  // Start session monitoring
+  const startSessionMonitoring = () => {
+    // Update activity immediately
+    updateActivity();
+    
+    // Set up activity check interval
+    activityCheckIntervalRef.current = setInterval(() => {
+      const timeSinceLastActivity = Date.now() - lastActivity;
+      if (timeSinceLastActivity >= SESSION_TIMEOUT && isAuthenticated) {
+        console.log('🕐 Auto logout due to inactivity');
+        logout();
+      }
+    }, ACTIVITY_CHECK_INTERVAL);
+    
+    // Add event listeners for user activity
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    events.forEach(event => {
+      document.addEventListener(event, updateActivity, true);
+    });
+    
+    return () => {
+      // Cleanup
+      events.forEach(event => {
+        document.removeEventListener(event, updateActivity, true);
+      });
+    };
+  };
+
+  // Session monitoring effect
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const cleanup = startSessionMonitoring();
+      return cleanup;
+    } else {
+      // Clear timers when not authenticated
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current);
+      }
+      if (activityCheckIntervalRef.current) {
+        clearInterval(activityCheckIntervalRef.current);
+      }
+    }
+  }, [isAuthenticated, user]);
 
   // Check if user has specific permission
   const hasPermission = (permission) => {
