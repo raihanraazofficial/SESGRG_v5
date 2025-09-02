@@ -894,7 +894,7 @@ const ContactManagement = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <MapPin className="h-5 w-5" />
-            Directions Management
+            Getting to BRAC University - Directions Management
           </CardTitle>
           <Button
             onClick={isEditingDirections ? handleSaveDirections : handleEditDirections}
@@ -904,44 +904,146 @@ const ContactManagement = () => {
             {isEditingDirections ? 'Save Changes' : 'Edit Directions'}
           </Button>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {!isEditingDirections ? (
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Public Transportation Section */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Title</h4>
-                <p className="text-gray-600">{directions.title}</p>
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                  </svg>
+                  {directions.publicTransportation.title}
+                </h4>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <ul className="space-y-2">
+                    {directions.publicTransportation.items.map((item, index) => (
+                      <li key={index} className="flex items-start gap-2 text-gray-700">
+                        <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
+
+              {/* By Car Section */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Content</h4>
-                <p className="text-gray-600 whitespace-pre-line">{directions.content}</p>
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                  </svg>
+                  {directions.byCar.title}
+                </h4>
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <ul className="space-y-2">
+                    {directions.byCar.items.map((item, index) => (
+                      <li key={index} className="flex items-start gap-2 text-gray-700">
+                        <span className="inline-block w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                <input
-                  type="text"
-                  value={editingDirections?.title || ''}
-                  onChange={(e) => setEditingDirections({
-                    ...editingDirections,
-                    title: e.target.value
-                  })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
-                />
+            <div className="space-y-6">
+              {/* Edit Public Transportation Section */}
+              <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Public Transportation Title
+                  </label>
+                  <input
+                    type="text"
+                    value={editingDirections?.publicTransportation?.title || ''}
+                    onChange={(e) => setEditingDirections({
+                      ...editingDirections,
+                      publicTransportation: {
+                        ...editingDirections.publicTransportation,
+                        title: e.target.value
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 bg-white"
+                    placeholder="e.g., Public Transportation"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Transportation Options (one per line)
+                  </label>
+                  <textarea
+                    value={editingDirections?.publicTransportation?.items?.join('\n') || ''}
+                    onChange={(e) => setEditingDirections({
+                      ...editingDirections,
+                      publicTransportation: {
+                        ...editingDirections.publicTransportation,
+                        items: e.target.value.split('\n').filter(item => item.trim() !== '')
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 bg-white"
+                    rows={4}
+                    placeholder="Take bus from Gulshan, Banani, or Mohakhali areas&#10;CNG auto-rickshaw available from nearby locations&#10;Uber and Pathao ride-sharing services available"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Enter each transportation option on a separate line</p>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Directions Content</label>
-                <textarea
-                  value={editingDirections?.content || ''}
-                  onChange={(e) => setEditingDirections({
-                    ...editingDirections,
-                    content: e.target.value
-                  })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500"
-                  rows={6}
-                  placeholder="Enter detailed directions..."
-                />
+
+              {/* Edit By Car Section */}
+              <div className="border border-green-200 rounded-lg p-4 bg-green-50">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    By Car Title
+                  </label>
+                  <input
+                    type="text"
+                    value={editingDirections?.byCar?.title || ''}
+                    onChange={(e) => setEditingDirections({
+                      ...editingDirections,
+                      byCar: {
+                        ...editingDirections.byCar,
+                        title: e.target.value
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 bg-white"
+                    placeholder="e.g., By Car"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Car Directions (one per line)
+                  </label>
+                  <textarea
+                    value={editingDirections?.byCar?.items?.join('\n') || ''}
+                    onChange={(e) => setEditingDirections({
+                      ...editingDirections,
+                      byCar: {
+                        ...editingDirections.byCar,
+                        items: e.target.value.split('\n').filter(item => item.trim() !== '')
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 bg-white"
+                    rows={4}
+                    placeholder="Located on Mohakhali Road, easily accessible&#10;Parking facilities available on campus&#10;Approximately 15 minutes from Gulshan Circle"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Enter each direction point on a separate line</p>
+                </div>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <svg className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div>
+                    <h5 className="font-medium text-yellow-800 mb-1">Editing Instructions</h5>
+                    <p className="text-sm text-yellow-700">
+                      Each line you enter will appear as a separate bullet point on the contact page. 
+                      Make sure to provide clear, actionable directions for visitors to reach BRAC University.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
