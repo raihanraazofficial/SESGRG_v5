@@ -129,6 +129,11 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  
+  // Session management
+  const [lastActivity, setLastActivity] = useState(Date.now());
+  const activityTimeoutRef = useRef(null);
+  const activityCheckIntervalRef = useRef(null);
 
   // Initialize authentication state with Firebase
   useEffect(() => {
