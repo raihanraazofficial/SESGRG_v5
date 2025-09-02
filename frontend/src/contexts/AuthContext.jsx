@@ -236,6 +236,17 @@ export const AuthProvider = ({ children }) => {
           // Try to sign in with Firebase Authentication
           await signInWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, password);
           console.log('✅ Successfully signed in with Firebase Auth');
+          
+          // Update last login time
+          const currentTime = new Date().toISOString();
+          const userData = await firebaseService.getUserByUsername(username);
+          if (userData) {
+            await firebaseService.updateUser(userData.id, { 
+              lastLogin: currentTime,
+              lastActivity: currentTime 
+            });
+          }
+          
           return { success: true };
         } catch (authError) {
           console.log('🔄 Firebase Auth user not found, creating new user...');
