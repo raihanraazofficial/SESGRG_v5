@@ -21,6 +21,7 @@ import { usePeople } from '../../contexts/PeopleContext';
 
 const UserManagement = () => {
   const { users, createUser, updateUser, deleteUser, USER_ROLES, PERMISSIONS, isLoading: authLoading } = useAuth();
+  const { addPerson, deletePerson } = usePeople();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [componentLoading, setComponentLoading] = useState(true);
