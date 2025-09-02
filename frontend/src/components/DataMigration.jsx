@@ -109,28 +109,37 @@ const DataMigration = () => {
       
       keys.forEach(key => {
         const data = localStorage.getItem(key);
-        if (data) {
+        if (data && data !== 'null' && data !== '[]' && data !== '{}') {
           dataFound = true;
           try {
             const parsed = JSON.parse(data);
-            const info = Array.isArray(parsed) ? `${parsed.length} items` : 'Object data';
-            console.log(`${key}:`, info);
-            dataReport.push(`${key}: ${info}`);
+            let info = 'Unknown data';
+            if (Array.isArray(parsed)) {
+              info = `${parsed.length} items`;
+            } else if (typeof parsed === 'object' && parsed !== null) {
+              const itemCount = Object.keys(parsed).length;
+              info = `Object with ${itemCount} properties`;
+            } else {
+              info = 'Scalar data';
+            }
+            console.log(`✅ ${key}:`, info, parsed);
+            dataReport.push(`✅ ${key}: ${info}`);
           } catch (e) {
-            console.log(`${key}:`, 'String data');
-            dataReport.push(`${key}: String data`);
+            console.log(`✅ ${key}:`, 'String data:', data);
+            dataReport.push(`✅ ${key}: String data`);
+            dataFound = true;
           }
         } else {
-          console.log(`${key}:`, 'No data');
-          dataReport.push(`${key}: No data`);
+          console.log(`❌ ${key}:`, 'No data');
+          dataReport.push(`❌ ${key}: No data`);
         }
       });
       
       // Show summary alert
       if (dataFound) {
-        alert(`✅ LocalStorage data found!\n\n${dataReport.join('\n')}`);
+        alert(`✅ LocalStorage data found!\n\n${dataReport.join('\n')}\n\nCheck browser console for detailed data.`);
       } else {
-        alert('❌ No localStorage data found. All keys are empty.');
+        alert('❌ No localStorage data found. All keys are empty.\n\nThis might mean:\n1. Data has already been migrated\n2. Website is using Firebase directly\n3. No data has been created yet\n\nTry "Test Firebase Connection" to check current data status.');
       }
       
     } catch (error) {
