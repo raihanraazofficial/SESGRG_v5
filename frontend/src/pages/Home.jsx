@@ -54,13 +54,19 @@ const LatestNewsSection = () => {
         sort_order: 'desc'
       });
       
+      // Get featured news
+      const featured = getFeaturedNewsEvents(1);
+      
       setLatestNews(result.news_events || []);
+      setFeaturedNews(featured || []);
       console.log('✅ Homepage: Latest news refreshed:', result.news_events?.length || 0, 'items');
+      console.log('✅ Homepage: Featured news refreshed:', featured?.length || 0, 'items');
       
     } catch (error) {
       console.error('❌ Homepage: Error loading latest news:', error);
       setError('Failed to load latest news. Please try refreshing the page.');
       setLatestNews([]);
+      setFeaturedNews([]);
     } finally {
       setRefreshing(false);
     }
