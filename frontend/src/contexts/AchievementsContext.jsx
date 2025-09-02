@@ -114,23 +114,35 @@ export const AchievementsProvider = ({ children }) => {
   // Delete achievement
   const deleteAchievement = (id) => {
     try {
-      console.log('🔍 AchievementsContext: Deleting achievement with ID:', id);
+      console.log('🔍 AchievementsContext: Deleting achievement with ID:', id, 'Type:', typeof id);
       console.log('🔍 Current achievements data:', achievementsData);
       
-      if (!id) {
+      if (!id && id !== 0) {
         throw new Error('Achievement ID is required for deletion');
       }
       
-      const existingAchievement = achievementsData.find(achievement => achievement.id === id);
+      // Convert id to string for consistent comparison (localStorage often stores IDs as strings)
+      const idStr = String(id);
+      const idNum = Number(id);
+      
+      console.log('🔍 Searching for achievement with ID (string):', idStr, 'or (number):', idNum);
+      
+      const existingAchievement = achievementsData.find(achievement => 
+        String(achievement.id) === idStr || achievement.id === idNum
+      );
+      
       if (!existingAchievement) {
+        console.log('❌ Achievement not found. Available IDs:', achievementsData.map(a => ({ id: a.id, type: typeof a.id })));
         throw new Error(`Achievement with ID ${id} not found`);
       }
       
       console.log('🔍 Found achievement to delete:', existingAchievement);
       
       setAchievementsData(prev => {
-        const filtered = prev.filter(achievement => achievement.id !== id);
-        console.log('✅ Achievement deleted. New data length:', filtered.length);
+        const filtered = prev.filter(achievement => 
+          String(achievement.id) !== idStr && achievement.id !== idNum
+        );
+        console.log('✅ Achievement deleted. Old length:', prev.length, 'New length:', filtered.length);
         return filtered;
       });
       
