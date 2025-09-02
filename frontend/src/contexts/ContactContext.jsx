@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import firebaseService from '../services/firebaseService';
 
 const ContactContext = createContext();
 
@@ -11,7 +12,7 @@ export const useContact = () => {
 };
 
 // Default contact information
-const DEFAULT_CONTACT_INFO = {
+const DEFAULT_CONTACT_DATA = {
   address: {
     title: "Lab Address",
     content: "Sustainable Energy and Smart Grid Research\nDepartment of Electrical and Electronic Engineering\nBRAC University\n66 Mohakhali, Dhaka 1212, Bangladesh"
@@ -27,301 +28,328 @@ const DEFAULT_CONTACT_INFO = {
   officeHours: {
     title: "Office Hours",
     schedule: "Sunday - Thursday: 9:00 AM - 5:00 PM\nFriday: 9:00 AM - 12:00 PM\nSaturday: Closed"
-  }
-};
-
-// Default inquiry types
-const DEFAULT_INQUIRY_TYPES = [
-  { id: 1, label: "Research Collaboration", value: "research_collaboration" },
-  { id: 2, label: "Student Opportunities", value: "student_opportunities" },
-  { id: 3, label: "Industry Partnership", value: "industry_partnership" },
-  { id: 4, label: "Academic Inquiry", value: "academic_inquiry" },
-  { id: 5, label: "General Information", value: "general_info" },
-  { id: 6, label: "Technical Support", value: "technical_support" }
-];
-
-// Default cards information
-const DEFAULT_CARDS = [
-  {
-    id: 1,
-    title: "Research Collaboration",
-    content: "Interested in collaborative research? We welcome partnerships with academic institutions and industry leaders.",
-    icon: "collaboration"
   },
-  {
-    id: 2,
-    title: "Student Opportunities", 
-    content: "Looking for research opportunities? We offer positions for undergraduate and graduate students.",
-    icon: "education"
+  inquiryTypes: [
+    { id: 1, label: "Research Collaboration", value: "research_collaboration" },
+    { id: 2, label: "Student Opportunities", value: "student_opportunities" },
+    { id: 3, label: "Industry Partnership", value: "industry_partnership" },
+    { id: 4, label: "Academic Inquiry", value: "academic_inquiry" },
+    { id: 5, label: "General Information", value: "general_info" },
+    { id: 6, label: "Technical Support", value: "technical_support" }
+  ],
+  cards: [
+    {
+      id: 1,
+      title: "Research Collaboration",
+      content: "Interested in collaborative research? We welcome partnerships with academic institutions and industry leaders.",
+      icon: "collaboration"
+    },
+    {
+      id: 2,
+      title: "Student Opportunities", 
+      content: "Looking for research opportunities? We offer positions for undergraduate and graduate students.",
+      icon: "education"
+    },
+    {
+      id: 3,
+      title: "Industry Partnerships",
+      content: "Connect with our lab for technology transfer, consultancy, and industrial research projects.",
+      icon: "industry"
+    }
+  ],
+  directions: {
+    publicTransportation: {
+      title: "Public Transportation",
+      items: [
+        "Take bus from Gulshan, Banani, or Mohakhali areas",
+        "CNG auto-rickshaw available from nearby locations", 
+        "Uber and Pathao ride-sharing services available"
+      ]
+    },
+    byCar: {
+      title: "By Car",
+      items: [
+        "Located on Mohakhali Road, easily accessible",
+        "Parking facilities available on campus",
+        "Approximately 15 minutes from Gulshan Circle"
+      ]
+    }
   },
-  {
-    id: 3,
-    title: "Industry Partnerships",
-    content: "Connect with our lab for technology transfer, consultancy, and industrial research projects.",
-    icon: "industry"
-  }
-];
-
-// Default directions information
-const DEFAULT_DIRECTIONS = {
-  publicTransportation: {
-    title: "Public Transportation",
-    items: [
-      "Take bus from Gulshan, Banani, or Mohakhali areas",
-      "CNG auto-rickshaw available from nearby locations", 
-      "Uber and Pathao ride-sharing services available"
-    ]
+  mapConfig: {
+    embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.923235053417!2d90.42224541501535!3d23.77321088458117!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7715a40c603%3A0xec01cd75f33139f5!2sBRAC%20University!5e0!3m2!1sen!2sbd!4v1693140400000",
+    title: "BRAC University Location"
   },
-  byCar: {
-    title: "By Car",
-    items: [
-      "Located on Mohakhali Road, easily accessible",
-      "Parking facilities available on campus",
-      "Approximately 15 minutes from Gulshan Circle"
-    ]
+  emailjsConfig: {
+    serviceId: "service_t24jk5y",
+    templateId: "template_4463jfm", 
+    publicKey: "SO-7N8WkgVst2B5lq",
+    toEmail: "raihanraaz.official@gmail.com",
+    enabled: true
   }
-};
-
-const DEFAULT_MAP_CONFIG = {
-  embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.923235053417!2d90.42224541501535!3d23.77321088458117!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7715a40c603%3A0xec01cd75f33139f5!2sBRAC%20University!5e0!3m2!1sen!2sbd!4v1693140400000",
-  title: "BRAC University Location"
-};
-
-// Default EmailJS configuration
-const DEFAULT_EMAILJS_CONFIG = {
-  serviceId: "service_t24jk5y",
-  templateId: "template_4463jfm", 
-  publicKey: "SO-7N8WkgVst2B5lq",
-  toEmail: "raihanraaz.official@gmail.com",
-  enabled: true
 };
 
 export const ContactProvider = ({ children }) => {
-  const [contactInfo, setContactInfo] = useState(DEFAULT_CONTACT_INFO);
-  const [inquiryTypes, setInquiryTypes] = useState(DEFAULT_INQUIRY_TYPES);
-  const [cards, setCards] = useState(DEFAULT_CARDS);
-  const [directions, setDirections] = useState(DEFAULT_DIRECTIONS);
-  const [mapConfig, setMapConfig] = useState(DEFAULT_MAP_CONFIG);
-  const [emailjsConfig, setEmailjsConfig] = useState(DEFAULT_EMAILJS_CONFIG);
+  const [contactData, setContactData] = useState(null);
   const [inquiries, setInquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
-  // Initialize data from localStorage
+  // Load data from Firebase on initialization
   useEffect(() => {
-    initializeContactData();
-  }, []);
-
-  const initializeContactData = () => {
-    try {
-      // Load contact info
-      const storedContactInfo = localStorage.getItem('sesg_contact_info');
-      if (storedContactInfo) {
-        setContactInfo(JSON.parse(storedContactInfo));
-      } else {
-        localStorage.setItem('sesg_contact_info', JSON.stringify(DEFAULT_CONTACT_INFO));
+    const loadContactData = async () => {
+      if (initialized) return;
+      
+      try {
+        setIsLoading(true);
+        console.log('🔄 Loading contact data from Firebase...');
+        
+        const firebaseContactData = await firebaseService.getContactData();
+        
+        if (firebaseContactData) {
+          setContactData(firebaseContactData);
+          console.log('✅ Contact data loaded from Firebase');
+        } else {
+          // Initialize with default data if no data in Firebase
+          console.log('📋 No contact data in Firebase, initializing with defaults...');
+          await firebaseService.updateContactData(DEFAULT_CONTACT_DATA);
+          setContactData(DEFAULT_CONTACT_DATA);
+          console.log('✅ Default contact data initialized in Firebase');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error loading contact data from Firebase:', error);
+        // Fallback to default data
+        setContactData(DEFAULT_CONTACT_DATA);
+      } finally {
+        setIsLoading(false);
+        setInitialized(true);
       }
+    };
 
-      // Load inquiry types
-      const storedInquiryTypes = localStorage.getItem('sesg_inquiry_types');
-      if (storedInquiryTypes) {
-        setInquiryTypes(JSON.parse(storedInquiryTypes));
-      } else {
-        localStorage.setItem('sesg_inquiry_types', JSON.stringify(DEFAULT_INQUIRY_TYPES));
-      }
-
-      // Load cards
-      const storedCards = localStorage.getItem('sesg_contact_cards');
-      if (storedCards) {
-        setCards(JSON.parse(storedCards));
-      } else {
-        localStorage.setItem('sesg_contact_cards', JSON.stringify(DEFAULT_CARDS));
-      }
-
-      // Load directions
-      const storedDirections = localStorage.getItem('sesg_contact_directions');
-      if (storedDirections) {
-        setDirections(JSON.parse(storedDirections));
-      } else {
-        localStorage.setItem('sesg_contact_directions', JSON.stringify(DEFAULT_DIRECTIONS));
-      }
-
-      // Load map config
-      const storedMapConfig = localStorage.getItem('sesg_map_config');
-      if (storedMapConfig) {
-        setMapConfig(JSON.parse(storedMapConfig));
-      } else {
-        localStorage.setItem('sesg_map_config', JSON.stringify(DEFAULT_MAP_CONFIG));
-      }
-
-      // Load EmailJS config
-      const storedEmailjsConfig = localStorage.getItem('sesg_emailjs_config');
-      if (storedEmailjsConfig) {
-        setEmailjsConfig(JSON.parse(storedEmailjsConfig));
-      } else {
-        localStorage.setItem('sesg_emailjs_config', JSON.stringify(DEFAULT_EMAILJS_CONFIG));
-      }
-
-      // Load inquiries
-      const storedInquiries = localStorage.getItem('sesg_contact_inquiries');
-      if (storedInquiries) {
-        setInquiries(JSON.parse(storedInquiries));
-      }
-
-    } catch (error) {
-      console.error('Error initializing contact data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    loadContactData();
+  }, [initialized]);
 
   // Contact Info Management
-  const updateContactInfo = (newContactInfo) => {
+  const updateContactInfo = async (newContactInfo) => {
     try {
-      setContactInfo(newContactInfo);
-      localStorage.setItem('sesg_contact_info', JSON.stringify(newContactInfo));
+      const updatedData = { ...contactData, ...newContactInfo };
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ Contact info updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating contact info:', error);
+      console.error('❌ Error updating contact info:', error);
       return { success: false, error: 'Failed to update contact information' };
     }
   };
 
   // Inquiry Types Management
-  const addInquiryType = (inquiryType) => {
+  const addInquiryType = async (inquiryType) => {
     try {
       const newInquiryType = {
         id: Date.now(),
         ...inquiryType
       };
-      const updatedTypes = [...inquiryTypes, newInquiryType];
-      setInquiryTypes(updatedTypes);
-      localStorage.setItem('sesg_inquiry_types', JSON.stringify(updatedTypes));
+      
+      const updatedData = {
+        ...contactData,
+        inquiryTypes: [...(contactData?.inquiryTypes || []), newInquiryType]
+      };
+      
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ Inquiry type added to Firebase');
       return { success: true, inquiryType: newInquiryType };
     } catch (error) {
-      console.error('Error adding inquiry type:', error);
+      console.error('❌ Error adding inquiry type:', error);
       return { success: false, error: 'Failed to add inquiry type' };
     }
   };
 
-  const updateInquiryType = (id, updatedData) => {
+  const updateInquiryType = async (id, updatedData) => {
     try {
-      const updatedTypes = inquiryTypes.map(type =>
+      const updatedInquiryTypes = contactData.inquiryTypes.map(type =>
         type.id === id ? { ...type, ...updatedData } : type
       );
-      setInquiryTypes(updatedTypes);
-      localStorage.setItem('sesg_inquiry_types', JSON.stringify(updatedTypes));
+      
+      const newContactData = {
+        ...contactData,
+        inquiryTypes: updatedInquiryTypes
+      };
+      
+      await firebaseService.updateContactData(newContactData);
+      setContactData(newContactData);
+      
+      console.log('✅ Inquiry type updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating inquiry type:', error);
+      console.error('❌ Error updating inquiry type:', error);
       return { success: false, error: 'Failed to update inquiry type' };
     }
   };
 
-  const deleteInquiryType = (id) => {
+  const deleteInquiryType = async (id) => {
     try {
-      const updatedTypes = inquiryTypes.filter(type => type.id !== id);
-      setInquiryTypes(updatedTypes);
-      localStorage.setItem('sesg_inquiry_types', JSON.stringify(updatedTypes));
+      const updatedInquiryTypes = contactData.inquiryTypes.filter(type => type.id !== id);
+      
+      const newContactData = {
+        ...contactData,
+        inquiryTypes: updatedInquiryTypes
+      };
+      
+      await firebaseService.updateContactData(newContactData);
+      setContactData(newContactData);
+      
+      console.log('✅ Inquiry type deleted from Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error deleting inquiry type:', error);
+      console.error('❌ Error deleting inquiry type:', error);
       return { success: false, error: 'Failed to delete inquiry type' };
     }
   };
 
   // Cards Management
-  const addCard = (cardData) => {
+  const addCard = async (cardData) => {
     try {
       const newCard = {
         id: Date.now(),
         ...cardData
       };
-      const updatedCards = [...cards, newCard];
-      setCards(updatedCards);
-      localStorage.setItem('sesg_contact_cards', JSON.stringify(updatedCards));
+      
+      const updatedData = {
+        ...contactData,
+        cards: [...(contactData?.cards || []), newCard]
+      };
+      
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ Card added to Firebase');
       return { success: true, card: newCard };
     } catch (error) {
-      console.error('Error adding card:', error);
+      console.error('❌ Error adding card:', error);
       return { success: false, error: 'Failed to add card' };
     }
   };
 
-  const updateCard = (id, updatedData) => {
+  const updateCard = async (id, updatedData) => {
     try {
-      const updatedCards = cards.map(card =>
+      const updatedCards = contactData.cards.map(card =>
         card.id === id ? { ...card, ...updatedData } : card
       );
-      setCards(updatedCards);
-      localStorage.setItem('sesg_contact_cards', JSON.stringify(updatedCards));
+      
+      const newContactData = {
+        ...contactData,
+        cards: updatedCards
+      };
+      
+      await firebaseService.updateContactData(newContactData);
+      setContactData(newContactData);
+      
+      console.log('✅ Card updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating card:', error);
+      console.error('❌ Error updating card:', error);
       return { success: false, error: 'Failed to update card' };
     }
   };
 
-  const deleteCard = (id) => {
+  const deleteCard = async (id) => {
     try {
-      const updatedCards = cards.filter(card => card.id !== id);
-      setCards(updatedCards);
-      localStorage.setItem('sesg_contact_cards', JSON.stringify(updatedCards));
+      const updatedCards = contactData.cards.filter(card => card.id !== id);
+      
+      const newContactData = {
+        ...contactData,
+        cards: updatedCards
+      };
+      
+      await firebaseService.updateContactData(newContactData);
+      setContactData(newContactData);
+      
+      console.log('✅ Card deleted from Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error deleting card:', error);
+      console.error('❌ Error deleting card:', error);
       return { success: false, error: 'Failed to delete card' };
     }
   };
 
   // Directions Management
-  const updateDirections = (newDirections) => {
+  const updateDirections = async (newDirections) => {
     try {
-      setDirections(newDirections);
-      localStorage.setItem('sesg_contact_directions', JSON.stringify(newDirections));
+      const updatedData = {
+        ...contactData,
+        directions: newDirections
+      };
+      
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ Directions updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating directions:', error);
+      console.error('❌ Error updating directions:', error);
       return { success: false, error: 'Failed to update directions' };
     }
   };
 
   // EmailJS Configuration Management
-  const updateEmailjsConfig = (newConfig) => {
+  const updateEmailjsConfig = async (newConfig) => {
     try {
-      setEmailjsConfig(newConfig);
-      localStorage.setItem('sesg_emailjs_config', JSON.stringify(newConfig));
+      const updatedData = {
+        ...contactData,
+        emailjsConfig: newConfig
+      };
+      
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ EmailJS config updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating EmailJS config:', error);
+      console.error('❌ Error updating EmailJS config:', error);
       return { success: false, error: 'Failed to update EmailJS configuration' };
     }
   };
-  const updateMapConfig = (newMapConfig) => {
+
+  const updateMapConfig = async (newMapConfig) => {
     try {
-      setMapConfig(newMapConfig);
-      localStorage.setItem('sesg_map_config', JSON.stringify(newMapConfig));
+      const updatedData = {
+        ...contactData,
+        mapConfig: newMapConfig
+      };
+      
+      await firebaseService.updateContactData(updatedData);
+      setContactData(updatedData);
+      
+      console.log('✅ Map config updated in Firebase');
       return { success: true };
     } catch (error) {
-      console.error('Error updating map config:', error);
+      console.error('❌ Error updating map config:', error);
       return { success: false, error: 'Failed to update map configuration' };
     }
   };
 
-  // Inquiry Submission Management
-  const submitInquiry = (inquiryData) => {
+  // Inquiry Submission Management (stored separately as collection)
+  const submitInquiry = async (inquiryData) => {
     try {
       const newInquiry = {
-        id: Date.now(),
         ...inquiryData,
         submittedAt: new Date().toISOString(),
         status: 'new'
       };
       
+      // For now, we'll store inquiries in a separate approach
+      // Could be implemented as a separate collection later
       const updatedInquiries = [newInquiry, ...inquiries];
       setInquiries(updatedInquiries);
-      localStorage.setItem('sesg_contact_inquiries', JSON.stringify(updatedInquiries));
+      
+      console.log('✅ Inquiry submitted');
       return { success: true, inquiry: newInquiry };
     } catch (error) {
-      console.error('Error submitting inquiry:', error);
+      console.error('❌ Error submitting inquiry:', error);
       return { success: false, error: 'Failed to submit inquiry' };
     }
   };
@@ -332,7 +360,6 @@ export const ContactProvider = ({ children }) => {
         inquiry.id === id ? { ...inquiry, status, updatedAt: new Date().toISOString() } : inquiry
       );
       setInquiries(updatedInquiries);
-      localStorage.setItem('sesg_contact_inquiries', JSON.stringify(updatedInquiries));
       return { success: true };
     } catch (error) {
       console.error('Error updating inquiry status:', error);
@@ -344,7 +371,6 @@ export const ContactProvider = ({ children }) => {
     try {
       const updatedInquiries = inquiries.filter(inquiry => inquiry.id !== id);
       setInquiries(updatedInquiries);
-      localStorage.setItem('sesg_contact_inquiries', JSON.stringify(updatedInquiries));
       return { success: true };
     } catch (error) {
       console.error('Error deleting inquiry:', error);
@@ -389,12 +415,12 @@ export const ContactProvider = ({ children }) => {
 
   const value = {
     // State
-    contactInfo,
-    inquiryTypes,
-    cards,
-    directions,
-    mapConfig,
-    emailjsConfig,
+    contactInfo: contactData,
+    inquiryTypes: contactData?.inquiryTypes || [],
+    cards: contactData?.cards || [],
+    directions: contactData?.directions || {},
+    mapConfig: contactData?.mapConfig || {},
+    emailjsConfig: contactData?.emailjsConfig || {},
     inquiries,
     isLoading,
 
