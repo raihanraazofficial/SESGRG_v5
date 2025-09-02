@@ -152,6 +152,12 @@ const ContentManagement = () => {
       label: 'Calendar',
       icon: Calendar,
       count: null // Calendar doesn't have count
+    },
+    {
+      id: 'migration',
+      label: 'Data Migration',
+      icon: Database,
+      count: null // Migration doesn't have count
     }
   ];
 
