@@ -508,6 +508,32 @@ const HomeManagement = () => {
         onSave={modalMode === 'add' ? addResearchArea : updateResearchArea}
         mode={modalMode}
       />
+
+      {/* Footer Modals */}
+      <FooterLabInfoModal
+        isOpen={isFooterLabInfoModalOpen}
+        onClose={() => setIsFooterLabInfoModalOpen(false)}
+      />
+
+      <FooterQuickLinksModal
+        isOpen={isFooterQuickLinksModalOpen}
+        onClose={() => setIsFooterQuickLinksModalOpen(false)}
+      />
+
+      <FooterContactModal
+        isOpen={isFooterContactModalOpen}
+        onClose={() => setIsFooterContactModalOpen(false)}
+      />
+
+      <FooterSocialModal
+        isOpen={isFooterSocialModalOpen}
+        onClose={() => setIsFooterSocialModalOpen(false)}
+      />
+
+      <FooterBottomBarModal
+        isOpen={isFooterBottomBarModalOpen}
+        onClose={() => setIsFooterBottomBarModalOpen(false)}
+      />
     </div>
   );
 };
