@@ -261,6 +261,7 @@ const RichTextEditor = ({ value, onChange, placeholder = "Write your content..."
           ) : (
             <Button
               key={index}
+              type="button"
               variant="ghost"
               size="sm"
               onClick={button.action}
