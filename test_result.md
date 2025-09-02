@@ -343,6 +343,18 @@ user_problem_statement: |
   ⏳ Email Delivery: Form submissions need to be sent to raihanraaz.official@gmail.com via EmailJS when keys provided
   
 backend:
+  - task: "User Management System Overhaul - Role System and Enhanced Features"
+    implemented: true
+    working: false
+    file: "AuthContext.jsx, UserManagement.jsx, firebaseService.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "🚀 COMPREHENSIVE USER MANAGEMENT SYSTEM OVERHAUL COMPLETED: 1) Updated role system from Admin/Moderator/Viewer to Admin/Advisor/Team Member/Collaborator with proper default permissions, 2) Added profile picture URL, first name, last name, position fields to user creation/editing, 3) Implemented system admin protection - cannot create new system admins or delete existing system admin, 4) Added advisor protection - only system admin can delete advisors, 5) Fixed )} display issue in user management page, 6) Enhanced user cards with profile pictures, full names, position display, 7) Implemented 1-hour session timeout with activity tracking, 8) Added proper last login time display with date/time format, 9) Created comprehensive permission system with role-based defaults (Advisor gets most permissions, Team Member moderate, Collaborator fewer), 10) Enhanced UI with role color coding and system admin badges. CRITICAL REQUIREMENT: User wants to keep only 1 main admin profile and delete 3 others from Firebase, plus verify all new functionality works correctly. NEEDS TESTING to verify Firebase user management, authentication, session timeout, and all CRUD operations work properly."
+
   - task: "Firebase Integration and Migration System Testing"
     implemented: true
     working: true
