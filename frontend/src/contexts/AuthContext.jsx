@@ -238,57 +238,69 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('🔄 Attempting login for:', username);
       
-      // Check if credentials match default admin
+      // Get user data from Firestore by username
+      const userData = await firebaseService.getUserByUsername(username);
+      if (!userData) {
+        console.log('❌ User not found in Firestore:', username);
+        return { success: false, error: 'Invalid username or password' };
+      }
+      
+      console.log('✅ User found in Firestore:', userData.username, 'Email:', userData.email);
+      
+      // Special handling for default admin credentials
       if (username === DEFAULT_ADMIN_CREDENTIALS.username && 
           password === DEFAULT_ADMIN_CREDENTIALS.password) {
         
         try {
-          // Try to sign in with Firebase Authentication
-          await signInWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, password);
-          console.log('✅ Successfully signed in with Firebase Auth');
-          
-          // Update last login time
-          const currentTime = new Date().toISOString();
-          const userData = await firebaseService.getUserByUsername(username);
-          if (userData) {
-            await firebaseService.updateUser(userData.id, { 
-              lastLogin: currentTime,
-              lastActivity: currentTime 
-            });
-          }
-          
+          // Try to sign in with Firebase Authentication using stored email
+          await signInWithEmailAndPassword(auth, userData.email, password);
+          console.log('✅ Default admin successfully signed in with Firebase Auth');
           return { success: true };
         } catch (authError) {
-          console.log('🔄 Firebase Auth user not found, creating new user...');
+          console.log('🔄 Default admin Firebase Auth user not found, creating...');
           
           // If user doesn't exist in Firebase Auth, create it
           if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
             try {
-              await createUserWithEmailAndPassword(auth, DEFAULT_ADMIN_CREDENTIALS.email, DEFAULT_ADMIN_CREDENTIALS.password);
-              console.log('✅ Admin user created in Firebase Authentication');
-              
-              // Update last login time for new user
-              const currentTime = new Date().toISOString();
-              const userData = await firebaseService.getUserByUsername(username);
-              if (userData) {
-                await firebaseService.updateUser(userData.id, { 
-                  lastLogin: currentTime,
-                  lastActivity: currentTime 
-                });
-              }
-              
+              await createUserWithEmailAndPassword(auth, userData.email, password);
+              console.log('✅ Default admin user created in Firebase Authentication');
               return { success: true };
             } catch (createError) {
-              console.error('❌ Error creating admin user in Firebase Auth:', createError);
+              console.error('❌ Error creating default admin user in Firebase Auth:', createError);
               return { success: false, error: 'Failed to create admin account: ' + createError.message };
             }
+          } else {
+            console.error('❌ Firebase Auth error for default admin:', authError);
+            return { success: false, error: 'Authentication error: ' + authError.message };
+          }
+        }
+      } else {
+        // For all other users, try to sign in with Firebase Auth
+        try {
+          await signInWithEmailAndPassword(auth, userData.email, password);
+          console.log('✅ User successfully signed in with Firebase Auth:', username);
+          return { success: true };
+        } catch (authError) {
+          console.log('🔄 User Firebase Auth account not found, creating...', authError.code);
+          
+          // If user doesn't exist in Firebase Auth, create it
+          if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
+            try {
+              await createUserWithEmailAndPassword(auth, userData.email, password);
+              console.log('✅ User created in Firebase Authentication:', username);
+              return { success: true };
+            } catch (createError) {
+              console.error('❌ Error creating user in Firebase Auth:', createError);
+              return { success: false, error: 'Failed to create user account: ' + createError.message };
+            }
+          } else if (authError.code === 'auth/wrong-password') {
+            console.log('❌ Invalid password for user:', username);
+            return { success: false, error: 'Invalid username or password' };
           } else {
             console.error('❌ Firebase Auth error:', authError);
             return { success: false, error: 'Authentication error: ' + authError.message };
           }
         }
-      } else {
-        return { success: false, error: 'Invalid username or password' };
       }
     } catch (error) {
       console.error('❌ Login error:', error);
