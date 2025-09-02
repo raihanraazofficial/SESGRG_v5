@@ -394,24 +394,7 @@ const Home = () => {
               </p>
             </div>
             
-            <div className={`flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <Button 
-                size="lg" 
-                onClick={scrollToResearch}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 text-lg hover:scale-105 transition-all duration-300"
-              >
-                Explore Research <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg hover:scale-105 transition-all duration-300"
-              >
-                <Link to="/people" className="flex items-center">
-                  Meet Our Team <Users className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
+
           </div>
         </div>
       </section>
