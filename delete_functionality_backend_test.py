@@ -29,7 +29,7 @@ from datetime import datetime
 class DeleteFunctionalityTester:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://admin-panel-debug-4.preview.emergentagent.com"
+        self.frontend_url = "https://login-security-1.preview.emergentagent.com"
         
         # Admin credentials for authentication testing
         self.admin_credentials = {
