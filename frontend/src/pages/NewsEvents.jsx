@@ -9,7 +9,7 @@ import SkeletonCard from "../components/SkeletonCard";
 import LaTeXRenderer, { parseLatexContent } from "../components/LaTeXRenderer";
 import { useNewsEvents } from "../contexts/NewsEventsContext";
 import { useAuth } from "../contexts/AuthContext";
-import googleSheetsService from "../services/googleSheetsApi";
+
 import "../styles/smooth-filters.css";
 
 const NewsEvents = () => {
