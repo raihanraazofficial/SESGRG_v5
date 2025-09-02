@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import firebaseService from '../services/firebaseService';
 
 const FooterContext = createContext();
 
