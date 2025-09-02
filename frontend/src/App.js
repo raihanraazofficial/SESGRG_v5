@@ -89,13 +89,14 @@ function App() {
                       </Routes>
                     </BrowserRouter>
                   </div>
-                </GalleryProvider>
-              </ContactProvider>
-            </NewsEventsProvider>
-          </AchievementsProvider>
-        </ProjectsProvider>
-      </PublicationsProvider>
-    </PeopleProvider>
+                    </HomeProvider>
+                  </GalleryProvider>
+                </ContactProvider>
+              </NewsEventsProvider>
+            </AchievementsProvider>
+          </ProjectsProvider>
+        </PublicationsProvider>
+      </PeopleProvider>
     </AuthProvider>
   );
 }
