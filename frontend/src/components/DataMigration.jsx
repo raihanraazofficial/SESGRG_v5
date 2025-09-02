@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { firebaseService } from '../services/firebaseService';
+import { firebaseSetup } from '../services/firebaseSetup';
 
 /**
  * DataMigration Component
@@ -9,6 +10,8 @@ const DataMigration = () => {
   const [migrationStatus, setMigrationStatus] = useState('idle'); // idle, running, completed, error
   const [migrationResults, setMigrationResults] = useState(null);
   const [error, setError] = useState(null);
+  const [firebaseStatus, setFirebaseStatus] = useState('unknown'); // unknown, connected, error
+  const [existingData, setExistingData] = useState(null);
 
   const startMigration = async () => {
     try {
