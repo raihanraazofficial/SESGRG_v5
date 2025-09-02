@@ -19,9 +19,10 @@ import { Input } from '../ui/input';
 import { useAuth } from '../../contexts/AuthContext';
 
 const UserManagement = () => {
-  const { users, createUser, updateUser, deleteUser, USER_ROLES, PERMISSIONS } = useAuth();
+  const { users, createUser, updateUser, deleteUser, USER_ROLES, PERMISSIONS, isLoading: authLoading } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
+  const [componentLoading, setComponentLoading] = useState(true);
   
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
