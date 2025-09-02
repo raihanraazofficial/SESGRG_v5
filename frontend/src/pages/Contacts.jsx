@@ -108,11 +108,12 @@ const Contacts = () => {
   }
 
   // Ensure contact data is available before rendering
-  if (!contactInfo || !inquiryTypes) {
+  if (!contactInfo || !contactInfo.address || !inquiryTypes || inquiryTypes.length === 0) {
     return (
       <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Contact information unavailable. Please try refreshing the page.</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading contact information...</p>
         </div>
       </div>
     );
