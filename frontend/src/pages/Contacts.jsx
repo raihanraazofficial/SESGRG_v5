@@ -107,25 +107,40 @@ const Contacts = () => {
     );
   }
 
-  // Ensure contact data is available before rendering - with timeout fallback
+  // Ensure contact data is available before rendering
   if (!contactInfo || !contactInfo.address || !inquiryTypes || inquiryTypes.length === 0) {
-    // Auto-retry after 3 seconds if data is not loaded
+    const [showError, setShowError] = React.useState(false);
+    
+    // Show error message after 5 seconds
     React.useEffect(() => {
-      const retryTimeout = setTimeout(() => {
-        console.warn('⚠️ Contact data still not loaded, forcing fallback');
-        // Force a page reload if data is not available after 3 seconds
-        window.location.reload();
-      }, 3000);
+      const errorTimeout = setTimeout(() => {
+        setShowError(true);
+      }, 5000);
       
-      return () => clearTimeout(retryTimeout);
+      return () => clearTimeout(errorTimeout);
     }, []);
+
+    if (showError) {
+      return (
+        <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
+          <div className="text-center max-w-md">
+            <p className="text-gray-600 mb-4">Unable to load contact information. Please try refreshing the page.</p>
+            <Button 
+              onClick={() => window.location.reload()}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              Refresh Page
+            </Button>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading contact information...</p>
-          <p className="text-sm text-gray-500 mt-2">If this takes too long, please refresh the page</p>
         </div>
       </div>
     );
