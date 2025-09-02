@@ -131,7 +131,7 @@ const UserManagement = () => {
 
     setIsLoading(true);
     try {
-      const result = deleteUser(editingUser.id);
+      const result = await deleteUser(editingUser.id);
       if (result.success) {
         alert('User deleted successfully!');
         setIsDeleteModalOpen(false);
