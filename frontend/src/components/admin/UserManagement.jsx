@@ -273,8 +273,9 @@ const UserManagement = () => {
           >
             <option value="all">All Roles</option>
             <option value={USER_ROLES.ADMIN}>Admins</option>
-            <option value={USER_ROLES.MODERATOR}>Moderators</option>
-            <option value={USER_ROLES.VIEWER}>Viewers</option>
+            <option value={USER_ROLES.ADVISOR}>Advisors</option>
+            <option value={USER_ROLES.TEAM_MEMBER}>Team Members</option>
+            <option value={USER_ROLES.COLLABORATOR}>Collaborators</option>
           </select>
         </div>
       </div>
