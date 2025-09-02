@@ -890,7 +890,7 @@ const NewsEvents = () => {
                         <Button 
                           size="lg"
                           className="group-hover:bg-blue-700 bg-blue-600 text-white px-8 py-3"
-                          onClick={() => openBlogModal(newsEvents[0])}
+                          onClick={() => generateBlogContent(newsEvents[0])}
                         >
                           Read Full Story <ArrowRight className="h-5 w-5 ml-3" />
                         </Button>
