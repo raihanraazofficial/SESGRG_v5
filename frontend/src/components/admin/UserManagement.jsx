@@ -467,6 +467,58 @@ const UserManagement = () => {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      First Name *
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.firstName}
+                      onChange={(e) => handleFormChange('firstName', e.target.value)}
+                      placeholder="Enter first name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Last Name *
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.lastName}
+                      onChange={(e) => handleFormChange('lastName', e.target.value)}
+                      placeholder="Enter last name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Profile Picture URL
+                  </label>
+                  <Input
+                    type="url"
+                    value={formData.profilePicture}
+                    onChange={(e) => handleFormChange('profilePicture', e.target.value)}
+                    placeholder="https://example.com/profile-picture.jpg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Position in SESGRG
+                  </label>
+                  <select
+                    value={formData.position}
+                    onChange={(e) => handleFormChange('position', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="Advisor">Advisor</option>
+                    <option value="Team Member">Team Member</option>
+                    <option value="Collaborator">Collaborator</option>
+                  </select>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Role
@@ -476,8 +528,10 @@ const UserManagement = () => {
                     onChange={(e) => handleFormChange('role', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   >
-                    <option value={USER_ROLES.MODERATOR}>Moderator</option>
-                    <option value={USER_ROLES.VIEWER}>Viewer</option>
+                    <option value={USER_ROLES.ADMIN}>Admin</option>
+                    <option value={USER_ROLES.ADVISOR}>Advisor</option>
+                    <option value={USER_ROLES.TEAM_MEMBER}>Team Member</option>
+                    <option value={USER_ROLES.COLLABORATOR}>Collaborator</option>
                   </select>
                 </div>
 
