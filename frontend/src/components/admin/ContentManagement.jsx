@@ -173,7 +173,16 @@ const ContentManagement = () => {
     try {
       setIsDeleting(true);
       
+      // Validate required data before delete
+      if (!deletingItem || !deletingItem.id || !editingCategory) {
+        throw new Error('Missing required data for deletion');
+      }
+      
       if (editingCategory === 'people') {
+        // Validate people-specific data
+        if (!deletingItem.category) {
+          throw new Error('Person category is required for deletion');
+        }
         deletePerson(deletingItem.category, deletingItem.id);
       } else if (editingCategory === 'publications') {
         await deletePublication(deletingItem.id);
@@ -193,7 +202,7 @@ const ContentManagement = () => {
       alert('Item deleted successfully!');
     } catch (error) {
       console.error('Error deleting item:', error);
-      alert('Error deleting item. Please try again.');
+      alert(`Error deleting item: ${error.message}. Please try again.`);
     } finally {
       setIsDeleting(false);
     }
