@@ -7,7 +7,7 @@ import { useNewsEvents } from "../contexts/NewsEventsContext";
 import { useGallery } from "../contexts/GalleryContext";
 import { useHome } from "../contexts/HomeContext";
 import { useResearchAreas } from "../contexts/ResearchAreasContext";
-import googleSheetsService from "../services/googleSheetsApi";
+
 
 // Latest News Section Component
 const LatestNewsSection = () => {
