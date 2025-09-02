@@ -51,8 +51,15 @@ const NewsEvents = () => {
       const result = getPaginatedNewsEvents(filters);
       setNewsEvents(result.news_events || []);
       setPagination(result.pagination || {});
+      
+      // Load featured news events
+      const featured = getFeaturedNewsEvents(1);
+      setFeaturedNewsEvents(featured || []);
+      
+      console.log('✅ NewsEvents Page: Regular news loaded:', result.news_events?.length || 0);
+      console.log('✅ NewsEvents Page: Featured news loaded:', featured?.length || 0);
     }
-  }, [newsEventsData, filters, getPaginatedNewsEvents, loading]);
+  }, [newsEventsData, filters, getPaginatedNewsEvents, getFeaturedNewsEvents, loading]);
 
   // Load calendar settings from localStorage
   useEffect(() => {
