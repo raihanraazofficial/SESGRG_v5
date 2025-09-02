@@ -69,7 +69,24 @@ const EditPersonModal = ({ person, category, isOpen, onClose }) => {
   };
 
   const handleSave = () => {
-    updatePerson(category, person.id, formData);
+    // Map display category to storage category
+    const categoryMap = {
+      'Advisor': 'advisors',
+      'Team Member': 'teamMembers', 
+      'Collaborator': 'collaborators'
+    };
+    
+    // Get the person's actual category (stored in person object)
+    const personCategory = person.category;
+    const storageCategory = categoryMap[personCategory];
+    
+    if (!storageCategory) {
+      console.error('Invalid person category:', personCategory);
+      alert('Error: Invalid person category. Please try again.');
+      return;
+    }
+    
+    updatePerson(storageCategory, person.id, formData);
     onClose();
   };
 
