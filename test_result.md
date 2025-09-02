@@ -389,14 +389,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Footer Management System Implementation - COMPLETED ✅"
-    - "Admin Panel Data Display Fix - COMPLETED ✅"
-    - "Calendar Management Testing - COMPLETED ✅"
-    - "Real-time Data Sync Testing - COMPLETED ✅"
-    - "CRUD Operations Testing - COMPLETED ✅"
-    - "Data Migration System Testing - COMPLETED ✅"
-    - "Bengali Review Request Requirements - COMPLETED ✅"
-    - "Edit Modals UI Fixes Backend Testing - COMPLETED ✅"
+    - "Homepage Hero Button Removal and Featured Content Functionality Fix"
+    - "Featured Content Admin Panel Integration Testing"
+    - "HomePage Featured News Display Testing"
+    - "Achievements Page Featured Display Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
