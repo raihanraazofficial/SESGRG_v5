@@ -188,6 +188,10 @@ const UserManagement = () => {
       username: user.username,
       email: user.email,
       password: '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      profilePicture: user.profilePicture || '',
+      position: user.position || 'Team Member',
       role: user.role,
       permissions: user.permissions || []
     });
