@@ -319,7 +319,7 @@ export const FooterProvider = ({ children }) => {
   };
 
   const value = {
-    footerData,
+    footerData: footerData || defaultFooterData,
     isLoading,
     
     // Lab Info
