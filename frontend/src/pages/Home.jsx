@@ -295,15 +295,23 @@ const LatestNewsSection = () => {
             )}
 
             {/* Smaller News Cards */}
-            {latestNews.length > 1 && (
+            {(featuredNews.length > 0 ? latestNews.length >= 1 : latestNews.length > 1) && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {latestNews.slice(1, 8).map((news, index) => (
+                {(featuredNews.length > 0 
+                  ? latestNews.slice(0, 7) // Show 7 more items if featured news exists
+                  : latestNews.slice(1, 8) // Show 7 items after the first one if no featured news
+                ).map((news, index) => (
                   <Card key={news.id || `news-${index}-${news.title?.slice(0,10)}`} className="hover:shadow-lg transition-all duration-300 border-0 shadow-md group">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(news.category)}`}>
                           {news.category}
                         </span>
+                        {news.featured && (
+                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                            Featured
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">
                         {news.title}
