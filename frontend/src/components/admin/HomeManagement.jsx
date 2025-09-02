@@ -129,18 +129,23 @@ const HomeManagement = () => {
     setIsCarouselModalOpen(true);
   };
 
-  const handleDeleteCarouselImage = (imageId) => {
+  const handleDeleteCarouselImage = async (imageId) => {
     if (carouselImages.length <= 2) {
       alert('Cannot delete image. Minimum 2 images required in carousel.');
       return;
     }
     
     if (confirm('Are you sure you want to delete this carousel image?')) {
-      const result = deleteCarouselImage(imageId);
-      if (result.success) {
-        alert('Carousel image deleted successfully!');
-      } else {
-        alert(result.error || 'Failed to delete carousel image');
+      try {
+        const result = await deleteCarouselImage(imageId);
+        if (result.success) {
+          alert('Carousel image deleted successfully!');
+        } else {
+          alert(result.error || 'Failed to delete carousel image');
+        }
+      } catch (error) {
+        console.error('Error deleting carousel image:', error);
+        alert('Failed to delete carousel image');
       }
     }
   };
