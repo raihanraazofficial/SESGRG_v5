@@ -9,12 +9,14 @@ import {
   Target,
   ArrowUp,
   ArrowDown,
-  Layers
+  Layers,
+  Settings
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useHome } from '../../contexts/HomeContext';
 import { useResearchAreas } from '../../contexts/ResearchAreasContext';
+import { useFooter } from '../../contexts/FooterContext';
 
 // Import modals
 import EditAboutUsModal from '../home/EditAboutUsModal';
