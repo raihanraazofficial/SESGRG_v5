@@ -96,7 +96,8 @@ export const AuthProvider = ({ children }) => {
           const userData = await firebaseService.getUserByUsername('admin');
           if (userData) {
             setUser({
-              id: firebaseUser.uid,
+              id: userData.id, // Use Firestore document ID instead of Firebase Auth UID
+              uid: firebaseUser.uid, // Keep auth UID for reference
               email: firebaseUser.email,
               username: userData.username,
               role: userData.role,
@@ -111,6 +112,7 @@ export const AuthProvider = ({ children }) => {
             });
           } else {
             // If no user data in Firestore, sign out
+            console.warn('No user data found in Firestore for authenticated user');
             await signOut(auth);
           }
         } else {
@@ -120,6 +122,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Error in auth state change:', error);
+        // Don't immediately sign out on error, just set user to null
         setUser(null);
         setIsAuthenticated(false);
       } finally {
