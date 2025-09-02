@@ -74,6 +74,9 @@ const HomeManagement = () => {
     deleteResearchArea
   } = useResearchAreas();
 
+  // Footer context
+  const { footerData } = useFooter();
+
   // Section tabs
   const sections = [
     {
