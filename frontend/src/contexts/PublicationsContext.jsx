@@ -135,7 +135,32 @@ export const PublicationsProvider = ({ children }) => {
 
   // Delete publication
   const deletePublication = (id) => {
-    setPublicationsData(prev => prev.filter(pub => pub.id !== id));
+    try {
+      console.log('🔍 PublicationsContext: Deleting publication with ID:', id);
+      console.log('🔍 Current publications data:', publicationsData);
+      
+      if (!id) {
+        throw new Error('Publication ID is required for deletion');
+      }
+      
+      const existingPublication = publicationsData.find(pub => pub.id === id);
+      if (!existingPublication) {
+        throw new Error(`Publication with ID ${id} not found`);      
+      }
+      
+      console.log('🔍 Found publication to delete:', existingPublication);
+      
+      setPublicationsData(prev => {
+        const filtered = prev.filter(pub => pub.id !== id);
+        console.log('✅ Publication deleted. New data length:', filtered.length);
+        return filtered;
+      });
+      
+      console.log('✅ Publication delete operation completed');
+    } catch (error) {
+      console.error('❌ Error in deletePublication:', error);
+      throw error; // Re-throw to let calling component handle it
+    }
   };
 
   // Get publication by ID
