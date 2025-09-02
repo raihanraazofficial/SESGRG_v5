@@ -236,15 +236,9 @@ const LatestNewsSection = () => {
                     <h3 className="text-2xl font-bold text-gray-900 mb-4 hover:text-emerald-600 transition-colors">
                       {latestNews[0].title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed mb-6">
+                    <p className="text-gray-600 leading-relaxed">
                       {latestNews[0].short_description || latestNews[0].description}
                     </p>
-                    <Button 
-                      variant="outline" 
-                      className="self-start border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white"
-                    >
-                      Read More <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
                   </CardContent>
                 </div>
               </Card>
