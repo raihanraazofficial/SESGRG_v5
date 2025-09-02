@@ -277,7 +277,7 @@ def main():
         print("   Review the issues above and apply the recommended fixes.")
     
     print(f"\n🔗 Test the admin panel manually at:")
-    print(f"   https://admin-panel-repair.preview.emergentagent.com/admin/login")
+    print(f"   https://persist-data.preview.emergentagent.com/admin/login")
     print(f"   Credentials: admin / @dminsesg405")
 
 if __name__ == "__main__":
