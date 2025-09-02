@@ -70,12 +70,61 @@ const UserManagement = () => {
     console.log('👥 UserManagement - componentLoading:', componentLoading);
   }, [users, filteredUsers, authLoading, componentLoading]);
 
+  // Get default permissions for role
+  const getDefaultPermissionsForRole = (role) => {
+    const rolePermissions = {
+      [USER_ROLES.ADMIN]: Object.values(PERMISSIONS),
+      [USER_ROLES.ADVISOR]: [
+        PERMISSIONS.CREATE_CONTENT,
+        PERMISSIONS.EDIT_CONTENT,
+        PERMISSIONS.DELETE_CONTENT,
+        PERMISSIONS.PUBLISH_CONTENT,
+        PERMISSIONS.VIEW_USERS,
+        PERMISSIONS.CREATE_PAGES,
+        PERMISSIONS.EDIT_PAGES,
+        PERMISSIONS.VIEW_ANALYTICS,
+        PERMISSIONS.MANAGE_PUBLICATIONS,
+        PERMISSIONS.MANAGE_PROJECTS,
+        PERMISSIONS.MANAGE_PEOPLE,
+        PERMISSIONS.MANAGE_ACHIEVEMENTS,
+        PERMISSIONS.MANAGE_NEWS_EVENTS
+      ],
+      [USER_ROLES.TEAM_MEMBER]: [
+        PERMISSIONS.CREATE_CONTENT,
+        PERMISSIONS.EDIT_CONTENT,
+        PERMISSIONS.PUBLISH_CONTENT,
+        PERMISSIONS.VIEW_USERS,
+        PERMISSIONS.MANAGE_PUBLICATIONS,
+        PERMISSIONS.MANAGE_PROJECTS,
+        PERMISSIONS.MANAGE_ACHIEVEMENTS,
+        PERMISSIONS.MANAGE_NEWS_EVENTS
+      ],
+      [USER_ROLES.COLLABORATOR]: [
+        PERMISSIONS.CREATE_CONTENT,
+        PERMISSIONS.EDIT_CONTENT,
+        PERMISSIONS.VIEW_USERS,
+        PERMISSIONS.MANAGE_PUBLICATIONS,
+        PERMISSIONS.MANAGE_PROJECTS
+      ]
+    };
+    return rolePermissions[role] || [];
+  };
+
   // Handle form changes
   const handleFormChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      };
+      
+      // Auto-set permissions when role changes
+      if (field === 'role') {
+        newData.permissions = getDefaultPermissionsForRole(value);
+      }
+      
+      return newData;
+    });
   };
 
   // Handle permission changes
