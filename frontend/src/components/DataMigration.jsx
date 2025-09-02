@@ -323,17 +323,32 @@ const DataMigration = () => {
         <h3 className="text-lg font-semibold mb-3 text-gray-800">
           📝 Instructions
         </h3>
-        <ol className="list-decimal list-inside space-y-2 text-gray-700">
-          <li>First, click "Check LocalStorage Data" to see what data is available</li>
-          <li>Click "Start Migration" to transfer all data from localStorage to Firebase</li>
-          <li>Wait for the migration to complete</li>
-          <li>After successful migration, click "Clear LocalStorage" to clean up old data</li>
-        </ol>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-medium text-gray-700 mb-2">🔄 Migration Process:</h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+              <li>First, test Firebase connection</li>
+              <li>Check if localStorage has any data</li>
+              <li>Use "Migrate LocalStorage" if data exists</li>
+              <li>Clear localStorage after successful migration</li>
+            </ol>
+          </div>
+          
+          <div>
+            <h4 className="font-medium text-gray-700 mb-2">🚀 Fresh Setup:</h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+              <li>Use "Fresh Firebase Setup" for new installation</li>
+              <li>This will populate Firebase with sample data</li>
+              <li>All contexts will connect to Firebase automatically</li>
+              <li>Admin panel will work with Firebase data</li>
+            </ol>
+          </div>
+        </div>
         
         <div className="mt-4 p-3 bg-yellow-100 rounded-lg">
           <p className="text-yellow-800 text-sm">
-            <strong>⚠️ Warning:</strong> Make sure you have a stable internet connection before starting the migration.
-            The "Clear LocalStorage" action cannot be undone.
+            <strong>⚠️ Note:</strong> "Fresh Firebase Setup" will create sample data if Firebase is empty. 
+            "Clear LocalStorage" action cannot be undone. Make sure Firebase connection is working before migration.
           </p>
         </div>
       </div>
