@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Plus, Minus, Edit3 } from 'lucide-react';
 import { Button } from './ui/button';
 import { usePeople } from '../contexts/PeopleContext';
+import '../styles/checkbox-fix.css';
 
 const EditPersonModal = ({ person, category, isOpen, onClose }) => {
   const { researchAreas, updatePerson } = usePeople();
