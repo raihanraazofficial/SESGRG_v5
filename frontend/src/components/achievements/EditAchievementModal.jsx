@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import RichTextEditor from '../RichTextEditor';
 import FullScreenModal from '../ui/FullScreenModal';
+import '../../styles/checkbox-fix.css';
 
 const EditAchievementModal = ({ isOpen, onClose, onUpdate, achievement, categories }) => {
   const [formData, setFormData] = useState({
