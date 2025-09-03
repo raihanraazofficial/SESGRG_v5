@@ -1,38 +1,30 @@
-/* CRITICAL CHECKBOX INTERACTION FIXES */
-/* This file specifically addresses checkbox interaction issues in admin panel */
+/* TARGETED CHECKBOX INTERACTION FIXES - NO CONFLICT WITH TEXT INPUTS */
+/* This file specifically addresses checkbox interaction issues only */
 
-/* Reset checkbox and radio button styling to ensure proper interaction */
+/* Reset checkbox and radio button styling - CHECKBOXES ONLY */
 input[type="checkbox"], 
 input[type="radio"] {
-  /* Override any global transforms that might interfere */
-  transform: none !important;
-  backface-visibility: visible !important;
-  will-change: auto !important;
-  
-  /* Ensure proper pointer interaction */
+  /* Essential interaction properties */
   pointer-events: auto !important;
   cursor: pointer !important;
   touch-action: manipulation !important;
-  
-  /* Reset appearance to browser default */
-  -webkit-appearance: checkbox !important;
-  appearance: checkbox !important;
   
   /* Ensure proper positioning */
   position: relative !important;
   z-index: 10 !important;
   
-  /* Ensure minimum size for touch interaction */
-  min-width: 16px !important;
-  min-height: 16px !important;
-  
-  /* Remove any opacity or visibility issues */
+  /* Ensure visibility */
   opacity: 1 !important;
   visibility: visible !important;
   
-  /* Ensure no overlays are blocking interaction */
-  border: 1px solid #d1d5db !important;
-  background: white !important;
+  /* Remove problematic transforms */
+  transform: none !important;
+  backface-visibility: visible !important;
+  will-change: auto !important;
+  
+  /* Ensure minimum touch target */
+  min-width: 16px !important;
+  min-height: 16px !important;
 }
 
 /* Force checkbox interaction over any overlay issues */
