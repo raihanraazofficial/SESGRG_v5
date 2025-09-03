@@ -1,0 +1,187 @@
+/* CRITICAL CHECKBOX INTERACTION FIXES */
+/* This file specifically addresses checkbox interaction issues in admin panel */
+
+/* Reset checkbox and radio button styling to ensure proper interaction */
+input[type="checkbox"], 
+input[type="radio"] {
+  /* Override any global transforms that might interfere */
+  transform: none !important;
+  backface-visibility: visible !important;
+  will-change: auto !important;
+  
+  /* Ensure proper pointer interaction */
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  
+  /* Reset appearance to browser default */
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  
+  /* Ensure proper positioning */
+  position: relative !important;
+  z-index: 10 !important;
+  
+  /* Ensure minimum size for touch interaction */
+  min-width: 16px !important;
+  min-height: 16px !important;
+  
+  /* Remove any opacity or visibility issues */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+input[type="radio"] {
+  -webkit-appearance: radio !important;
+  appearance: radio !important;
+}
+
+/* Fix labels that contain checkboxes */
+label:has(input[type="checkbox"]), 
+label:has(input[type="radio"]),
+label[for] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  
+  /* Ensure labels are properly interactive */
+  transform: none !important;
+  backface-visibility: visible !important;
+}
+
+/* Fix for research areas and permissions sections */
+.research-areas input[type="checkbox"],
+.permissions input[type="checkbox"],
+.category-select input[type="checkbox"],
+.featured-select input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 100 !important;
+}
+
+/* Fix for research areas labels */
+.research-areas label,
+.permissions label,
+.category-select label,
+.featured-select label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+/* Fix for checkbox containers */
+.checkbox-container,
+[class*="checkbox"],
+.flex.items-center:has(input[type="checkbox"]) {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  transform: none !important;
+}
+
+/* Specific fixes for admin panel modals */
+.admin-modal-form input[type="checkbox"],
+.admin-modal-form input[type="radio"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+}
+
+.admin-modal-form label:has(input[type="checkbox"]),
+.admin-modal-form label:has(input[type="radio"]) {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Fix for FullScreenModal checkboxes */
+.admin-modal-fullscreen input[type="checkbox"],
+.admin-modal-fullscreen input[type="radio"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 1001 !important;
+}
+
+/* Ensure all form controls are interactive */
+form input, 
+form select, 
+form textarea, 
+form button {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+/* Fix for grid layouts containing checkboxes */
+.grid:has(input[type="checkbox"]) input[type="checkbox"],
+.grid:has(input[type="radio"]) input[type="radio"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix for modal overlays - ensure they don't block checkbox interaction */
+.modal-overlay,
+.admin-modal-overlay {
+  pointer-events: auto !important;
+}
+
+.modal-overlay > *,
+.admin-modal-overlay > * {
+  pointer-events: auto !important;
+}
+
+/* Specific fix for permissions grid in UserManagement */
+.permissions-grid input[type="checkbox"],
+.permissions-list input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+}
+
+.permissions-grid label,
+.permissions-list label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+}
+
+/* Fix for select dropdown issues */
+select {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+}
+
+/* Fix for any remaining issues with interactive elements */
+button,
+input,
+select,
+textarea,
+label {
+  transform: none !important;
+  backface-visibility: visible !important;
+  will-change: auto !important;
+  pointer-events: auto !important;
+}
+
+/* Media query for mobile devices - ensure touch interaction works */
+@media (max-width: 768px) {
+  input[type="checkbox"], 
+  input[type="radio"] {
+    min-width: 20px !important;
+    min-height: 20px !important;
+    margin: 4px !important;
+  }
+  
+  label:has(input[type="checkbox"]),
+  label:has(input[type="radio"]) {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px !important;
+  }
+}
