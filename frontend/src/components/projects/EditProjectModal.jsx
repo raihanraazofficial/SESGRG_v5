@@ -1,54 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Calendar, DollarSign, Users, Folder, Edit3, Loader2, Tag, FileText } from 'lucide-react';
+import { X, FolderOpen, Loader2, Calendar, Users, Tag, FileText, DollarSign } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import FullScreenModal from '../ui/FullScreenModal';
 
 const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, statuses }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    status: 'Planning',
+    status: 'Active',
+    research_areas: [],
+    principal_investigator: '',
+    co_investigators: [''],
     start_date: '',
     end_date: '',
-    principal_investigator: '',
-    team_members: [''],
-    funding_agency: '',
-    budget: '',
-    research_areas: [],
-    objectives: [''],
-    expected_outcomes: [''],
-    keywords: ['']
+    funding_amount: '',
+    funding_source: '',
+    keywords: [''],
+    objectives: ['']
   });
+  
+  const [loading, setLoading] = useState(false);
 
-  // Populate form when project changes
+  // Populate form data when project prop changes
   useEffect(() => {
     if (project) {
       setFormData({
         title: project.title || '',
         description: project.description || '',
-        status: project.status || 'Planning',
+        status: project.status || 'Active',
+        research_areas: project.research_areas || [],
+        principal_investigator: project.principal_investigator || '',
+        co_investigators: project.co_investigators || [''],
         start_date: project.start_date || '',
         end_date: project.end_date || '',
-        principal_investigator: project.principal_investigator || '',
-        team_members: Array.isArray(project.team_members) && project.team_members.length > 0 
-          ? project.team_members 
-          : [''],
-        funding_agency: project.funding_agency || '',
-        budget: project.budget || '',
-        research_areas: Array.isArray(project.research_areas) 
-          ? project.research_areas 
-          : [],
-        objectives: Array.isArray(project.objectives) && project.objectives.length > 0 
-          ? project.objectives 
-          : [''],
-        expected_outcomes: Array.isArray(project.expected_outcomes) && project.expected_outcomes.length > 0 
-          ? project.expected_outcomes 
-          : [''],
-        keywords: Array.isArray(project.keywords) && project.keywords.length > 0 
-          ? project.keywords 
-          : ['']
+        funding_amount: project.funding_amount || '',
+        funding_source: project.funding_source || '',
+        keywords: project.keywords || [''],
+        objectives: project.objectives || ['']
       });
     }
   }, [project]);
@@ -117,7 +106,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
     }
 
     try {
-      setIsLoading(true);
+      setLoading(true);
       
       // Clean up the data
       const cleanedData = {
@@ -125,11 +114,10 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
         title: formData.title.trim(),
         description: formData.description.trim(),
         principal_investigator: formData.principal_investigator.trim(),
-        team_members: formData.team_members.filter(member => member.trim()),
-        objectives: formData.objectives.filter(obj => obj.trim()),
-        expected_outcomes: formData.expected_outcomes.filter(outcome => outcome.trim()),
+        co_investigators: formData.co_investigators.filter(inv => inv.trim()),
         keywords: formData.keywords.filter(keyword => keyword.trim()),
-        budget: formData.budget ? parseFloat(formData.budget) : null
+        objectives: formData.objectives.filter(obj => obj.trim()),
+        funding_amount: formData.funding_amount ? parseFloat(formData.funding_amount) : null
       };
       
       await onUpdate(project.id, cleanedData);
@@ -138,9 +126,11 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
       console.error('Error updating project:', error);
       alert('Error updating project. Please try again.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
+
+  if (!isOpen) return null;
 
   const modalFooter = (
     <>
@@ -148,25 +138,25 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
         type="button"
         variant="outline"
         onClick={onClose}
-        disabled={isLoading}
+        disabled={loading}
         className="flex-1 sm:flex-none px-4 lg:px-6 py-2"
       >
         Cancel
       </Button>
       <Button
         type="submit"
-        disabled={isLoading}
+        disabled={loading}
         onClick={handleSubmit}
         className="bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none px-4 lg:px-6 py-2"
       >
-        {isLoading ? (
+        {loading ? (
           <>
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             Updating...
           </>
         ) : (
           <>
-            <Edit3 className="h-4 w-4 mr-2" />
+            <FolderOpen className="h-4 w-4 mr-2" />
             Update Project
           </>
         )}
@@ -179,9 +169,9 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
       isOpen={isOpen}
       onClose={onClose}
       title="Edit Project"
-      description="Update the research project information"
-      icon={Edit3}
-      loading={isLoading}
+      description="Update project information"
+      icon={FolderOpen}
+      loading={loading}
       footer={modalFooter}
       className="max-w-[95vw] max-h-[95vh] lg:max-w-[1200px]"
     >
@@ -191,7 +181,7 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
         <div className="space-y-6">
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-4 lg:p-6 rounded-lg">
             <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <Folder className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-emerald-600" />
+              <FolderOpen className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-emerald-600" />
               Basic Information
             </h3>
             
@@ -260,22 +250,20 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
         {/* Research Areas */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 lg:p-6 rounded-lg">
-            <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <FileText className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-purple-600" />
-              Research Areas *
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 lg:p-6 rounded-lg research-areas">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              Research Areas * (Select at least 1)
             </h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-              {researchAreas.map(area => (
-                <label key={area} className="flex items-center space-x-3 p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {researchAreas.map((area) => (
+                <label key={area} className="flex items-center space-x-3 p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all checkbox-container">
                   <input
                     type="checkbox"
                     checked={formData.research_areas.includes(area)}
                     onChange={() => handleResearchAreaToggle(area)}
-                    className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 research-area-checkbox"
                   />
-                  <span className="text-sm lg:text-base text-gray-700 font-medium">{area}</span>
+                  <span className="text-xs lg:text-sm text-gray-700 font-medium">{area}</span>
                 </label>
               ))}
             </div>
@@ -284,12 +272,11 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
 
         {/* Project Timeline */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 lg:p-6 rounded-lg">
-            <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <Calendar className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-blue-600" />
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 lg:p-6 rounded-lg">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              <Calendar className="h-4 w-4 lg:h-5 lg:w-5 inline mr-2" />
               Project Timeline
             </h3>
-            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -317,78 +304,36 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
           </div>
         </div>
 
-        {/* Team Members */}
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 lg:p-6 rounded-lg">
-            <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <Users className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-green-600" />
-              Team Members
-            </h3>
-            
-            <div className="space-y-3 lg:space-y-4">
-              {formData.team_members.map((member, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <Input
-                    value={member}
-                    onChange={(e) => handleArrayChange('team_members', index, e.target.value)}
-                    placeholder={`Team member ${index + 1}`}
-                    className="flex-1 text-sm lg:text-base"
-                  />
-                  {formData.team_members.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayItem('team_members', index)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => addArrayItem('team_members')}
-                className="mt-3 text-sm lg:text-base"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Team Member
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Funding Information */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 lg:p-6 rounded-lg">
-            <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <DollarSign className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-yellow-600" />
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 lg:p-6 rounded-lg">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              <DollarSign className="h-4 w-4 lg:h-5 lg:w-5 inline mr-2" />
               Funding Information
             </h3>
-            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Funding Agency
+                  Funding Amount
                 </label>
                 <Input
-                  value={formData.funding_agency}
-                  onChange={(e) => handleInputChange('funding_agency', e.target.value)}
-                  placeholder="Enter funding agency"
+                  type="number"
+                  value={formData.funding_amount}
+                  onChange={(e) => handleInputChange('funding_amount', e.target.value)}
+                  placeholder="Enter amount"
+                  min="0"
+                  step="0.01"
                   className="text-sm lg:text-base"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Budget (Amount)
+                  Funding Source
                 </label>
                 <Input
-                  type="number"
-                  value={formData.budget}
-                  onChange={(e) => handleInputChange('budget', e.target.value)}
-                  placeholder="Enter budget amount"
+                  value={formData.funding_source}
+                  onChange={(e) => handleInputChange('funding_source', e.target.value)}
+                  placeholder="Enter funding source"
                   className="text-sm lg:text-base"
                 />
               </div>
@@ -396,137 +341,129 @@ const EditProjectModal = ({ isOpen, onClose, onUpdate, project, researchAreas, s
           </div>
         </div>
 
-        {/* Project Details */}
+        {/* Co-Investigators */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 lg:p-6 rounded-lg">
-            <h3 className="text-base lg:text-lg font-semibold text-gray-900 flex items-center mb-4 lg:mb-6">
-              <FileText className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-indigo-600" />
-              Project Details
+          <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-4 lg:p-6 rounded-lg">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              <Users className="h-4 w-4 lg:h-5 lg:w-5 inline mr-2" />
+              Co-Investigators
             </h3>
-            
-            <div className="space-y-6">
-              {/* Objectives */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Objectives
-                </label>
-                <div className="space-y-3">
-                  {formData.objectives.map((objective, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <textarea
-                        value={objective}
-                        onChange={(e) => handleArrayChange('objectives', index, e.target.value)}
-                        placeholder={`Objective ${index + 1}`}
-                        rows={2}
-                        className="flex-1 px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
-                      />
-                      {formData.objectives.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeArrayItem('objectives', index)}
-                          className="text-red-600 hover:text-red-700 mt-2"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
+            {formData.co_investigators.map((investigator, index) => (
+              <div key={index} className="flex gap-2 lg:gap-3 mb-3">
+                <Input
+                  value={investigator}
+                  onChange={(e) => handleArrayChange('co_investigators', index, e.target.value)}
+                  placeholder={`Co-Investigator ${index + 1}`}
+                  className="text-sm lg:text-base"
+                />
+                {formData.co_investigators.length > 1 && (
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => addArrayItem('objectives')}
-                    className="text-sm lg:text-base"
+                    size="sm"
+                    onClick={() => removeArrayItem('co_investigators', index)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
                   >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Objective
+                    <X className="h-3 w-3 lg:h-4 lg:w-4" />
                   </Button>
-                </div>
+                )}
               </div>
-
-              {/* Expected Outcomes */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Expected Outcomes
-                </label>
-                <div className="space-y-3">
-                  {formData.expected_outcomes.map((outcome, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <textarea
-                        value={outcome}
-                        onChange={(e) => handleArrayChange('expected_outcomes', index, e.target.value)}
-                        placeholder={`Expected outcome ${index + 1}`}
-                        rows={2}
-                        className="flex-1 px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
-                      />
-                      {formData.expected_outcomes.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeArrayItem('expected_outcomes', index)}
-                          className="text-red-600 hover:text-red-700 mt-2"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => addArrayItem('expected_outcomes')}
-                    className="text-sm lg:text-base"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Expected Outcome
-                  </Button>
-                </div>
-              </div>
-
-              {/* Keywords */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Keywords
-                </label>
-                <div className="space-y-3">
-                  {formData.keywords.map((keyword, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <Input
-                        value={keyword}
-                        onChange={(e) => handleArrayChange('keywords', index, e.target.value)}
-                        placeholder={`Keyword ${index + 1}`}
-                        className="flex-1 text-sm lg:text-base"
-                      />
-                      {formData.keywords.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeArrayItem('keywords', index)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => addArrayItem('keywords')}
-                    className="text-sm lg:text-base"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Keyword
-                  </Button>
-                </div>
-              </div>
-            </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem('co_investigators')}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+            >
+              <Users className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
+              Add Co-Investigator
+            </Button>
           </div>
         </div>
 
+        {/* Keywords */}
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 lg:p-6 rounded-lg">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              <Tag className="h-4 w-4 lg:h-5 lg:w-5 inline mr-2" />
+              Keywords
+            </h3>
+            {formData.keywords.map((keyword, index) => (
+              <div key={index} className="flex gap-2 lg:gap-3 mb-3">
+                <Input
+                  value={keyword}
+                  onChange={(e) => handleArrayChange('keywords', index, e.target.value)}
+                  placeholder={`Keyword ${index + 1}`}
+                  className="text-sm lg:text-base"
+                />
+                {formData.keywords.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeArrayItem('keywords', index)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
+                  >
+                    <X className="h-3 w-3 lg:h-4 lg:w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem('keywords')}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+            >
+              <Tag className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
+              Add Keyword
+            </Button>
+          </div>
+        </div>
+
+        {/* Objectives */}
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 lg:p-6 rounded-lg">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
+              <FileText className="h-4 w-4 lg:h-5 lg:w-5 inline mr-2" />
+              Project Objectives
+            </h3>
+            {formData.objectives.map((objective, index) => (
+              <div key={index} className="flex gap-2 lg:gap-3 mb-3">
+                <textarea
+                  value={objective}
+                  onChange={(e) => handleArrayChange('objectives', index, e.target.value)}
+                  placeholder={`Objective ${index + 1}`}
+                  rows={2}
+                  className="flex-1 px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                {formData.objectives.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeArrayItem('objectives', index)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0 self-start"
+                  >
+                    <X className="h-3 w-3 lg:h-4 lg:w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem('objectives')}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+            >
+              <FileText className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
+              Add Objective
+            </Button>
+          </div>
+        </div>
       </form>
     </FullScreenModal>
   );
