@@ -3,6 +3,7 @@ import { X, FolderOpen, Loader2, Calendar, Users, Tag, FileText, DollarSign } fr
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import FullScreenModal from '../ui/FullScreenModal';
+import '../../styles/checkbox-fix.css';
 
 const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) => {
   const [formData, setFormData] = useState({
