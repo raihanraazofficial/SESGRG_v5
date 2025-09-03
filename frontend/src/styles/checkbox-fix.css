@@ -27,65 +27,33 @@ input[type="radio"] {
   min-height: 16px !important;
 }
 
-/* Force checkbox interaction over any overlay issues */
-input[type="checkbox"]:before,
-input[type="checkbox"]:after {
-  pointer-events: none !important;
-}
-
-input[type="radio"] {
-  -webkit-appearance: radio !important;
-  appearance: radio !important;
-}
-
-/* Fix labels that contain checkboxes */
+/* Labels for checkboxes - CHECKBOX LABELS ONLY */
 label:has(input[type="checkbox"]), 
-label:has(input[type="radio"]),
-label[for] {
+label:has(input[type="radio"]) {
   cursor: pointer !important;
   pointer-events: auto !important;
   user-select: none !important;
   -webkit-user-select: none !important;
-  
-  /* Ensure labels are properly interactive */
-  transform: none !important;
-  backface-visibility: visible !important;
 }
 
-/* Fix for research areas and permissions sections */
+/* Specific checkbox classes used in admin panel */
 .research-areas input[type="checkbox"],
-.research-areas .research-area-checkbox,
 .permissions input[type="checkbox"],
-.category-select input[type="checkbox"],
-.featured-select input[type="checkbox"],
 .checkbox-container input[type="checkbox"],
-.featured-checkbox {
+.featured-checkbox,
+.publication-checkbox {
   pointer-events: auto !important;
   cursor: pointer !important;
   z-index: 1000 !important;
   position: relative !important;
-  margin: 0 !important;
-  background: white !important;
-  border: 2px solid #9ca3af !important;
-  border-radius: 4px !important;
   width: 18px !important;
   height: 18px !important;
-  -webkit-appearance: checkbox !important;
-  appearance: checkbox !important;
+  margin: 0 2px !important;
 }
 
-/* Specific fixes for featured checkboxes */
-.featured-select,
-.checkbox-container.featured-select {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 999 !important;
-  position: relative !important;
-}
-
-/* Force research area checkbox to be clickable */
-.research-areas .checkbox-container,
-.research-areas label {
+/* Checkbox containers */
+.checkbox-container,
+.research-areas .checkbox-container {
   pointer-events: auto !important;
   cursor: pointer !important;
   position: relative !important;
@@ -93,16 +61,12 @@ label[for] {
   display: flex !important;
   align-items: center !important;
   gap: 0.75rem !important;
-  padding: 12px !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
 }
 
-/* Fix for research areas labels */
+/* Labels for checkboxes */
 .research-areas label,
 .permissions label,
-.category-select label,
-.featured-select label {
+.checkbox-container label {
   cursor: pointer !important;
   pointer-events: auto !important;
   display: flex !important;
@@ -110,107 +74,33 @@ label[for] {
   gap: 0.5rem !important;
 }
 
-/* Fix for checkbox containers */
-.checkbox-container,
-[class*="checkbox"],
-.flex.items-center:has(input[type="checkbox"]) {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  transform: none !important;
+/* Publication checkbox specific styling */
+.publication-checkbox {
+  z-index: 10001 !important;
+  background: transparent !important;
+  border: 2px solid #6b7280 !important;
+  border-radius: 4px !important;
 }
 
-/* Specific fixes for admin panel modals */
-.admin-modal-form input[type="checkbox"],
-.admin-modal-form input[type="radio"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 1000 !important;
+.publication-checkbox:checked {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  accent-color: #059669 !important;
 }
 
-.admin-modal-form label:has(input[type="checkbox"]),
-.admin-modal-form label:has(input[type="radio"]) {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-}
-
-/* Fix for FullScreenModal checkboxes */
+/* Modal checkbox fixes */
 .admin-modal-fullscreen input[type="checkbox"],
-.admin-modal-fullscreen input[type="radio"] {
+[class*="Modal"] input[type="checkbox"],
+div[class*="bg-gradient"] input[type="checkbox"] {
   pointer-events: auto !important;
   cursor: pointer !important;
-  z-index: 1001 !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* Ensure all form controls are interactive */
-form input, 
-form select, 
-form textarea, 
-form button {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-/* Fix for grid layouts containing checkboxes */
-.grid:has(input[type="checkbox"]) input[type="checkbox"],
-.grid:has(input[type="radio"]) input[type="radio"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-/* Fix for modal overlays - ensure they don't block checkbox interaction */
-.modal-overlay,
-.admin-modal-overlay {
-  pointer-events: auto !important;
-}
-
-.modal-overlay > *,
-.admin-modal-overlay > * {
-  pointer-events: auto !important;
-}
-
-/* Specific fix for permissions grid in UserManagement */
-.permissions-grid input[type="checkbox"],
-.permissions-list input[type="checkbox"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 1000 !important;
-  min-width: 18px !important;
-  min-height: 18px !important;
-}
-
-.permissions-grid label,
-.permissions-list label {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 0.75rem !important;
-}
-
-/* Fix for select dropdown issues */
-select {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  touch-action: manipulation !important;
-}
-
-/* Fix for any remaining issues with interactive elements - SPECIFIC TO FORM CONTROLS */
-button[type="button"],
-button[type="submit"],
-button[type="reset"],
-input[type="checkbox"],
-input[type="radio"],
-select {
-  transform: none !important;
-  backface-visibility: visible !important;
-  will-change: auto !important;
-  pointer-events: auto !important;
-}
-
-/* DO NOT APPLY THESE RULES TO TEXT INPUTS */
-/* Text inputs should be handled by input-fix.css */
-
-/* Media query for mobile devices - ensure touch interaction works */
+/* Mobile responsiveness for checkboxes */
 @media (max-width: 768px) {
   input[type="checkbox"], 
   input[type="radio"] {
@@ -226,112 +116,4 @@ select {
     align-items: center !important;
     padding: 8px !important;
   }
-}
-
-/* EMERGENCY FIXES FOR MODAL CHECKBOXES - HIGHEST PRIORITY */
-/* Force all modal checkboxes to be interactive */
-[class*="Modal"] input[type="checkbox"],
-[class*="modal"] input[type="checkbox"],
-div[class*="bg-gradient"] input[type="checkbox"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 9999 !important;
-  position: relative !important;
-  background: white !important;
-  border: 2px solid #6b7280 !important;
-  border-radius: 4px !important;
-  width: 20px !important;
-  height: 20px !important;
-  margin: 2px !important;
-  -webkit-appearance: checkbox !important;
-  appearance: checkbox !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Force modal checkbox labels to be clickable */
-[class*="Modal"] label[for],
-[class*="modal"] label[for],
-div[class*="bg-gradient"] label[for] {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  z-index: 9998 !important;
-  position: relative !important;
-}
-
-/* Override any Tailwind or component styles that might interfere */
-.bg-yellow-50 input[type="checkbox"],
-.bg-emerald-50 input[type="checkbox"],
-.bg-purple-50 input[type="checkbox"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 10000 !important;
-}
-
-/* Specific fix for publication checkboxes - SIMPLIFIED APPROACH */
-.publication-checkbox {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 10001 !important;
-  position: relative !important;
-  -webkit-appearance: checkbox !important;
-  appearance: checkbox !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  margin: 0 !important;
-  width: 20px !important;
-  height: 20px !important;
-  background: transparent !important;
-  border: 2px solid #6b7280 !important;
-  border-radius: 4px !important;
-}
-
-.publication-checkbox:checked {
-  background-color: #059669 !important;
-  border-color: #059669 !important;
-  accent-color: #059669 !important;
-}
-
-.publication-checkbox:focus {
-  outline: 2px solid #10b981 !important;
-  outline-offset: 2px !important;
-}
-
-/* Ensure publication checkbox labels work */
-label[for="add_open_access"],
-label[for="add_featured"],
-label[for="edit_open_access"],
-label[for="edit_featured"] {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  user-select: none !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Fix for checkbox containers - ensure they don't block clicks */
-.checkbox-container {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  position: relative !important;
-  z-index: 1000 !important;
-}
-
-.checkbox-container input[type="checkbox"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 10002 !important;
-}
-
-/* Override any conflicting Tailwind styles */
-input[type="checkbox"].publication-checkbox {
-  all: revert !important;
-  -webkit-appearance: checkbox !important;
-  appearance: checkbox !important;
-  width: 20px !important;
-  height: 20px !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  z-index: 10003 !important;
-  position: relative !important;
 }
