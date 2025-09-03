@@ -489,3 +489,55 @@
     min-height: 200px;
   }
 }
+
+/* CRITICAL FIX FOR CHECKBOX INTERACTIONS */
+/* Ensure checkboxes and radio buttons work properly */
+input[type="checkbox"], 
+input[type="radio"] {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  transform: none !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  z-index: 10 !important;
+  position: relative !important;
+  cursor: pointer !important;
+}
+
+input[type="radio"] {
+  -webkit-appearance: radio !important;
+  appearance: radio !important;
+}
+
+/* Fix for labels containing checkboxes */
+label:has(input[type="checkbox"]), 
+label:has(input[type="radio"]) {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Ensure checkbox containers are interactive */
+.checkbox-container,
+[class*="checkbox"],
+label[class*="flex"][class*="items-center"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix for research areas checkboxes */
+.research-areas label,
+.permissions label,
+.category-select label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure all form inputs are interactive */
+form input, form select, form textarea, form button {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
