@@ -4,6 +4,7 @@ import "./App.css";
 import "./styles/checkbox-fix.css";
 import "./styles/input-fix.css";
 import { clearOldLocalStorageData } from "./utils/clearOldData";
+import { debugInputFields } from "./utils/debugInputs";
 
 // Import components
 import Navbar from "./components/Navbar";
