@@ -3,6 +3,7 @@ import { X, Plus, Loader2, FileText, BookOpen, Users } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import FullScreenModal from '../ui/FullScreenModal';
+import '../../styles/checkbox-fix.css';
 
 const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
   const [formData, setFormData] = useState({
