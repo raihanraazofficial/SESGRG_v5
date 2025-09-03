@@ -71,8 +71,7 @@ export const HomeProvider = ({ children }) => {
       if (initialized) return;
       
       try {
-        setIsLoading(true);
-        console.log('🔄 Loading home data from Firebase...');
+        console.log('🔄 Loading home data from Firebase in background...');
         
         // Set timeout to prevent indefinite loading
         const timeoutPromise = new Promise((_, reject) => 
@@ -84,20 +83,19 @@ export const HomeProvider = ({ children }) => {
         const firebaseHomeData = await Promise.race([firebasePromise, timeoutPromise]);
         
         if (firebaseHomeData) {
-          console.log('✅ Firebase home data loaded successfully');
+          console.log('✅ Firebase home data loaded successfully, updating content');
           setHomeData(firebaseHomeData);
         } else {
           console.log('📋 No Firebase data found, initializing with defaults...');
           // Initialize Firebase with default data if none exists
           await firebaseService.updateHomeData(DEFAULT_HOME_DATA);
-          setHomeData(DEFAULT_HOME_DATA);
+          // Keep default data already set
         }
       } catch (error) {
         console.error('❌ Error loading home data from Firebase:', error);
-        console.log('📋 Using default data due to error');
-        setHomeData(DEFAULT_HOME_DATA);
+        console.log('📋 Continuing with default data due to error');
+        // Keep default data already set
       } finally {
-        setIsLoading(false);
         setInitialized(true);
       }
     };
