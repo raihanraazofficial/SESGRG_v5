@@ -208,15 +208,30 @@ const EditAchievementModal = ({ isOpen, onClose, onUpdate, achievement, categori
               </div>
 
               {/* Featured checkbox */}
-              <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container featured-select">
+              <div 
+                className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container featured-select"
+                onClick={() => handleCheckboxToggle('featured')}
+              >
                 <input
                   type="checkbox"
                   id="featured"
                   checked={formData.featured}
-                  onChange={(e) => handleInputChange('featured', e.target.checked)}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    handleInputChange('featured', e.target.checked);
+                  }}
+                  onClick={(e) => e.stopPropagation()}
                   className="h-4 w-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                 />
-                <label htmlFor="featured" className="flex items-center text-sm font-medium text-gray-700 cursor-pointer">
+                <label 
+                  htmlFor="featured" 
+                  className="flex items-center text-sm font-medium text-gray-700 cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleCheckboxToggle('featured');
+                  }}
+                >
                   <Star className="h-4 w-4 mr-2 text-yellow-500" />
                   Mark as Featured
                 </label>
