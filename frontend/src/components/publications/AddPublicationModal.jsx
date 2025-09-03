@@ -282,18 +282,18 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
 
         {/* Research Areas */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 lg:p-6 rounded-lg">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 lg:p-6 rounded-lg research-areas">
             <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-4">
               Research Areas * (Select at least 1)
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {researchAreas.map((area) => (
-                <label key={area} className="flex items-center space-x-3 p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all">
+                <label key={area} className="flex items-center space-x-3 p-3 lg:p-4 border border-gray-200 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all checkbox-container">
                   <input
                     type="checkbox"
                     checked={formData.research_areas.includes(area)}
                     onChange={() => handleResearchAreaToggle(area)}
-                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 research-area-checkbox"
                   />
                   <span className="text-xs lg:text-sm text-gray-700 font-medium">{area}</span>
                 </label>
