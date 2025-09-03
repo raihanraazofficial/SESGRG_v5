@@ -512,25 +512,57 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
 
               {/* Checkboxes */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container">
+                <div 
+                  className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleInputChange('open_access', !formData.open_access);
+                  }}
+                >
                   <input
                     type="checkbox"
                     id="add_open_access"
                     checked={formData.open_access}
-                    onChange={(e) => handleInputChange('open_access', e.target.checked)}
-                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 publication-checkbox"
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleInputChange('open_access', e.target.checked);
+                    }}
+                    className="publication-checkbox"
+                    style={{ pointerEvents: 'auto', cursor: 'pointer', zIndex: 10001 }}
                   />
-                  <label htmlFor="add_open_access" className="text-sm text-gray-700 font-medium cursor-pointer">Open Access</label>
+                  <label 
+                    htmlFor="add_open_access" 
+                    className="text-sm text-gray-700 font-medium cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Open Access
+                  </label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container">
+                <div 
+                  className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleInputChange('featured', !formData.featured);
+                  }}
+                >
                   <input
                     type="checkbox"
                     id="add_featured"
                     checked={formData.featured}
-                    onChange={(e) => handleInputChange('featured', e.target.checked)}
-                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 publication-checkbox"
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleInputChange('featured', e.target.checked);
+                    }}
+                    className="publication-checkbox"
+                    style={{ pointerEvents: 'auto', cursor: 'pointer', zIndex: 10001 }}
                   />
-                  <label htmlFor="add_featured" className="text-sm text-gray-700 font-medium cursor-pointer">Featured Publication</label>
+                  <label 
+                    htmlFor="add_featured" 
+                    className="text-sm text-gray-700 font-medium cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Featured Publication
+                  </label>
                 </div>
               </div>
 
