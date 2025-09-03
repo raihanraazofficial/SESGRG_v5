@@ -61,8 +61,8 @@ const DEFAULT_HOME_DATA = {
 };
 
 export const HomeProvider = ({ children }) => {
-  const [homeData, setHomeData] = useState(DEFAULT_HOME_DATA); // Start with default data
-  const [isLoading, setIsLoading] = useState(false); // Set to false initially
+  const [homeData, setHomeData] = useState(null); // Start with null to force loading from Firebase
+  const [isLoading, setIsLoading] = useState(true); // Show loading initially
   const [initialized, setInitialized] = useState(false);
 
   // Load data from Firebase on initialization
@@ -71,7 +71,8 @@ export const HomeProvider = ({ children }) => {
       if (initialized) return;
       
       try {
-        console.log('🔄 Loading home data from Firebase in background...');
+        setIsLoading(true);
+        console.log('🔄 Loading home data from Firebase...');
         
         const firebaseHomeData = await firebaseService.getHomeData();
         
@@ -79,12 +80,17 @@ export const HomeProvider = ({ children }) => {
           console.log('✅ Firebase home data loaded successfully');
           setHomeData(firebaseHomeData);
         } else {
-          console.log('📋 No Firebase data found, keeping default data');
+          console.log('📋 No Firebase data found, initializing with defaults...');
+          // Initialize Firebase with default data if none exists
+          await firebaseService.updateHomeData(DEFAULT_HOME_DATA);
+          setHomeData(DEFAULT_HOME_DATA);
         }
       } catch (error) {
         console.error('❌ Error loading home data from Firebase:', error);
         console.log('📋 Using default data due to error');
+        setHomeData(DEFAULT_HOME_DATA);
       } finally {
+        setIsLoading(false);
         setInitialized(true);
       }
     };
