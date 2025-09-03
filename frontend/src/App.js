@@ -44,6 +44,11 @@ function App() {
   // Clear old localStorage data on app initialization
   useEffect(() => {
     clearOldLocalStorageData();
+    
+    // Debug input fields if there are issues
+    setTimeout(() => {
+      debugInputFields();
+    }, 3000);
   }, []);
 
   return (
