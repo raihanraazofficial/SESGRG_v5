@@ -191,27 +191,41 @@ class December2025BackendTester:
             response = requests.get(admin_login_url, timeout=10)
             
             if response.status_code == 200:
-                content = response.text.lower()
+                # Since this is a React SPA, check the JavaScript bundle for admin components
+                bundle_url = f"{self.frontend_url}/static/js/bundle.js"
+                bundle_response = requests.get(bundle_url, timeout=15)
                 
-                # Check for login form elements
-                has_login_form = any([
-                    'login' in content,
-                    'username' in content,
-                    'password' in content,
-                    'admin' in content
-                ])
-                
-                if has_login_form:
-                    self.log_test(
-                        "Admin Panel Accessibility", 
-                        True, 
-                        f"Admin login page accessible with login form elements"
-                    )
+                if bundle_response.status_code == 200:
+                    content = bundle_response.text.lower()
+                    
+                    # Check for admin panel components in the bundle
+                    admin_indicators = [
+                        'admin' in content,
+                        'login' in content,
+                        'username' in content,
+                        'password' in content,
+                        'authentication' in content or 'auth' in content
+                    ]
+                    
+                    admin_count = sum(admin_indicators)
+                    
+                    if admin_count >= 4:  # At least 4 out of 5 indicators
+                        self.log_test(
+                            "Admin Panel Accessibility", 
+                            True, 
+                            f"Admin panel components detected in bundle ({admin_count}/5 indicators found)"
+                        )
+                    else:
+                        self.log_test(
+                            "Admin Panel Accessibility", 
+                            False, 
+                            f"Insufficient admin panel components ({admin_count}/5 indicators found)"
+                        )
                 else:
                     self.log_test(
                         "Admin Panel Accessibility", 
                         False, 
-                        "Admin login page accessible but missing expected form elements"
+                        f"Cannot access JavaScript bundle for admin check (Status: {bundle_response.status_code})"
                     )
             else:
                 self.log_test(
