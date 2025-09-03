@@ -506,62 +506,27 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
 
                   {/* Checkboxes */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div 
-                      className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container open-access-select"
-                      onClick={() => handleCheckboxToggle('open_access')}
-                    >
+                    <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container">
                       <input
                         type="checkbox"
-                        id="open_access"
+                        id="edit_open_access"
                         checked={formData.open_access}
-                        onChange={(e) => {
-                          console.log('Open access checkbox onChange:', e.target.checked);
-                          e.stopPropagation();
-                          handleInputChange('open_access', e.target.checked);
-                        }}
-                        onClick={(e) => {
-                          console.log('Open access checkbox onClick:', e.target.checked);
-                          e.stopPropagation();
-                        }}
-                        className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox open-access-checkbox"
+                        onChange={(e) => handleInputChange('open_access', e.target.checked)}
+                        className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 publication-checkbox"
                       />
-                      <label 
-                        htmlFor="open_access" 
-                        className="text-sm text-gray-700 font-medium cursor-pointer"
-                        onClick={(e) => {
-                          console.log('Open access label clicked');
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleCheckboxToggle('open_access');
-                        }}
-                      >
+                      <label htmlFor="edit_open_access" className="text-sm text-gray-700 font-medium cursor-pointer">
                         Open Access
                       </label>
                     </div>
-                    <div 
-                      className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container featured-select"
-                      onClick={() => handleCheckboxToggle('featured')}
-                    >
+                    <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container">
                       <input
                         type="checkbox"
-                        id="featured"
+                        id="edit_featured"
                         checked={formData.featured}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          handleInputChange('featured', e.target.checked);
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
+                        onChange={(e) => handleInputChange('featured', e.target.checked)}
+                        className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 publication-checkbox"
                       />
-                      <label 
-                        htmlFor="featured" 
-                        className="text-sm text-gray-700 font-medium cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleCheckboxToggle('featured');
-                        }}
-                      >
+                      <label htmlFor="edit_featured" className="text-sm text-gray-700 font-medium cursor-pointer">
                         Featured Publication
                       </label>
                     </div>
