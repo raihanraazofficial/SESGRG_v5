@@ -231,3 +231,43 @@ label {
     padding: 8px !important;
   }
 }
+
+/* EMERGENCY FIXES FOR MODAL CHECKBOXES - HIGHEST PRIORITY */
+/* Force all modal checkboxes to be interactive */
+[class*="Modal"] input[type="checkbox"],
+[class*="modal"] input[type="checkbox"],
+div[class*="bg-gradient"] input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  background: white !important;
+  border: 2px solid #6b7280 !important;
+  border-radius: 4px !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 2px !important;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Force modal checkbox labels to be clickable */
+[class*="Modal"] label[for],
+[class*="modal"] label[for],
+div[class*="bg-gradient"] label[for] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 9998 !important;
+  position: relative !important;
+}
+
+/* Override any Tailwind or component styles that might interfere */
+.bg-yellow-50 input[type="checkbox"],
+.bg-emerald-50 input[type="checkbox"],
+.bg-purple-50 input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 10000 !important;
+}
