@@ -34,6 +34,13 @@ const EditAchievementModal = ({ isOpen, onClose, onUpdate, achievement, categori
     }
   }, [achievement]);
 
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const handleCheckboxToggle = (field) => {
     console.log(`Toggling ${field}:`, !formData[field]);
     handleInputChange(field, !formData[field]);
