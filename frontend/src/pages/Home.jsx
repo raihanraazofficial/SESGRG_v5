@@ -357,8 +357,8 @@ const Home = () => {
     setIsVisible(true);
     
     const observerOptions = {
-      threshold: 0.6,
-      rootMargin: '0px 0px -100px 0px'
+      threshold: 0.4, // Reduced threshold for better trigger
+      rootMargin: '0px 0px -50px 0px' // Reduced margin for earlier trigger
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -368,20 +368,28 @@ const Home = () => {
           if (objectiveIndex !== undefined) {
             setTimeout(() => {
               setAnimatedObjectives(prev => new Set([...prev, objectiveIndex]));
-            }, objectiveIndex * 200);
+            }, objectiveIndex * 150); // Reduced delay for faster animation
           }
         }
       });
     }, observerOptions);
 
-    // Observe objective elements
-    setTimeout(() => {
+    // Observe objective elements with multiple attempts
+    const setupObserver = () => {
       const objectiveElements = document.querySelectorAll('[data-objective-index]');
-      objectiveElements.forEach(el => observer.observe(el));
-    }, 100);
+      if (objectiveElements.length > 0) {
+        objectiveElements.forEach(el => observer.observe(el));
+        console.log(`📍 Observing ${objectiveElements.length} objective elements for animation`);
+      } else {
+        // Retry if elements not found
+        setTimeout(setupObserver, 200);
+      }
+    };
+
+    setTimeout(setupObserver, 100);
 
     return () => observer.disconnect();
-  }, []);
+  }, [objectives]); // Added objectives as dependency to re-setup when data changes
 
 
   return (
