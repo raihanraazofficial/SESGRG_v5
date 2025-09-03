@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Plus, Loader2, FileText, BookOpen, Users } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import '../../styles/checkbox-fix.css';
 
 const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, researchAreas }) => {
   const [formData, setFormData] = useState({
