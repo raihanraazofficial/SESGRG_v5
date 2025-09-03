@@ -22,7 +22,7 @@ from datetime import datetime
 class UserManagementTester:
     def __init__(self):
         # Get backend URL from frontend .env
-        self.backend_url = "https://admin-auth-fix-1.preview.emergentagent.com"
+        self.backend_url = "https://data-sync-update.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test credentials
