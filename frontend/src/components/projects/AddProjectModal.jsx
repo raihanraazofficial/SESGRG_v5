@@ -54,6 +54,7 @@ const AddProjectModal = ({ isOpen, onClose, onAdd, researchAreas, statuses }) =>
   };
 
   const handleResearchAreaToggle = (area) => {
+    console.log('Project research area toggle clicked:', area);
     setFormData(prev => ({
       ...prev,
       research_areas: prev.research_areas.includes(area)
