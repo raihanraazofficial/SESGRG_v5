@@ -5,6 +5,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import RichTextEditor from '../RichTextEditor';
 import FullScreenModal from '../ui/FullScreenModal';
+import '../../styles/checkbox-fix.css';
 
 const EditNewsEventModal = ({ isOpen, onClose, onSubmit, categories, newsEvent }) => {
   const [formData, setFormData] = useState({
