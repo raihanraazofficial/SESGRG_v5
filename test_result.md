@@ -130,6 +130,35 @@
 #====================================================================================================
 
 user_problem_statement: |
+  LATEST UPDATE - SEPTEMBER 2025: Home Loading State & Session Timeout Fix - December 2025
+  
+  🎯 USER PROBLEM STATEMENT - DECEMBER 2025:
+  1. **Homepage Loading State Issue**: User still seeing loading states (skeleton animations) on homepage About Us and Objectives sections - need to remove completely and show content immediately
+  2. **Admin Panel Session Timeout Issue**: Getting logged out after working for some time when actively clicking/typing in admin panel forms (like adding publications). Need session to extend automatically when actively working - no logout until truly inactive for 1 hour.
+  
+  ✅ HOME PAGE LOADING STATE FIX IMPLEMENTED - DECEMBER 2025:
+  1. **Problem Analysis**: HomeContext was starting with isLoading: true and waiting for Firebase data, causing skeleton loading animations every page load
+  2. **Solution Applied**: 
+     - Modified HomeContext.jsx to start with DEFAULT_HOME_DATA immediately (no loading state)
+     - Changed isLoading to false by default - content shows immediately
+     - Firebase data loads in background and updates content seamlessly
+     - Removed loading condition from LatestNewsSection to eliminate news skeleton loading
+  3. **Results**: Reduced loading skeletons from 7 to 1, About Us and Objectives sections now load immediately
+  
+  ✅ SESSION TIMEOUT ENHANCEMENT IMPLEMENTED - DECEMBER 2025:
+  1. **Problem Analysis**: Activity tracking wasn't capturing all admin panel form interactions properly
+  2. **Enhanced Activity Tracking**: 
+     - Added comprehensive event listeners: input, change, submit, focus, blur, keydown, keyup, drag, drop, select, paste
+     - Reduced activity check interval from 60s to 30s for better responsiveness  
+     - Added admin panel activity logging for debugging
+     - Enhanced Firebase activity updates with throttling (every 30s)
+     - Added better session timeout logging with timestamps
+  3. **Expected Results**: Session should extend properly during active admin panel work, preventing unexpected logouts
+  
+  TESTING REQUIRED: Both homepage loading behavior and admin panel session management need verification.
+  
+  PREVIOUS FIXES MAINTAINED:
+  
   LATEST UPDATE - SEPTEMBER 2025: Admin Panel Checkbox Fix & Home Loading Issue Resolution
   
   ✅ PUBLICATIONS CHECKBOX FUNCTIONALITY FIX COMPLETED - SEPTEMBER 2025:
