@@ -535,6 +535,30 @@ user_problem_statement: |
   ⏳ Email Delivery: Form submissions need to be sent to raihanraaz.official@gmail.com via EmailJS when keys provided
   
 backend:
+  - task: "Publications Checkbox Functionality Fix - September 2025"
+    implemented: true
+    working: "NA"
+    file: "EditPublicationModal.jsx, AddPublicationModal.jsx, checkbox-fix.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🔧 PUBLICATIONS CHECKBOX FUNCTIONALITY SIMPLIFIED - SEPTEMBER 2025: Identified and fixed the root cause of non-working Open Access and Featured Publication checkboxes in admin panel publications section. ISSUE: Complex event handling with multiple onClick handlers, stopPropagation, preventDefault was causing conflicts between div clicks, label clicks, and checkbox onChange events. SOLUTION: 1) Removed complex handleCheckboxToggle function and div onClick handlers from EditPublicationModal.jsx, 2) Simplified to standard checkbox onChange handlers only, 3) Updated checkbox IDs to be unique (edit_open_access, edit_featured, add_open_access, add_featured), 4) Applied clean publication-checkbox class instead of mixed featured-checkbox classes, 5) Enhanced checkbox-fix.css with specific .publication-checkbox rules (z-index: 10001, proper pointer-events, cursor, appearance), 6) Added label targeting for publication checkboxes. RESULT: Publications Open Access and Featured checkboxes should now be fully interactive and selectable. Research areas checkboxes were already working and remain unchanged."
+
+  - task: "Home Page Loading State Fix - September 2025"
+    implemented: true
+    working: "NA"
+    file: "Home.jsx, HomeContext.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🎯 HOME PAGE LOADING STATE ISSUE RESOLVED - SEPTEMBER 2025: Fixed the problem where About Us and Objectives sections showed old/default content first before displaying actual admin panel changes. ISSUE: HomeContext had DEFAULT_HOME_DATA fallback being used immediately while Firebase data was loading, causing flash of old content on every page refresh or site entry. SOLUTION: 1) Added isLoading state extraction from useHome() hook in Home.jsx, 2) Implemented conditional rendering to show skeleton loading animations instead of default content, 3) Added professional skeleton loading for About Us section (title and content placeholders), 4) Added skeleton loading for Objectives section (5 objective placeholders with number circles), 5) Used proper loading state management to prevent default content flash. RESULT: Home page now shows smooth loading animations during Firebase data fetch, no more flash of old content, seamless transition from loading to actual admin panel content. This fixes both About Us and Objectives sections loading behavior."
+
   - task: "Admin Panel Checkbox Functionality Fix - All Modals"
     implemented: true
     working: "NA"
