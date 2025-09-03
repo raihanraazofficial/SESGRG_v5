@@ -130,6 +130,45 @@
 #====================================================================================================
 
 user_problem_statement: |
+  LATEST UPDATE - JANUARY 2025: Home Loading State Old Data Flash Issue Fix
+  
+  🎯 USER PROBLEM STATEMENT - JANUARY 2025:
+  **CRITICAL HOMEPAGE LOADING ISSUE**: About Us, Objectives, and Carousel sections showing old/default data first on page load/refresh, then switching to new updated data from admin panel. This creates a flash of old content that confuses users.
+  
+  **SPECIFIC ISSUES IDENTIFIED**:
+  1. About Us section shows old content: "The Sustainable Energy and Smart Grid Research lab at BRAC University..." then switches to new content: "The Sustainable Energy and Smart Grid Research Group (SESGRG) is an independent research group established in 2025..."
+  2. Objectives section shows old list (7 old objectives) then switches to new list (7 updated objectives)
+  3. Carousel/slider has same loading behavior problem
+  4. localStorage cache may contain old data interfering with loading
+  
+  **ROOT CAUSE ANALYSIS**:
+  - HomeContext.jsx starts with DEFAULT_HOME_DATA (old content) and isLoading=false
+  - This causes immediate render of old content while Firebase loads in background
+  - When Firebase data arrives, it triggers re-render with new content
+  - Result: OLD DATA FLASH → NEW DATA (bad UX)
+  
+  ✅ HOMEPAGE OLD DATA FLASH FIX IMPLEMENTED - JANUARY 2025:
+  1. **Loading State Management**: Changed HomeContext to start with isLoading=true and homeData=null instead of DEFAULT_HOME_DATA
+  2. **localStorage Cleanup**: Added automatic clearing of 'sesg_home_data' and other old localStorage keys that could contain cached old data
+  3. **Updated Default Content**: Updated DEFAULT_HOME_DATA with new SESGRG content and objectives to match latest admin panel updates
+  4. **App-level Data Clearing**: Added clearOldLocalStorageData utility that runs on app initialization to prevent any old cached data interference
+  5. **Proper Loading Sequence**: Firebase data loads first, then content renders - no flash of old content
+  6. **Enhanced Error Handling**: Better timeout handling (8 seconds) and fallback to updated defaults if Firebase fails
+  
+  **TECHNICAL CHANGES**:
+  - HomeContext.jsx: Start with null data and loading=true, clear localStorage, use updated defaults
+  - clearOldData.js: New utility to systematically clear old cached data
+  - App.js: Initialize data cleanup on app start
+  - Home.jsx: Skeleton loading shows while Firebase loads (no old content flash)
+  
+  **EXPECTED RESULTS**: 
+  - Page loads → Shows loading skeleton → Displays current Firebase data immediately
+  - No flash of old "BRAC University research lab" content before new "SESGRG independent research group" content
+  - No flash of old objectives before new objectives
+  - Carousel loads current images without showing old defaults first
+  
+  TESTING REQUIRED: Manual testing to verify no old data shows on page load/refresh, only current admin panel data displays.
+  
   LATEST UPDATE - SEPTEMBER 2025: Home Loading State & Session Timeout Fix - December 2025
   
   🎯 USER PROBLEM STATEMENT - DECEMBER 2025:
