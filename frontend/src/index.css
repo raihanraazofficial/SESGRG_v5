@@ -91,7 +91,11 @@ code {
   /* ULTRA PERFORMANCE OPTIMIZATIONS FOR SMOOTH SCROLLING */
   * {
     -webkit-overflow-scrolling: touch;
-    /* Enable hardware acceleration for all elements */
+  }
+  
+  /* CRITICAL: Exclude form elements from global transforms */
+  :not(input):not(select):not(textarea):not(button):not(label) {
+    /* Enable hardware acceleration for non-form elements */
     transform: translateZ(0);
     backface-visibility: hidden;
   }
