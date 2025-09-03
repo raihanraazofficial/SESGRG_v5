@@ -33,9 +33,9 @@ class March2025BugFixesBackendTest:
                         self.base_url = line.split('=', 1)[1].strip()
                         break
                 else:
-                    self.base_url = "https://content-fix-5.preview.emergentagent.com"
+                    self.base_url = "https://input-debug.preview.emergentagent.com"
         except:
-            self.base_url = "https://content-fix-5.preview.emergentagent.com"
+            self.base_url = "https://input-debug.preview.emergentagent.com"
         
         self.api_url = f"{self.base_url}/api"
         self.session = requests.Session()

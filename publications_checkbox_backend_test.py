@@ -25,7 +25,7 @@ from datetime import datetime
 class PublicationsCheckboxTester:
     def __init__(self):
         # Get backend URL from frontend .env
-        self.backend_url = "https://content-fix-5.preview.emergentagent.com"
+        self.backend_url = "https://input-debug.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test credentials

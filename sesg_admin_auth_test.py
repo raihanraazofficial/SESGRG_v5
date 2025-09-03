@@ -22,7 +22,7 @@ import re
 class SESGAdminAuthTester:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://content-fix-5.preview.emergentagent.com"
+        self.frontend_url = "https://input-debug.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
