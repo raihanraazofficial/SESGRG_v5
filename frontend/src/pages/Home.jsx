@@ -422,10 +422,25 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">{aboutUs.title}</h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
-              {aboutUs.content}
-            </p>
+            {isLoading ? (
+              <>
+                <div className="animate-pulse">
+                  <div className="h-12 bg-gray-200 rounded-md w-3/4 mx-auto mb-6"></div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-full mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-5/6 mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-4/5 mx-auto"></div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">{aboutUs.title}</h2>
+                <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
+                  {aboutUs.content}
+                </p>
+              </>
+            )}
           </div>
 
           {/* Our Objectives & Research in Action - Vertically Centered Layout */}
