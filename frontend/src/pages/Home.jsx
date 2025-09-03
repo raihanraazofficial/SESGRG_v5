@@ -511,40 +511,56 @@ const Home = () => {
               {/* Objectives - Right Side */}
               <div className="flex flex-col justify-center">
                 <h3 className="text-3xl font-bold text-gray-900 mb-12 text-center">Our Objectives</h3>
-                <div className="space-y-8">
-                  {objectives.map((objective, index) => (
-                    <div 
-                      key={index}
-                      data-objective-index={index}
-                      className="objective-item"
-                    >
-                      <div className="flex items-start space-x-4">
-                        <div className={`relative flex-shrink-0 w-12 h-12 rounded-full border-3 border-emerald-500 flex items-center justify-center transition-all duration-500 ${
-                          animatedObjectives.has(index) 
-                            ? 'bg-emerald-500 scale-110' 
-                            : 'bg-white'
-                        }`}>
-                          <span className={`text-lg font-bold transition-colors duration-500 ${
-                            animatedObjectives.has(index) ? 'text-white' : 'text-emerald-500'
-                          }`}>
-                            {index + 1}
-                          </span>
-                          {animatedObjectives.has(index) && (
-                            <CheckCircle className="absolute -top-1 -right-1 h-5 w-5 text-emerald-600 animate-ping" />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-lg text-gray-700 leading-relaxed">
-                            {objective}
-                          </p>
-                          <div className={`mt-2 h-0.5 bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-500 ${
-                            animatedObjectives.has(index) ? 'w-full opacity-100' : 'w-0 opacity-0'
-                          }`}></div>
+                {isLoading ? (
+                  <div className="space-y-8">
+                    {[1, 2, 3, 4, 5].map((index) => (
+                      <div key={index} className="animate-pulse">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-12 h-12 bg-gray-200 rounded-full flex-shrink-0"></div>
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 bg-gray-200 rounded w-full"></div>
+                            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {objectives.map((objective, index) => (
+                      <div 
+                        key={index}
+                        data-objective-index={index}
+                        className="objective-item"
+                      >
+                        <div className="flex items-start space-x-4">
+                          <div className={`relative flex-shrink-0 w-12 h-12 rounded-full border-3 border-emerald-500 flex items-center justify-center transition-all duration-500 ${
+                            animatedObjectives.has(index) 
+                              ? 'bg-emerald-500 scale-110' 
+                              : 'bg-white'
+                          }`}>
+                            <span className={`text-lg font-bold transition-colors duration-500 ${
+                              animatedObjectives.has(index) ? 'text-white' : 'text-emerald-500'
+                            }`}>
+                              {index + 1}
+                            </span>
+                            {animatedObjectives.has(index) && (
+                              <CheckCircle className="absolute -top-1 -right-1 h-5 w-5 text-emerald-600 animate-ping" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-lg text-gray-700 leading-relaxed">
+                              {objective}
+                            </p>
+                            <div className={`mt-2 h-0.5 bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-500 ${
+                              animatedObjectives.has(index) ? 'w-full opacity-100' : 'w-0 opacity-0'
+                            }`}></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
