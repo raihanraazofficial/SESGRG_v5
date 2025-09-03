@@ -499,25 +499,25 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
 
               {/* Checkboxes */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg">
+                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container">
                   <input
                     type="checkbox"
                     id="open_access"
                     checked={formData.open_access}
                     onChange={(e) => handleInputChange('open_access', e.target.checked)}
-                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                   />
-                  <label htmlFor="open_access" className="text-sm text-gray-700 font-medium">Open Access</label>
+                  <label htmlFor="open_access" className="text-sm text-gray-700 font-medium cursor-pointer">Open Access</label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg">
+                <div className="flex items-center space-x-3 p-3 lg:p-4 bg-yellow-50 rounded-lg checkbox-container featured-select">
                   <input
                     type="checkbox"
                     id="featured"
                     checked={formData.featured}
                     onChange={(e) => handleInputChange('featured', e.target.checked)}
-                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                   />
-                  <label htmlFor="featured" className="text-sm text-gray-700 font-medium">Featured Publication</label>
+                  <label htmlFor="featured" className="text-sm text-gray-700 font-medium cursor-pointer">Featured Publication</label>
                 </div>
               </div>
 
