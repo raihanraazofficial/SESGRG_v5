@@ -94,6 +94,15 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
     }
   };
 
+  const handleResearchAreaToggle = (area) => {
+    setFormData(prev => ({
+      ...prev,
+      research_areas: prev.research_areas.includes(area)
+        ? prev.research_areas.filter(a => a !== area)
+        : [...prev.research_areas, area]
+    }));
+  };
+
   const handleCheckboxToggle = (field) => {
     console.log(`Toggling ${field}:`, !formData[field]);
     handleInputChange(field, !formData[field]);
