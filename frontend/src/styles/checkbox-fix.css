@@ -271,3 +271,34 @@ div[class*="bg-gradient"] label[for] {
   cursor: pointer !important;
   z-index: 10000 !important;
 }
+
+/* Specific fix for publication checkboxes */
+.publication-checkbox {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 10001 !important;
+  position: relative !important;
+  background: white !important;
+  border: 2px solid #6b7280 !important;
+  border-radius: 4px !important;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 0 !important;
+}
+
+.publication-checkbox:checked {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+/* Ensure publication checkbox labels work */
+label[for="add_open_access"],
+label[for="add_featured"],
+label[for="edit_open_access"],
+label[for="edit_featured"] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
