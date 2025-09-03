@@ -273,7 +273,7 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
 
             {/* Research Areas */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg research-areas">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Research Areas * (Select at least 1)
                 </h3>
