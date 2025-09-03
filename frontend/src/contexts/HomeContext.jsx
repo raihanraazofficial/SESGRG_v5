@@ -299,9 +299,9 @@ export const HomeProvider = ({ children }) => {
 
   const value = {
     // State
-    aboutUs: homeData?.aboutUs || DEFAULT_HOME_DATA.aboutUs,
-    carouselImages: homeData?.carouselImages || DEFAULT_HOME_DATA.carouselImages,
-    objectives: homeData?.objectives || DEFAULT_HOME_DATA.objectives,
+    aboutUs: homeData?.aboutUs || {},
+    carouselImages: homeData?.carouselImages || [],
+    objectives: homeData?.objectives || [],
     isLoading,
 
     // About Us Methods
