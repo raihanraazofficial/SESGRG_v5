@@ -28,9 +28,9 @@ class March2025TargetedBackendTest:
                         self.base_url = line.split('=', 1)[1].strip()
                         break
                 else:
-                    self.base_url = "https://data-sync-update.preview.emergentagent.com"
+                    self.base_url = "https://admin-panel-repair-1.preview.emergentagent.com"
         except:
-            self.base_url = "https://data-sync-update.preview.emergentagent.com"
+            self.base_url = "https://admin-panel-repair-1.preview.emergentagent.com"
         
         self.session = requests.Session()
         self.session.headers.update({
