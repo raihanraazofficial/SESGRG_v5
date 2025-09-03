@@ -26,6 +26,11 @@ const AddAchievementModal = ({ isOpen, onClose, onAdd, categories }) => {
     }));
   };
 
+  const handleCheckboxToggle = (field) => {
+    console.log(`Toggling ${field}:`, !formData[field]);
+    handleInputChange(field, !formData[field]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
