@@ -103,11 +103,6 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
     }));
   };
 
-  const handleCheckboxToggle = (field) => {
-    console.log(`Toggling ${field}:`, !formData[field]);
-    handleInputChange(field, !formData[field]);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
