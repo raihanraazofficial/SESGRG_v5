@@ -10,7 +10,7 @@ import firebaseService from '../services/firebaseService';
 
 // Session configuration
 const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
-const ACTIVITY_CHECK_INTERVAL = 60 * 1000; // Check every minute
+const ACTIVITY_CHECK_INTERVAL = 30 * 1000; // Check every 30 seconds (reduced for better responsiveness)
 
 // Create Auth Context
 const AuthContext = createContext();
