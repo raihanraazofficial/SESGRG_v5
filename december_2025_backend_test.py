@@ -140,40 +140,41 @@ class December2025BackendTester:
     def test_firebase_configuration_validation(self):
         """Test 3: Firebase Configuration and Connectivity"""
         try:
-            # Test if Firebase configuration is accessible through the app
-            # We'll check for Firebase-related resources and configuration
+            # Check Firebase configuration in the JavaScript bundle
+            bundle_url = f"{self.frontend_url}/static/js/bundle.js"
+            response = requests.get(bundle_url, timeout=15)
             
-            # Check for Firebase SDK loading
-            response = requests.get(self.frontend_url, timeout=10)
             if response.status_code == 200:
                 content = response.text.lower()
                 
-                # Look for Firebase indicators
+                # Look for Firebase indicators in the bundle
                 firebase_indicators = [
                     'firebase' in content,
                     'firestore' in content,
-                    'sesg-research-website' in content  # Firebase project ID
+                    'sesg-research-website' in content,  # Firebase project ID
+                    'auth' in content,
+                    'storage' in content
                 ]
                 
-                firebase_present = any(firebase_indicators)
+                firebase_count = sum(firebase_indicators)
                 
-                if firebase_present:
+                if firebase_count >= 4:  # At least 4 out of 5 indicators
                     self.log_test(
                         "Firebase Configuration Validation", 
                         True, 
-                        "Firebase configuration detected in frontend bundle"
+                        f"Firebase configuration detected in bundle ({firebase_count}/5 indicators found)"
                     )
                 else:
                     self.log_test(
                         "Firebase Configuration Validation", 
                         False, 
-                        "Firebase configuration not detected in frontend"
+                        f"Insufficient Firebase configuration ({firebase_count}/5 indicators found)"
                     )
             else:
                 self.log_test(
                     "Firebase Configuration Validation", 
                     False, 
-                    f"Cannot access frontend to check Firebase config (Status: {response.status_code})"
+                    f"Cannot access JavaScript bundle (Status: {response.status_code})"
                 )
         except Exception as e:
             self.log_test(
