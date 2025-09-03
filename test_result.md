@@ -605,6 +605,18 @@ user_problem_statement: |
   ⏳ Email Delivery: Form submissions need to be sent to raihanraaz.official@gmail.com via EmailJS when keys provided
   
 backend:
+  - task: "Homepage Old Data Flash Issue Fix - January 2025"
+    implemented: true
+    working: "NA"
+    file: "HomeContext.jsx, clearOldData.js, App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "🎯 CRITICAL HOMEPAGE OLD DATA FLASH ISSUE FIXED - JANUARY 2025: Identified and resolved the root cause where About Us, Objectives, and Carousel sections showed old/default data first on page load/refresh before switching to new Firebase data. PROBLEM: HomeContext started with DEFAULT_HOME_DATA (old content) and isLoading=false, causing immediate render of old content while Firebase loaded in background. SOLUTION: 1) Changed HomeContext to start with homeData=null and isLoading=true, 2) Added automatic localStorage cleanup ('sesg_home_data' and other keys) to prevent old cached data interference, 3) Updated DEFAULT_HOME_DATA with current SESGRG content and objectives, 4) Created clearOldData.js utility for systematic cache clearing, 5) Added app-level data cleanup in App.js initialization. RESULT: Page now loads → shows loading skeleton → displays current Firebase data immediately without flash of old 'BRAC University research lab' content before new 'SESGRG independent research group' content. NEEDS MANUAL TESTING to verify no old data flash occurs."
+
   - task: "December 2025 Homepage Loading State & Session Timeout Fixes"
     implemented: true
     working: true
