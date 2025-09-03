@@ -11,11 +11,11 @@ export const useHome = () => {
   return context;
 };
 
-// Default home page content
+// Default home page content - only used if Firebase has no data
 const DEFAULT_HOME_DATA = {
   aboutUs: {
     title: "About Us",
-    content: "The Sustainable Energy and Smart Grid Research at BRAC University is dedicated to advancing cutting-edge research in renewable energy systems, smart grid technologies, and sustainable power infrastructure. Our interdisciplinary team works to address the global energy challenges through innovative solutions and collaborative research."
+    content: "The Sustainable Energy and Smart Grid Research Group (SESGRG) is an independent research group established in 2025, affiliated with the BSRM School of Engineering, BRAC University. We specialize in sustainable energy systems, smart grid technologies, and advanced power network optimization, taking a comprehensive approach that spans generation, transmission, distribution, and microgrids. Committed to developing innovative and resilient energy solutions, we address modern power system challenges while promoting environmental stewardship through cutting-edge research and collaboration. Guided by principles of excellence, integrity, and sustainability, our vision is to revolutionize global power systems by advancing human well-being through intelligent infrastructure and renewable energy integration."
   },
   carouselImages: [
     {
@@ -50,20 +50,29 @@ const DEFAULT_HOME_DATA = {
     }
   ],
   objectives: [
-    "Advance smart grid technologies for enhanced energy distribution efficiency",
-    "Integrate renewable energy sources into existing power infrastructure",
-    "Develop AI-powered solutions for energy forecasting and optimization",
-    "Enhance cybersecurity measures for power grid protection",
-    "Create sustainable microgrids for distributed energy systems",
-    "Research energy storage systems for improved grid stability",
-    "Foster interdisciplinary collaboration in sustainable energy research"
+    "Bridge the gap between research and real-world applications.",
+    "Optimize power network efficiency and reliability.",
+    "Advance renewable energy integration technologies.",
+    "Create sustainable microgrids for distributed energy systems.",
+    "Develop Energy Storage and EV Integration Systems.",
+    "Enhance Cybersecurity and AI Measures for Power Grid Protection.",
+    "Promote Sustainable Energy Policy and Economics."
   ]
 };
 
 export const HomeProvider = ({ children }) => {
-  const [homeData, setHomeData] = useState(DEFAULT_HOME_DATA); // Start with default data to show immediately
-  const [isLoading, setIsLoading] = useState(false); // No loading state - show content immediately
+  // Start with no data and loading state
+  const [homeData, setHomeData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+
+  // Clear any old localStorage data on component mount
+  useEffect(() => {
+    console.log('🧹 Clearing old localStorage data to prevent data conflicts...');
+    // Clear the specific localStorage key that might contain old data
+    localStorage.removeItem('sesg_home_data');
+    console.log('✅ Old localStorage data cleared');
+  }, []);
 
   // Load data from Firebase on initialization
   useEffect(() => {
@@ -71,32 +80,36 @@ export const HomeProvider = ({ children }) => {
       if (initialized) return;
       
       try {
-        console.log('🔄 Loading home data from Firebase in background...');
+        console.log('🔄 Loading home data from Firebase...');
+        setIsLoading(true);
         
         // Set timeout to prevent indefinite loading
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Firebase loading timeout')), 5000)
+          setTimeout(() => reject(new Error('Firebase loading timeout')), 8000)
         );
         
         const firebasePromise = firebaseService.getHomeData();
         
         const firebaseHomeData = await Promise.race([firebasePromise, timeoutPromise]);
         
-        if (firebaseHomeData) {
-          console.log('✅ Firebase home data loaded successfully, updating content');
+        if (firebaseHomeData && Object.keys(firebaseHomeData).length > 0) {
+          console.log('✅ Firebase home data loaded successfully, displaying updated content');
           setHomeData(firebaseHomeData);
         } else {
-          console.log('📋 No Firebase data found, initializing with defaults...');
-          // Initialize Firebase with default data if none exists
+          console.log('📋 No Firebase data found, initializing with latest defaults...');
+          // Initialize Firebase with updated default data if none exists
           await firebaseService.updateHomeData(DEFAULT_HOME_DATA);
-          // Keep default data already set
+          setHomeData(DEFAULT_HOME_DATA);
         }
       } catch (error) {
         console.error('❌ Error loading home data from Firebase:', error);
-        console.log('📋 Continuing with default data due to error');
-        // Keep default data already set
+        console.log('📋 Using latest default data due to error');
+        // Use updated default data if Firebase fails
+        setHomeData(DEFAULT_HOME_DATA);
       } finally {
+        setIsLoading(false);
         setInitialized(true);
+        console.log('✅ Home data loading completed');
       }
     };
 
