@@ -861,16 +861,16 @@ const UserManagement = () => {
                     Permissions
                     <span className="text-xs text-gray-500 ml-2">(Auto-selected based on role)</span>
                   </label>
-                  <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                  <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto permissions-grid">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                       {Object.values(PERMISSIONS).map((permission) => (
-                        <label key={permission} className="flex items-center text-sm hover:bg-gray-100 p-2 rounded cursor-pointer">
+                        <label key={permission} className="flex items-center text-sm hover:bg-gray-100 p-2 rounded cursor-pointer checkbox-container">
                           <span className="inline-flex items-center">
                             <input
                               type="checkbox"
                               checked={formData.permissions.includes(permission)}
                               onChange={(e) => handlePermissionChange(permission, e.target.checked)}
-                              className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 mr-3 w-4 h-4"
+                              className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 mr-3 w-4 h-4 permission-checkbox"
                             />
                           </span>
                           <span className="text-gray-700 capitalize select-none">
