@@ -374,8 +374,22 @@ export const AuthProvider = ({ children }) => {
       }
     }, ACTIVITY_CHECK_INTERVAL);
     
-    // Add event listeners for user activity
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    // Add event listeners for user activity - Enhanced list for admin panel forms
+    const events = [
+      // Mouse events
+      'mousedown', 'mousemove', 'click', 'dblclick', 'contextmenu',
+      // Keyboard events
+      'keypress', 'keydown', 'keyup',
+      // Form events
+      'input', 'change', 'submit', 'focus', 'blur',
+      // Touch events
+      'touchstart', 'touchmove', 'touchend',
+      // Scroll and wheel events
+      'scroll', 'wheel',
+      // Other interaction events
+      'drag', 'drop', 'select', 'paste'
+    ];
+    
     events.forEach(event => {
       document.addEventListener(event, updateActivity, true);
     });
