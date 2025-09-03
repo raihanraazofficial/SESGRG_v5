@@ -333,6 +333,20 @@ export const AuthProvider = ({ children }) => {
     const now = Date.now();
     setLastActivity(now);
     
+    // Update user's last activity in Firebase if authenticated
+    if (isAuthenticated && user) {
+      // Throttle Firebase updates to avoid too many calls
+      const timeSinceLastUpdate = now - (window.lastActivityUpdate || 0);
+      if (timeSinceLastUpdate > 30000) { // Update Firebase only every 30 seconds
+        window.lastActivityUpdate = now;
+        firebaseService.updateUser(user.id, {
+          lastActivity: new Date().toISOString()
+        }).catch(error => {
+          console.log('⚠️ Failed to update last activity in Firebase:', error.message);
+        });
+      }
+    }
+    
     // Reset inactivity timeout
     if (activityTimeoutRef.current) {
       clearTimeout(activityTimeoutRef.current);
