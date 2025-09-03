@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePeople } from '../../contexts/PeopleContext';
+import '../../styles/checkbox-fix.css';
 
 const UserManagement = () => {
   const { users, createUser, updateUser, deleteUser, USER_ROLES, PERMISSIONS, isLoading: authLoading } = useAuth();
