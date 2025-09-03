@@ -39,6 +39,11 @@ import AdminPanel from "./pages/AdminPanel";
 import AdminRoute from "./components/AdminRoute";
 
 function App() {
+  // Clear old localStorage data on app initialization
+  useEffect(() => {
+    clearOldLocalStorageData();
+  }, []);
+
   return (
     <AuthProvider>
       <PeopleProvider>
