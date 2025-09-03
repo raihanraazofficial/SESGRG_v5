@@ -1014,7 +1014,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Critical Admin Panel Delete Functionality Prop Mismatch Bug Fix"
+    - "Admin Panel Input Fields Not Working Fix - January 2025"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
