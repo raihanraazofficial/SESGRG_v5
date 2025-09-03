@@ -34,7 +34,7 @@ from datetime import datetime
 class AdminPanelInputFieldsTester:
     def __init__(self):
         # Get backend URL from existing test pattern
-        self.backend_url = "https://admin-panel-repair-1.preview.emergentagent.com"
+        self.backend_url = "https://content-fix-5.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test credentials

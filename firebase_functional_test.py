@@ -25,7 +25,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 class FirebaseFunctionalTester:
     def __init__(self):
-        self.frontend_url = "https://admin-panel-repair-1.preview.emergentagent.com"
+        self.frontend_url = "https://content-fix-5.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"

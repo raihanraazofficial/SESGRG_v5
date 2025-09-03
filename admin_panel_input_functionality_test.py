@@ -21,7 +21,7 @@ from datetime import datetime
 
 class AdminPanelInputFunctionalityTester:
     def __init__(self):
-        self.backend_url = "https://admin-panel-repair-1.preview.emergentagent.com"
+        self.backend_url = "https://content-fix-5.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
