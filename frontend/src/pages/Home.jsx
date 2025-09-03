@@ -126,48 +126,7 @@ const LatestNewsSection = () => {
           </div>
         </div>
 
-        {loading ? (
-          <div className="space-y-8">
-            {/* Featured Story Skeleton */}
-            <Card className="border-0 shadow-lg overflow-hidden animate-pulse">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="h-64 lg:h-80 bg-gray-200"></div>
-                <div className="p-8 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-                    <div className="h-4 w-24 bg-gray-200 rounded"></div>
-                  </div>
-                  <div className="h-8 bg-gray-200 rounded"></div>
-                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                  </div>
-                  <div className="h-10 w-32 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-            </Card>
-            
-            {/* Smaller Cards Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, index) => (
-                <Card key={index} className="border-0 shadow-md animate-pulse">
-                  <div className="p-6 space-y-3">
-                    <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-                    <div className="h-6 bg-gray-200 rounded"></div>
-                    <div className="h-4 w-24 bg-gray-200 rounded"></div>
-                    <div className="space-y-2">
-                      <div className="h-3 bg-gray-200 rounded"></div>
-                      <div className="h-3 bg-gray-200 rounded w-4/5"></div>
-                      <div className="h-3 bg-gray-200 rounded w-3/5"></div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="text-center py-16">
             <div className="mb-6">
               <BookOpen className="h-16 w-16 text-red-300 mx-auto mb-4" />
