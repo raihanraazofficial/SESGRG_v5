@@ -272,25 +272,33 @@ div[class*="bg-gradient"] label[for] {
   z-index: 10000 !important;
 }
 
-/* Specific fix for publication checkboxes */
+/* Specific fix for publication checkboxes - SIMPLIFIED APPROACH */
 .publication-checkbox {
   pointer-events: auto !important;
   cursor: pointer !important;
   z-index: 10001 !important;
   position: relative !important;
-  background: white !important;
-  border: 2px solid #6b7280 !important;
-  border-radius: 4px !important;
   -webkit-appearance: checkbox !important;
   appearance: checkbox !important;
   opacity: 1 !important;
   visibility: visible !important;
   margin: 0 !important;
+  width: 20px !important;
+  height: 20px !important;
+  background: transparent !important;
+  border: 2px solid #6b7280 !important;
+  border-radius: 4px !important;
 }
 
 .publication-checkbox:checked {
   background-color: #059669 !important;
   border-color: #059669 !important;
+  accent-color: #059669 !important;
+}
+
+.publication-checkbox:focus {
+  outline: 2px solid #10b981 !important;
+  outline-offset: 2px !important;
 }
 
 /* Ensure publication checkbox labels work */
@@ -301,4 +309,33 @@ label[for="edit_featured"] {
   cursor: pointer !important;
   pointer-events: auto !important;
   user-select: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Fix for checkbox containers - ensure they don't block clicks */
+.checkbox-container {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+.checkbox-container input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 10002 !important;
+}
+
+/* Override any conflicting Tailwind styles */
+input[type="checkbox"].publication-checkbox {
+  all: revert !important;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  width: 20px !important;
+  height: 20px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 10003 !important;
+  position: relative !important;
 }
