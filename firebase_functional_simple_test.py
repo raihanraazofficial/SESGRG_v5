@@ -18,7 +18,7 @@ from datetime import datetime
 
 class FirebaseFunctionalTester:
     def __init__(self):
-        self.frontend_url = "https://select-options-fix.preview.emergentagent.com"
+        self.frontend_url = "https://admin-panel-fix-20.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"

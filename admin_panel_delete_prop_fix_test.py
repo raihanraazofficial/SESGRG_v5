@@ -32,7 +32,7 @@ from datetime import datetime
 
 class AdminPanelDeletePropFixTester:
     def __init__(self):
-        self.frontend_url = "https://select-options-fix.preview.emergentagent.com"
+        self.frontend_url = "https://admin-panel-fix-20.preview.emergentagent.com"
         
         # Google Sheets API URLs for data verification
         self.google_sheets_apis = {
@@ -676,7 +676,7 @@ class AdminPanelDeletePropFixTester:
         # Testing instructions for manual verification
         print("\n🔍 MANUAL TESTING INSTRUCTIONS:")
         print("-" * 100)
-        print("1. Navigate to admin panel: https://select-options-fix.preview.emergentagent.com/admin/login")
+        print("1. Navigate to admin panel: https://admin-panel-fix-20.preview.emergentagent.com/admin/login")
         print("2. Login with credentials: admin / @dminsesg405")
         print("3. Go to Content Management tab")
         print("4. Test Publications delete: Click delete button on any publication → Confirm deletion")

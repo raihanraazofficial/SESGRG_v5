@@ -26,7 +26,7 @@ from datetime import datetime
 class FooterManagementBackendTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://select-options-fix.preview.emergentagent.com"
+        self.backend_url = "https://admin-panel-fix-20.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test configuration
