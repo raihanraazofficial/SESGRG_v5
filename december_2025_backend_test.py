@@ -299,51 +299,53 @@ class December2025BackendTester:
     def test_session_timeout_backend_infrastructure(self):
         """Test 6: Session Timeout Backend Infrastructure - Firebase Auth Support"""
         try:
-            # Test Firebase Authentication infrastructure
-            # Check if the app has proper authentication setup
-            
-            response = requests.get(self.frontend_url, timeout=10)
+            # Check Firebase Authentication infrastructure in the JavaScript bundle
+            bundle_url = f"{self.frontend_url}/static/js/bundle.js"
+            response = requests.get(bundle_url, timeout=15)
             
             if response.status_code == 200:
                 content = response.text.lower()
                 
-                # Check for authentication infrastructure
+                # Check for authentication infrastructure in the bundle
                 auth_indicators = [
                     'auth' in content,
                     'session' in content,
                     'login' in content,
                     'firebase' in content,
-                    'token' in content
+                    'token' in content,
+                    'timeout' in content
                 ]
                 
-                auth_infrastructure = sum(auth_indicators) >= 3  # At least 3 indicators
+                auth_count = sum(auth_indicators)
                 
                 # Check for session management indicators
                 session_indicators = [
                     'timeout' in content,
                     'activity' in content,
-                    'expir' in content  # expires, expiry, expiration
+                    'expir' in content,  # expires, expiry, expiration
+                    'session_timeout' in content,
+                    'lastactivity' in content
                 ]
                 
-                session_support = any(session_indicators)
+                session_count = sum(session_indicators)
                 
-                if auth_infrastructure:
+                if auth_count >= 4 and session_count >= 2:
                     self.log_test(
                         "Session Timeout Backend Infrastructure", 
                         True, 
-                        f"Authentication infrastructure detected: {sum(auth_indicators)}/5 indicators. Session support: {session_support}"
+                        f"Authentication infrastructure: {auth_count}/6 indicators. Session support: {session_count}/5 indicators"
                     )
                 else:
                     self.log_test(
                         "Session Timeout Backend Infrastructure", 
                         False, 
-                        f"Insufficient authentication infrastructure: {sum(auth_indicators)}/5 indicators"
+                        f"Insufficient infrastructure - Auth: {auth_count}/6, Session: {session_count}/5"
                     )
             else:
                 self.log_test(
                     "Session Timeout Backend Infrastructure", 
                     False, 
-                    f"Cannot access app for authentication analysis (Status: {response.status_code})"
+                    f"Cannot access JavaScript bundle for auth analysis (Status: {response.status_code})"
                 )
         except Exception as e:
             self.log_test(
