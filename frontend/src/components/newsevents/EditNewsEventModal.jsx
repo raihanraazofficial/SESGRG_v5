@@ -66,6 +66,11 @@ const EditNewsEventModal = ({ isOpen, onClose, onSubmit, categories, newsEvent }
     }));
   };
 
+  const handleCheckboxToggle = (field) => {
+    console.log(`Toggling ${field}:`, !formData[field]);
+    handleChange(field, !formData[field]);
+  };
+
   const modalFooter = (
     <>
       <Button
