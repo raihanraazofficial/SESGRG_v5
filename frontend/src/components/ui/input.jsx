@@ -11,12 +11,6 @@ const Input = React.forwardRef(({ className, type, ...props }, ref) => {
         className
       )}
       ref={ref}
-      style={{
-        pointerEvents: 'auto',
-        userSelect: type === 'text' || type === 'email' || type === 'password' || type === 'url' || type === 'number' || !type ? 'text' : 'auto',
-        cursor: type === 'text' || type === 'email' || type === 'password' || type === 'url' || type === 'number' || !type ? 'text' : 'auto',
-        touchAction: 'manipulation'
-      }}
       {...props} />
   );
 })
