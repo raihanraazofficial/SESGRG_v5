@@ -1,7 +1,7 @@
-/* FIX FOR ADMIN PANEL INPUT FIELDS NOT ACCEPTING TEXT INPUT */
-/* This file addresses the critical issue where users cannot type in form input fields */
+/* TARGETED FIX FOR ADMIN PANEL INPUT FIELDS */
+/* This file addresses input field interaction issues without overriding design */
 
-/* CRITICAL: Ensure all text inputs and textareas are fully interactive */
+/* CRITICAL: Ensure text inputs are interactive without visual override */
 input[type="text"],
 input[type="email"], 
 input[type="password"],
@@ -16,42 +16,29 @@ input[type="month"],
 input[type="week"],
 textarea,
 select {
-  /* Force text inputs to be fully interactive */
+  /* Essential interaction properties only */
   pointer-events: auto !important;
   touch-action: manipulation !important;
   user-select: text !important;
   -webkit-user-select: text !important;
   
-  /* Remove any transforms that might interfere */
+  /* Ensure proper cursor */
+  cursor: text !important;
+  
+  /* Ensure visibility and positioning */
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  
+  /* Remove problematic transforms */
   transform: none !important;
   backface-visibility: visible !important;
   will-change: auto !important;
   
-  /* Ensure proper positioning */
-  position: relative !important;
-  z-index: 1 !important;
-  
-  /* Ensure visibility */
-  opacity: 1 !important;
-  visibility: visible !important;
-  
-  /* Reset appearance */
-  -webkit-appearance: textfield !important;
-  appearance: textfield !important;
-  
-  /* Enable text cursor */
-  cursor: text !important;
-  
-  /* Remove any blocking overlays */
-  background: white !important;
-  border: 1px solid #d1d5db !important;
-  border-radius: 6px !important;
-  padding: 8px 12px !important;
-  
-  /* Enable text selection and editing */
-  -webkit-text-select: auto !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
+  /* Enable text editing */
+  -webkit-user-modify: read-write !important;
+  -moz-user-modify: read-write !important;
+  user-modify: read-write !important;
 }
 
 /* Special handling for textareas */
