@@ -11,32 +11,29 @@ import { useResearchAreas } from "../contexts/ResearchAreasContext";
 
 // Latest News Section Component
 const LatestNewsSection = () => {
-  const { newsEventsData, loading, getPaginatedNewsEvents, getFeaturedNewsEvents } = useNewsEvents();
+  const { newsEventsData, getPaginatedNewsEvents, getFeaturedNewsEvents } = useNewsEvents();
   const [latestNews, setLatestNews] = useState([]);
   const [featuredNews, setFeaturedNews] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Load latest news and featured news from localStorage context
-    if (newsEventsData.length > 0 || !loading) {
-      // Get latest news
-      const result = getPaginatedNewsEvents({
-        page: 1,
-        per_page: 8,
-        sort_by: 'date',
-        sort_order: 'desc'
-      });
-      setLatestNews(result.news_events || []);
-      
-      // Get featured news
-      const featured = getFeaturedNewsEvents(1);
-      setFeaturedNews(featured || []);
-      
-      console.log('✅ Homepage: Latest news loaded from localStorage:', result.news_events?.length || 0, 'items');
-      console.log('✅ Homepage: Featured news loaded:', featured?.length || 0, 'items');
-    }
-  }, [newsEventsData, loading, getPaginatedNewsEvents, getFeaturedNewsEvents]);
+    // Load latest news and featured news immediately without loading state
+    const result = getPaginatedNewsEvents({
+      page: 1,
+      per_page: 8,
+      sort_by: 'date',
+      sort_order: 'desc'
+    });
+    setLatestNews(result.news_events || []);
+    
+    // Get featured news
+    const featured = getFeaturedNewsEvents(1);
+    setFeaturedNews(featured || []);
+    
+    console.log('✅ Homepage: Latest news loaded immediately:', result.news_events?.length || 0, 'items');
+    console.log('✅ Homepage: Featured news loaded:', featured?.length || 0, 'items');
+  }, [newsEventsData, getPaginatedNewsEvents, getFeaturedNewsEvents]);
 
   const fetchLatestNews = async (forceRefresh = false) => {
     try {
