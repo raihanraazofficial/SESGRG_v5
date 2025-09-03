@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Image, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
+import '../../styles/checkbox-fix.css';
 
 const AddGalleryModal = ({ isOpen, onClose, onAdd, categories = [] }) => {
   const [formData, setFormData] = useState({
