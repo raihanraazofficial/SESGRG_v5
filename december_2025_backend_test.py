@@ -401,10 +401,9 @@ class December2025BackendTester:
     def test_enhanced_activity_tracking_support(self):
         """Test 8: Enhanced Activity Tracking Support - Backend Infrastructure"""
         try:
-            # Test if the application has proper infrastructure for activity tracking
-            # This includes checking for event handling and session management
-            
-            response = requests.get(self.frontend_url, timeout=10)
+            # Check for activity tracking infrastructure in the JavaScript bundle
+            bundle_url = f"{self.frontend_url}/static/js/bundle.js"
+            response = requests.get(bundle_url, timeout=15)
             
             if response.status_code == 200:
                 content = response.text.lower()
@@ -419,37 +418,39 @@ class December2025BackendTester:
                     'timeout' in content
                 ]
                 
-                activity_support = sum(activity_indicators) >= 3  # At least 3 indicators
+                activity_count = sum(activity_indicators)
                 
-                # Check for enhanced event handling (mentioned in the fixes)
+                # Check for enhanced event handling (mentioned in the December 2025 fixes)
                 enhanced_events = [
                     'input' in content,
                     'change' in content,
                     'focus' in content,
                     'blur' in content,
                     'keydown' in content,
-                    'submit' in content
+                    'submit' in content,
+                    'mousedown' in content,
+                    'touchstart' in content
                 ]
                 
-                enhanced_support = sum(enhanced_events) >= 4  # At least 4 event types
+                enhanced_count = sum(enhanced_events)
                 
-                if activity_support and enhanced_support:
+                if activity_count >= 4 and enhanced_count >= 6:
                     self.log_test(
                         "Enhanced Activity Tracking Support", 
                         True, 
-                        f"Activity tracking: {sum(activity_indicators)}/6 indicators. Enhanced events: {sum(enhanced_events)}/6 types"
+                        f"Activity tracking: {activity_count}/6 indicators. Enhanced events: {enhanced_count}/8 types"
                     )
                 else:
                     self.log_test(
                         "Enhanced Activity Tracking Support", 
                         False, 
-                        f"Insufficient support - Activity: {sum(activity_indicators)}/6, Events: {sum(enhanced_events)}/6"
+                        f"Insufficient support - Activity: {activity_count}/6, Events: {enhanced_count}/8"
                     )
             else:
                 self.log_test(
                     "Enhanced Activity Tracking Support", 
                     False, 
-                    f"Cannot access app for activity tracking analysis (Status: {response.status_code})"
+                    f"Cannot access JavaScript bundle for activity analysis (Status: {response.status_code})"
                 )
         except Exception as e:
             self.log_test(
