@@ -339,7 +339,7 @@ const Home = () => {
   const [animatedObjectives, setAnimatedObjectives] = useState(new Set());
 
   // Use HomeContext data
-  const { aboutUs, carouselImages, objectives } = useHome();
+  const { aboutUs, carouselImages, objectives, isLoading } = useHome();
   
   // Use ResearchAreasContext data
   const { researchAreas } = useResearchAreas();
