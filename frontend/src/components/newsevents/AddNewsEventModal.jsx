@@ -206,15 +206,15 @@ const AddNewsEventModal = ({ isOpen, onClose, onSubmit, categories }) => {
               </div>
 
               {/* Featured checkbox */}
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 checkbox-container featured-select">
                 <input
                   type="checkbox"
                   id="featured"
                   checked={formData.featured}
                   onChange={(e) => handleChange('featured', e.target.checked)}
-                  className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                  className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                 />
-                <label htmlFor="featured" className="flex items-center text-sm font-medium text-gray-700">
+                <label htmlFor="featured" className="flex items-center text-sm font-medium text-gray-700 cursor-pointer">
                   <Star className="h-4 w-4 mr-2 text-yellow-500" />
                   Mark as Featured
                 </label>
