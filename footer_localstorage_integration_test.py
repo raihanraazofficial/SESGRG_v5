@@ -14,7 +14,7 @@ from datetime import datetime
 
 class FooterLocalStorageIntegrationTester:
     def __init__(self):
-        self.backend_url = "https://admin-panel-fix-20.preview.emergentagent.com"
+        self.backend_url = "https://admin-dashboard-fix-6.preview.emergentagent.com"
         self.test_results = []
         
     def log_result(self, test_name, status, details):

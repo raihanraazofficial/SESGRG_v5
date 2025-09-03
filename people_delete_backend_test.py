@@ -26,7 +26,7 @@ from datetime import datetime
 class PeopleDeleteBackendTester:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://admin-panel-fix-20.preview.emergentagent.com"
+        self.frontend_url = "https://admin-dashboard-fix-6.preview.emergentagent.com"
         
         # Admin credentials for authentication testing
         self.admin_credentials = {
