@@ -29,6 +29,16 @@ input[type="radio"] {
   /* Remove any opacity or visibility issues */
   opacity: 1 !important;
   visibility: visible !important;
+  
+  /* Ensure no overlays are blocking interaction */
+  border: 1px solid #d1d5db !important;
+  background: white !important;
+}
+
+/* Force checkbox interaction over any overlay issues */
+input[type="checkbox"]:before,
+input[type="checkbox"]:after {
+  pointer-events: none !important;
 }
 
 input[type="radio"] {
