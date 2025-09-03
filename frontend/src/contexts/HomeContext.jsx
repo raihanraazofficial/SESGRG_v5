@@ -74,7 +74,14 @@ export const HomeProvider = ({ children }) => {
         setIsLoading(true);
         console.log('🔄 Loading home data from Firebase...');
         
-        const firebaseHomeData = await firebaseService.getHomeData();
+        // Set timeout to prevent indefinite loading
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Firebase loading timeout')), 5000)
+        );
+        
+        const firebasePromise = firebaseService.getHomeData();
+        
+        const firebaseHomeData = await Promise.race([firebasePromise, timeoutPromise]);
         
         if (firebaseHomeData) {
           console.log('✅ Firebase home data loaded successfully');
