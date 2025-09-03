@@ -65,7 +65,9 @@ label[for] {
 .research-areas .research-area-checkbox,
 .permissions input[type="checkbox"],
 .category-select input[type="checkbox"],
-.featured-select input[type="checkbox"] {
+.featured-select input[type="checkbox"],
+.checkbox-container input[type="checkbox"],
+.featured-checkbox {
   pointer-events: auto !important;
   cursor: pointer !important;
   z-index: 1000 !important;
@@ -76,6 +78,17 @@ label[for] {
   border-radius: 4px !important;
   width: 18px !important;
   height: 18px !important;
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+}
+
+/* Specific fixes for featured checkboxes */
+.featured-select,
+.checkbox-container.featured-select {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 999 !important;
+  position: relative !important;
 }
 
 /* Force research area checkbox to be clickable */
