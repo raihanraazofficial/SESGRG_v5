@@ -66,6 +66,7 @@ const AddPublicationModal = ({ isOpen, onClose, onAdd, researchAreas }) => {
   };
 
   const handleResearchAreaToggle = (area) => {
+    console.log('Research area toggle clicked:', area);
     setFormData(prev => ({
       ...prev,
       research_areas: prev.research_areas.includes(area)
