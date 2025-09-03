@@ -1,0 +1,197 @@
+/* FIX FOR ADMIN PANEL INPUT FIELDS NOT ACCEPTING TEXT INPUT */
+/* This file addresses the critical issue where users cannot type in form input fields */
+
+/* CRITICAL: Ensure all text inputs and textareas are fully interactive */
+input[type="text"],
+input[type="email"], 
+input[type="password"],
+input[type="url"],
+input[type="tel"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+textarea,
+select {
+  /* Force text inputs to be fully interactive */
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  
+  /* Remove any transforms that might interfere */
+  transform: none !important;
+  backface-visibility: visible !important;
+  will-change: auto !important;
+  
+  /* Ensure proper positioning */
+  position: relative !important;
+  z-index: 1 !important;
+  
+  /* Ensure visibility */
+  opacity: 1 !important;
+  visibility: visible !important;
+  
+  /* Reset appearance */
+  -webkit-appearance: textfield !important;
+  appearance: textfield !important;
+  
+  /* Enable text cursor */
+  cursor: text !important;
+  
+  /* Remove any blocking overlays */
+  background: white !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  
+  /* Enable text selection and editing */
+  -webkit-text-select: auto !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Special handling for textareas */
+textarea {
+  resize: vertical !important;
+  min-height: 100px !important;
+  cursor: text !important;
+  -webkit-appearance: textarea !important;
+  appearance: textarea !important;
+}
+
+/* Special handling for select dropdowns */
+select {
+  cursor: pointer !important;
+  -webkit-appearance: menulist !important;
+  appearance: menulist !important;
+  background-image: none !important;
+}
+
+/* Special handling for number inputs */
+input[type="number"] {
+  -webkit-appearance: textfield !important;
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}
+
+/* Remove spinner from number inputs if desired */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Ensure form containers don't block inputs */
+form,
+.admin-modal-form,
+.admin-modal-content,
+.admin-modal-scrollable {
+  pointer-events: auto !important;
+}
+
+/* Fix for React controlled inputs */
+input[value],
+textarea[value] {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+/* Fix for labels that might be blocking inputs */
+label {
+  pointer-events: auto !important;
+  cursor: default !important;
+}
+
+/* Exception: labels with for attribute should be clickable */
+label[for] {
+  cursor: pointer !important;
+}
+
+/* Ensure Input component from UI library works */
+.ui-input,
+[class*="Input"],
+[data-testid*="input"] {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+/* Fix for modal overlays - prevent them from blocking form interaction */
+.modal-overlay input,
+.admin-modal-overlay input,
+.admin-modal-fullscreen input {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+/* Emergency fix for any container that might be blocking inputs */
+div:has(input[type="text"]),
+div:has(input[type="email"]),
+div:has(input[type="password"]),
+div:has(input[type="url"]),
+div:has(input[type="number"]),
+div:has(textarea) {
+  pointer-events: auto !important;
+}
+
+/* Specific fix for Tailwind UI components */
+.relative input,
+.flex input,
+.grid input,
+.block input {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+/* Ensure keyboard events work properly */
+input, textarea {
+  -webkit-user-modify: read-write !important;
+  -moz-user-modify: read-write !important;
+  user-modify: read-write !important;
+}
+
+/* Fix for any CSS that might be preventing text selection */
+* {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
+/* Override for text inputs specifically */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="number"],
+textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Fix for React input components */
+div[role="textbox"],
+div[contenteditable="true"] {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+/* Additional safety rules */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+textarea {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  touch-action: manipulation !important;
+}
