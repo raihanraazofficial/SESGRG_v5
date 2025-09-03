@@ -61,8 +61,8 @@ const DEFAULT_HOME_DATA = {
 };
 
 export const HomeProvider = ({ children }) => {
-  const [homeData, setHomeData] = useState(null); // Start with null to force loading from Firebase
-  const [isLoading, setIsLoading] = useState(true); // Show loading initially
+  const [homeData, setHomeData] = useState(DEFAULT_HOME_DATA); // Start with default data to show immediately
+  const [isLoading, setIsLoading] = useState(false); // No loading state - show content immediately
   const [initialized, setInitialized] = useState(false);
 
   // Load data from Firebase on initialization
