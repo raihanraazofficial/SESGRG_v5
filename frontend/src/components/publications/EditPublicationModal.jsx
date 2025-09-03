@@ -506,25 +506,59 @@ const EditPublicationModal = ({ isOpen, onClose, onUpdate, publication, research
 
                   {/* Checkboxes */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container">
+                    <div 
+                      className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container"
+                      onClick={() => handleCheckboxToggle('open_access')}
+                    >
                       <input
                         type="checkbox"
                         id="open_access"
                         checked={formData.open_access}
-                        onChange={(e) => handleInputChange('open_access', e.target.checked)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleInputChange('open_access', e.target.checked);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
                         className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                       />
-                      <label htmlFor="open_access" className="text-sm text-gray-700 font-medium cursor-pointer">Open Access</label>
+                      <label 
+                        htmlFor="open_access" 
+                        className="text-sm text-gray-700 font-medium cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCheckboxToggle('open_access');
+                        }}
+                      >
+                        Open Access
+                      </label>
                     </div>
-                    <div className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container featured-select">
+                    <div 
+                      className="flex items-center space-x-3 p-4 bg-yellow-50 rounded-lg checkbox-container featured-select"
+                      onClick={() => handleCheckboxToggle('featured')}
+                    >
                       <input
                         type="checkbox"
                         id="featured"
                         checked={formData.featured}
-                        onChange={(e) => handleInputChange('featured', e.target.checked)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleInputChange('featured', e.target.checked);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
                         className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 featured-checkbox"
                       />
-                      <label htmlFor="featured" className="text-sm text-gray-700 font-medium cursor-pointer">Featured Publication</label>
+                      <label 
+                        htmlFor="featured" 
+                        className="text-sm text-gray-700 font-medium cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCheckboxToggle('featured');
+                        }}
+                      >
+                        Featured Publication
+                      </label>
                     </div>
                   </div>
 
