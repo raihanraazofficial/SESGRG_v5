@@ -20,7 +20,7 @@ from datetime import datetime
 class ResearchAreasSyncBackendTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://duplicates-removal.preview.emergentagent.com"
+        self.backend_url = "https://select-options-fix.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Expected research areas data structure

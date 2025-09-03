@@ -18,7 +18,7 @@ from datetime import datetime
 
 class FinalAdminTester:
     def __init__(self):
-        self.frontend_url = "https://duplicates-removal.preview.emergentagent.com"
+        self.frontend_url = "https://select-options-fix.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin",
             "password": "@dminsesg405"
@@ -222,7 +222,7 @@ class FinalAdminTester:
         
         instructions = [
             "1. ADMIN LOGIN TESTING:",
-            "   a. Open browser and navigate to: https://duplicates-removal.preview.emergentagent.com/admin/login",
+            "   a. Open browser and navigate to: https://select-options-fix.preview.emergentagent.com/admin/login",
             "   b. Enter credentials: username = admin, password = @dminsesg405",
             "   c. Click 'Sign In to Admin Panel'",
             "   d. Should redirect to admin dashboard",
