@@ -202,17 +202,21 @@ select {
   touch-action: manipulation !important;
 }
 
-/* Fix for any remaining issues with interactive elements */
-button,
-input,
-select,
-textarea,
-label {
+/* Fix for any remaining issues with interactive elements - SPECIFIC TO FORM CONTROLS */
+button[type="button"],
+button[type="submit"],
+button[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select {
   transform: none !important;
   backface-visibility: visible !important;
   will-change: auto !important;
   pointer-events: auto !important;
 }
+
+/* DO NOT APPLY THESE RULES TO TEXT INPUTS */
+/* Text inputs should be handled by input-fix.css */
 
 /* Media query for mobile devices - ensure touch interaction works */
 @media (max-width: 768px) {
