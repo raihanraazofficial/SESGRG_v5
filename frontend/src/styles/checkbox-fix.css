@@ -62,12 +62,35 @@ label[for] {
 
 /* Fix for research areas and permissions sections */
 .research-areas input[type="checkbox"],
+.research-areas .research-area-checkbox,
 .permissions input[type="checkbox"],
 .category-select input[type="checkbox"],
 .featured-select input[type="checkbox"] {
   pointer-events: auto !important;
   cursor: pointer !important;
-  z-index: 100 !important;
+  z-index: 1000 !important;
+  position: relative !important;
+  margin: 0 !important;
+  background: white !important;
+  border: 2px solid #9ca3af !important;
+  border-radius: 4px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Force research area checkbox to be clickable */
+.research-areas .checkbox-container,
+.research-areas label {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 999 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
 }
 
 /* Fix for research areas labels */
