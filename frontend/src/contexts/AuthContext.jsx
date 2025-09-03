@@ -333,6 +333,11 @@ export const AuthProvider = ({ children }) => {
     const now = Date.now();
     setLastActivity(now);
     
+    // Debug logging for admin panel activity
+    if (window.location.pathname.includes('/admin')) {
+      console.log('🎯 Admin panel activity detected, extending session');
+    }
+    
     // Update user's last activity in Firebase if authenticated
     if (isAuthenticated && user) {
       // Throttle Firebase updates to avoid too many calls
@@ -354,7 +359,7 @@ export const AuthProvider = ({ children }) => {
     
     if (isAuthenticated) {
       activityTimeoutRef.current = setTimeout(() => {
-        console.log('🕐 Session timeout due to inactivity');
+        console.log('🕐 Session timeout due to inactivity - last activity was:', new Date(lastActivity).toLocaleString());
         logout();
       }, SESSION_TIMEOUT);
     }
