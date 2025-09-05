@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import "./styles/admin.css";
 import { clearOldLocalStorageData } from "./utils/clearOldData";
 import { debugInputFields } from "./utils/debugInputs";
 
