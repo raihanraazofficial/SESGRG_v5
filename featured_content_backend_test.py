@@ -23,7 +23,7 @@ from datetime import datetime
 class FeaturedContentBackendTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://input-debug.preview.emergentagent.com"
+        self.backend_url = "https://modal-input-fix.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Google Sheets API URLs from frontend .env

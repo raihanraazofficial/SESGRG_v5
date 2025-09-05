@@ -19,7 +19,7 @@ from datetime import datetime
 class December2025BackendTester:
     def __init__(self):
         # Get backend URL from frontend env
-        self.frontend_url = "https://input-debug.preview.emergentagent.com"
+        self.frontend_url = "https://modal-input-fix.preview.emergentagent.com"
         self.api_base = f"{self.frontend_url}/api"  # Backend API base
         
         # Test configuration

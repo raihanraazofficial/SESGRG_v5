@@ -19,7 +19,7 @@ from datetime import datetime
 
 class PeopleDeleteLocalStorageTester:
     def __init__(self):
-        self.frontend_url = "https://input-debug.preview.emergentagent.com"
+        self.frontend_url = "https://modal-input-fix.preview.emergentagent.com"
         self.test_results = []
         
     def log_test(self, test_name, status, details=""):
