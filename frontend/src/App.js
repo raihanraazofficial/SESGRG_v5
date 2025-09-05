@@ -38,7 +38,8 @@ import { FooterProvider } from "./contexts/FooterContext";
 
 // Import admin components
 import AdminLogin from "./pages/AdminLogin";
-import AdminPanel from "./pages/AdminPanel";
+import AdminDashboard from "./pages/AdminDashboard";
+import ContentManagement from "./pages/ContentManagement";
 import AdminRoute from "./components/AdminRoute";
 
 function App() {
