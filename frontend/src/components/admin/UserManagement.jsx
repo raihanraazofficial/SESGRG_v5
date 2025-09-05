@@ -558,6 +558,7 @@ const UserManagement = () => {
                       onChange={(e) => handleFormChange('username', e.target.value)}
                       placeholder="Enter username"
                       className="w-full"
+                      style={{ pointerEvents: 'auto', userSelect: 'text', cursor: 'text' }}
                     />
                   </div>
 
