@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   signInWithEmailAndPassword, 
   signOut, 
@@ -7,10 +7,6 @@ import {
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import firebaseService from '../services/firebaseService';
-
-// Session configuration
-const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
-const ACTIVITY_CHECK_INTERVAL = 30 * 1000; // Check every 30 seconds (reduced for better responsiveness)
 
 // Create Auth Context
 const AuthContext = createContext();
@@ -24,48 +20,33 @@ export const useAuth = () => {
   return context;
 };
 
-// User roles and permissions
+// User roles
 export const USER_ROLES = {
   ADMIN: 'admin',
-  ADVISOR: 'advisor',
-  TEAM_MEMBER: 'team_member',
-  COLLABORATOR: 'collaborator'
+  MODERATOR: 'moderator'
 };
 
+// Permissions system - 13 specific permissions as requested
 export const PERMISSIONS = {
-  // Content Management
   CREATE_CONTENT: 'create_content',
-  EDIT_CONTENT: 'edit_content', 
+  EDIT_CONTENT: 'edit_content',
   DELETE_CONTENT: 'delete_content',
   PUBLISH_CONTENT: 'publish_content',
-  
-  // User Management
   CREATE_USERS: 'create_users',
   EDIT_USERS: 'edit_users',
   DELETE_USERS: 'delete_users',
   VIEW_USERS: 'view_users',
-  
-  // Page Management
   CREATE_PAGES: 'create_pages',
   EDIT_PAGES: 'edit_pages',
   DELETE_PAGES: 'delete_pages',
-  
-  // System Management
   VIEW_ANALYTICS: 'view_analytics',
-  SYSTEM_SETTINGS: 'system_settings',
-  
-  // Research Management
-  MANAGE_PUBLICATIONS: 'manage_publications',
-  MANAGE_PROJECTS: 'manage_projects',
-  MANAGE_PEOPLE: 'manage_people',
-  MANAGE_ACHIEVEMENTS: 'manage_achievements',
-  MANAGE_NEWS_EVENTS: 'manage_news_events'
+  SYSTEM_SETTINGS: 'system_settings'
 };
 
 // Default role permissions
 const DEFAULT_PERMISSIONS = {
-  [USER_ROLES.ADMIN]: Object.values(PERMISSIONS),
-  [USER_ROLES.ADVISOR]: [
+  [USER_ROLES.ADMIN]: Object.values(PERMISSIONS), // Admin gets all permissions
+  [USER_ROLES.MODERATOR]: [ // Moderator gets limited permissions
     PERMISSIONS.CREATE_CONTENT,
     PERMISSIONS.EDIT_CONTENT,
     PERMISSIONS.DELETE_CONTENT,
@@ -73,54 +54,29 @@ const DEFAULT_PERMISSIONS = {
     PERMISSIONS.VIEW_USERS,
     PERMISSIONS.CREATE_PAGES,
     PERMISSIONS.EDIT_PAGES,
-    PERMISSIONS.VIEW_ANALYTICS,
-    PERMISSIONS.MANAGE_PUBLICATIONS,
-    PERMISSIONS.MANAGE_PROJECTS,
-    PERMISSIONS.MANAGE_PEOPLE,
-    PERMISSIONS.MANAGE_ACHIEVEMENTS,
-    PERMISSIONS.MANAGE_NEWS_EVENTS
-  ],
-  [USER_ROLES.TEAM_MEMBER]: [
-    PERMISSIONS.CREATE_CONTENT,
-    PERMISSIONS.EDIT_CONTENT,
-    PERMISSIONS.PUBLISH_CONTENT,
-    PERMISSIONS.VIEW_USERS,
-    PERMISSIONS.MANAGE_PUBLICATIONS,
-    PERMISSIONS.MANAGE_PROJECTS,
-    PERMISSIONS.MANAGE_ACHIEVEMENTS,
-    PERMISSIONS.MANAGE_NEWS_EVENTS
-  ],
-  [USER_ROLES.COLLABORATOR]: [
-    PERMISSIONS.CREATE_CONTENT,
-    PERMISSIONS.EDIT_CONTENT,
-    PERMISSIONS.VIEW_USERS,
-    PERMISSIONS.MANAGE_PUBLICATIONS,
-    PERMISSIONS.MANAGE_PROJECTS
+    PERMISSIONS.VIEW_ANALYTICS
   ]
 };
 
-// Default admin user credentials
+// New admin credentials as requested
 const DEFAULT_ADMIN_CREDENTIALS = {
   username: 'admin',
-  password: '@dminsesg405',
+  password: '@dminsesg705',
   email: 'admin@sesg.bracu.ac.bd'
 };
 
-// Default admin user data for Firebase
+// Default admin user data
 const DEFAULT_ADMIN = {
   username: 'admin',
   email: 'admin@sesg.bracu.ac.bd',
   firstName: 'System',
   lastName: 'Administrator',
-  profilePicture: '',
-  position: 'System Admin',
   role: USER_ROLES.ADMIN,
   permissions: DEFAULT_PERMISSIONS[USER_ROLES.ADMIN],
   isActive: true,
-  isSystemAdmin: true, // Protected system admin
+  isSystemAdmin: true,
   createdAt: new Date().toISOString(),
-  lastLogin: null,
-  lastActivity: new Date().toISOString()
+  lastLogin: null
 };
 
 // Auth Provider Component
@@ -129,29 +85,23 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
-  
-  // Session management
-  const [lastActivity, setLastActivity] = useState(Date.now());
-  const activityTimeoutRef = useRef(null);
-  const activityCheckIntervalRef = useRef(null);
 
   // Initialize authentication state with Firebase
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
-          // User is signed in, get user data from Firestore by email
+          // User is signed in, get user data from Firestore
           console.log('🔄 Firebase user authenticated:', firebaseUser.email);
           
-          // Get user data by email instead of hardcoded username
           const allUsers = await firebaseService.getUsers();
           const userData = allUsers.find(user => user.email === firebaseUser.email);
           
           if (userData) {
-            console.log('✅ User data found in Firestore:', userData.username);
+            console.log('✅ User data found:', userData.username);
             setUser({
-              id: userData.id, // Use Firestore document ID instead of Firebase Auth UID
-              uid: firebaseUser.uid, // Keep auth UID for reference
+              id: userData.id,
+              uid: firebaseUser.uid,
               email: firebaseUser.email,
               username: userData.username,
               firstName: userData.firstName,
@@ -165,22 +115,18 @@ export const AuthProvider = ({ children }) => {
             // Update last login
             await firebaseService.updateUser(userData.id, {
               ...userData,
-              lastLogin: new Date().toISOString(),
-              lastActivity: new Date().toISOString()
+              lastLogin: new Date().toISOString()
             });
           } else {
-            // If no user data in Firestore, sign out
-            console.warn('No user data found in Firestore for authenticated user:', firebaseUser.email);
+            console.warn('No user data found for:', firebaseUser.email);
             await signOut(auth);
           }
         } else {
-          // User is signed out
           setUser(null);
           setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Error in auth state change:', error);
-        // Don't immediately sign out on error, just set user to null
         setUser(null);
         setIsAuthenticated(false);
       } finally {
@@ -188,10 +134,9 @@ export const AuthProvider = ({ children }) => {
       }
     });
 
-    // Initialize users in Firebase if not exists
+    // Initialize users in Firebase
     initializeUsersInFirebase();
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
@@ -199,286 +144,138 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('🔄 Initializing users in Firebase...');
       
-      // Check if admin user exists in Firebase
+      // Check if admin user exists
       const existingAdmin = await firebaseService.getUserByUsername('admin');
       if (!existingAdmin) {
-        console.log('🔄 Creating default admin user in Firebase...');
+        console.log('🔄 Creating default admin user...');
         const newAdminUser = {
           ...DEFAULT_ADMIN,
-          createdAt: new Date().toISOString(),
-          id: 'admin_' + Date.now() // Ensure unique ID
+          id: 'admin_' + Date.now()
         };
         await firebaseService.addUser(newAdminUser);
-        console.log('✅ Default admin user created in Firebase');
-      } else {
-        console.log('✅ Admin user already exists in Firebase:', existingAdmin.username);
+        console.log('✅ Default admin user created');
       }
       
-      // Load all users for admin panel
+      // Load all users
       const allUsers = await firebaseService.getUsers();
-      console.log('📊 Loaded users from Firebase:', allUsers.length);
-      console.log('📊 Users data:', allUsers);
       setUsers(allUsers);
+      console.log('📊 Loaded users:', allUsers.length);
     } catch (error) {
-      console.error('❌ Error initializing users in Firebase:', error);
+      console.error('❌ Error initializing users:', error);
       // Initialize with default admin if Firebase fails
-      console.log('🔄 Initializing with default admin user...');
       const defaultUsers = [{
         ...DEFAULT_ADMIN,
-        id: 'admin_default',
-        createdAt: new Date().toISOString()
+        id: 'admin_default'
       }];
-      console.log('📊 Setting default users:', defaultUsers);
       setUsers(defaultUsers);
     }
   };
 
-  // Login function with Firebase Authentication
+  // Login function
   const login = async (username, password) => {
     try {
       console.log('🔄 Attempting login for:', username);
       
-      // Get user data from Firestore by username
+      // Get user data from Firestore
       const userData = await firebaseService.getUserByUsername(username);
       if (!userData) {
-        console.log('❌ User not found in Firestore:', username);
         return { success: false, error: 'Invalid username or password' };
       }
-      
-      console.log('✅ User found in Firestore:', userData.username, 'Email:', userData.email);
       
       // Special handling for default admin credentials
       if (username === DEFAULT_ADMIN_CREDENTIALS.username && 
           password === DEFAULT_ADMIN_CREDENTIALS.password) {
         
         try {
-          // Try to sign in with Firebase Authentication using stored email
           await signInWithEmailAndPassword(auth, userData.email, password);
-          console.log('✅ Default admin successfully signed in with Firebase Auth');
+          console.log('✅ Admin successfully signed in');
           return { success: true };
         } catch (authError) {
-          console.log('🔄 Default admin Firebase Auth user not found, creating...');
+          console.log('🔄 Admin user not found in Firebase Auth, creating...');
           
-          // If user doesn't exist in Firebase Auth, create it
           if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
             try {
               await createUserWithEmailAndPassword(auth, userData.email, password);
-              console.log('✅ Default admin user created in Firebase Authentication');
+              console.log('✅ Admin user created in Firebase Auth');
               return { success: true };
             } catch (createError) {
-              console.error('❌ Error creating default admin user in Firebase Auth:', createError);
-              return { success: false, error: 'Failed to create admin account: ' + createError.message };
+              console.error('❌ Error creating admin user:', createError);
+              return { success: false, error: 'Failed to create admin account' };
             }
           } else {
-            console.error('❌ Firebase Auth error for default admin:', authError);
-            return { success: false, error: 'Authentication error: ' + authError.message };
+            return { success: false, error: 'Authentication error' };
           }
         }
       } else {
-        // For all other users, try to sign in with Firebase Auth
+        // For other users
         try {
           await signInWithEmailAndPassword(auth, userData.email, password);
-          console.log('✅ User successfully signed in with Firebase Auth:', username);
           return { success: true };
         } catch (authError) {
-          console.log('🔄 User Firebase Auth account not found, creating...', authError.code);
-          
-          // If user doesn't exist in Firebase Auth, create it
-          if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
-            try {
-              await createUserWithEmailAndPassword(auth, userData.email, password);
-              console.log('✅ User created in Firebase Authentication:', username);
-              return { success: true };
-            } catch (createError) {
-              console.error('❌ Error creating user in Firebase Auth:', createError);
-              return { success: false, error: 'Failed to create user account: ' + createError.message };
-            }
-          } else if (authError.code === 'auth/wrong-password') {
-            console.log('❌ Invalid password for user:', username);
+          if (authError.code === 'auth/wrong-password') {
             return { success: false, error: 'Invalid username or password' };
-          } else {
-            console.error('❌ Firebase Auth error:', authError);
-            return { success: false, error: 'Authentication error: ' + authError.message };
           }
+          return { success: false, error: 'Authentication failed' };
         }
       }
     } catch (error) {
       console.error('❌ Login error:', error);
-      return { success: false, error: 'Login failed: ' + error.message };
+      return { success: false, error: 'Login failed' };
     }
   };
 
-  // Logout function with Firebase
+  // Logout function
   const logout = async () => {
     try {
-      // Clear session timers
-      if (activityTimeoutRef.current) {
-        clearTimeout(activityTimeoutRef.current);
-      }
-      if (activityCheckIntervalRef.current) {
-        clearInterval(activityCheckIntervalRef.current);
-      }
-      
       await signOut(auth);
       setUser(null);
       setIsAuthenticated(false);
-      setLastActivity(0);
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
 
-  // Update last activity
-  const updateActivity = () => {
-    const now = Date.now();
-    setLastActivity(now);
-    
-    // Debug logging for admin panel activity
-    if (window.location.pathname.includes('/admin')) {
-      console.log('🎯 Admin panel activity detected, extending session');
-    }
-    
-    // Update user's last activity in Firebase if authenticated
-    if (isAuthenticated && user) {
-      // Throttle Firebase updates to avoid too many calls
-      const timeSinceLastUpdate = now - (window.lastActivityUpdate || 0);
-      if (timeSinceLastUpdate > 30000) { // Update Firebase only every 30 seconds
-        window.lastActivityUpdate = now;
-        firebaseService.updateUser(user.id, {
-          lastActivity: new Date().toISOString()
-        }).catch(error => {
-          console.log('⚠️ Failed to update last activity in Firebase:', error.message);
-        });
-      }
-    }
-    
-    // Reset inactivity timeout
-    if (activityTimeoutRef.current) {
-      clearTimeout(activityTimeoutRef.current);
-    }
-    
-    if (isAuthenticated) {
-      activityTimeoutRef.current = setTimeout(() => {
-        console.log('🕐 Session timeout due to inactivity - last activity was:', new Date(lastActivity).toLocaleString());
-        logout();
-      }, SESSION_TIMEOUT);
-    }
-  };
-
-  // Start session monitoring
-  const startSessionMonitoring = () => {
-    // Update activity immediately
-    updateActivity();
-    
-    // Set up activity check interval
-    activityCheckIntervalRef.current = setInterval(() => {
-      const timeSinceLastActivity = Date.now() - lastActivity;
-      if (timeSinceLastActivity >= SESSION_TIMEOUT && isAuthenticated) {
-        console.log('🕐 Auto logout due to inactivity');
-        logout();
-      }
-    }, ACTIVITY_CHECK_INTERVAL);
-    
-    // Add event listeners for user activity - Enhanced list for admin panel forms
-    const events = [
-      // Mouse events
-      'mousedown', 'mousemove', 'click', 'dblclick', 'contextmenu',
-      // Keyboard events
-      'keypress', 'keydown', 'keyup',
-      // Form events
-      'input', 'change', 'submit', 'focus', 'blur',
-      // Touch events
-      'touchstart', 'touchmove', 'touchend',
-      // Scroll and wheel events
-      'scroll', 'wheel',
-      // Other interaction events
-      'drag', 'drop', 'select', 'paste'
-    ];
-    
-    events.forEach(event => {
-      document.addEventListener(event, updateActivity, true);
-    });
-    
-    return () => {
-      // Cleanup
-      events.forEach(event => {
-        document.removeEventListener(event, updateActivity, true);
-      });
-    };
-  };
-
-  // Session monitoring effect
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const cleanup = startSessionMonitoring();
-      return cleanup;
-    } else {
-      // Clear timers when not authenticated
-      if (activityTimeoutRef.current) {
-        clearTimeout(activityTimeoutRef.current);
-      }
-      if (activityCheckIntervalRef.current) {
-        clearInterval(activityCheckIntervalRef.current);
-      }
-    }
-  }, [isAuthenticated, user]);
-
-  // Check if user has specific permission
+  // Permission checking functions
   const hasPermission = (permission) => {
     if (!user || !isAuthenticated) return false;
     return user.permissions && user.permissions.includes(permission);
   };
 
-  // Check if user has role
   const hasRole = (role) => {
     if (!user || !isAuthenticated) return false;
     return user.role === role;
   };
 
-  // Check if user is admin
   const isAdmin = () => hasRole(USER_ROLES.ADMIN);
+  const isModerator = () => hasRole(USER_ROLES.MODERATOR);
 
-  // Create new user (admin only) with Firebase
+  // User management functions (admin only)
   const createUser = async (userData) => {
     if (!isAdmin()) {
       return { success: false, error: 'Only admins can create users' };
     }
 
-    // Prevent creation of new system admins (only allow regular admins, advisors, team members, collaborators)
-    if (userData.role === USER_ROLES.ADMIN && user?.isSystemAdmin !== true) {
-      return { success: false, error: 'Only system admin can create admin users' };
-    }
-
     try {
-      console.log('🔄 Creating new user:', userData.username);
-      
-      // Create user in Firestore
       const newUser = {
         ...userData,
-        id: userData.username + '_' + Date.now(), // Generate unique ID
+        id: userData.username + '_' + Date.now(),
         isActive: true,
-        isSystemAdmin: false, // New users are never system admins
+        isSystemAdmin: false,
         createdAt: new Date().toISOString(),
         lastLogin: null,
-        lastActivity: new Date().toISOString(),
         permissions: userData.permissions || DEFAULT_PERMISSIONS[userData.role] || []
       };
 
       const createdUser = await firebaseService.addUser(newUser);
-      console.log('✅ User created in Firebase:', createdUser);
-
-      // Update local users state
       const updatedUsers = [...users, createdUser];
       setUsers(updatedUsers);
       
       return { success: true, user: createdUser };
     } catch (error) {
-      console.error('❌ Error creating user:', error);
-      return { success: false, error: error.message || 'Failed to create user' };
+      return { success: false, error: 'Failed to create user' };
     }
   };
 
-  // Update user (admin only) with Firebase
   const updateUser = async (userId, updateData) => {
     if (!isAdmin()) {
       throw new Error('Only admins can update users');
@@ -486,20 +283,16 @@ export const AuthProvider = ({ children }) => {
 
     try {
       await firebaseService.updateUser(userId, updateData);
-      
       const updatedUsers = users.map(u => 
         u.id === userId ? { ...u, ...updateData } : u
       );
       setUsers(updatedUsers);
-      
       return { success: true };
     } catch (error) {
-      console.error('Error updating user:', error);
       return { success: false, error: 'Failed to update user' };
     }
   };
 
-  // Delete user (admin only) with Firebase
   const deleteUser = async (userId) => {
     if (!isAdmin()) {
       throw new Error('Only admins can delete users');
@@ -509,42 +302,18 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: 'Cannot delete your own account' };
     }
 
-    // Find the user to check if they're system admin or advisor
     const targetUser = users.find(u => u.id === userId);
     if (targetUser?.isSystemAdmin) {
       return { success: false, error: 'System admin account cannot be deleted' };
     }
 
-    if (targetUser?.role === USER_ROLES.ADVISOR && user?.isSystemAdmin !== true) {
-      return { success: false, error: 'Only system admin can delete advisor accounts' };
-    }
-
     try {
       await firebaseService.deleteUser(userId);
-      
       const updatedUsers = users.filter(u => u.id !== userId);
       setUsers(updatedUsers);
-      
       return { success: true };
     } catch (error) {
-      console.error('Error deleting user:', error);
       return { success: false, error: 'Failed to delete user' };
-    }
-  };
-
-  // Get all users (admin only) with Firebase
-  const getAllUsers = async () => {
-    if (!isAdmin()) {
-      throw new Error('Only admins can view all users');
-    }
-    
-    try {
-      const allUsers = await firebaseService.getUsers();
-      setUsers(allUsers);
-      return allUsers;
-    } catch (error) {
-      console.error('Error getting all users:', error);
-      return users; // Return cached users if Firebase call fails
     }
   };
 
@@ -563,13 +332,13 @@ export const AuthProvider = ({ children }) => {
     hasPermission,
     hasRole,
     isAdmin,
+    isModerator,
     
-    // User management (admin only)
+    // User management
     users,
     createUser,
     updateUser,
     deleteUser,
-    getAllUsers,
     
     // Constants
     USER_ROLES,
