@@ -74,7 +74,15 @@ function App() {
                           path="/admin" 
                           element={
                             <AdminRoute>
-                              <AdminPanel />
+                              <AdminDashboard />
+                            </AdminRoute>
+                          } 
+                        />
+                        <Route 
+                          path="/admin/content/:contentType" 
+                          element={
+                            <AdminRoute>
+                              <ContentManagement />
                             </AdminRoute>
                           } 
                         />
