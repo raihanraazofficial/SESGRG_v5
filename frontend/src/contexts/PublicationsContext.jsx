@@ -118,7 +118,11 @@ export const PublicationsProvider = ({ children }) => {
 
   // Filter and search publications
   const getFilteredPublications = (filters = {}) => {
+    console.log('🔍 DEBUG getFilteredPublications: Starting with publicationsData:', publicationsData);
+    console.log('🔍 DEBUG getFilteredPublications: publicationsData length:', publicationsData.length);
+    
     let filtered = [...publicationsData];
+    console.log('🔍 DEBUG getFilteredPublications: Initial filtered copy:', filtered);
 
     // Search filter
     if (filters.search_filter) {
@@ -129,16 +133,20 @@ export const PublicationsProvider = ({ children }) => {
         pub.year.toString().includes(searchTerm) ||
         pub.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm))
       );
+      console.log('🔍 DEBUG getFilteredPublications: After search filter:', filtered.length);
     }
 
     // Year filter
     if (filters.year_filter) {
       filtered = filtered.filter(pub => pub.year.toString() === filters.year_filter);
+      console.log('🔍 DEBUG getFilteredPublications: After year filter:', filtered.length);
     }
 
     // Category filter
     if (filters.category_filter) {
       filtered = filtered.filter(pub => pub.category === filters.category_filter);
+      console.log('🔍 DEBUG getFilteredPublications: After category filter:', filtered.length);
+    }
     }
 
     // Research area filter
