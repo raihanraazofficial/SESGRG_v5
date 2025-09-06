@@ -52,8 +52,14 @@ const Publications = () => {
     try {
       setLoading(true);
       
+      console.log('🔍 DEBUG Publications.jsx: Fetching publications with filters:', filters);
+      
       const response = getPaginatedPublications(filters);
       const pubs = response.publications || [];
+      
+      console.log('🔍 DEBUG Publications.jsx: Response received:', response);
+      console.log('🔍 DEBUG Publications.jsx: Publications array:', pubs);
+      console.log('🔍 DEBUG Publications.jsx: Publications count:', pubs.length);
       
       setPublications(pubs);
       setPagination(response.pagination || {});
@@ -69,6 +75,7 @@ const Publications = () => {
       console.log('✅ Publications loaded successfully:', pubs.length, 'items');
     } catch (error) {
       console.error('Error fetching publications:', error);
+      console.log('🔍 DEBUG Publications.jsx: Error details:', error.message, error.stack);
       setStatistics({
         total_publications: 0,
         total_citations: 0,
