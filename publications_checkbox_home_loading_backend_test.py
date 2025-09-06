@@ -20,7 +20,7 @@ from datetime import datetime
 class PublicationsCheckboxAndHomeLoadingBackendTest:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://cms-viewport-fix.preview.emergentagent.com"
+        self.frontend_url = "https://admin-panel-repair-2.preview.emergentagent.com"
         self.api_base_url = f"{self.frontend_url}/api"
         
         # Test results tracking
