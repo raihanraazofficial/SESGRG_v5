@@ -147,7 +147,6 @@ export const PublicationsProvider = ({ children }) => {
       filtered = filtered.filter(pub => pub.category === filters.category_filter);
       console.log('🔍 DEBUG getFilteredPublications: After category filter:', filtered.length);
     }
-    }
 
     // Research area filter
     if (filters.area_filter) {
@@ -197,7 +196,9 @@ export const PublicationsProvider = ({ children }) => {
       }
     });
 
+    console.log('🔍 DEBUG getFilteredPublications: Final filtered result:', filtered);
     return filtered;
+  };
   };
 
   // Get paginated publications
