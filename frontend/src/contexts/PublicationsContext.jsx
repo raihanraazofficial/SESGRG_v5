@@ -199,7 +199,6 @@ export const PublicationsProvider = ({ children }) => {
     console.log('🔍 DEBUG getFilteredPublications: Final filtered result:', filtered);
     return filtered;
   };
-  };
 
   // Get paginated publications
   const getPaginatedPublications = (filters = {}) => {
