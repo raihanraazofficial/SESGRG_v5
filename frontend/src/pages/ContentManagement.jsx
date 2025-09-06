@@ -318,9 +318,16 @@ const ContentManagement = () => {
             type={field.type}
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
             required={field.required}
-            placeholder={field.label}
+            placeholder={`Enter ${field.label.toLowerCase()}...`}
+            style={{ 
+              pointerEvents: 'auto', 
+              userSelect: 'text', 
+              cursor: 'text',
+              touchAction: 'manipulation',
+              webkitUserSelect: 'text'
+            }}
           />
         );
       case 'select':
@@ -328,8 +335,14 @@ const ContentManagement = () => {
           <select
             value={value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
             required={field.required}
+            style={{ 
+              pointerEvents: 'auto', 
+              userSelect: 'text', 
+              cursor: 'pointer',
+              touchAction: 'manipulation'
+            }}
           >
             <option value="">Select {field.label}</option>
             {field.options.map(option => (
@@ -339,24 +352,31 @@ const ContentManagement = () => {
         );
       case 'checkbox':
         return (
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center space-x-4 cursor-pointer p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
             <input
               type="checkbox"
               checked={value || false}
               onChange={(e) => handleFieldChange(field.name, e.target.checked)}
-              className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              className="w-6 h-6 rounded border-2 border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              style={{ 
+                pointerEvents: 'auto', 
+                cursor: 'pointer',
+                touchAction: 'manipulation'
+              }}
             />
-            <span>{field.label}</span>
+            <span className="text-lg font-medium text-gray-800">{field.label}</span>
           </label>
         );
       case 'richtext':
         return (
-          <RichTextEditor
-            value={value}
-            onChange={(content) => handleFieldChange(field.name, content)}
-            placeholder={`Enter ${field.label.toLowerCase()}...`}
-            className="min-h-[300px]"
-          />
+          <div className="border-2 border-gray-300 rounded-xl overflow-hidden">
+            <RichTextEditor
+              value={value}
+              onChange={(content) => handleFieldChange(field.name, content)}
+              placeholder={`Enter ${field.label.toLowerCase()}...`}
+              className="min-h-[400px] text-lg"
+            />
+          </div>
         );
       default:
         return null;
