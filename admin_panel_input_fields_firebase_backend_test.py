@@ -27,7 +27,7 @@ from datetime import datetime
 class AdminPanelInputFieldsFirebaseBackendTester:
     def __init__(self):
         # Frontend URL (Firebase hosting or development server)
-        self.frontend_url = "https://content-manager-23.preview.emergentagent.com"
+        self.frontend_url = "https://content-management-1.preview.emergentagent.com"
         
         # Firebase configuration from the codebase
         self.firebase_config = {

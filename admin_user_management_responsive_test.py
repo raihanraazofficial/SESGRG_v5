@@ -11,7 +11,7 @@ Test Categories:
 5. UI/UX Enhancement Testing
 
 Admin Credentials: admin/@dminsesg405
-Frontend URL: https://content-manager-23.preview.emergentagent.com
+Frontend URL: https://content-management-1.preview.emergentagent.com
 """
 
 import requests
@@ -23,7 +23,7 @@ from datetime import datetime
 class AdminUserManagementTester:
     def __init__(self):
         # Get backend URL from frontend .env
-        self.backend_url = "https://content-manager-23.preview.emergentagent.com"
+        self.backend_url = "https://content-management-1.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # Test credentials

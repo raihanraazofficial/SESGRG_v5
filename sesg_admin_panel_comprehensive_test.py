@@ -24,7 +24,7 @@ from datetime import datetime
 class SESGAdminPanelTester:
     def __init__(self):
         # Get backend URL - using the production URL from environment
-        self.backend_url = "https://content-manager-23.preview.emergentagent.com"
+        self.backend_url = "https://content-management-1.preview.emergentagent.com"
         self.api_base = f"{self.backend_url}/api"
         
         # NEW admin credentials as requested in review

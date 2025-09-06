@@ -20,7 +20,7 @@ from datetime import datetime
 class PublicationsCheckboxHomeLoadingFunctionalTest:
     def __init__(self):
         # Get frontend URL from environment
-        self.frontend_url = "https://content-manager-23.preview.emergentagent.com"
+        self.frontend_url = "https://content-management-1.preview.emergentagent.com"
         
         # Test results tracking
         self.test_results = {
