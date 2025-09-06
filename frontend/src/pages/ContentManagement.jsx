@@ -374,7 +374,8 @@ const ContentManagement = () => {
               value={value}
               onChange={(content) => handleFieldChange(field.name, content)}
               placeholder={`Enter ${field.label.toLowerCase()}...`}
-              className="min-h-[400px] text-lg"
+              className="min-h-[250px] max-h-[350px] text-base"
+              style={{ height: '250px' }}
             />
           </div>
         );
