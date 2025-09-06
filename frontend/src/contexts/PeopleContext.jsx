@@ -82,28 +82,47 @@ export const PeopleProvider = ({ children }) => {
     );
   };
 
-  // Update person data with Firebase
-  const updatePerson = async (category, personId, updatedData) => {
+  // Update person data with Firebase - Updated to match ContentManagement interface
+  const updatePerson = async (personId, updatedData) => {
     try {
+      // Determine category from formData
+      let category = 'teamMembers'; // Default
+      if (updatedData.category) {
+        const categoryMap = {
+          'Advisor': 'advisors',
+          'Team Member': 'teamMembers',
+          'Collaborator': 'collaborators'
+        };
+        category = categoryMap[updatedData.category] || 'teamMembers';
+      }
+
       // Find person in Firebase and update
       const firebasePeople = await firebaseService.getPeople();
-      const person = firebasePeople.find(p => p.id === personId && p.category === category);
+      const person = firebasePeople.find(p => p.id === personId);
       
       if (!person) {
-        throw new Error(`Person with ID ${personId} not found in ${category}`);
+        throw new Error(`Person with ID ${personId} not found`);
       }
       
       await firebaseService.updatePerson(person.id, { ...updatedData, category });
       
-      // Update local state
-      setPeopleData(prevData => ({
-        ...prevData,
-        [category]: prevData[category].map(person =>
-          person.id === personId ? { ...person, ...updatedData } : person
-        )
-      }));
+      // Update local state - remove from old category and add to new category
+      setPeopleData(prevData => {
+        // Remove from old category
+        const oldCategory = person.category;
+        const updatedState = {
+          advisors: prevData.advisors.filter(p => p.id !== personId),
+          teamMembers: prevData.teamMembers.filter(p => p.id !== personId),
+          collaborators: prevData.collaborators.filter(p => p.id !== personId)
+        };
+        
+        // Add to new category
+        updatedState[category] = [...updatedState[category], { ...person, ...updatedData, category }];
+        
+        return updatedState;
+      });
       
-      console.log(`✅ Updated ${category} person with ID ${personId} in Firebase`);
+      console.log(`✅ Updated person with ID ${personId} in Firebase`);
     } catch (error) {
       console.error('Error updating person:', error);
       throw error;
