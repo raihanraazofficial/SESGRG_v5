@@ -110,10 +110,27 @@ export const PeopleProvider = ({ children }) => {
     }
   };
 
-  // Add new person with Firebase
-  const addPerson = async (category, personData) => {
+  // Add new person with Firebase - Updated to match ContentManagement interface
+  const addPerson = async (personData) => {
     try {
-      const newPersonData = { ...personData, category };
+      // Determine category from formData
+      let category = 'teamMembers'; // Default
+      if (personData.category) {
+        const categoryMap = {
+          'Advisor': 'advisors',
+          'Team Member': 'teamMembers',
+          'Collaborator': 'collaborators'
+        };
+        category = categoryMap[personData.category] || 'teamMembers';
+      }
+
+      // Generate unique ID
+      const newPersonData = { 
+        ...personData, 
+        category,
+        id: `person_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      };
+      
       const newPerson = await firebaseService.addPerson(newPersonData);
       
       // Update local state
