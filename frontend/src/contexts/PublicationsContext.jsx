@@ -194,16 +194,26 @@ export const PublicationsProvider = ({ children }) => {
 
   // Get paginated publications
   const getPaginatedPublications = (filters = {}) => {
+    console.log('🔍 DEBUG getPaginatedPublications: Called with filters:', filters);
+    console.log('🔍 DEBUG getPaginatedPublications: Current publicationsData:', publicationsData);
+    console.log('🔍 DEBUG getPaginatedPublications: publicationsData length:', publicationsData.length);
+    console.log('🔍 DEBUG getPaginatedPublications: Loading state:', loading, 'Initialized:', initialized);
+    
     const page = filters.page || 1;
     const perPage = filters.per_page || 20;
     
     const filtered = getFilteredPublications(filters);
+    console.log('🔍 DEBUG getPaginatedPublications: Filtered results:', filtered);
+    console.log('🔍 DEBUG getPaginatedPublications: Filtered length:', filtered.length);
+    
     const total = filtered.length;
     const totalPages = Math.ceil(total / perPage);
     const offset = (page - 1) * perPage;
     const paginatedData = filtered.slice(offset, offset + perPage);
     
-    return {
+    console.log('🔍 DEBUG getPaginatedPublications: Final paginated data:', paginatedData);
+    
+    const result = {
       publications: paginatedData,
       pagination: {
         current_page: page,
@@ -215,6 +225,9 @@ export const PublicationsProvider = ({ children }) => {
       },
       statistics: getStatistics(filtered)
     };
+    
+    console.log('🔍 DEBUG getPaginatedPublications: Returning result:', result);
+    return result;
   };
 
   // Get statistics
