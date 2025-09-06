@@ -467,49 +467,70 @@ const ContentManagement = () => {
           ))}
         </div>
 
-        {/* Form Modal */}
+        {/* Full Screen Form Modal */}
         {isFormOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
-              <div className="p-6 border-b">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">
+          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-0">
+            <div className="bg-white w-full h-full shadow-2xl overflow-hidden flex flex-col admin-modal-fullscreen">
+              {/* Sticky Header */}
+              <div className="sticky top-0 bg-white border-b-2 border-gray-200 p-6 flex items-center justify-between z-10 shadow-sm">
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900">
                     {formMode === 'add' ? 'Add New' : 'Edit'} {config.title.replace(' Management', '')}
                   </h2>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setIsFormOpen(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <p className="text-gray-600 mt-1">
+                    Professional content management with rich text editor
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsFormOpen(false)}
+                  className="px-6 py-2 text-gray-600 hover:text-gray-800 border-2"
+                >
+                  <X className="h-5 w-5 mr-2" />
+                  Close Window
+                </Button>
+              </div>
+              
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-8 admin-modal-scrollable">
+                <div className="max-w-6xl mx-auto">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {config.fields.map((field, index) => (
+                      <div 
+                        key={field.name} 
+                        className={field.type === 'richtext' ? 'lg:col-span-2' : 'col-span-1'}
+                      >
+                        <label className="block text-lg font-semibold text-gray-800 mb-3">
+                          {field.label}
+                          {field.required && <span className="text-red-500 ml-2 text-xl">*</span>}
+                        </label>
+                        <div className="admin-form-field">
+                          {renderField(field)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               
-              <div className="p-6 space-y-6">
-                {config.fields.map(field => (
-                  <div key={field.name}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {field.label}
-                      {field.required && <span className="text-red-500 ml-1">*</span>}
-                    </label>
-                    {renderField(field)}
-                  </div>
-                ))}
-              </div>
-              
-              <div className="p-6 border-t flex justify-end space-x-3">
+              {/* Sticky Footer */}
+              <div className="sticky bottom-0 bg-white border-t-2 border-gray-200 p-6 flex justify-end space-x-4 shadow-lg">
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setIsFormOpen(false)}
+                  className="px-8 py-3 text-lg"
                 >
                   Cancel
                 </Button>
                 <Button
+                  type="button"
                   onClick={handleSave}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-emerald-600 hover:bg-emerald-700 px-8 py-3 text-lg font-semibold"
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save
+                  <Save className="h-5 w-5 mr-2" />
+                  Save Changes
                 </Button>
               </div>
             </div>
