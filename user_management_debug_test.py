@@ -18,7 +18,7 @@ from datetime import datetime
 
 class UserManagementDebugTester:
     def __init__(self):
-        self.frontend_url = "https://content-management-1.preview.emergentagent.com"
+        self.frontend_url = "https://cms-viewport-fix.preview.emergentagent.com"
         self.admin_credentials = {
             "username": "admin", 
             "password": "@dminsesg405"
