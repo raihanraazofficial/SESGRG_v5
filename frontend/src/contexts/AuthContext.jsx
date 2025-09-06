@@ -61,7 +61,7 @@ const DEFAULT_PERMISSIONS = {
 // New admin credentials as requested
 const DEFAULT_ADMIN_CREDENTIALS = {
   username: 'admin',
-  password: '@dminsesg705',
+  password: '@dminsesg405',
   email: 'admin@sesg.bracu.ac.bd'
 };
 
