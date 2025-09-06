@@ -37,15 +37,22 @@ export const PublicationsProvider = ({ children }) => {
         console.log('🔄 Loading publications data from Firebase...');
         
         const firebasePublications = await firebaseService.getPublications();
+        console.log('🔍 DEBUG: Raw Firebase publications data:', firebasePublications);
+        console.log('🔍 DEBUG: Publications data type:', typeof firebasePublications);
+        console.log('🔍 DEBUG: Is array?', Array.isArray(firebasePublications));
+        
         setPublicationsData(firebasePublications);
         
         console.log(`✅ Publications data loaded from Firebase: ${firebasePublications.length} publications`);
+        console.log('🔍 DEBUG: State updated with publications:', firebasePublications);
       } catch (error) {
         console.error('❌ Error loading publications data from Firebase:', error);
+        console.log('🔍 DEBUG: Error details:', error.message, error.stack);
         setPublicationsData([]);
       } finally {
         setLoading(false);
         setInitialized(true);
+        console.log('🔍 DEBUG: Publications loading completed. Loading:', false, 'Initialized:', true);
       }
     };
 
